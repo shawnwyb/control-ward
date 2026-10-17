@@ -1,0 +1,23 @@
+[
+  {
+    "lat": 9.7563,
+    "lon": -70.7711,
+    "struck_at": "2026-10-16T02:03:16.825Z",
+    "source": "goes-glm",
+    "satellite": "GOES-19"
+  },
+  {
+    "lat": 9.8056,
+    "lon": -70.8384,
+    "struck_at": "2026-10-16T02:40:08.617Z",
+    "source": "goes-glm",
+    "satellite": "GOES-19"
+  },
+  {
+    "lat": 9.7515,
+    "lon": -70.8369,
+    "struck_at": "2026-10-16T02:41:54.779Z",
+    "source": "goes-glm",
+    "satellite": "GOES-19"
+  }
+]
