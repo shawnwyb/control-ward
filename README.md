@@ -234,3 +234,13 @@ Request and response shapes are in [the monitoring contract](docs/api-contract.m
 - Read the terms of use of each data provider. None have been reviewed.
 - `river_distance_m` is the distance to the nearest stream gauge. It is a rough measure of how close a plant is to a river.
 - For larger deployments, measure the locking strategy, paginate long feeds, and define limits on confirmation abuse and data retention.
+
+## Cited task safety checklists (pilot)
+
+Site supervisors can save planned work, request a cited private draft, review evidence and gaps, and publish a crew checklist. Crew acknowledge the exact publication. Existing weather briefings, risk, live alerts and stop-work rules continue independently. Generation defaults off.
+
+The supported pilot requires confirmed Florida/private-sector electrical operations and maintenance coverage; other or unknown coverage produces gaps. Worker instructions come from reviewed canonical source passages and require supervisor review.
+
+Use `npm run dev:design` for the fictional supervisor-to-crew demo. `npm run safety:local:start` creates an isolated local stack; `npm run test:safety:db` checks access, citations, concurrency and lifecycle. `npm run test:safety:ui` runs browser demo checks.
+
+See the [safety API](docs/safety-api.md), [safety contract](docs/safety-contract.md) and [setup and operations](docs/safety-operations.md) for integration, source review, provider configuration, verification and deployment.

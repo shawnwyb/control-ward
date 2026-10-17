@@ -1,4 +1,5 @@
 // Explicit operator action. Stages candidates only; never approves or publishes.
+import { resolve, dirname } from "node:path";
 import { readFile } from "node:fs/promises";
 import {
   officialCorpus,
@@ -25,11 +26,13 @@ const sources =
           ),
         ]
       : officialCorpus;
-for (const { passages, ...source } of sources) {
+for (const { document_file, passages, ...source } of sources) {
   const document =
     source.category === "official"
       ? await fetchApprovedHtml(source.url)
-      : passages.map((p) => p.excerpt).join("\n");
+      : document_file
+        ? await readFile(resolve(dirname(file), document_file), "utf8")
+        : passages.map((p) => p.excerpt).join("\n");
   for (const p of passages)
     if (!document.includes(p.excerpt))
       throw new Error(
