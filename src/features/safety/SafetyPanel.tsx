@@ -315,10 +315,9 @@ function SafetyWorkspace({
             key={`${siteId}:${date}`}
             context={data.context}
             disabled={disabled}
-            onSave={(profile, job) =>
+            onSave={(profile, job, expected) =>
               act(
-                () =>
-                  api.saveContext(siteId, date, data.context!, profile, job),
+                () => api.saveContext(siteId, date, expected, profile, job),
                 "Work context saved. Generate a fresh draft for these inputs.",
               )
             }
@@ -387,7 +386,11 @@ function ContextForm({
 }: {
   context: NonNullable<Workspace["context"]>;
   disabled: boolean;
-  onSave: (p: SafetyProfile, j: SafetyJob) => Promise<boolean>;
+  onSave: (
+    p: SafetyProfile,
+    j: SafetyJob,
+    expected: NonNullable<Workspace["context"]>,
+  ) => Promise<boolean>;
 }) {
   const [profile, setProfile] = useState<SafetyProfile>({
     state: "FL",
@@ -405,8 +408,10 @@ function ContextForm({
     ...context.job,
   });
   const [dirty, setDirty] = useState(false);
+  const [expected, setExpected] = useState(context);
   useEffect(() => {
     if (!dirty) {
+      setExpected(context);
       setProfile({
         state: "FL",
         employer_sector: "unknown",
@@ -438,7 +443,7 @@ function ContextForm({
       aria-label="Planned work"
       onSubmit={(e) => {
         e.preventDefault();
-        void onSave(profile, job).then((saved) => {
+        void onSave(profile, job, expected).then((saved) => {
           if (saved) setDirty(false);
         });
       }}
@@ -577,7 +582,12 @@ function ContextForm({
           Save work context
         </Button>
         {dirty ? (
-          <span className={styles.muted}> Unsaved context changes</span>
+          <>
+            <span className={styles.muted}> Unsaved context changes</span>
+            <Button variant="quiet" onClick={() => setDirty(false)}>
+              Reload saved context
+            </Button>
+          </>
         ) : null}
       </div>
     </form>

@@ -23,6 +23,18 @@ export function validateDraft(
   )
     throw new Error("invalid_schema");
   if (
+    Object.keys(raw).some(
+      (k) =>
+        ![
+          "worker_items",
+          "supervisor_items",
+          "coverage_gaps",
+          "admin_notes",
+        ].includes(k),
+    )
+  )
+    throw new Error("invalid_schema_fields");
+  if (
     raw.worker_items.length > 20 ||
     raw.supervisor_items.length > 20 ||
     raw.admin_notes.length > 6000 ||
@@ -54,6 +66,21 @@ export function validateDraft(
         (worker && evidence.get(id)?.audience !== "crew")
       )
         throw new Error("invalid_citation");
+    if (
+      Object.keys(x).some(
+        (k) =>
+          ![
+            "type",
+            "task",
+            "text",
+            "explanation",
+            "evidence_ids",
+            "applicability",
+            "conditions",
+          ].includes(k),
+      )
+    )
+      throw new Error("invalid_item_fields");
     const e = evidence.get(x.evidence_ids[0])!;
     if (
       x.text !== e.instruction ||
@@ -61,7 +88,12 @@ export function validateDraft(
       x.type !== e.kind
     )
       throw new Error("unreviewed_instruction");
-    if (e.conflicts) throw new Error("conflicting_source");
+    if (
+      e.conflicts ||
+      (requiredGaps.some((g) => g.startsWith("Conflicting sources")) &&
+        ["legal_requirement", "company_policy"].includes(String(x.type)))
+    )
+      throw new Error("conflicting_source");
     if (
       x.type === "legal_requirement" &&
       (!supported(input) || x.applicability !== "supported")

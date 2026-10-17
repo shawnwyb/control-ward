@@ -1,5 +1,5 @@
 import { rpc, serve } from "../_shared/runtime.ts";
-import { runAgent } from "../_shared/safety-agent/agent.ts";
+import { failureDiagnostics, runAgent } from "../_shared/safety-agent/agent.ts";
 import { geminiAdapter } from "../_shared/safety-agent/gemini.ts";
 import type {
   Evidence,
@@ -19,12 +19,12 @@ serve("generate-safety-briefings", async () => {
     model = Deno.env.get("SAFETY_MODEL") ?? "";
   const reserve = Number(Deno.env.get("SAFETY_RESERVED_USD_PER_TURN"));
   // Price reservation must conservatively include the maximum prompt+output+thinking tokens at current pricing.
-  if (!key || !model || !Number.isFinite(reserve) || reserve <= 0)
-    return { configured: false };
   const runs = await rpc<Run[]>("claim_safety_runs", { p_limit: 1 });
   const results = [];
   for (const run of runs) {
     try {
+      if (!key || !model || !Number.isFinite(reserve) || reserve <= 0)
+        throw new Error("provider_unconfigured");
       if (run.input_snapshot.model !== model)
         throw new Error("model_configuration_changed");
       const bound = await rpc<{
@@ -70,6 +70,7 @@ serve("generate-safety-briefings", async () => {
       results.push({ run_id: run.id, saved });
     } catch (error) {
       const allowed = [
+        "provider_unconfigured",
         "provider_rate_limited",
         "provider_failed",
         "model_configuration_changed",
@@ -89,6 +90,7 @@ serve("generate-safety-briefings", async () => {
         p_run_id: run.id,
         p_lease_token: run.lease_token,
         p_error: category,
+        p_diagnostics: failureDiagnostics(error),
       });
       results.push({ run_id: run.id, error: category });
     }

@@ -253,11 +253,11 @@ test("call/step/token/spend limits and tool timeouts terminate", async () => {
         input,
         {
           async turn() {
-            return { final: draft(), tokens: 999 };
+            return { final: draft(), tokens: 999999 };
           },
         },
         tools,
-        { tokens: 50 },
+        { tokens: 50000 },
       ),
     /token_limit/,
   );
@@ -355,8 +355,40 @@ test("Gemini adapter preserves raw signatures/call IDs in memory and suppresses 
     100,
   );
   assert.equal(reply.calls[0].id, "call-1");
-  assert.deepEqual(reply.opaque, opaque);
+  assert.deepEqual(reply.opaque, { ...opaque, parts: [opaque.parts[1]] });
+  assert.ok(!JSON.stringify(reply).includes("hidden text"));
   assert.equal(reply.tokens, 9);
   assert.equal(sent.generationConfig.maxOutputTokens, 100);
   assert.equal(sent.tools[0].functionDeclarations.length, 5);
+});
+
+test("unknown item fields cannot carry private data into a publication; failures retain sanitized metrics", async () => {
+  const extra = draft();
+  extra.worker_items[0].admin_notes = "private";
+  assert.throws(
+    () =>
+      validateDraft(extra, input, new Map([[evidence.id, evidence]]), [
+        "Keep the gap",
+      ]),
+    /invalid_item_fields/,
+  );
+  try {
+    await runAgent(
+      input,
+      {
+        async turn() {
+          throw new Error("provider_failed");
+        },
+      },
+      tools,
+    );
+    assert.fail("Expected failure");
+  } catch (e) {
+    assert.equal(e.message, "provider_failed");
+    assert.equal(e.safetyDiagnostics.turns, 1);
+    assert.equal(e.safetyDiagnostics.usage_complete, false);
+    assert.ok(
+      !JSON.stringify(e.safetyDiagnostics).includes("Reviewed passage"),
+    );
+  }
 });

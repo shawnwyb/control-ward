@@ -176,6 +176,28 @@ test("retrieval and full fake-provider vertical slice: isolation, recall, review
     );
     assert.ok(!JSON.stringify(payload).includes("PRIVATE"));
     assert.equal(payload.evidence.length, 2);
+    const invented = structuredClone(out.draft);
+    invented.worker_items[0].text = "Maintain 3 ft and use 40 cal PPE";
+    await rejected(
+      () =>
+        q("select public.edit_safety_revision($1,$2,$3)", [
+          rev.id,
+          rev.revision,
+          invented,
+        ]),
+      /Instruction must match/,
+    );
+    const extra = structuredClone(out.draft);
+    extra.worker_items[0].admin_notes = "private in worker";
+    await rejected(
+      () =>
+        q("select public.edit_safety_revision($1,$2,$3)", [
+          rev.id,
+          rev.revision,
+          extra,
+        ]),
+      /Invalid item fields/,
+    );
     // Refresh preserves old passages and citation versions but blocks stale publication.
     const { passages, ...source } = officialCorpus[1];
     const document =

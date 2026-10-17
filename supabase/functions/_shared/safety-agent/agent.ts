@@ -89,105 +89,126 @@ export async function runAgent(
       throw new Error("tool_failed");
     }
   }
-  // Required snapshots and both source classes are collected even if the model skips a tool.
-  const context = await call("get_job_context", {});
-  const hazards = (await call("get_site_hazards", {})) as {
-    coverage_gaps: string[];
-  };
-  const official = await call("search_regulations", { query: input.job.task });
-  const procedures = await call("search_site_documents", {
-    query: input.job.task,
+  const diagnostics = (complete: boolean) => ({
+    prompt_version: input.prompt_version,
+    tool_version: "safety-tools-v1",
+    model: input.model,
+    turns,
+    calls,
+    tokens,
+    reserved_spend_usd: reserved,
+    duration_ms: Date.now() - started,
+    traces,
+    usage_complete: complete,
   });
-  const requiredGaps = hazards.coverage_gaps;
-  if (
-    !Array.isArray(requiredGaps) ||
-    !requiredGaps.every((g) => typeof g === "string")
-  )
-    throw new Error("missing_host_gaps");
-  messages.push({
-    role: "user",
-    parts: [
-      {
-        text: JSON.stringify({
-          context,
-          hazards,
-          official,
-          procedures,
-          requiredGaps,
-        }),
-      },
-    ],
-  });
-  for (; turns < limits.turns;) {
+  try {
+    // Required snapshots and both source classes are collected even if the model skips a tool.
+    const context = await call("get_job_context", {});
+    const hazards = (await call("get_site_hazards", {})) as {
+      coverage_gaps: string[];
+    };
+    const official = await call("search_regulations", {
+      query: input.job.task,
+    });
+    const procedures = await call("search_site_documents", {
+      query: input.job.task,
+    });
+    const requiredGaps = hazards.coverage_gaps;
     if (
-      tokens >= limits.tokens ||
-      reserved + limits.reservedUsdPerTurn > limits.maxSpendUsd + 1e-9
+      !Array.isArray(requiredGaps) ||
+      !requiredGaps.every((g) => typeof g === "string")
     )
-      throw new Error("resource_limit");
-    reserved += limits.reservedUsdPerTurn;
-    turns++;
-    const reply = await bounded(
-      model.turn(messages, signal, Math.min(4096, limits.tokens - tokens)),
-      signal,
-    );
-    if (!Number.isFinite(reply.tokens) || reply.tokens < 0)
-      throw new Error("invalid_usage");
-    tokens += reply.tokens;
-    if (tokens > limits.tokens) throw new Error("token_limit");
-    if (reply.opaque)
-      messages.push(reply.opaque as Message); // Raw model parts preserve transport signatures in memory only.
-    else
-      messages.push({
-        role: "model",
-        parts: [{ text: JSON.stringify(reply.final ?? reply.calls) }],
-      });
-    if (reply.calls?.length) {
-      const responses = [];
-      for (const c of reply.calls) {
-        const data = await call(c.name, c.args);
-        responses.push({
-          functionResponse: {
-            name: c.name,
-            ...(c.id ? { id: c.id } : {}),
-            response: { result: data },
-          },
+      throw new Error("missing_host_gaps");
+    messages.push({
+      role: "user",
+      parts: [
+        {
+          text: JSON.stringify({
+            context,
+            hazards,
+            official,
+            procedures,
+            requiredGaps,
+          }),
+        },
+      ],
+    });
+    for (; turns < limits.turns;) {
+      if (
+        tokens >= limits.tokens ||
+        reserved + limits.reservedUsdPerTurn > limits.maxSpendUsd + 1e-9
+      )
+        throw new Error("resource_limit");
+      // UTF-8 byte count conservatively bounds prompt tokens before issuing a paid request.
+      const inputBound = new TextEncoder().encode(
+        JSON.stringify(messages) + systemPrompt,
+      ).byteLength;
+      const outputBudget = Math.min(4096, limits.tokens - tokens - inputBound);
+      if (outputBudget <= 0) throw new Error("resource_limit");
+      reserved += limits.reservedUsdPerTurn;
+      turns++;
+      const reply = await bounded(
+        model.turn(messages, signal, outputBudget),
+        signal,
+      );
+      if (!Number.isFinite(reply.tokens) || reply.tokens < 0)
+        throw new Error("invalid_usage");
+      tokens += reply.tokens;
+      if (tokens > limits.tokens) throw new Error("token_limit");
+      if (reply.opaque)
+        messages.push(reply.opaque as Message); // Raw model parts preserve transport signatures in memory only.
+      else
+        messages.push({
+          role: "model",
+          parts: [{ text: JSON.stringify(reply.final ?? reply.calls) }],
+        });
+      if (reply.calls?.length) {
+        const responses = [];
+        for (const c of reply.calls) {
+          const data = await call(c.name, c.args);
+          responses.push({
+            functionResponse: {
+              name: c.name,
+              ...(c.id ? { id: c.id } : {}),
+              response: { result: data },
+            },
+          });
+        }
+        messages.push({ role: "user", parts: responses });
+        continue;
+      }
+      try {
+        const draft: SafetyDraft = validateDraft(
+          reply.final,
+          input,
+          evidence,
+          requiredGaps,
+        );
+        return {
+          draft,
+          diagnostics: diagnostics(true),
+        };
+      } catch (error) {
+        if (repairs++ >= 1) throw new Error("validation_failed");
+        messages.push({
+          role: "user",
+          parts: [
+            {
+              text: `Host validation rejected the draft (${error instanceof Error ? error.message : "invalid"}). Repair once using only returned canonical evidence and all required gaps.`,
+            },
+          ],
         });
       }
-      messages.push({ role: "user", parts: responses });
-      continue;
     }
-    try {
-      const draft: SafetyDraft = validateDraft(
-        reply.final,
-        input,
-        evidence,
-        requiredGaps,
-      );
-      return {
-        draft,
-        diagnostics: {
-          prompt_version: input.prompt_version,
-          tool_version: "safety-tools-v1",
-          model: input.model,
-          turns,
-          calls,
-          tokens,
-          reserved_spend_usd: reserved,
-          duration_ms: Date.now() - started,
-          traces,
-        },
-      };
-    } catch (error) {
-      if (repairs++ >= 1) throw new Error("validation_failed");
-      messages.push({
-        role: "user",
-        parts: [
-          {
-            text: `Host validation rejected the draft (${error instanceof Error ? error.message : "invalid"}). Repair once using only returned canonical evidence and all required gaps.`,
-          },
-        ],
-      });
-    }
+    throw new Error("step_limit");
+  } catch (error) {
+    const failure =
+      error instanceof Error ? error : new Error("generation_failed");
+    throw Object.assign(failure, { safetyDiagnostics: diagnostics(false) });
   }
-  throw new Error("step_limit");
+}
+export function failureDiagnostics(error: unknown): Record<string, unknown> {
+  return error instanceof Error && "safetyDiagnostics" in error
+    ? (error.safetyDiagnostics as Record<string, unknown>)
+    : {};
 }

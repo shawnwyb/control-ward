@@ -55,7 +55,11 @@ export function geminiAdapter(
             systemInstruction: { parts: [{ text: systemPrompt }] },
             contents: messages,
             tools: [{ functionDeclarations: declarations }],
-            generationConfig: { temperature: 0.1, maxOutputTokens },
+            generationConfig: {
+              temperature: 0.1,
+              maxOutputTokens,
+              thinkingConfig: { includeThoughts: false },
+            },
           }),
         },
       );
@@ -66,7 +70,15 @@ export function geminiAdapter(
       const raw = await response.text();
       if (raw.length > 150000) throw new Error("provider_output_limit");
       const body = JSON.parse(raw);
-      const content = body.candidates?.[0]?.content;
+      const candidate = body.candidates?.[0]?.content;
+      const content = candidate
+        ? {
+            ...candidate,
+            parts: candidate.parts?.filter(
+              (p: { thought?: boolean }) => !p.thought,
+            ),
+          }
+        : null;
       if (!content?.parts) throw new Error("provider_empty");
       const calls = content.parts
         .filter((p: { functionCall?: unknown }) => p.functionCall)
@@ -96,7 +108,7 @@ export function geminiAdapter(
       return {
         calls,
         final,
-        tokens: body.usageMetadata?.totalTokenCount ?? 0,
+        tokens: body.usageMetadata?.totalTokenCount ?? NaN,
         opaque: content,
       };
     },
