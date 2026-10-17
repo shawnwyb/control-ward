@@ -1,3 +1,19 @@
 httpx>=0.27
 pandas>=2.2
 pyarrow>=16.0
+python-dateutil>=2.9
+openpyxl>=3.1
+h5py>=3.11
+# models/mud-trafficability (STRAM-inspired rutting model)
+numpy>=2.0
+scipy>=1.13
+scikit-image>=0.24
+rasterio>=1.4
+pysheds>=0.5
+shapely>=2.0
+pyproj>=3.6
+# models/hazard-index (Hazard Index ML prototype)
+scikit-learn>=1.5
+matplotlib>=3.8
+joblib
+tzdata
