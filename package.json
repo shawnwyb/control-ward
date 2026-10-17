@@ -1,0 +1,25 @@
+{
+  "name": "planit-crew-hazards",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "tsc --noEmit && vite build",
+    "local:start": "supabase start -x edge-runtime,imgproxy,logflare,vector && node scripts/local-env.mjs",
+    "local:reset": "node scripts/reset-local.mjs",
+    "local:env": "node scripts/local-env.mjs",
+    "types": "supabase gen types typescript --local > src/database.types.ts",
+    "test": "node --test --test-concurrency=1 tests/backend.test.mjs",
+    "test:ui": "playwright test"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.0.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.0.0",
+    "pg": "^8.0.0",
+    "typescript": "^5.0.0",
+    "vite": "^6.0.0"
+  }
+}
