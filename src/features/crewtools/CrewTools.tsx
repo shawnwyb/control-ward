@@ -15,7 +15,6 @@ import {
   enablePush,
   isPushEnabled,
   pushSupport,
-  showTestNotification,
 } from "../../lib/push";
 import { Button } from "../../components/ui";
 import { AlertsSection } from "../dashboard/AlertsSection";
@@ -98,17 +97,6 @@ export function CrewTools({
       navigator.serviceWorker.removeEventListener("message", onMessage);
   }, []);
 
-  async function testNotification() {
-    try {
-      await showTestNotification();
-      announce(
-        "Test sent. If nothing appeared, allow notifications for your browser in system settings and turn off Focus or Do Not Disturb.",
-      );
-    } catch (error) {
-      announce(errorMessage(error), true);
-    }
-  }
-
   async function togglePush(on: boolean) {
     try {
       if (on) await enablePush(userId);
@@ -163,11 +151,6 @@ export function CrewTools({
           />
           Notify me about alerts and plans
         </label>
-        {pushOn ? (
-          <Button variant="ghost" onClick={() => void testNotification()}>
-            Test notification
-          </Button>
-        ) : null}
         {location.supported ? (
           <label className={styles.toggle}>
             <input
