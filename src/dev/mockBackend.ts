@@ -57,8 +57,8 @@ const accounts: Record<string, string[]> = {
   "supervisor@planit.local": sites.map((site) => site.id),
   "outsider@planit.local": [],
   // The dashboard's roster people can sign in; two more accounts have no site yet.
-  "jordan@planit.local": ["site-north"],
-  "sam@planit.local": ["site-north"],
+  "jordan@planit.local": sites.map((site) => site.id),
+  "sam@planit.local": sites.map((site) => site.id),
   "taylor.kim@example.com": [],
   "riley.chen@example.com": [],
 };
