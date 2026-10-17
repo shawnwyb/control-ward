@@ -1,0 +1,144 @@
+.map {
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  min-height: 18rem;
+  border: var(--rule-width) solid var(--rule-strong);
+  background: var(--map-ground);
+  cursor: crosshair;
+}
+
+.map :global(.maplibregl-canvas) {
+  outline: none;
+}
+
+.map :global(.maplibregl-ctrl-group) {
+  border-radius: var(--radius-sm);
+  box-shadow: none;
+  border: var(--rule-width) solid var(--rule-strong);
+}
+
+.map :global(.maplibregl-ctrl-group button) {
+  width: var(--tap-min);
+  height: var(--tap-min);
+}
+
+.map :global(.maplibregl-ctrl-attrib) {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+}
+
+.map :global(.maplibregl-ctrl-scale) {
+  font-family: var(--font-mono);
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
+.hazard {
+  display: grid;
+  place-items: center;
+  cursor: default;
+}
+
+/* A hovered feed row rings its marker. */
+.highlight::after {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* 44px hit area so the pin can be dragged with a thumb. */
+.pin {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  cursor: grab;
+}
+
+.pin span {
+  width: 1.375rem;
+  height: 1.375rem;
+  border-radius: 50%;
+  background: var(--brand);
+  border: 3px solid var(--surface);
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--brand) 22%, transparent);
+}
+
+.pin:active {
+  cursor: grabbing;
+}
+
+.center {
+  width: 0.875rem;
+  height: 0.875rem;
+  background: var(--ink);
+  border: 2px solid var(--surface);
+}
+
+@media (max-width: 40rem) {
+  .map {
+    aspect-ratio: 4 / 3;
+    min-height: 20rem;
+  }
+}
+
+/* Hazard hover card (a MapLibre popup). */
+.popup {
+  pointer-events: none;
+}
+
+.popup :global(.maplibregl-popup-content) {
+  padding: 0;
+  border: var(--rule-width) solid var(--ink);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  box-shadow: none;
+  color: var(--ink);
+  font-family: var(--font-sans);
+}
+
+.popup :global(.maplibregl-popup-tip) {
+  display: none;
+}
+
+.cardBody {
+  display: grid;
+  gap: var(--space-2);
+  min-width: 16rem;
+  padding: var(--space-3);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.cardTitle {
+  flex: 1;
+  font-size: var(--text-base);
+}
+
+.cardFacts {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-1) var(--space-3);
+  margin: 0;
+  padding-top: var(--space-2);
+  border-top: var(--rule-width) solid var(--rule);
+  font-size: var(--text-sm);
+}
+
+.cardLabel {
+  color: var(--ink-muted);
+}
+
+.cardValue {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  text-align: right;
+}

@@ -1,0 +1,23 @@
+.dot {
+  display: inline-block;
+  width: 0.625rem;
+  height: 0.625rem;
+  flex: none;
+  border-radius: 50%;
+  border: 2px solid var(--ink-faint);
+}
+
+.live {
+  background: var(--ok);
+  border-color: var(--ok);
+}
+
+.pending {
+  background: transparent;
+  border-color: var(--ink-faint);
+}
+
+.off {
+  background: transparent;
+  border-color: var(--sev-2);
+}

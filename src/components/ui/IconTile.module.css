@@ -1,0 +1,10 @@
+.tile {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: var(--rule-width) solid var(--rule-strong);
+  border-radius: var(--radius-sm);
+  background: var(--paper);
+}

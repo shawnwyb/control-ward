@@ -1,0 +1,116 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: var(--tap-min);
+  padding: 0 var(--space-4);
+  border: var(--rule-width) solid transparent;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  font-size: var(--text-base);
+  font-weight: 600;
+  line-height: 1.2;
+  cursor: pointer;
+  text-align: center;
+  transition:
+    background-color var(--duration-fast) var(--ease),
+    border-color var(--duration-fast) var(--ease);
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Busy is a state, not a disabled control: stay legible and show progress. */
+.button[data-busy]:disabled {
+  opacity: 1;
+  cursor: progress;
+}
+
+.button:not(:disabled):active {
+  transform: translateY(1px);
+}
+
+.primary {
+  min-height: var(--tap-comfort);
+  padding: 0 var(--space-6);
+  background: var(--brand);
+  border-color: var(--brand);
+  color: var(--brand-ink);
+}
+
+.primary:not(:disabled):hover {
+  background: var(--brand-hover);
+  border-color: var(--brand-hover);
+}
+
+.primary:not(:disabled):active {
+  background: var(--brand-pressed);
+  border-color: var(--brand-pressed);
+}
+
+.primary[data-busy]:disabled {
+  background: var(--brand-pressed);
+  border-color: var(--brand-pressed);
+}
+
+.secondary {
+  background: var(--surface);
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
+.secondary:not(:disabled):hover {
+  background: var(--surface-sunken);
+}
+
+/* Repeated row actions: present, but quieter than the content they act on. */
+.quiet {
+  border-color: var(--rule-strong);
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.quiet:not(:disabled):hover {
+  border-color: var(--ink);
+  background: var(--surface-sunken);
+}
+
+.ghost {
+  padding: 0 var(--space-2);
+  color: var(--brand);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.ghost:not(:disabled):hover {
+  color: var(--brand-hover);
+  background: var(--brand-soft);
+}
+
+.block {
+  width: 100%;
+}
+
+.spinner {
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (forced-colors: active) {
+  .button {
+    border-color: ButtonText;
+  }
+}

@@ -1,0 +1,96 @@
+.placeholder {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 3 / 2;
+  min-height: 18rem;
+  padding: var(--space-4);
+  border: var(--rule-width) dashed var(--rule-strong);
+  background: var(--map-ground);
+  color: var(--ink-muted);
+  text-align: center;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-4);
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--text-sm);
+}
+
+.legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.note {
+  color: var(--ink-muted);
+}
+
+.pinSample {
+  width: 0.875rem;
+  height: 0.875rem;
+  border-radius: 50%;
+  background: var(--brand);
+  box-shadow: 0 0 0 3px var(--brand-soft);
+}
+
+@media (max-width: 40rem) {
+  .placeholder {
+    aspect-ratio: 4 / 3;
+    min-height: 20rem;
+  }
+}
+
+/* Keyboard hint only where a keyboard is likely. */
+@media (hover: none) {
+  .keyboardHint {
+    display: none;
+  }
+}
+
+.overlayRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.overlayLabel {
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.weather {
+  display: grid;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+.weatherNote {
+  color: var(--ink-muted);
+  font-size: var(--text-sm);
+}
+
+.radarKey {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--ink-muted);
+}
+
+.ramp {
+  width: 8rem;
+  height: 0.5rem;
+  border-radius: var(--radius-sm);
+}
+
+.credit {
+  margin-left: auto;
+}

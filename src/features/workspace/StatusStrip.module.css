@@ -1,0 +1,38 @@
+/* A status line, not a dashboard: the report form is the main event. */
+.strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--rule-width);
+  border: var(--rule-width) solid var(--rule);
+  background: var(--rule);
+}
+
+.strip > * {
+  background: var(--surface);
+}
+
+.connection {
+  display: flex;
+  align-items: center;
+  grid-column: 1 / -1;
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--text-sm);
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: 500;
+}
+
+@media (min-width: 48rem) {
+  .strip {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(0, 1.4fr);
+  }
+
+  .connection {
+    grid-column: auto;
+    padding: var(--space-3) var(--space-4);
+  }
+}

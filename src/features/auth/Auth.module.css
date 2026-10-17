@@ -1,0 +1,53 @@
+.setup {
+  display: grid;
+  gap: var(--space-3);
+  padding-top: var(--space-12);
+  max-width: 40rem;
+}
+
+/* One narrow column, centred: a sign-in form needs no more. */
+.login {
+  display: grid;
+  gap: var(--space-5);
+  max-width: 28rem;
+  margin: var(--space-8) auto 0;
+}
+
+.intro {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.title {
+  font-size: var(--text-2xl);
+  letter-spacing: -0.01em;
+}
+
+.intro p {
+  color: var(--ink-muted);
+}
+
+.form {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.demo {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border: var(--rule-width) dashed var(--rule-strong);
+  font-size: var(--text-sm);
+  color: var(--ink-muted);
+}
+
+.demo strong {
+  color: var(--ink);
+}
+
+.demo p {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}

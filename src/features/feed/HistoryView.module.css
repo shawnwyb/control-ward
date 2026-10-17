@@ -1,0 +1,36 @@
+.history {
+  margin-top: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: var(--rule-width) dashed var(--rule-strong);
+  font-size: var(--text-sm);
+  color: var(--ink-muted);
+}
+
+.list {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+}
+
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+.gallery:empty {
+  display: none;
+}
+
+.gallery img {
+  display: block;
+  width: 6rem;
+  height: 6rem;
+  object-fit: cover;
+  border: var(--rule-width) solid var(--rule-strong);
+}
