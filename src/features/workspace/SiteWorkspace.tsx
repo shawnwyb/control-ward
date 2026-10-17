@@ -7,8 +7,12 @@ import { checkinRequestId, completeCheckin } from "../../lib/submission";
 import { sendCheckin } from "../../lib/api";
 import type { Site } from "../../lib/types";
 import { ErrorBoundary } from "../../components/ErrorBoundary";
-import { Panel } from "../../components/ui";
+import { Panel, cx } from "../../components/ui";
 import { ReportFeed } from "../feed/ReportFeed";
+import { AlertList } from "../monitoring/AlertList";
+import { AlertsUnavailable } from "../monitoring/AlertsUnavailable";
+import { BriefingPanel } from "../monitoring/BriefingPanel";
+import { useMonitoring } from "../monitoring/useMonitoring";
 import { SiteMap } from "../map/SiteMap";
 import { ReportForm } from "../report/ReportForm";
 import type { ReportDraft } from "../report/types";
@@ -17,10 +21,19 @@ import { StatusStrip } from "./StatusStrip";
 import styles from "./SiteWorkspace.module.css";
 
 /** Everything for one site. Remounted per site, so form and feed state reset on switch. */
-export function SiteWorkspace({ site }: { site: Site }) {
+export function SiteWorkspace({
+  site,
+  userId,
+}: {
+  site: Site;
+  userId: string;
+}) {
   const { announce } = useNotice();
   const { busy, isBusy, setBusy } = useBusy();
   const feed = useSiteFeed(site.id, (message) => announce(message, true));
+  const monitoring = useMonitoring(site.id, userId, (message) =>
+    announce(message, true),
+  );
   const [draft, setDraft] = useState<ReportDraft>({
     type: "debris",
     severity: 2,
@@ -85,12 +98,29 @@ export function SiteWorkspace({ site }: { site: Site }) {
 
   return (
     <div id="site-workspace" className={styles.workspace}>
+      {/* Alerts come first: stop-work must never sit below the fold. */}
+      <ErrorBoundary fallback={<AlertsUnavailable />}>
+        {monitoring.failed ? (
+          <AlertsUnavailable onRetry={() => void monitoring.retry()} />
+        ) : (
+          <AlertList
+            alerts={monitoring.alerts}
+            acknowledged={monitoring.acknowledged}
+            pending={monitoring.pending}
+            onAcknowledge={(alertId) => void monitoring.acknowledge(alertId)}
+          />
+        )}
+      </ErrorBoundary>
       <StatusStrip
         metrics={feed.metrics}
         loaded={feed.loaded}
         connection={feed.connection}
+        overview={monitoring.overview}
+        overviewLoaded={monitoring.loaded}
       />
-      <div className={styles.grid}>
+      <div
+        className={cx(styles.grid, monitoring.briefing && styles.withBriefing)}
+      >
         <ReportForm
           className={styles.form}
           draft={draft}
@@ -124,6 +154,18 @@ export function SiteWorkspace({ site }: { site: Site }) {
             onPin={setPin}
           />
         </ErrorBoundary>
+        {monitoring.briefing ? (
+          <ErrorBoundary fallback={null}>
+            <BriefingPanel
+              className={styles.briefing}
+              briefing={monitoring.briefing}
+              read={monitoring.briefingRead}
+              onMarkRead={() =>
+                void monitoring.markRead(monitoring.briefing!.id)
+              }
+            />
+          </ErrorBoundary>
+        ) : null}
         <ReportFeed
           className={styles.feed}
           reports={feed.reports}

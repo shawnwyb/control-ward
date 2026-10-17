@@ -25,6 +25,16 @@ export default defineConfig(({ mode }) => {
     // MapLibre v6 loads its worker relative to its own module URL, which breaks
     // when Vite pre-bundles it into .vite/deps.
     optimizeDeps: { exclude: ["maplibre-gl"] },
+    build: {
+      rollupOptions: {
+        // Dev-only code (the mock backend) must never ship. Declaring it free of
+        // side effects lets the bundler drop it, since production never calls it.
+        treeshake: {
+          moduleSideEffects: (id) =>
+            !id.replaceAll("\\", "/").includes("/src/dev/"),
+        },
+      },
+    },
     // `vite --mode design` runs the UI against an in-browser mock backend.
     ...(design && {
       server: { port: DESIGN_PORT, strictPort: true },

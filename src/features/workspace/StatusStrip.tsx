@@ -3,19 +3,41 @@ import {
   connectionLabels,
   type ConnectionState,
 } from "../../hooks/useSiteFeed";
-import type { SiteMetrics } from "../../lib/types";
+import type { SiteMetrics, SiteOverview } from "../../lib/types";
 import styles from "./StatusStrip.module.css";
 
 type Props = {
   metrics: SiteMetrics;
   loaded: boolean;
   connection: ConnectionState;
+  /** Backend risk score for the site. Absent until it has been scored. */
+  overview?: SiteOverview;
+  overviewLoaded: boolean;
 };
 
-export function StatusStrip({ metrics, loaded, connection }: Props) {
+const score = (value: number | null | undefined) =>
+  typeof value === "number" ? value.toFixed(1) : undefined;
+
+export function StatusStrip({
+  metrics,
+  loaded,
+  connection,
+  overview,
+  overviewLoaded,
+}: Props) {
   const dash = "—";
+  const now = score(overview?.risk_now);
+  const tomorrow = score(overview?.risk_tomorrow);
   return (
-    <section className={styles.strip} aria-label="Site crew metrics">
+    <section className={styles.strip} aria-label="Site status">
+      <Stat
+        label="Site risk"
+        valueId="metric-site-risk"
+        value={overviewLoaded ? (now ?? dash) : dash}
+        note="of 10"
+        footnote={tomorrow ? `Tomorrow ${tomorrow}` : undefined}
+        title="Site risk now, out of 10. It combines live weather, heat, lightning, flood, wildfire and soil readings with crew reports."
+      />
       <Stat
         label="Open hazards"
         valueId="metric-count"
@@ -36,6 +58,11 @@ export function StatusStrip({ metrics, loaded, connection }: Props) {
         note="of 10"
         title="Wildlife subscore, out of 10, age adjusted"
       />
+      {overview?.top_driver ? (
+        <p className={styles.driver} id="site-risk-driver">
+          {overview.top_driver}
+        </p>
+      ) : null}
       <div className={styles.connection} title="Shared with your site team">
         <span id="connection" className={styles.status}>
           <StatusDot

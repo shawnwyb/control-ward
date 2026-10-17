@@ -1,0 +1,116 @@
+.list ul {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--space-3) var(--space-4);
+  align-items: start;
+  padding: var(--space-4);
+  border: var(--rule-width) solid var(--rule-strong);
+  border-left-width: 6px;
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+}
+
+.icon {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: var(--rule-width) solid currentColor;
+  border-radius: var(--radius-sm);
+}
+
+.body {
+  display: grid;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+}
+
+.title {
+  font-size: var(--text-lg);
+}
+
+.level {
+  padding: 2px var(--space-2);
+  border: var(--rule-width) solid currentColor;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.detail {
+  max-width: 60ch;
+}
+
+.countdown {
+  font-weight: 500;
+}
+
+.clock {
+  font-family: var(--font-mono);
+  font-size: var(--text-xl);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.actions {
+  grid-column: 2;
+}
+
+/* Stop work is the one thing on screen that must not be missed: solid red. */
+.stop_work {
+  border-color: var(--danger);
+  background: var(--danger);
+  color: #fff;
+}
+
+.warning {
+  border-left-color: var(--sev-2);
+  background: var(--sev-2-bg);
+}
+
+.warning .icon,
+.warning .level {
+  color: var(--sev-2);
+}
+
+.info {
+  border-left-color: var(--brand);
+  background: var(--brand-soft);
+}
+
+.info .icon,
+.info .level {
+  color: var(--brand);
+}
+
+@media (min-width: 48rem) {
+  .item {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+  }
+
+  .actions {
+    grid-column: auto;
+  }
+}
+
+@media (forced-colors: active) {
+  .stop_work {
+    border-color: CanvasText;
+  }
+}

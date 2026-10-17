@@ -42,7 +42,7 @@ function Shell() {
       />
       <main className={page.page}>
         {session.status === "signedIn" ? (
-          <Workspace key={session.userId} />
+          <Workspace key={session.userId} userId={session.userId} />
         ) : session.status === "signedOut" ? (
           <LoginPanel />
         ) : null}

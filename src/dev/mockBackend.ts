@@ -190,6 +190,178 @@ let tasks = [
 const params = new URLSearchParams(location.search);
 const latency = Number(params.get("latency") ?? 150);
 const failWrites = params.has("fail");
+// ?break=alerts, or window.__mockFlags.breakAlerts at runtime, makes alert reads fail.
+// Created on first use, not at import, so importing this module has no side effects.
+function flags(): { breakAlerts: boolean } {
+  const w = window as unknown as { __mockFlags?: { breakAlerts: boolean } };
+  return (w.__mockFlags ??= { breakAlerts: params.get("break") === "alerts" });
+}
+
+/* ---------- monitoring: alerts, site risk, briefings ---------- */
+
+type MockAlert = {
+  id: string;
+  site_id: string;
+  kind: string;
+  level: string;
+  status: "active" | "cleared";
+  payload: Row;
+  dedup_key: string;
+  created_at: string;
+  cleared_at: string | null;
+};
+const secondsFromNow = (seconds: number) =>
+  new Date(Date.now() + seconds * 1000).toISOString();
+// ?clear=8 makes the lightning countdown end in 8 seconds, to design that state.
+const lightningClearIn = Number(params.get("clear") ?? 24 * 60 + 31);
+function mockAlert(
+  siteId: string,
+  kind: string,
+  level: string,
+  payload: Row,
+  ageMinutes: number,
+): MockAlert {
+  return {
+    id: `a-${siteId}-${kind}`,
+    site_id: siteId,
+    kind,
+    level,
+    status: "active",
+    payload,
+    dedup_key: `${kind}:${siteId}`,
+    created_at: minutesAgo(ageMinutes),
+    cleared_at: null,
+  };
+}
+const alerts: MockAlert[] = [
+  mockAlert(
+    "site-north",
+    "lightning",
+    "stop_work",
+    {
+      last_strike_at: minutesAgo(6),
+      distance_mi: 6.2,
+      clear_at: secondsFromNow(lightningClearIn),
+    },
+    6,
+  ),
+  mockAlert(
+    "site-north",
+    "heat",
+    "warning",
+    { wbgt_f: 87.4, tier: "danger, limit heavy work" },
+    95,
+  ),
+  mockAlert(
+    "site-south",
+    "flood",
+    "warning",
+    {
+      rain_overnight_mm: 31,
+      gauge_stage_ft: 11.8,
+      flood_zone: "AE",
+      river_distance_m: 2400,
+      nws_flood_warning: false,
+    },
+    240,
+  ),
+  mockAlert(
+    "site-tampa",
+    "wildfire",
+    "warning",
+    {
+      nearest_fire_mi: 18.4,
+      fires_within_25mi: 2,
+      smoke_note: "Smoke likely; check air quality before heavy work.",
+    },
+    130,
+  ),
+  mockAlert(
+    "site-jax",
+    "other",
+    "warning",
+    { nws_alert_severity: 3, wind_gust_mph: 44 },
+    50,
+  ),
+  mockAlert(
+    "site-everglades",
+    "heat",
+    "info",
+    { wbgt_f: 82.4, tier: "caution" },
+    300,
+  ),
+];
+const alertAcks = new Set<string>(); // `${userId}|${alertId}`
+const briefingReads = new Set<string>(); // `${userId}|${briefingId}`
+
+const overviews = [
+  ["site-north", 7.4, 5.1, "Driven by lightning stop work and WBGT 87°F"],
+  [
+    "site-south",
+    5.2,
+    4.3,
+    "Driven by overnight rain and a river near flood stage",
+  ],
+  ["site-tampa", 4.1, 3.6, "Driven by an active fire 18 mi away"],
+  ["site-jax", 3.8, 3.2, "Driven by wind gusts to 44 mph"],
+  ["site-manatee", 1.9, 2.4, null],
+  ["site-everglades", 2.7, 3.0, "Driven by WBGT 82°F"],
+] as const;
+
+const tomorrow = new Date(Date.now() + 86400000);
+const forDate = `${tomorrow.getFullYear()}-${String(tomorrow.getMonth() + 1).padStart(2, "0")}-${String(tomorrow.getDate()).padStart(2, "0")}`;
+const briefings = ["site-north", "site-south"].map((siteId) => ({
+  id: `b-${siteId}`,
+  site_id: siteId,
+  for_date: forDate,
+  generated_at: minutesAgo(40),
+  content: {
+    tz: "America/New_York",
+    hazards: [
+      {
+        hazard: "heat",
+        metric: "WBGT",
+        forecast: 88.4,
+        unit: "F",
+        level: "danger",
+      },
+      {
+        hazard: "weather",
+        metric: "wind gust",
+        forecast: 31,
+        unit: "mph",
+        level: "normal",
+      },
+      {
+        hazard: "lightning",
+        metric: "thunderstorm chance",
+        forecast: 70,
+        unit: "%",
+        level: "caution",
+      },
+      {
+        hazard: "flood",
+        metric: "rainfall",
+        forecast: 12,
+        unit: "mm",
+        level: "normal",
+      },
+    ],
+    predicted_risk: siteId === "site-north" ? 5.1 : 4.3,
+    top_driver:
+      siteId === "site-north"
+        ? "Driven by WBGT 88°F and afternoon storms"
+        : "Driven by river stage and saturated soil",
+    open_crew_hazards: reports
+      .filter((report) => report.site_id === siteId && report.is_active)
+      .map((report) => ({
+        id: report.id,
+        type: report.type,
+        severity: report.severity,
+      })),
+    smoke_note: null,
+  },
+}));
 
 function base64url(value: object): string {
   return btoa(JSON.stringify(value))
@@ -496,6 +668,91 @@ async function handle(
         ),
       },
     ]);
+  }
+  if (path === "/rest/v1/site_overview") {
+    const siteId = filterValue(url, "site_id");
+    const row = overviews.find(([id]) => id === siteId);
+    if (!row || !accounts[email].includes(row[0])) return respond([]);
+    const [id, now, next, driver] = row;
+    const site = sites.find((candidate) => candidate.id === id)!;
+    const open = alerts.filter(
+      (a) => a.site_id === id && a.status === "active",
+    );
+    return respond([
+      {
+        site_id: id,
+        name: site.name,
+        lat: site.latitude,
+        lon: site.longitude,
+        timezone: "America/New_York",
+        risk_now: now,
+        risk_tomorrow: next,
+        top_driver: driver,
+        subscores: {},
+        lightning: {
+          status: open.some((a) => a.kind === "lightning")
+            ? "stop_work"
+            : "clear",
+          last_strike_at: null,
+        },
+        active_alert_count: open.length,
+      },
+    ]);
+  }
+  if (path === "/rest/v1/alerts") {
+    if (flags().breakAlerts)
+      return apiError("Simulated outage (?break=alerts)", 503);
+    const siteId = filterValue(url, "site_id");
+    if (!siteId || !accounts[email].includes(siteId)) return respond([]);
+    return respond(
+      alerts.filter(
+        (a) =>
+          a.site_id === siteId &&
+          a.status === (filterValue(url, "status") ?? a.status),
+      ),
+    );
+  }
+  if (path === "/rest/v1/briefings") {
+    const siteId = filterValue(url, "site_id");
+    if (!siteId || !accounts[email].includes(siteId)) return respond([]);
+    return respond(briefings.filter((b) => b.site_id === siteId));
+  }
+  if (path === "/rest/v1/alert_acks") {
+    const ids = (url.searchParams.get("alert_id") ?? "")
+      .replace(/^in\.\(|\)$/g, "")
+      .split(",");
+    const userId = filterValue(url, "user_id") ?? "";
+    return respond(
+      ids
+        .filter((id) => alertAcks.has(`${userId}|${id}`))
+        .map((id) => ({ alert_id: id })),
+    );
+  }
+  if (path === "/rest/v1/briefing_reads") {
+    const briefingId = filterValue(url, "briefing_id") ?? "";
+    const userId = filterValue(url, "user_id") ?? "";
+    return respond(
+      briefingReads.has(`${userId}|${briefingId}`)
+        ? [{ briefing_id: briefingId }]
+        : [],
+    );
+  }
+  if (path === "/rest/v1/rpc/acknowledge_alert") {
+    if (failWrites) return apiError("Simulated failure (?fail)", 500);
+    const alert = alerts.find((a) => a.id === body.p_alert_id);
+    if (!alert || !accounts[email].includes(alert.site_id))
+      return apiError("Unknown alert", 400);
+    alertAcks.add(`user-${email}|${alert.id}`);
+    notifyChange();
+    return respond({ ok: true, acknowledged_at: new Date().toISOString() });
+  }
+  if (path === "/rest/v1/rpc/mark_briefing_read") {
+    if (failWrites) return apiError("Simulated failure (?fail)", 500);
+    const briefing = briefings.find((b) => b.id === body.p_briefing_id);
+    if (!briefing || !accounts[email].includes(briefing.site_id))
+      return apiError("Unknown briefing", 400);
+    briefingReads.add(`user-${email}|${briefing.id}`);
+    return respond({ ok: true });
   }
   if (path === "/rest/v1/hazard_checkin_tasks") return respond(tasks);
   if (path === "/rest/v1/hazard_observations") {

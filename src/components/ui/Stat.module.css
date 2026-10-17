@@ -27,6 +27,12 @@
   font-variant-numeric: tabular-nums;
 }
 
+.footnote {
+  font-size: var(--text-sm);
+  color: var(--ink-muted);
+  white-space: nowrap;
+}
+
 .note {
   font-size: var(--text-sm);
   color: var(--ink-muted);

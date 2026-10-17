@@ -11,7 +11,7 @@ import { PageHeader } from "../shell/PageHeader";
 import { SiteWorkspace } from "./SiteWorkspace";
 
 /** Signed-in area. Mounted per user, so it always starts from a clean state. */
-export function Workspace() {
+export function Workspace({ userId }: { userId: string }) {
   const { announce } = useNotice();
   const { busy, isBusy } = useBusy();
   const [sites, setSites] = useState<Site[]>();
@@ -62,7 +62,9 @@ export function Workspace() {
         }
       />
       {sites && sites.length === 0 ? <NoSites /> : null}
-      {site ? <SiteWorkspace key={site.id} site={site} /> : null}
+      {site ? (
+        <SiteWorkspace key={site.id} site={site} userId={userId} />
+      ) : null}
     </section>
   );
 }

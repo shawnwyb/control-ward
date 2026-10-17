@@ -103,6 +103,37 @@ if (env.CHECK_EMAIL && env.CHECK_PASSWORD) {
         p_site_id: first.id,
       });
       check("Crew metrics RPC", !metrics.error, metrics.error?.message);
+      // Monitoring reads behind the alerts, risk and briefing on the crew screen.
+      for (const [name, query] of [
+        [
+          "site_overview",
+          supabase
+            .from("site_overview")
+            .select("site_id,risk_now")
+            .eq("site_id", first.id)
+            .limit(1),
+        ],
+        [
+          "alerts",
+          supabase
+            .from("alerts")
+            .select("id")
+            .eq("site_id", first.id)
+            .eq("status", "active")
+            .limit(1),
+        ],
+        [
+          "briefings",
+          supabase
+            .from("briefings")
+            .select("id")
+            .eq("site_id", first.id)
+            .limit(1),
+        ],
+      ]) {
+        const result = await query;
+        check(`Read ${name}`, !result.error, result.error?.message);
+      }
     }
     await supabase.auth.signOut();
   }
