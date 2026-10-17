@@ -6,3 +6,10 @@ playwright-report/
 test-results/
 .DS_Store
 
+.venv
+models/mud-trafficability/cache/
+models/mud-trafficability/output/
+models/hazard-index/cache/
+
+
+CLAUDE.md
