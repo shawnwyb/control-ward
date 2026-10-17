@@ -262,6 +262,15 @@ test("database: access, immutable review, publication, fencing and exact receipt
     );
     assert.equal(
       (
+        await as(supervisor, "select public.get_safety_workspace($1,$2) data", [
+          site,
+          "2099-06-10",
+        ])
+      )[0].data.revision_stale,
+      true,
+    );
+    assert.equal(
+      (
         await q(
           "select needs_review from public.safety_briefing_publications where id=$1",
           [pub2],

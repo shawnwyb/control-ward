@@ -304,3 +304,11 @@ export async function acknowledgeAlert(
   });
   if (error) throw error;
 }
+
+/** Supervisor alerts have no automatic end; this takes one off the crew's screens. */
+export async function clearSupervisorAlert(alertId: string): Promise<void> {
+  const { error } = await supabase.rpc("clear_supervisor_alert", {
+    p_alert_id: alertId,
+  });
+  if (error) throw error;
+}

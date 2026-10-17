@@ -60,6 +60,11 @@ test("retrieval and full fake-provider vertical slice: isolation, recall, review
       ...officialCorpus,
       demoProcedure(site),
       demoProcedure(south),
+      {
+        ...demoProcedure(site),
+        key: "fixture-supervisor-procedure",
+        audience: "supervisor",
+      },
     ]) {
       const document = passages.map((p) => p.excerpt).join("\n");
       const [{ id }] = await q(
@@ -77,12 +82,48 @@ test("retrieval and full fake-provider vertical slice: isolation, recall, review
       ]);
       versions.push(id);
     }
+    // Base-table RLS follows source ownership; direct tools remain service-only.
+    await q("savepoint source_rls");
+    await q("select set_config('request.jwt.claims',$1,true)", [
+      JSON.stringify({
+        sub: "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+        role: "authenticated",
+      }),
+    ]);
+    await q("set local role authenticated");
+    assert.equal(
+      (await q("select * from public.safety_sources where site_id=$1", [south]))
+        .length,
+      0,
+    );
+    assert.equal(
+      (await q("select * from public.safety_sources where site_id=$1", [site]))
+        .length,
+      1,
+    );
+    assert.equal(
+      (await q("select * from public.safety_briefing_runs")).length,
+      0,
+    );
+    await q("reset role");
+    await q("rollback to source_rls");
+    await q(
+      "insert into public.alerts(site_id,kind,level,payload,dedup_key,target_user_ids) values($1,'supervisor','warning',$2,'safety-targeted-fixture',array[$3::uuid])",
+      [
+        site,
+        { title: "SECRET TARGETED MESSAGE", body: "Private recipient only" },
+        "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb",
+      ],
+    );
     const [{ id: runId }] = await q(
       "select public.request_safety_briefing($1,$2)",
       [site, "2099-06-10"],
     ).then((rows) => rows.map((r) => ({ id: r.request_safety_briefing })));
     const [run] = await q("select * from public.claim_safety_runs(1)");
     assert.equal(run.id, runId);
+    assert.ok(
+      !JSON.stringify(run.input_snapshot).includes("SECRET TARGETED MESSAGE"),
+    );
     const retrieve = async (name, args = {}) =>
       (
         await q(
@@ -108,9 +149,12 @@ test("retrieval and full fake-provider vertical slice: isolation, recall, review
       ),
     );
     const policy = await retrieve("search_site_documents");
-    assert.equal(policy.length, 1);
-    assert.equal(policy[0].kind, "company_policy");
-    assert.ok(policy[0].title.startsWith("FICTIONAL"));
+    assert.equal(policy.length, 2);
+    const crewPolicy = policy.find((e) => e.audience === "crew"),
+      privatePolicy = policy.find((e) => e.audience === "supervisor");
+    assert.ok(crewPolicy && privatePolicy);
+    assert.equal(crewPolicy.kind, "company_policy");
+    assert.ok(crewPolicy.title.startsWith("FICTIONAL"));
     assert.ok(!JSON.stringify(policy).includes(south));
     const [{ id: foreignPassage }] = await q(
       "select p.id from public.safety_passages p join public.safety_source_versions v on v.id=p.version_id where v.id=$1",
@@ -144,7 +188,7 @@ test("retrieval and full fake-provider vertical slice: isolation, recall, review
             final: {
               worker_items: [
                 instructionItem(official[0], job.task),
-                instructionItem(policy[0], job.task),
+                instructionItem(crewPolicy, job.task),
               ],
               supervisor_items: [],
               coverage_gaps: bound.coverage_gaps,
@@ -176,6 +220,17 @@ test("retrieval and full fake-provider vertical slice: isolation, recall, review
     );
     assert.ok(!JSON.stringify(payload).includes("PRIVATE"));
     assert.equal(payload.evidence.length, 2);
+    const privateCitation = structuredClone(out.draft);
+    privateCitation.worker_items[1] = instructionItem(privatePolicy, job.task);
+    await rejected(
+      () =>
+        q("select public.edit_safety_revision($1,$2,$3)", [
+          rev.id,
+          rev.revision,
+          privateCitation,
+        ]),
+      /Unauthorized citation/,
+    );
     const invented = structuredClone(out.draft);
     invented.worker_items[0].text = "Maintain 3 ft and use 40 cal PPE";
     await rejected(

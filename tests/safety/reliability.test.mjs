@@ -184,6 +184,63 @@ test("concurrent dedup/claims, retries, missing provider fallback, dates/DST and
           e.forecast_for.includes("2099-06-10"),
       ),
     );
+    // Two authenticated supervisors racing to publish cannot create two current publications.
+    await q(
+      "update public.safety_briefing_runs set state='failed' where site_id=$1 and state='queued'",
+      [site],
+    );
+    const [{ id: publishRun }] = await q(
+      "select public.request_safety_briefing($1,'2099-06-10',true) id",
+      [site],
+    );
+    const [publishing] = await q("select * from public.claim_safety_runs(1)");
+    assert.equal(publishing.id, publishRun);
+    const [{ data: bound }] = await q(
+      "select public.bind_safety_hazards($1,$2) data",
+      [publishing.id, publishing.lease_token],
+    );
+    await q("select public.finish_safety_run($1,$2,$3)", [
+      publishing.id,
+      publishing.lease_token,
+      {
+        worker_items: [],
+        supervisor_items: [],
+        coverage_gaps: bound.coverage_gaps,
+        admin_notes: "private fixture",
+      },
+    ]);
+    const [rev] = await q(
+      "select * from public.safety_briefing_revisions where run_id=$1",
+      [publishing.id],
+    );
+    await Promise.all([a, b].map((db) => db.query("set role authenticated")));
+    const publications = await Promise.allSettled(
+      [a, b].map((db) =>
+        db.query("select public.publish_safety_revision($1,$2)", [
+          rev.id,
+          rev.revision,
+        ]),
+      ),
+    );
+    assert.equal(
+      publications.filter((r) => r.status === "fulfilled").length,
+      1,
+    );
+    assert.equal(publications.filter((r) => r.status === "rejected").length, 1);
+    assert.match(
+      publications.find((r) => r.status === "rejected").reason.message,
+      /already published/,
+    );
+    await Promise.all([a, b].map((db) => db.query("reset role")));
+    assert.equal(
+      (
+        await q(
+          "select count(*)::int n from public.safety_briefing_publications where site_id=$1 and status='published'",
+          [site],
+        )
+      )[0].n,
+      1,
+    );
     // Global kill switch and per-site disable stop claims without deleting old publications.
     await q("update private.safety_settings set enabled=false");
     assert.equal(
@@ -193,6 +250,10 @@ test("concurrent dedup/claims, retries, missing provider fallback, dates/DST and
   } finally {
     await q("delete from public.briefings where site_id=$1", [site]);
     await q("delete from public.readings where site_id=$1", [site]);
+    await q(
+      "delete from public.safety_briefing_publications where site_id=$1",
+      [site],
+    );
     await q("delete from public.safety_briefing_runs where site_id=$1", [site]);
     await q("delete from public.site_memberships where site_id=$1", [site]);
     await q("delete from public.sites where id=$1", [site]);

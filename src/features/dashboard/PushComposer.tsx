@@ -83,15 +83,20 @@ export function PushComposer({ siteId, selected, reports }: Props) {
       const id = await sendPush(siteId, title.trim(), body.trim(), target);
       setTitle("");
       setBody("");
-      announce("Sending…");
+      announce("Alert sent. It now shows on the crew’s screens.");
       const outcome = await waitForPush(id);
-      if (!outcome) announce("Still sending. Check back in a minute.", false);
+      // The alert is already on the crew's screens; the push is an extra for phones.
+      if (!outcome)
+        announce("Alert sent. Phone notifications are still going out.", false);
       else if (outcome.status === "failed")
-        announce("The push couldn’t be sent. Try again.", true);
+        announce(
+          "Alert sent to the crew’s screens. Phone notifications couldn’t be sent.",
+          true,
+        );
       else if (outcome.recipients === 0)
         announce(
-          "No devices to notify. No one in this group has notifications on.",
-          true,
+          "Alert sent to the crew’s screens. No one in this group has phone notifications on.",
+          false,
         );
       else
         announce(
@@ -118,17 +123,15 @@ export function PushComposer({ siteId, selected, reports }: Props) {
       ? "Add a title."
       : !body.trim()
         ? "Add a message."
-        : audience?.reachable === 0
-          ? "No one in this group has notifications on."
-          : "";
+        : "";
   const ready =
     Boolean(target) && title.trim().length > 0 && body.trim().length > 0;
   return (
     <Panel id="push" aria-labelledby="push-title">
       <PanelHeader
         titleId="push-title"
-        title="Send a push"
-        description="Reaches workers who turned on notifications."
+        title="Send an alert"
+        description="Shows as an alert on each worker’s screen. Phones with notifications on also get a push."
       />
       <form
         className={styles.form}
@@ -200,7 +203,7 @@ export function PushComposer({ siteId, selected, reports }: Props) {
         </Field>
         <p className={styles.audience} id="push-audience">
           {audience
-            ? `${audience.reachable} of ${audience.targeted} targeted workers can receive pushes.`
+            ? `${audience.targeted} workers will see the alert; ${audience.reachable} also get a phone notification.`
             : target
               ? "Checking who can receive it…"
               : ""}
@@ -213,7 +216,7 @@ export function PushComposer({ siteId, selected, reports }: Props) {
             disabled={Boolean(blocker) || !ready}
             aria-describedby="push-blocker"
           >
-            Send push
+            Send alert
           </Button>
           <span id="push-blocker" className={styles.muted}>
             {blocker}

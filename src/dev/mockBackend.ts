@@ -223,6 +223,8 @@ type MockAlert = {
   dedup_key: string;
   created_at: string;
   cleared_at: string | null;
+  /** Who can see it; null means everyone on the site. */
+  target_user_ids?: string[] | null;
 };
 const secondsFromNow = (seconds: number) =>
   new Date(Date.now() + seconds * 1000).toISOString();
@@ -937,7 +939,14 @@ async function handle(
     return respond(
       memberOf
         ? alerts
-            .filter((a) => a.site_id === siteParam && a.status === "active")
+            .filter(
+              (a) =>
+                a.site_id === siteParam &&
+                a.status === "active" &&
+                (isSupervisor ||
+                  !a.target_user_ids ||
+                  a.target_user_ids.includes(`user-${email}`)),
+            )
             .map(({ id, kind, level, created_at, payload }) => ({
               id,
               kind,
@@ -1039,7 +1048,44 @@ async function handle(
   if (path === "/rest/v1/rpc/send_push") {
     if (!isSupervisor) return apiError("Supervisor role required", 403);
     if (failWrites) return apiError("Mock write failure", 500);
-    return respond({ ok: true, id: crypto.randomUUID() });
+    const target = body.p_target as { mode: string; user_ids?: string[] };
+    const people = mockCrew(siteParam).filter((m) =>
+      target.mode === "users"
+        ? target.user_ids?.includes(m.user_id)
+        : target.mode === "near"
+          ? m.latitude !== null && m.age < 10
+          : true,
+    );
+    const alert = mockAlert(
+      siteParam,
+      "supervisor",
+      "warning",
+      {
+        title: String(body.p_title ?? ""),
+        body: String(body.p_body ?? ""),
+      },
+      0,
+    );
+    alert.id = crypto.randomUUID();
+    alert.dedup_key = `supervisor:${alert.id}`;
+    alert.target_user_ids =
+      target.mode === "all" ? null : people.map((m) => m.user_id);
+    alerts.unshift(alert);
+    notifyChange();
+    return respond({ ok: true, id: crypto.randomUUID(), alert_id: alert.id });
+  }
+  if (path === "/rest/v1/rpc/clear_supervisor_alert") {
+    if (!isSupervisor) {
+      return apiError("Supervisor role required", 403);
+    }
+    const alert = alerts.find(
+      (a) => a.id === body.p_alert_id && a.kind === "supervisor",
+    );
+    if (!alert) return apiError("Unknown alert", 400);
+    alert.status = "cleared";
+    alert.cleared_at = new Date().toISOString();
+    notifyChange();
+    return respond({ ok: true });
   }
   if (path === "/rest/v1/rpc/update_crew_location")
     return respond({ ok: true, exposed_alerts: [] });
