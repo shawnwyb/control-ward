@@ -1,23 +1,86 @@
-# PlanIT Control · Crew hazard reporting
+# PlanIT Control
 
-A working Section 5 slice: authenticated crew reports, private photos, spatial duplicate merging, status check-ins, scheduled reminders and expiration, scoring feeds, and a responsive crew interface.
+A safety platform for utility field crews, built for SwampHacks 2026. It combines weather, heat, lightning, flood, wildfire, soil and crew-reported hazards into one risk score for each power plant site. It raises alerts when conditions turn dangerous and creates a next-day briefing at 6 PM local time for each site.
 
-Runs on **real local Supabase**: Postgres + PostGIS, Auth, Storage, Realtime and pg_cron. No cloud account, external API keys, weather service, ML service or map service is required. Initial setup downloads npm packages and Docker images; the running reporting flow makes no external requests.
+## Status
 
-## Start locally
+| Area                                                                | Status                                                                 |
+| ------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| Crew hazard reporting (photos, duplicate merging, check-ins)        | Built, with a crew UI                                                  |
+| Site registry (60 real plants from EIA-860M)                        | Built                                                                  |
+| Live feeds (weather, heat, rain, soil, rivers, wildfire, lightning) | Built, scheduled, running on the hosted project                        |
+| Rules, alerts, risk score, evening briefing                         | Built                                                                  |
+| Demo scenarios for lightning, rain, heat, fire and wildlife         | Built (RPCs only, no panel)                                            |
+| Crew app additions, supervisor dashboard (PlanIt Dash)              | Not built here. Another developer owns the UI.                         |
+| ML hazard index                                                     | Not built. The `ml_scores` table and `upsert_ml_scores` RPC are ready. |
+| SMS and web push                                                    | Not built. Alerts reach clients through Realtime.                      |
 
-Requirements: Node 22+, npm, Supabase CLI and a running Docker-compatible engine. These commands operate on this project's local stack, never a linked remote database.
+## How it works
+
+Everything runs on Supabase (Postgres with PostGIS, Auth, Storage, Realtime, pg_cron, Edge Functions). There is no separate server.
+
+1. pg_cron starts an Edge Function on a schedule.
+2. The Edge Function fetches outside data (Open-Meteo, NWS, NOAA, USGS, NIFC, NOAA GOES) and stores it as readings.
+3. Postgres applies the rules. It calculates subscores, raises or clears alerts, and computes the risk score for each site.
+4. Clients read the tables and views. Realtime sends alert changes to subscribers.
+
+Lightning follows the brief: a strike within 10 miles sets stop work, a new strike restarts a 30 minute countdown, and 30 minutes without a strike clears it.
+
+Read these for details:
+
+- [Monitoring contract](docs/api-contract.md): schedules, reading units, rule thresholds, RPCs and operations.
+- [Ingestion data sources](docs/ingestion-data-sources.docx): each outside dataset, its endpoint, what is stored, and caveats.
+- [Crew reporting API](docs/crew-api.md) and [crew contract](docs/crew-contract.md): hazard reports, photos and check-ins.
+
+## Setup
+
+Requirements: Node 22 or later, npm and the Supabase CLI. Docker is needed only for the local option.
 
 ```sh
 npm ci
+```
+
+### Option A: hosted project (no Docker)
+
+1. Run `supabase login`.
+2. Link your project: `supabase link --project-ref <ref>`.
+3. Apply the migrations: `supabase db push --linked`.
+4. Load the plants: download an EIA-860M workbook from <https://www.eia.gov/electricity/data/eia860m/>, then run:
+
+   ```sh
+   node scripts/load-sites.mjs <workbook.xlsx>
+   supabase db query --linked -f supabase/seed-sites.sql
+   ```
+
+5. Set the secrets and deploy the functions:
+
+   ```sh
+   supabase secrets set CRON_SECRET=<random string> LIGHTNING_SOURCE=glm
+   for f in ingest-openmeteo ingest-nws ingest-gauges ingest-wildfire ingest-lightning; do
+     supabase functions deploy $f --use-api
+   done
+   ```
+
+6. Store the same secret and the functions URL in Supabase Vault (SQL editor):
+
+   ```sql
+   select vault.create_secret('https://<ref>.supabase.co/functions/v1', 'functions_base_url');
+   select vault.create_secret('<the same random string>', 'cron_secret');
+   ```
+
+Do not load `supabase/seed.sql` into a hosted project. It creates demo accounts with a published password.
+
+### Option B: local stack (Docker)
+
+```sh
 npm run local:start
 npm run local:reset
 npm run dev
 ```
 
-Open <http://127.0.0.1:5173>. Local Supabase Studio is at <http://127.0.0.1:54323>.
+Open <http://127.0.0.1:5173>. Studio is at <http://127.0.0.1:54323>. `local:start` and `local:env` write the ignored `.env.local` with the local stack's development credentials. `local:reset` recreates the local database and loads fictional demo data.
 
-`local:reset` **recreates this local project's database** and loads the demo fixtures. Use it for a fresh demo, not to preserve local reports. `local:start` and `local:env` generate the ignored `.env.local` using the local stack's development credentials. No hosted keys are needed. Normal later starts need only `npm run local:start` and `npm run dev`.
+Edge Functions are not part of the local start script, so the live feeds run only on the hosted project.
 
 | Local account             | Site access |
 | ------------------------- | ----------- |
@@ -26,66 +89,78 @@ Open <http://127.0.0.1:5173>. Local Supabase Studio is at <http://127.0.0.1:5432
 | `supervisor@planit.local` | Both plants |
 | `outsider@planit.local`   | None        |
 
-All demo accounts use `CrewDemo123!`. Sites, identities and hazards are fictional. The demo account hints are enabled only by `VITE_LOCAL_DEMO=true` in the generated local environment. Never load demo identities into a production project or expose the local stack publicly.
-
-The pin picker uses a **local coordinate grid**, keyboard arrows, typed coordinates, or browser geolocation. It is not a street/satellite basemap. Grid dimensions are approximate; duplicate matching and risk-radius queries use PostGIS geography distances in meters.
-
-## Why the data model works
-
-- A **report** is the current state of one site-owned hazard; an **observation** is an immutable record of a submission, confirmation or resolution. Merging preserves location/severity history for ML.
-- Every mutation authenticates site membership. RLS limits reads; direct client writes are revoked. Privileged RPCs validate membership explicitly and use a fixed empty `search_path`.
-- A per-request transaction lock makes retries idempotent. A per-site transaction lock serializes duplicate searches, report updates and expiration. Matching submissions can never both insert solely because they raced. Hash collisions cause extra waiting, not incorrect matching.
-- A request UUID belongs to one user and one input payload. A retry returns the original response; changed input requires a new UUID. The UI preserves IDs during network retries within the current page session. A browser reload starts a new submission.
-- Photos use reservations and immutable private object paths. Upload precedes submission; attachment and observation commit together in Postgres. The database checks the uploaded object exists. Abandoned uploads are cleaned through the Storage API, followed by metadata pruning.
-- Expired reports stop contributing to metrics immediately. A five-minute pg_cron job persists resolution and creates in-app check-in reminders. Report history remains available.
-
-The full behavior, including **provisional scoring formulas**, duplicate time-window semantics, report radius and notification ownership, is in [the integration contract](docs/crew-contract.md).
+All demo accounts use `CrewDemo123!`. The sign-in hints appear only when `VITE_LOCAL_DEMO=true`. Never load these identities into a production project or expose the local stack publicly.
 
 ## Verify
 
 ```sh
-npm test                     # Real Auth, REST, PostGIS, Storage, concurrent RPCs, Realtime, pg_cron
-npx playwright install chromium
-npm run test:ui              # Real browser flows, photo upload, lost-response retry, mobile layout
+npm run test:functions       # Parsers, time zones, WBGT and lightning decoding. No network.
+npm run verify:monitoring    # Lightning state machine and risk formula on the linked project, rolled back
+npm run verify:rules         # Every rule, briefings and demo scenarios on the linked project, rolled back
+npm test                     # Crew backend against the local stack (needs Docker)
+npm run test:ui              # Browser flows (needs Docker and: npx playwright install chromium)
 npm run build                # TypeScript and production bundle
-npm run db:lint              # Application schemas only; excludes vendor PostGIS functions
+npm run db:lint              # Application schemas (local stack)
 npm run format:check
-npm audit
 ```
 
-Tests create isolated users/sites and remove their fixtures afterward. Backend tests exercise independent database connections through simultaneous HTTP requests. Browser tests include a response lost **after the RPC committed**, then verify retrying does not add a confirmation. Desktop/mobile screenshots and failure traces go into ignored `test-results/`.
+The `verify:` commands always roll back. A passing run ends with an error that starts "ALL ... CHECKS PASSED". Any other error means a check failed.
 
-Additional commands:
+Other commands:
 
 ```sh
-npm run types                # Regenerate committed database TypeScript types after schema changes
-npm run local:cleanup        # Delete up to 100 unattached uploads older than one hour via Storage API
-supabase stop                # Stop this project's local services; preserves local data
+npm run types                # Regenerate src/database.types.ts from the local schema
+supabase gen types typescript --linked > src/database.types.ts   # or from the hosted schema
+npm run local:cleanup        # Delete unattached photo uploads older than one hour (local)
+supabase stop                # Stop the local stack; data is kept
 ```
 
-Keep service-role credentials on trusted workers only. The cleanup script derives its credentials from the local CLI and refuses non-loopback URLs. For hosted deployment, schedule an equivalent janitor using server-side credentials. Expiry and in-app reminder generation are already scheduled inside Postgres.
+## Repository layout
 
-## Monitoring backend (hosted Supabase)
+| Path                      | Contents                                                            |
+| ------------------------- | ------------------------------------------------------------------- |
+| `supabase/migrations/`    | Database schema, RPCs, rules, and cron jobs, in order               |
+| `supabase/functions/`     | Edge Functions and the shared parsing modules in `_shared/`         |
+| `supabase/seed.sql`       | Fictional local demo data. Never use on a hosted project.           |
+| `supabase/seed-sites.sql` | The 60 real plants, generated by `scripts/load-sites.mjs`           |
+| `src/`                    | Crew reporting UI (Vite and TypeScript)                             |
+| `tests/`                  | Backend and UI tests, function tests, and the hosted verify scripts |
+| `docs/`                   | Contracts and the data source reference                             |
+| `requirements.txt`        | Python packages for data work (not used by the backend)             |
+| `.claude/skills/`         | Agent skills for this repository                                    |
 
-Feeds, rules, alerts, briefings and the lightning countdown run on the linked hosted project with no local Docker: pg_cron calls Edge Functions, which write readings; Postgres derives subscores, alerts and risk. See [the monitoring contract](docs/api-contract.md) for schedules, reading units, rule thresholds, payloads and operations. `npm run test:functions`, `npm run verify:monitoring` and `npm run verify:rules` check it. Heat thresholds and the WBGT estimate still need validation, and ML scoring is not part of this layer.
+## Crew reporting design
 
-## Teammate handoff
+- A **report** is the current state of one hazard at one site. An **observation** is an immutable record of a submission, confirmation or resolution. Merging keeps the location and severity history for ML.
+- Every mutation checks site membership. Row level security limits reads, and direct client writes are revoked. Privileged RPCs check membership explicitly and use a fixed empty `search_path`.
+- A per-request lock makes retries idempotent. A per-site lock serializes duplicate searches, report updates and expiration, so two matching submissions cannot both insert.
+- A request UUID belongs to one user and one input. A retry returns the first response. A changed input needs a new UUID.
+- Photos use reservations and immutable private paths. The upload comes before the submission, and the database checks that the object exists.
+- Expired reports stop counting in metrics immediately. A pg_cron job every 5 minutes records the resolution and creates in-app check-in reminders.
 
-See [RPC examples and consumer queries](docs/crew-api.md).
+The pin picker uses a local coordinate grid, not a street map. Distances use PostGIS geography in meters.
 
-| Interface                                               | Consumer                                              |
-| ------------------------------------------------------- | ----------------------------------------------------- |
-| `submit_hazard_report`                                  | Crew reporting form                                   |
-| `checkin_hazard_report`                                 | Crew “still there” / “gone” controls                  |
-| `reserve_hazard_photo` + private `hazard-photos` bucket | Crew photo upload                                     |
-| `crew_hazard_feed`                                      | Dashboard, heatmap, open hazards in briefing          |
-| `crew_observation_feed`                                 | Spatial history / repeated affected areas for ML      |
-| `get_site_crew_metrics`                                 | Risk-score and wildlife-subscore owners               |
-| `hazard_events` + claim/ack RPCs                        | Alert / briefing workers; independent leased delivery |
-| `hazard_checkin_tasks`                                  | Assigned crew's in-app reminder inbox                 |
+## Handoff
 
-The minimal shared `sites` and `site_memberships` schema must be reconciled with your team's site registry before combining migrations. Authenticated consumers are site-scoped. Trusted service-role workers can read all sites and calculate metrics.
+| Interface                                                     | Consumer                                |
+| ------------------------------------------------------------- | --------------------------------------- |
+| `submit_hazard_report`, `checkin_hazard_report`               | Crew reporting form and controls        |
+| `reserve_hazard_photo` and the private `hazard-photos` bucket | Crew photo upload                       |
+| `site_overview`                                               | Dashboard site ranking and map          |
+| `alerts`, `lightning_state` (Realtime)                        | Crew alerts and the 30 minute countdown |
+| `crew_hazard_feed`, `hazard_heatmap`                          | Dashboard heatmap and open hazards      |
+| `update_crew_location`, `crew_locations_live`                 | Location sharing and live crew markers  |
+| `briefings`, `mark_briefing_read`                             | Evening briefing inbox                  |
+| `demo_inject`, `demo_reset`, `demo_generate_briefing`         | Demo control panel (supervisors)        |
+| `crew_observation_feed`, `ml_scores`, `upsert_ml_scores`      | ML work                                 |
+| `hazard_events` with `claim_hazard_events`                    | A future push or SMS dispatcher         |
 
-This slice does not implement weather ingestion, the overall risk score, Python ML, supervisor dashboard, briefing generation, or outbound SMS/push delivery. It supplies their data interfaces. “Local crews” currently means assigned site members; GPS-based recipient selection is a separate policy decision.
+Request and response shapes are in [the monitoring contract](docs/api-contract.md) and [the crew API](docs/crew-api.md).
 
-For larger deployments, replace the simple site-wide serialization with a measured locking strategy, paginate long feeds/history, and define confirmation abuse controls and retention. Notification consumers already have independent leases and acknowledgements; outbound providers still need idempotency. Current mutations are designed for Postgres's default READ COMMITTED isolation and the documented hackathon workload.
+## Open items
+
+- Verify the heat tiers (82, 85, 88, 90 F) against TB MED 507. The WBGT value is an estimate and is not yet validated.
+- Validate GOES GLM lightning against a ground network before crews rely on it. Blitzortung is not used because its terms forbid storm warning use.
+- Read the terms of use of each data provider. None have been reviewed.
+- `river_distance_m` is the distance to the nearest stream gauge. It is a rough measure of how close a plant is to a river.
+- For larger deployments, measure the locking strategy, paginate long feeds, and define limits on confirmation abuse and data retention.
