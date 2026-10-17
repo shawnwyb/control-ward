@@ -61,10 +61,18 @@ export function useLive<T>(
     const interval = setInterval(() => {
       if (!document.hidden) soon();
     }, pollMs);
+    // A tab that was hidden skipped its polls, so catch up the moment it is shown again.
+    const onVisible = () => {
+      if (!document.hidden) soon();
+    };
+    document.addEventListener("visibilitychange", onVisible);
+    window.addEventListener("focus", onVisible);
     return () => {
       cancelled = true;
       clearTimeout(timer);
       clearInterval(interval);
+      document.removeEventListener("visibilitychange", onVisible);
+      window.removeEventListener("focus", onVisible);
       void supabase.removeChannel(channel);
     };
   }, [siteId, tablesKey, pollMs, refresh]);
