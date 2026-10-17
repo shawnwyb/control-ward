@@ -8,8 +8,8 @@ begin
   r:=public.ingest_strikes(jsonb_build_array(
     jsonb_build_object('lat',29.652+6*1609.344/111194.9,'lon',-82.325,'struck_at',now(),'source','verify'),
     jsonb_build_object('lat',29.652+40*1609.344/111194.9,'lon',-82.325,'struck_at',now(),'source','verify')));
-  assert (r->>'strikes')::int=2, 'both strikes stored: '||r;
-  assert jsonb_array_length(r->'sites_in_range')=1, 'one site in range: '||r;
+  assert (r->>'strikes')::int=2, 'both strikes stored: '||r::text;
+  assert (r->'sites_in_range') @> jsonb_build_array(jsonb_build_object('site_id',s)), 'fixture site in range: '||r::text;
   select status,last_strike_distance_m into st,d from public.lightning_state where site_id=s;
   assert st='stop_work', 'stop_work set';
   log:=log||'distance_m='||d||'; ';

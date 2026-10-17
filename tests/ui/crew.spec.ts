@@ -4,7 +4,18 @@ import { createClient } from "@supabase/supabase-js";
 import pg from "pg";
 
 const config = JSON.parse(
-  execFileSync("supabase", ["status", "-o", "json"], { encoding: "utf8" }),
+  execFileSync(
+    "supabase",
+    [
+      "status",
+      "-o",
+      "json",
+      ...(process.env.SUPABASE_WORKDIR
+        ? ["--workdir", process.env.SUPABASE_WORKDIR]
+        : []),
+    ],
+    { encoding: "utf8" },
+  ),
 );
 if (new URL(config.API_URL).hostname !== "127.0.0.1")
   throw new Error("Local tests only");
@@ -80,7 +91,12 @@ test("crew submits a private photo, merges, confirms, resolves and views history
   const outsideRequests: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
   page.on("request", (request) => {
-    if (!["127.0.0.1", "localhost"].includes(new URL(request.url()).hostname))
+    // The shipped basemap legitimately fetches tiles/fonts from OpenFreeMap.
+    if (
+      !["127.0.0.1", "localhost", "tiles.openfreemap.org"].includes(
+        new URL(request.url()).hostname,
+      )
+    )
       outsideRequests.push(request.url());
   });
   await page.goto("/");

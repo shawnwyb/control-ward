@@ -21,7 +21,15 @@
     "verify:monitoring": "supabase db query --linked -f tests/monitoring.verify.sql",
     "verify:rules": "supabase db query --linked -f tests/rules.verify.sql",
     "verify:crew-assignment": "supabase db query --linked -f tests/crew-assignment.verify.sql",
-    "test:functions": "node --test tests/functions/*.test.mjs"
+    "test:functions": "node --experimental-strip-types --test tests/functions/*.test.mjs",
+    "safety:local:start": "node scripts/safety/local-stack.mjs start",
+    "safety:local:stop": "node scripts/safety/local-stack.mjs stop",
+    "safety:types": "node scripts/safety/local-stack.mjs types",
+    "safety:dev": "vite --mode safety --host 127.0.0.1",
+    "test:safety:db": "node --experimental-strip-types --test --test-concurrency=1 tests/safety/*.test.mjs",
+    "test:safety:ui": "PLAYWRIGHT_MODE=design playwright test tests/ui-design/safety.spec.ts",
+    "safety:ingest": "node --experimental-strip-types scripts/safety/ingest.mjs",
+    "test:safety:regression": "node scripts/safety/regression.mjs"
   },
   "dependencies": {
     "@fontsource-variable/ibm-plex-sans": "^5.3.0",
