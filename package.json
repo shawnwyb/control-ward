@@ -15,16 +15,22 @@
     "local:cleanup": "node scripts/cleanup-photos.mjs",
     "db:lint": "supabase db lint --local --schema public,private --level warning",
     "format": "prettier --write src scripts tests docs index.html package.json tsconfig.json playwright.config.ts README.md",
-    "format:check": "prettier --check src scripts tests docs index.html package.json tsconfig.json playwright.config.ts README.md"
+    "format:check": "prettier --check src scripts tests docs index.html package.json tsconfig.json playwright.config.ts README.md",
+    "verify:monitoring": "supabase db query --linked -f tests/monitoring.verify.sql",
+    "verify:rules": "supabase db query --linked -f tests/rules.verify.sql",
+    "test:functions": "node --test tests/functions/shared.test.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.118.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.64.1",
+    "exceljs": "^4.4.0",
+    "jsfive": "^0.4.2",
     "pg": "^8.23.1",
     "prettier": "^3.9.10",
     "typescript": "^5.9.3",
+    "tz-lookup": "^6.1.25",
     "vite": "^6.4.4"
   }
 }
