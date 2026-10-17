@@ -286,6 +286,16 @@ test("retrieval and full fake-provider vertical slice: isolation, recall, review
       (await q("select public.refresh_stale_safety_briefings() n"))[0].n,
       0,
     );
+    await q("select public.mark_safety_source_unavailable($1)", [
+      officialCorpus[1].key,
+    ]);
+    const [{ data: sourceGaps }] = await q(
+      "select private.safety_gaps(private.safety_snapshot($1,$2)) data",
+      [site, "2099-06-10"],
+    );
+    assert.ok(
+      sourceGaps.some((g) => g.startsWith("Official evidence unavailable")),
+    );
     // Unsupported jurisdiction and unknown coverage retrieve no official instructions.
     await q("select public.save_safety_context($1,$2,1,1,$3,$4)", [
       site,

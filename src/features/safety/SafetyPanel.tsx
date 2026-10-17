@@ -354,12 +354,18 @@ function SafetyWorkspace({
               . Publication requires supervisor review.
             </p>
           ) : null}
+          {data.revision_stale ? (
+            <p className={styles.warning}>
+              Draft inputs changed. Generate a fresh draft before editing or
+              publishing.
+            </p>
+          ) : null}
           {data.revision ? (
             <ReviewEditor
               key={data.revision.id}
               revision={data.revision}
               evidence={data.evidence ?? []}
-              disabled={disabled}
+              disabled={disabled || !!data.revision_stale}
               onSave={(content) =>
                 act(
                   () => api.editRevision(data.revision!, content),

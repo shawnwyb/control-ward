@@ -1087,6 +1087,7 @@ export type Database = {
       }
       safety_source_versions: {
         Row: {
+          available: boolean
           conflicts: boolean
           content_hash: string
           document_text: string
@@ -1104,6 +1105,7 @@ export type Database = {
           task_tags: string[]
         }
         Insert: {
+          available?: boolean
           conflicts?: boolean
           content_hash: string
           document_text?: string
@@ -1121,6 +1123,7 @@ export type Database = {
           task_tags: string[]
         }
         Update: {
+          available?: boolean
           conflicts?: boolean
           content_hash?: string
           document_text?: string
@@ -1785,6 +1788,10 @@ export type Database = {
         }[]
       }
       mark_briefing_read: { Args: { p_briefing_id: string }; Returns: Json }
+      mark_safety_source_unavailable: {
+        Args: { p_source_key: string }
+        Returns: undefined
+      }
       prune_hazard_photo_reservations: {
         Args: { p_photo_ids: string[] }
         Returns: number

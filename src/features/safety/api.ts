@@ -38,6 +38,7 @@ export interface Publication {
 }
 export interface Workspace {
   enabled: boolean;
+  revision_stale?: boolean;
   publication: Publication | null;
   freshness?: {
     captured_at: string;

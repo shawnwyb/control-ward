@@ -29,6 +29,7 @@ serve("refresh-safety-sources", async () => {
       });
       results.push({ source: source.key, id, passages_match: matches });
     } catch {
+      await rpc("mark_safety_source_unavailable", { p_source_key: source.key });
       results.push({ source: source.key, error: "source_unavailable" });
     }
   }
