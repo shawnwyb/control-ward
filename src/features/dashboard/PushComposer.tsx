@@ -10,12 +10,7 @@ import {
 } from "../../components/ui";
 import { useNotice } from "../../hooks/notice";
 import { errorMessage } from "../../lib/format";
-import {
-  pushAudience,
-  sendPush,
-  waitForPush,
-  type PushTarget,
-} from "../../lib/monitoring";
+import { pushAudience, sendPush, type PushTarget } from "../../lib/monitoring";
 import { hazardLabels, type Report } from "../../lib/types";
 import styles from "./Dashboard.module.css";
 
@@ -80,32 +75,10 @@ export function PushComposer({ siteId, selected, reports }: Props) {
     if (!target || sending) return;
     setSending(true);
     try {
-      const id = await sendPush(siteId, title.trim(), body.trim(), target);
+      await sendPush(siteId, title.trim(), body.trim(), target);
       setTitle("");
       setBody("");
       announce("Alert sent. It now shows on the crew’s screens.");
-      const outcome = await waitForPush(id);
-      // The alert is already on the crew's screens; the push is an extra for phones.
-      if (!outcome)
-        announce("Alert sent. Phone notifications are still going out.", false);
-      else if (outcome.status === "failed")
-        announce(
-          "Alert sent to the crew’s screens. Phone notifications couldn’t be sent.",
-          true,
-        );
-      else if (outcome.recipients === 0)
-        announce(
-          "Alert sent to the crew’s screens. No one in this group has phone notifications on.",
-          false,
-        );
-      else
-        announce(
-          `Delivered to ${outcome.delivered} of ${outcome.recipients} devices` +
-            (outcome.failed
-              ? `. ${outcome.failed} were unreachable and have been removed. Those workers need to turn notifications on again.`
-              : ". If a phone shows nothing, check its notification settings."),
-          outcome.delivered === 0,
-        );
     } catch (error) {
       announce(errorMessage(error), true);
     } finally {
@@ -131,7 +104,7 @@ export function PushComposer({ siteId, selected, reports }: Props) {
       <PanelHeader
         titleId="push-title"
         title="Send an alert"
-        description="Shows as an alert on each worker’s screen. Phones with notifications on also get a push."
+        description="Shows as an alert on each worker’s screen."
       />
       <form
         className={styles.form}
@@ -203,7 +176,7 @@ export function PushComposer({ siteId, selected, reports }: Props) {
         </Field>
         <p className={styles.audience} id="push-audience">
           {audience
-            ? `${audience.targeted} workers will see the alert; ${audience.reachable} also get a phone notification.`
+            ? `${audience.targeted} ${audience.targeted === 1 ? "worker" : "workers"} will see the alert.`
             : target
               ? "Checking who can receive it…"
               : ""}
