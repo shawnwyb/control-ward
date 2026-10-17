@@ -1,0 +1,139 @@
+{
+ "generated_at": "2026-10-17T23:17:34Z",
+ "population": {
+  "naics_prefixes": [
+   "2211",
+   "237"
+  ],
+  "period": [
+   "2015-01-01",
+   "2025-11-30"
+  ],
+  "federal_osha_states": [
+   "ALABAMA",
+   "AMERICAN SAMOA",
+   "ARKANSAS",
+   "COLORADO",
+   "CONNECTICUT",
+   "DELAWARE",
+   "DISTRICT OF COLUMBIA",
+   "FLORIDA",
+   "GEORGIA",
+   "GUAM",
+   "IDAHO",
+   "ILLINOIS",
+   "KANSAS",
+   "LOUISIANA",
+   "MAINE",
+   "MASSACHUSETTS",
+   "MISSISSIPPI",
+   "MISSOURI",
+   "MONTANA",
+   "NEBRASKA",
+   "NEW HAMPSHIRE",
+   "NEW JERSEY",
+   "NEW YORK",
+   "NORTH DAKOTA",
+   "NORTHERN MARIANA ISLANDS",
+   "OHIO",
+   "OKLAHOMA",
+   "PENNSYLVANIA",
+   "RHODE ISLAND",
+   "SOUTH DAKOTA",
+   "TEXAS",
+   "VIRGIN ISLANDS",
+   "WEST VIRGINIA",
+   "WISCONSIN"
+  ],
+  "excluded_states": [
+   "ALASKA",
+   "ARIZONA",
+   "CALIFORNIA",
+   "HAWAII",
+   "INDIANA",
+   "IOWA",
+   "KENTUCKY",
+   "MARYLAND",
+   "MICHIGAN",
+   "MINNESOTA",
+   "NEVADA",
+   "NEW MEXICO",
+   "NORTH CAROLINA",
+   "OREGON",
+   "PUERTO RICO",
+   "SOUTH CAROLINA",
+   "TENNESSEE",
+   "UTAH",
+   "VERMONT",
+   "VIRGINIA",
+   "WASHINGTON",
+   "WYOMING"
+  ]
+ },
+ "prior_injuries": 5.0,
+ "r0": 0.0012391220748885503,
+ "weight_min": 0.75,
+ "families": {
+  "heat": {
+   "injuries_N": 233,
+   "event_days_D": 46842,
+   "raw_rate": 0.004974168481277486,
+   "shrunk_rate_r": 0.004677938209917111,
+   "rate_90": [
+    0.004190597963126618,
+    0.005187621905508238
+   ],
+   "weight_s": 1.0,
+   "event_days_by_cz_type": {
+    "C": 23,
+    "Z": 46819
+   }
+  },
+  "storm": {
+   "injuries_N": 27,
+   "event_days_D": 97292,
+   "raw_rate": 0.00027751510915594295,
+   "shrunk_rate_r": 0.0003158088535151715,
+   "rate_90": [
+    0.00022992318122963396,
+    0.0004128966900428398
+   ],
+   "weight_s": 0.834,
+   "event_days_by_cz_type": {
+    "C": 97292,
+    "Z": 0
+   }
+  },
+  "flood": {
+   "injuries_N": 0,
+   "event_days_D": 57956,
+   "raw_rate": 0.0,
+   "shrunk_rate_r": 8.065671999342879e-05,
+   "rate_90": [
+    3.178116041123044e-05,
+    0.00014765856421720594
+   ],
+   "weight_s": 0.75,
+   "event_days_by_cz_type": {
+    "C": 57956,
+    "Z": 0
+   }
+  },
+  "fire": {
+   "injuries_N": 1,
+   "event_days_D": 8543,
+   "raw_rate": 0.00011705489874751258,
+   "shrunk_rate_r": 0.0004770190149648724,
+   "rate_90": [
+    0.00020774295322753607,
+    0.0008358195927432007
+   ],
+   "weight_s": 0.8594,
+   "event_days_by_cz_type": {
+    "C": 0,
+    "Z": 8543
+   }
+  }
+ },
+ "note": "Storm, flood and fire weights rest on very few injuries (fire usually on none), so they mostly reflect the prior. D mixes county-days (storm, flash flood) and zone-days (heat, wildfire), which inflates the heat rate; the log scale limits any family's reduction to 25%."
+}
