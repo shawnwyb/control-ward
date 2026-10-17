@@ -1117,6 +1117,10 @@ export type Database = {
         Args: { p_alert_id: string; p_request_id: string }
         Returns: Json
       }
+      assign_site_member: {
+        Args: { p_email: string; p_site_id: string }
+        Returns: Json
+      }
       checkin_hazard_report: {
         Args: {
           p_report_id: string
@@ -1233,6 +1237,10 @@ export type Database = {
         Returns: Json
       }
       sweep_lightning: { Args: never; Returns: Json }
+      unassign_site_member: {
+        Args: { p_site_id: string; p_user_id: string }
+        Returns: Json
+      }
       update_crew_location: {
         Args: {
           p_accuracy_m?: number

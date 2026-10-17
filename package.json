@@ -20,6 +20,7 @@
     "format:check": "prettier --check vite.config.ts src scripts tests docs index.html package.json tsconfig.json playwright.config.ts README.md",
     "verify:monitoring": "supabase db query --linked -f tests/monitoring.verify.sql",
     "verify:rules": "supabase db query --linked -f tests/rules.verify.sql",
+    "verify:crew-assignment": "supabase db query --linked -f tests/crew-assignment.verify.sql",
     "test:functions": "node --test tests/functions/*.test.mjs"
   },
   "dependencies": {

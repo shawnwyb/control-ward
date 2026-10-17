@@ -11,7 +11,7 @@ import {
   type SiteRiskView,
 } from "../../lib/monitoring";
 import type { Report } from "../../lib/types";
-import { AlertsPanel } from "./AlertsPanel";
+import { AlertsSection } from "./AlertsSection";
 import { BriefingPanel } from "./BriefingPanel";
 import { CrewPanel } from "./CrewPanel";
 import styles from "./Dashboard.module.css";
@@ -34,20 +34,27 @@ const noLightning: LightningView = {
 
 type Props = {
   siteId: string;
+  siteName: string;
+  userId: string;
   reports: Report[];
   crewTerm: number;
   crew: CrewMember[];
   crewLoaded: boolean;
+  /** Reload the roster after someone is added or removed. */
+  onCrewChanged: () => void;
   onLocate: (member: CrewMember) => void;
 };
 
 /** Everything a supervisor needs above the map: risk, alerts, plan review, crew and messaging. */
 export function SupervisorDashboard({
   siteId,
+  siteName,
+  userId,
   reports,
   crewTerm,
   crew,
   crewLoaded,
+  onCrewChanged,
   onLocate,
 }: Props) {
   const { announce } = useNotice();
@@ -100,12 +107,15 @@ export function SupervisorDashboard({
         openHazards={reports.filter((r) => r.is_active).length}
         crewTerm={crewTerm}
       />
-      <AlertsPanel alerts={alerts.data} lightning={lightning.data} />
+      <AlertsSection alerts={alerts} lightning={lightning} userId={userId} />
       <div className={styles.columns}>
         <BriefingPanel siteId={siteId} />
         <CrewPanel
           crew={crew}
           loaded={crewLoaded}
+          siteId={siteId}
+          siteName={siteName}
+          onCrewChanged={onCrewChanged}
           selected={selected}
           onToggle={toggle}
           onSelectAll={selectAll}

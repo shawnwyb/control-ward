@@ -106,6 +106,9 @@ export function SiteWorkspace({
       {supervisor ? (
         <SupervisorDashboard
           siteId={site.id}
+          siteName={site.name}
+          userId={userId}
+          onCrewChanged={() => void roster.refresh()}
           reports={feed.reports}
           crewTerm={feed.metrics.crewRisk}
           crew={roster.crew}
@@ -124,7 +127,7 @@ export function SiteWorkspace({
         metrics={feed.metrics}
         loaded={feed.loaded}
         connection={feed.connection}
-        connectionOnly={supervisor}
+        connectionOnly
       />
       <div className={styles.grid}>
         <ReportForm

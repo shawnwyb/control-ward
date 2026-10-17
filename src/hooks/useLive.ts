@@ -18,6 +18,7 @@ export function useLive<T>(
 ) {
   const [data, setData] = useState<T>(initial);
   const [loaded, setLoaded] = useState(false);
+  const [failed, setFailed] = useState(false);
   const loadRef = useRef(load);
   const errorRef = useRef(onError);
   const initialRef = useRef(initial);
@@ -31,7 +32,9 @@ export function useLive<T>(
     try {
       setData(await loadRef.current(siteId));
       setLoaded(true);
+      setFailed(false);
     } catch (error) {
+      setFailed(true);
       errorRef.current?.(errorMessage(error));
     }
   }, [siteId]);
@@ -45,6 +48,7 @@ export function useLive<T>(
     };
     setData(initialRef.current);
     setLoaded(false);
+    setFailed(false);
     void refresh();
     let channel = supabase.channel(`live-${tablesKey}-${siteId}-${++sequence}`);
     for (const table of tablesKey.split(",").filter(Boolean))
@@ -65,5 +69,5 @@ export function useLive<T>(
     };
   }, [siteId, tablesKey, pollMs, refresh]);
 
-  return { data, loaded, refresh };
+  return { data, loaded, failed, refresh };
 }
