@@ -20,6 +20,7 @@ import type { ReportDraft } from "../report/types";
 import { useReportSubmit } from "../report/useReportSubmit";
 import { StatusStrip } from "./StatusStrip";
 import styles from "./SiteWorkspace.module.css";
+import { SafetyPanel } from "../safety/SafetyPanel";
 
 /** Everything for one site. Remounted per site, so form and feed state reset on switch. */
 export function SiteWorkspace({
@@ -123,6 +124,7 @@ export function SiteWorkspace({
         />
       ) : null}
       <CrewTools siteId={site.id} userId={userId} showAlerts={!supervisor} />
+      <SafetyPanel site={site} role={role} />
       <StatusStrip
         metrics={feed.metrics}
         loaded={feed.loaded}

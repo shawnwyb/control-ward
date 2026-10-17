@@ -8,6 +8,7 @@
  */
 
 import { offsetPoint } from "../lib/geo";
+import { handleSafety } from "./mockSafety";
 
 type Row = Record<string, unknown>;
 
@@ -682,6 +683,16 @@ async function handle(
       : apiError("Not signed in", 401);
   if (path === "/auth/v1/logout") return respond(null, 204);
   if (!email || !(email in accounts)) return apiError("JWT required", 401);
+
+  const safetyResponse = handleSafety(
+    path,
+    body,
+    email,
+    accounts[email],
+    supervisors.has(email),
+    failWrites,
+  );
+  if (safetyResponse) return safetyResponse;
 
   if (path === "/rest/v1/sites")
     return respond(
