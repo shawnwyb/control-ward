@@ -1089,6 +1089,7 @@ export type Database = {
         Row: {
           conflicts: boolean
           content_hash: string
+          document_text: string
           effective_on: string | null
           fetched_at: string
           fictional: boolean
@@ -1105,6 +1106,7 @@ export type Database = {
         Insert: {
           conflicts?: boolean
           content_hash: string
+          document_text?: string
           effective_on?: string | null
           fetched_at?: string
           fictional?: boolean
@@ -1121,6 +1123,7 @@ export type Database = {
         Update: {
           conflicts?: boolean
           content_hash?: string
+          document_text?: string
           effective_on?: string | null
           fetched_at?: string
           fictional?: boolean
@@ -1730,6 +1733,10 @@ export type Database = {
         }
         Returns: string
       }
+      enqueue_due_safety_briefings: {
+        Args: { p_now?: string }
+        Returns: number
+      }
       evaluate_all_sites: { Args: never; Returns: Json }
       evaluate_site: { Args: { p_site_id: string }; Returns: Json }
       finish_push: {
@@ -1799,6 +1806,7 @@ export type Database = {
           user_id: string
         }[]
       }
+      refresh_stale_safety_briefings: { Args: never; Returns: number }
       request_briefing_draft: { Args: { p_site_id: string }; Returns: Json }
       request_safety_briefing: {
         Args: { p_regenerate?: boolean; p_site_id: string; p_work_date: string }
@@ -1832,6 +1840,15 @@ export type Database = {
         }
         Returns: Json
       }
+      review_safety_source: {
+        Args: {
+          p_approve: boolean
+          p_conflicts?: boolean
+          p_notes: string
+          p_version_id: string
+        }
+        Returns: undefined
+      }
       run_hazard_maintenance: { Args: never; Returns: Json }
       save_briefing_draft: {
         Args: { p_content: Json; p_for_date: string; p_site_id: string }
@@ -1860,6 +1877,15 @@ export type Database = {
           p_title: string
         }
         Returns: Json
+      }
+      stage_safety_source: {
+        Args: {
+          p_document: string
+          p_hash: string
+          p_passages: Json
+          p_source: Json
+        }
+        Returns: string
       }
       store_briefing_draft: {
         Args: {
