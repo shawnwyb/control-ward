@@ -10,7 +10,12 @@ import {
 } from "../../components/ui";
 import { useNotice } from "../../hooks/notice";
 import { errorMessage } from "../../lib/format";
-import { pushAudience, sendPush, type PushTarget } from "../../lib/monitoring";
+import {
+  pushAudience,
+  sendPush,
+  waitForPush,
+  type PushTarget,
+} from "../../lib/monitoring";
 import { hazardLabels, type Report } from "../../lib/types";
 import styles from "./Dashboard.module.css";
 
@@ -75,10 +80,27 @@ export function PushComposer({ siteId, selected, reports }: Props) {
     if (!target || sending) return;
     setSending(true);
     try {
-      await sendPush(siteId, title.trim(), body.trim(), target);
-      announce("Push queued. Workers with notifications on will get it now.");
+      const id = await sendPush(siteId, title.trim(), body.trim(), target);
       setTitle("");
       setBody("");
+      announce("Sending…");
+      const outcome = await waitForPush(id);
+      if (!outcome) announce("Still sending. Check back in a minute.", false);
+      else if (outcome.status === "failed")
+        announce("The push couldn’t be sent. Try again.", true);
+      else if (outcome.recipients === 0)
+        announce(
+          "No devices to notify. No one in this group has notifications on.",
+          true,
+        );
+      else
+        announce(
+          `Delivered to ${outcome.delivered} of ${outcome.recipients} devices` +
+            (outcome.failed
+              ? `. ${outcome.failed} were unreachable and have been removed. Those workers need to turn notifications on again.`
+              : ". If a phone shows nothing, check its notification settings."),
+          outcome.delivered === 0,
+        );
     } catch (error) {
       announce(errorMessage(error), true);
     } finally {
