@@ -412,3 +412,20 @@ enabled = true
 # declarative_schema_path = "./database"
 # JSON string passed through to pg-delta SQL formatting.
 # format_options = "{\"keywordCase\":\"upper\",\"indent\":2,\"maxWidth\":80,\"commaStyle\":\"trailing\"}"
+
+# Called by pg_cron with an X-Cron-Secret header, not a user JWT.
+
+[functions.ingest-openmeteo]
+verify_jwt = false
+
+[functions.ingest-nws]
+verify_jwt = false
+
+[functions.ingest-gauges]
+verify_jwt = false
+
+[functions.ingest-wildfire]
+verify_jwt = false
+
+[functions.ingest-lightning]
+verify_jwt = false

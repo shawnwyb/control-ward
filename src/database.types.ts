@@ -7,6 +7,11 @@ export type Json =
   | Json[]
 
 export type Database = {
+  // Allows to automatically instantiate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
+  __InternalSupabase: {
+    PostgrestVersion: "14.18"
+  }
   graphql_public: {
     Tables: {
       [_ in never]: never
@@ -34,6 +39,187 @@ export type Database = {
   }
   public: {
     Tables: {
+      alert_acks: {
+        Row: {
+          acknowledged_at: string
+          alert_id: string
+          user_id: string
+        }
+        Insert: {
+          acknowledged_at?: string
+          alert_id: string
+          user_id: string
+        }
+        Update: {
+          acknowledged_at?: string
+          alert_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "alert_acks_alert_id_fkey"
+            columns: ["alert_id"]
+            isOneToOne: false
+            referencedRelation: "alerts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      alerts: {
+        Row: {
+          cleared_at: string | null
+          created_at: string
+          dedup_key: string
+          id: string
+          kind: string
+          level: string
+          payload: Json
+          site_id: string
+          status: string
+        }
+        Insert: {
+          cleared_at?: string | null
+          created_at?: string
+          dedup_key: string
+          id?: string
+          kind: string
+          level: string
+          payload?: Json
+          site_id: string
+          status?: string
+        }
+        Update: {
+          cleared_at?: string | null
+          created_at?: string
+          dedup_key?: string
+          id?: string
+          kind?: string
+          level?: string
+          payload?: Json
+          site_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "alerts_site_id_fkey"
+            columns: ["site_id"]
+            isOneToOne: false
+            referencedRelation: "site_overview"
+            referencedColumns: ["site_id"]
+          },
+          {
+            foreignKeyName: "alerts_site_id_fkey"
+            columns: ["site_id"]
+            isOneToOne: false
+            referencedRelation: "sites"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      briefing_reads: {
+        Row: {
+          briefing_id: string
+          read_at: string
+          user_id: string
+        }
+        Insert: {
+          briefing_id: string
+          read_at?: string
+          user_id: string
+        }
+        Update: {
+          briefing_id?: string
+          read_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "briefing_reads_briefing_id_fkey"
+            columns: ["briefing_id"]
+            isOneToOne: false
+            referencedRelation: "briefings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      briefings: {
+        Row: {
+          content: Json
+          for_date: string
+          generated_at: string
+          id: string
+          site_id: string
+        }
+        Insert: {
+          content: Json
+          for_date: string
+          generated_at?: string
+          id?: string
+          site_id: string
+        }
+        Update: {
+          content?: Json
+          for_date?: string
+          generated_at?: string
+          id?: string
+          site_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "briefings_site_id_fkey"
+            columns: ["site_id"]
+            isOneToOne: false
+            referencedRelation: "site_overview"
+            referencedColumns: ["site_id"]
+          },
+          {
+            foreignKeyName: "briefings_site_id_fkey"
+            columns: ["site_id"]
+            isOneToOne: false
+            referencedRelation: "sites"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      crew_locations: {
+        Row: {
+          accuracy_m: number | null
+          location: unknown
+          site_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          accuracy_m?: number | null
+          location: unknown
+          site_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          accuracy_m?: number | null
+          location?: unknown
+          site_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crew_locations_site_id_fkey"
+            columns: ["site_id"]
+            isOneToOne: false
+            referencedRelation: "site_overview"
+            referencedColumns: ["site_id"]
+          },
+          {
+            foreignKeyName: "crew_locations_site_id_fkey"
+            columns: ["site_id"]
+            isOneToOne: false
+            referencedRelation: "sites"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       hazard_checkin_tasks: {
         Row: {
           completed_at: string | null
@@ -227,6 +413,13 @@ export type Database = {
             foreignKeyName: "hazard_photos_site_id_fkey"
             columns: ["site_id"]
             isOneToOne: false
+            referencedRelation: "site_overview"
+            referencedColumns: ["site_id"]
+          },
+          {
+            foreignKeyName: "hazard_photos_site_id_fkey"
+            columns: ["site_id"]
+            isOneToOne: false
             referencedRelation: "sites"
             referencedColumns: ["id"]
           },
@@ -280,6 +473,190 @@ export type Database = {
             foreignKeyName: "hazard_reports_site_id_fkey"
             columns: ["site_id"]
             isOneToOne: false
+            referencedRelation: "site_overview"
+            referencedColumns: ["site_id"]
+          },
+          {
+            foreignKeyName: "hazard_reports_site_id_fkey"
+            columns: ["site_id"]
+            isOneToOne: false
+            referencedRelation: "sites"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lightning_state: {
+        Row: {
+          last_strike_at: string | null
+          last_strike_distance_m: number | null
+          site_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          last_strike_at?: string | null
+          last_strike_distance_m?: number | null
+          site_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          last_strike_at?: string | null
+          last_strike_distance_m?: number | null
+          site_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lightning_state_site_id_fkey"
+            columns: ["site_id"]
+            isOneToOne: true
+            referencedRelation: "site_overview"
+            referencedColumns: ["site_id"]
+          },
+          {
+            foreignKeyName: "lightning_state_site_id_fkey"
+            columns: ["site_id"]
+            isOneToOne: true
+            referencedRelation: "sites"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lightning_strikes: {
+        Row: {
+          id: number
+          latitude: number
+          location: unknown
+          longitude: number
+          source: string
+          struck_at: string
+        }
+        Insert: {
+          id?: never
+          latitude: number
+          location?: unknown
+          longitude: number
+          source?: string
+          struck_at: string
+        }
+        Update: {
+          id?: never
+          latitude?: number
+          location?: unknown
+          longitude?: number
+          source?: string
+          struck_at?: string
+        }
+        Relationships: []
+      }
+      ml_scores: {
+        Row: {
+          computed_at: string
+          horizon: string
+          model_version: string
+          score: number
+          site_id: string
+        }
+        Insert: {
+          computed_at?: string
+          horizon: string
+          model_version: string
+          score: number
+          site_id: string
+        }
+        Update: {
+          computed_at?: string
+          horizon?: string
+          model_version?: string
+          score?: number
+          site_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ml_scores_site_id_fkey"
+            columns: ["site_id"]
+            isOneToOne: false
+            referencedRelation: "site_overview"
+            referencedColumns: ["site_id"]
+          },
+          {
+            foreignKeyName: "ml_scores_site_id_fkey"
+            columns: ["site_id"]
+            isOneToOne: false
+            referencedRelation: "sites"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      push_subscriptions: {
+        Row: {
+          address: string
+          channel: string
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          address: string
+          channel: string
+          created_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          address?: string
+          channel?: string
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      readings: {
+        Row: {
+          forecast_for: string
+          hazard: Database["public"]["Enums"]["hazard_kind"]
+          id: number
+          observed_at: string
+          site_id: string
+          source: string
+          unit: string
+          value: number
+        }
+        Insert: {
+          forecast_for?: string
+          hazard: Database["public"]["Enums"]["hazard_kind"]
+          id?: never
+          observed_at: string
+          site_id: string
+          source?: string
+          unit: string
+          value: number
+        }
+        Update: {
+          forecast_for?: string
+          hazard?: Database["public"]["Enums"]["hazard_kind"]
+          id?: never
+          observed_at?: string
+          site_id?: string
+          source?: string
+          unit?: string
+          value?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "readings_site_id_fkey"
+            columns: ["site_id"]
+            isOneToOne: false
+            referencedRelation: "site_overview"
+            referencedColumns: ["site_id"]
+          },
+          {
+            foreignKeyName: "readings_site_id_fkey"
+            columns: ["site_id"]
+            isOneToOne: false
             referencedRelation: "sites"
             referencedColumns: ["id"]
           },
@@ -306,6 +683,112 @@ export type Database = {
             foreignKeyName: "site_memberships_site_id_fkey"
             columns: ["site_id"]
             isOneToOne: false
+            referencedRelation: "site_overview"
+            referencedColumns: ["site_id"]
+          },
+          {
+            foreignKeyName: "site_memberships_site_id_fkey"
+            columns: ["site_id"]
+            isOneToOne: false
+            referencedRelation: "sites"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      site_risk: {
+        Row: {
+          base: number
+          computed_at: string
+          crew_term: number
+          horizon: string
+          risk: number
+          site_id: string
+          top_driver: string | null
+        }
+        Insert: {
+          base: number
+          computed_at?: string
+          crew_term: number
+          horizon: string
+          risk: number
+          site_id: string
+          top_driver?: string | null
+        }
+        Update: {
+          base?: number
+          computed_at?: string
+          crew_term?: number
+          horizon?: string
+          risk?: number
+          site_id?: string
+          top_driver?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "site_risk_site_id_fkey"
+            columns: ["site_id"]
+            isOneToOne: false
+            referencedRelation: "site_overview"
+            referencedColumns: ["site_id"]
+          },
+          {
+            foreignKeyName: "site_risk_site_id_fkey"
+            columns: ["site_id"]
+            isOneToOne: false
+            referencedRelation: "sites"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      site_subscores: {
+        Row: {
+          computed_at: string
+          flood: number
+          heat: number
+          lightning: number
+          site_id: string
+          soil: number
+          top_driver: string | null
+          weather: number
+          wildfire: number
+          wildlife: number
+        }
+        Insert: {
+          computed_at?: string
+          flood?: number
+          heat?: number
+          lightning?: number
+          site_id: string
+          soil?: number
+          top_driver?: string | null
+          weather?: number
+          wildfire?: number
+          wildlife?: number
+        }
+        Update: {
+          computed_at?: string
+          flood?: number
+          heat?: number
+          lightning?: number
+          site_id?: string
+          soil?: number
+          top_driver?: string | null
+          weather?: number
+          wildfire?: number
+          wildlife?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "site_subscores_site_id_fkey"
+            columns: ["site_id"]
+            isOneToOne: true
+            referencedRelation: "site_overview"
+            referencedColumns: ["site_id"]
+          },
+          {
+            foreignKeyName: "site_subscores_site_id_fkey"
+            columns: ["site_id"]
+            isOneToOne: true
             referencedRelation: "sites"
             referencedColumns: ["id"]
           },
@@ -313,28 +796,55 @@ export type Database = {
       }
       sites: {
         Row: {
+          coast_distance_m: number | null
+          eia_plant_id: string | null
+          fema_flood_zone: string | null
           id: string
           latitude: number
           location: unknown
           longitude: number
           name: string
+          plant_type: string | null
           report_radius_m: number
+          river_distance_m: number | null
+          timezone: string
+          usgs_gauge_distance_m: number | null
+          usgs_gauge_id: string | null
+          utility: string | null
         }
         Insert: {
+          coast_distance_m?: number | null
+          eia_plant_id?: string | null
+          fema_flood_zone?: string | null
           id?: string
           latitude: number
           location?: unknown
           longitude: number
           name: string
+          plant_type?: string | null
           report_radius_m?: number
+          river_distance_m?: number | null
+          timezone?: string
+          usgs_gauge_distance_m?: number | null
+          usgs_gauge_id?: string | null
+          utility?: string | null
         }
         Update: {
+          coast_distance_m?: number | null
+          eia_plant_id?: string | null
+          fema_flood_zone?: string | null
           id?: string
           latitude?: number
           location?: unknown
           longitude?: number
           name?: string
+          plant_type?: string | null
           report_radius_m?: number
+          river_distance_m?: number | null
+          timezone?: string
+          usgs_gauge_distance_m?: number | null
+          usgs_gauge_id?: string | null
+          utility?: string | null
         }
         Relationships: []
       }
@@ -394,6 +904,58 @@ export type Database = {
             foreignKeyName: "hazard_reports_site_id_fkey"
             columns: ["site_id"]
             isOneToOne: false
+            referencedRelation: "site_overview"
+            referencedColumns: ["site_id"]
+          },
+          {
+            foreignKeyName: "hazard_reports_site_id_fkey"
+            columns: ["site_id"]
+            isOneToOne: false
+            referencedRelation: "sites"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      crew_locations_live: {
+        Row: {
+          accuracy_m: number | null
+          is_stale: boolean | null
+          latitude: number | null
+          longitude: number | null
+          site_id: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          accuracy_m?: number | null
+          is_stale?: never
+          latitude?: never
+          longitude?: never
+          site_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          accuracy_m?: number | null
+          is_stale?: never
+          latitude?: never
+          longitude?: never
+          site_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crew_locations_site_id_fkey"
+            columns: ["site_id"]
+            isOneToOne: false
+            referencedRelation: "site_overview"
+            referencedColumns: ["site_id"]
+          },
+          {
+            foreignKeyName: "crew_locations_site_id_fkey"
+            columns: ["site_id"]
+            isOneToOne: false
             referencedRelation: "sites"
             referencedColumns: ["id"]
           },
@@ -431,16 +993,70 @@ export type Database = {
             foreignKeyName: "hazard_reports_site_id_fkey"
             columns: ["site_id"]
             isOneToOne: false
+            referencedRelation: "site_overview"
+            referencedColumns: ["site_id"]
+          },
+          {
+            foreignKeyName: "hazard_reports_site_id_fkey"
+            columns: ["site_id"]
+            isOneToOne: false
             referencedRelation: "sites"
             referencedColumns: ["id"]
           },
         ]
+      }
+      hazard_heatmap: {
+        Row: {
+          cell_lat: number | null
+          cell_lon: number | null
+          last_seen: string | null
+          max_severity: number | null
+          observation_count: number | null
+          site_id: string | null
+          type: Database["public"]["Enums"]["hazard_type"] | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hazard_reports_site_id_fkey"
+            columns: ["site_id"]
+            isOneToOne: false
+            referencedRelation: "site_overview"
+            referencedColumns: ["site_id"]
+          },
+          {
+            foreignKeyName: "hazard_reports_site_id_fkey"
+            columns: ["site_id"]
+            isOneToOne: false
+            referencedRelation: "sites"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      site_overview: {
+        Row: {
+          active_alert_count: number | null
+          lat: number | null
+          lightning: Json | null
+          lon: number | null
+          name: string | null
+          risk_now: number | null
+          risk_tomorrow: number | null
+          site_id: string | null
+          subscores: Json | null
+          timezone: string | null
+          top_driver: string | null
+        }
+        Relationships: []
       }
     }
     Functions: {
       ack_hazard_event: {
         Args: { p_consumer: string; p_event_id: number; p_lease_token: string }
         Returns: boolean
+      }
+      acknowledge_alert: {
+        Args: { p_alert_id: string; p_request_id: string }
+        Returns: Json
       }
       checkin_hazard_report: {
         Args: {
@@ -461,6 +1077,23 @@ export type Database = {
           report_id: string
         }[]
       }
+      compute_site_risk: {
+        Args: {
+          p_site_id: string
+          p_tomorrow_driver?: string
+          p_tomorrow_worst?: number
+        }
+        Returns: Json
+      }
+      demo_generate_briefing: { Args: { p_site_id: string }; Returns: Json }
+      demo_inject: {
+        Args: { p_params?: Json; p_scenario: string; p_site_id: string }
+        Returns: Json
+      }
+      demo_reset: { Args: { p_site_id: string }; Returns: Json }
+      evaluate_all_sites: { Args: never; Returns: Json }
+      evaluate_site: { Args: { p_site_id: string }; Returns: Json }
+      generate_due_briefings: { Args: never; Returns: Json }
       get_site_crew_metrics: {
         Args: { p_site_id: string }
         Returns: {
@@ -469,10 +1102,14 @@ export type Database = {
           wildlife_subscore: number
         }[]
       }
+      ingest_readings: { Args: { p_batch: Json }; Returns: Json }
+      ingest_strikes: { Args: { p_batch: Json }; Returns: Json }
+      mark_briefing_read: { Args: { p_briefing_id: string }; Returns: Json }
       prune_hazard_photo_reservations: {
         Args: { p_photo_ids: string[] }
         Returns: number
       }
+      prune_monitoring_data: { Args: never; Returns: Json }
       reserve_hazard_photo: {
         Args: { p_content_type: string; p_photo_id: string; p_site_id: string }
         Returns: {
@@ -504,9 +1141,28 @@ export type Database = {
         }
         Returns: Json
       }
+      sweep_lightning: { Args: never; Returns: Json }
+      update_crew_location: {
+        Args: {
+          p_accuracy_m?: number
+          p_lat: number
+          p_lon: number
+          p_site_id: string
+        }
+        Returns: Json
+      }
+      upsert_ml_scores: { Args: { p_batch: Json }; Returns: Json }
     }
     Enums: {
       hazard_action: "submitted" | "confirmed" | "resolved" | "expired"
+      hazard_kind:
+        | "weather"
+        | "lightning"
+        | "flood"
+        | "heat"
+        | "wildfire"
+        | "soil"
+        | "wildlife"
       hazard_status: "open" | "resolved"
       hazard_type: "debris" | "wildlife" | "downed_line" | "washout" | "other"
     }
@@ -524,12 +1180,12 @@ export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
         DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -553,11 +1209,11 @@ export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -578,11 +1234,11 @@ export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -603,11 +1259,11 @@ export type Enums<
   DefaultSchemaEnumNameOrOptions extends
     | keyof DefaultSchema["Enums"]
     | { schema: keyof DatabaseWithoutInternals },
-  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+  EnumName extends (DefaultSchemaEnumNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -620,11 +1276,11 @@ export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof DefaultSchema["CompositeTypes"]
     | { schema: keyof DatabaseWithoutInternals },
-  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+  CompositeTypeName extends (PublicCompositeTypeNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-    : never = never,
+    : never) = never,
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -640,9 +1296,17 @@ export const Constants = {
   public: {
     Enums: {
       hazard_action: ["submitted", "confirmed", "resolved", "expired"],
+      hazard_kind: [
+        "weather",
+        "lightning",
+        "flood",
+        "heat",
+        "wildfire",
+        "soil",
+        "wildlife",
+      ],
       hazard_status: ["open", "resolved"],
       hazard_type: ["debris", "wildlife", "downed_line", "washout", "other"],
     },
   },
 } as const
-

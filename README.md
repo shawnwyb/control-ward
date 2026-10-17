@@ -75,6 +75,10 @@ supabase stop                # Stop this project's local services; preserves loc
 
 Keep service-role credentials on trusted workers only. The cleanup script derives its credentials from the local CLI and refuses non-loopback URLs. For hosted deployment, schedule an equivalent janitor using server-side credentials. Expiry and in-app reminder generation are already scheduled inside Postgres.
 
+## Monitoring backend (hosted Supabase)
+
+Feeds, rules, alerts, briefings and the lightning countdown run on the linked hosted project with no local Docker: pg_cron calls Edge Functions, which write readings; Postgres derives subscores, alerts and risk. See [the monitoring contract](docs/api-contract.md) for schedules, reading units, rule thresholds, payloads and operations. `npm run test:functions`, `npm run verify:monitoring` and `npm run verify:rules` check it. Heat thresholds and the WBGT estimate still need validation, and ML scoring is not part of this layer.
+
 ## Teammate handoff
 
 See [RPC examples and consumer queries](docs/crew-api.md).
