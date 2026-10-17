@@ -27,7 +27,7 @@ let selectedSite: Site | undefined;
 let channel: RealtimeChannel | undefined;
 let refreshTimer: ReturnType<typeof setTimeout> | undefined;
 let refreshVersion = 0;
-let pendingSubmission: { requestId: string; signature: string; photo?: Photo; file?: File; uploaded: boolean } | undefined;
+let pendingSubmission: { requestId: string; photoId: string; signature: string; photo?: Photo; file?: File; uploaded: boolean } | undefined;
 const pendingCheckins = new Map<string, string>();
 let busy = false;
 
@@ -175,11 +175,25 @@ async function selectSite(id: string): Promise<void> {
   document.querySelector('#map-title')!.textContent = selectedSite.name;
   setPin(selectedSite.latitude, selectedSite.longitude);
   await refresh();
+  let changesReady = false;
+  const connection = document.querySelector('#connection')!;
+  connection.textContent = '○ Connecting to live updates…';
   channel = supabase.channel(`site-${id}`)
     .on('postgres_changes', { event: '*', schema: 'public', table: 'hazard_reports', filter: `site_id=eq.${id}` }, scheduleRefresh)
     .on('postgres_changes', { event: '*', schema: 'public', table: 'hazard_checkin_tasks' }, scheduleRefresh)
+    .on('system', {}, payload => {
+      if (selectedSite?.id !== id || payload.extension !== 'postgres_changes') return;
+      changesReady = payload.status === 'ok';
+      connection.textContent = changesReady ? '● Live updates' : '○ Live feed unavailable · refreshes every minute';
+      // Reconcile writes that happened between the initial query and replication becoming ready.
+      if (changesReady) scheduleRefresh();
+    })
     .subscribe(status => {
-      document.querySelector('#connection')!.textContent = status === 'SUBSCRIBED' ? '● Live updates' : '○ Reconnecting · refreshes every minute';
+      if (selectedSite?.id !== id) return;
+      if (status !== 'SUBSCRIBED') {
+        changesReady = false;
+        connection.textContent = '○ Reconnecting · refreshes every minute';
+      } else if (!changesReady) connection.textContent = '○ Preparing live updates…';
     });
 }
 function scheduleRefresh(): void {
@@ -255,11 +269,11 @@ async function submitReport(): Promise<void> {
   try {
     if (!pendingSubmission || pendingSubmission.signature !== signature || pendingSubmission.file !== file) {
       await discardPhoto();
-      pendingSubmission = { requestId: crypto.randomUUID(), signature, file, uploaded: false };
+      pendingSubmission = { requestId: crypto.randomUUID(), photoId: crypto.randomUUID(), signature, file, uploaded: false };
     }
     const pending = pendingSubmission;
     if (file && !pending.photo) {
-      const reservation = await supabase.rpc('reserve_hazard_photo', { p_photo_id: crypto.randomUUID(), p_site_id: selectedSite.id, p_content_type: file.type });
+      const reservation = await supabase.rpc('reserve_hazard_photo', { p_photo_id: pending.photoId, p_site_id: selectedSite.id, p_content_type: file.type });
       if (reservation.error) throw reservation.error;
       pending.photo = reservation.data;
     }
@@ -276,7 +290,7 @@ async function submitReport(): Promise<void> {
     document.querySelector<HTMLInputElement>('#photo')!.value = '';
     document.querySelector('#photo-name')!.textContent = 'Choose a photo';
     announce(response.outcome === 'merged' ? `Merged with a nearby hazard. ${response.report.confirmations} confirmations recorded.` : 'Hazard reported. Your site team can now see it.');
-    await refresh();
+    await refresh().catch(() => announce('Report saved. The site feed could not refresh; it will retry automatically.', true));
   } catch (error) { announce(`${errorMessage(error)} Your input is preserved; you can retry.`, true); }
   finally { setBusy(false); }
 }

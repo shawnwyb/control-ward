@@ -106,6 +106,13 @@ export type Database = {
             foreignKeyName: "hazard_events_observation_id_fkey"
             columns: ["observation_id"]
             isOneToOne: true
+            referencedRelation: "crew_observation_feed"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hazard_events_observation_id_fkey"
+            columns: ["observation_id"]
+            isOneToOne: true
             referencedRelation: "hazard_observations"
             referencedColumns: ["id"]
           },
@@ -202,6 +209,13 @@ export type Database = {
           site_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "hazard_photos_observation_id_fkey"
+            columns: ["observation_id"]
+            isOneToOne: false
+            referencedRelation: "crew_observation_feed"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "hazard_photos_observation_id_fkey"
             columns: ["observation_id"]
@@ -376,6 +390,43 @@ export type Database = {
           type?: Database["public"]["Enums"]["hazard_type"] | null
         }
         Relationships: [
+          {
+            foreignKeyName: "hazard_reports_site_id_fkey"
+            columns: ["site_id"]
+            isOneToOne: false
+            referencedRelation: "sites"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      crew_observation_feed: {
+        Row: {
+          action: Database["public"]["Enums"]["hazard_action"] | null
+          actor_id: string | null
+          created_at: string | null
+          id: string | null
+          latitude: number | null
+          longitude: number | null
+          report_id: string | null
+          severity: number | null
+          site_id: string | null
+          type: Database["public"]["Enums"]["hazard_type"] | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hazard_observations_report_id_fkey"
+            columns: ["report_id"]
+            isOneToOne: false
+            referencedRelation: "crew_hazard_feed"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hazard_observations_report_id_fkey"
+            columns: ["report_id"]
+            isOneToOne: false
+            referencedRelation: "hazard_reports"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "hazard_reports_site_id_fkey"
             columns: ["site_id"]
