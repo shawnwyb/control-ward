@@ -11,16 +11,33 @@ self.addEventListener("push", (event) => {
   } catch {
     data = { title: "PlanIT", body: event.data ? event.data.text() : "" };
   }
+  const title = data.title || "PlanIT";
   event.waitUntil(
-    self.registration.showNotification(data.title || "PlanIT", {
-      body: data.body || "",
-      tag: data.tag,
-      renotify: Boolean(data.renotify),
-      icon: "/icon.svg",
-      badge: "/icon.svg",
-      requireInteraction: Boolean(data.urgent),
-      data: { siteId: data.siteId },
-    }),
+    Promise.all([
+      self.registration.showNotification(title, {
+        body: data.body || "",
+        tag: data.tag,
+        renotify: Boolean(data.renotify),
+        icon: "/icon.svg",
+        badge: "/icon.svg",
+        requireInteraction: Boolean(data.urgent),
+        data: { siteId: data.siteId },
+      }),
+      // Open app windows show the message too, in case the OS hides system notifications.
+      self.clients
+        .matchAll({ type: "window", includeUncontrolled: true })
+        .then((windows) =>
+          windows.forEach((client) =>
+            client.postMessage({
+              type: "push",
+              title,
+              body: data.body || "",
+              kind: data.kind,
+              urgent: Boolean(data.urgent),
+            }),
+          ),
+        ),
+    ]),
   );
 });
 

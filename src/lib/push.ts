@@ -35,6 +35,17 @@ async function registration() {
   return navigator.serviceWorker.ready;
 }
 
+/** Shows a notification from this device only, to check that the OS lets the browser display them. */
+export async function showTestNotification(): Promise<void> {
+  const reg = await navigator.serviceWorker.getRegistration("/sw.js");
+  if (!reg) throw new Error("Turn notifications on first.");
+  await reg.showNotification("PlanIT test", {
+    body: "If you can see this, notifications work on this device.",
+    tag: `test:${Date.now()}`,
+    icon: "/icon.svg",
+  });
+}
+
 export async function isPushEnabled(): Promise<boolean> {
   if (pushSupport() !== "ready") return false;
   const reg = await navigator.serviceWorker.getRegistration("/sw.js");
