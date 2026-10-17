@@ -32,7 +32,11 @@ export function pushPayload(row: PushRow): string {
   return JSON.stringify({
     title: row.title,
     body: row.body,
-    tag: `${row.kind}:${row.site_id}`,
+    // Alerts share one tag per site so a stale warning is replaced by the newest one (and re-alerts).
+    // Everything else gets its own tag: a repeated tag silently swaps the old notification for the new one.
+    tag:
+      row.kind === "alert" ? `alert:${row.site_id}` : `${row.kind}:${row.id}`,
+    renotify: row.kind === "alert",
     kind: row.kind,
     siteId: row.site_id,
     // Stop-work alerts stay on screen until the worker dismisses them.

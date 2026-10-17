@@ -173,6 +173,42 @@ describe("push helpers", () => {
     );
   });
 
+  test("each manual push gets its own tag; alerts share one per site and re-alert", () => {
+    const tag = (row) => JSON.parse(pushPayload(row));
+    const a = tag({
+      id: "1",
+      site_id: "s",
+      kind: "manual",
+      title: "t",
+      body: "b",
+    });
+    const b = tag({
+      id: "2",
+      site_id: "s",
+      kind: "manual",
+      title: "t",
+      body: "b",
+    });
+    assert.notEqual(a.tag, b.tag);
+    assert.equal(a.renotify, false);
+    const x = tag({
+      id: "3",
+      site_id: "s",
+      kind: "alert",
+      title: "t",
+      body: "b",
+    });
+    const y = tag({
+      id: "4",
+      site_id: "s",
+      kind: "alert",
+      title: "t",
+      body: "b",
+    });
+    assert.equal(x.tag, y.tag);
+    assert.equal(x.renotify, true);
+  });
+
   test("404 and 410 mean the subscription is gone", () => {
     assert.ok(isGone(404) && isGone(410));
     assert.ok(!isGone(500) && !isGone(undefined));
