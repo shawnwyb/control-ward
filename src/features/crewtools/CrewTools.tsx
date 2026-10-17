@@ -53,7 +53,7 @@ export function CrewTools({
     ["alerts"],
     fetchAlerts,
     [],
-    30000,
+    10000,
   );
   const lightning = useLive(
     siteId,
