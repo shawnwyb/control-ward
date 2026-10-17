@@ -56,26 +56,15 @@ const accounts: Record<string, string[]> = {
   "other@planit.local": ["site-south"],
   "supervisor@planit.local": sites.map((site) => site.id),
   "outsider@planit.local": [],
-  // More people for the Crew tab: two already on North, two with no site yet.
-  "jordan.lee@example.com": ["site-north"],
-  "sam.ortiz@example.com": ["site-north"],
+  // The dashboard's roster people can sign in; two more accounts have no site yet.
+  "jordan@planit.local": ["site-north"],
+  "sam@planit.local": ["site-north"],
   "taylor.kim@example.com": [],
   "riley.chen@example.com": [],
 };
-/** Role of each person at each site. Only supervisor@planit.local supervises; everyone else is crew. */
-const memberRoles = new Map<string, "crew" | "supervisor">(
-  Object.entries(accounts).flatMap(([email, siteIds]) =>
-    siteIds.map(
-      (siteId) =>
-        [
-          `${email}|${siteId}`,
-          email === "supervisor@planit.local" ? "supervisor" : "crew",
-        ] as const,
-    ),
-  ),
-);
+/** Supervisors supervise every site they belong to; everyone else is crew. */
 const isSupervisorAt = (email: string, siteId: string) =>
-  memberRoles.get(`${email}|${siteId}`) === "supervisor";
+  supervisors.has(email) && accounts[email]?.includes(siteId) === true;
 
 type Report = {
   id: string;
@@ -316,76 +305,6 @@ const alerts: MockAlert[] = [
   ),
 ];
 const alertAcks = new Set<string>(); // `${userId}|${alertId}`
-const briefingReads = new Set<string>(); // `${userId}|${briefingId}`
-
-const overviews = [
-  ["site-north", 7.4, 5.1, "Driven by lightning stop work and WBGT 87°F"],
-  [
-    "site-south",
-    5.2,
-    4.3,
-    "Driven by overnight rain and a river near flood stage",
-  ],
-  ["site-tampa", 4.1, 3.6, "Driven by an active fire 18 mi away"],
-  ["site-jax", 3.8, 3.2, "Driven by wind gusts to 44 mph"],
-  ["site-manatee", 1.9, 2.4, null],
-  ["site-everglades", 2.7, 3.0, "Driven by WBGT 82°F"],
-] as const;
-
-const tomorrow = new Date(Date.now() + 86400000);
-const forDate = `${tomorrow.getFullYear()}-${String(tomorrow.getMonth() + 1).padStart(2, "0")}-${String(tomorrow.getDate()).padStart(2, "0")}`;
-const briefings = ["site-north", "site-south"].map((siteId) => ({
-  id: `b-${siteId}`,
-  site_id: siteId,
-  for_date: forDate,
-  generated_at: minutesAgo(40),
-  content: {
-    tz: "America/New_York",
-    hazards: [
-      {
-        hazard: "heat",
-        metric: "WBGT",
-        forecast: 88.4,
-        unit: "F",
-        level: "danger",
-      },
-      {
-        hazard: "weather",
-        metric: "wind gust",
-        forecast: 31,
-        unit: "mph",
-        level: "normal",
-      },
-      {
-        hazard: "lightning",
-        metric: "thunderstorm chance",
-        forecast: 70,
-        unit: "%",
-        level: "caution",
-      },
-      {
-        hazard: "flood",
-        metric: "rainfall",
-        forecast: 12,
-        unit: "mm",
-        level: "normal",
-      },
-    ],
-    predicted_risk: siteId === "site-north" ? 5.1 : 4.3,
-    top_driver:
-      siteId === "site-north"
-        ? "Driven by WBGT 88°F and afternoon storms"
-        : "Driven by river stage and saturated soil",
-    open_crew_hazards: reports
-      .filter((report) => report.site_id === siteId && report.is_active)
-      .map((report) => ({
-        id: report.id,
-        type: report.type,
-        severity: report.severity,
-      })),
-    smoke_note: null,
-  },
-}));
 
 function base64url(value: object): string {
   return btoa(JSON.stringify(value))
@@ -618,6 +537,112 @@ const apiError = (message: string, status = 400) =>
 const filterValue = (url: URL, column: string) =>
   url.searchParams.get(column)?.replace(/^eq\./, "");
 
+// --- Monitoring, crew roster, push and briefing review (design mode only) ---
+const supervisors = new Set(["supervisor@planit.local"]);
+/** What the dashboard's roster shows about each person who shares a location. */
+const crewProfiles: Record<
+  string,
+  {
+    name: string;
+    place?: [north: number, east: number];
+    age: number;
+    push: boolean;
+  }
+> = {
+  "crew@planit.local": {
+    name: "Alex Rivera",
+    place: [120, -80],
+    age: 2,
+    push: true,
+  },
+  "jordan@planit.local": {
+    name: "Jordan Lee",
+    place: [-200, 340],
+    age: 18,
+    push: false,
+  },
+  "sam@planit.local": { name: "Sam Okafor", age: 0, push: true },
+};
+const mockCrew = (siteId: string) => {
+  const site = sites.find((candidate) => candidate.id === siteId)!;
+  return Object.keys(accounts)
+    .filter(
+      (email) => accounts[email].includes(siteId) && !supervisors.has(email),
+    )
+    .map((email) => {
+      const profile = crewProfiles[email];
+      const where = profile?.place ? offsetPoint(site, ...profile.place) : null;
+      return {
+        user_id: `user-${email}`,
+        name: profile?.name ?? email.split("@")[0],
+        email,
+        latitude: where?.latitude ?? null,
+        longitude: where?.longitude ?? null,
+        age: profile?.age ?? 0,
+        push: profile?.push ?? false,
+      };
+    });
+};
+type MockDraft = {
+  site_id: string;
+  for_date: string;
+  status: "generating" | "draft" | "sent";
+  source: "gemini" | "rules";
+  updated_at: string;
+  sent_at: string | null;
+  content: Record<string, unknown>;
+};
+const drafts = new Map<string, MockDraft>();
+function mockDraft(
+  siteId: string,
+  status: MockDraft["status"] = "draft",
+): MockDraft {
+  const date = new Date(Date.now() + 86400000).toISOString().slice(0, 10);
+  const hourly = Array.from({ length: 24 }, (_, hour) => {
+    const blocked = hour >= 13 && hour <= 15;
+    return {
+      hour,
+      wbgt: blocked ? 89 : 80,
+      gust: 12,
+      pop: blocked ? 70 : 10,
+      mm: 0,
+      safe: !blocked,
+      blocked_by: blocked ? ["storms"] : [],
+    };
+  });
+  return {
+    site_id: siteId,
+    for_date: date,
+    status,
+    source: "gemini",
+    updated_at: new Date().toISOString(),
+    sent_at: null,
+    content: {
+      work_window: { start: "07:00", end: "13:00" },
+      summary:
+        "Start early and wrap up by 1 PM. Afternoon storms are likely from 1 to 4 PM.",
+      reasons: ["Storm chance reaches 70% mid-afternoon."],
+      context: {
+        traffic:
+          "Lane closure on the main access road until 9 AM; allow extra time for deliveries.",
+        school:
+          "Elementary school nearby is in session; expect bus traffic 7:30 to 8:15 AM and 3 PM.",
+        wildlife:
+          "Gopher tortoises and snakes are active on warm mornings; watch the access road verges.",
+      },
+      hourly,
+      neighbors: [
+        {
+          name: "Neighbor Plant · Demo",
+          distance_km: 14.2,
+          risk_tomorrow: 6.5,
+          driver: "weather subscore 6.5",
+        },
+      ],
+    },
+  };
+}
+
 async function handle(
   request: { method: string; url: URL; headers: Headers; body: unknown },
   path: string,
@@ -656,102 +681,6 @@ async function handle(
   if (path === "/auth/v1/logout") return respond(null, 204);
   if (!email || !(email in accounts)) return apiError("JWT required", 401);
 
-  if (path === "/rest/v1/site_memberships") {
-    // Row-level security: a user reads only their own memberships.
-    const userId = filterValue(url, "user_id");
-    if (userId !== `user-${email}`) return respond([]);
-    return respond(
-      accounts[email].map((siteId) => ({
-        site_id: siteId,
-        role: memberRoles.get(`${email}|${siteId}`) ?? "crew",
-      })),
-    );
-  }
-  if (
-    path.startsWith("/rest/v1/rpc/") &&
-    /\/(list_site_crew|assign_site_member|unassign_site_member)$/.test(path)
-  ) {
-    if (flags().breakCrew)
-      return respond(
-        {
-          code: "PGRST202",
-          message: `Could not find the function public.${path.split("/").pop()} in the schema cache`,
-          details: null,
-          hint: null,
-        },
-        404,
-      );
-    const siteId = String(body.p_site_id ?? "");
-    if (!isSupervisorAt(email, siteId))
-      return apiError("Supervisor role required", 403);
-    const memberEmails = () =>
-      Object.keys(accounts).filter((address) =>
-        accounts[address].includes(siteId),
-      );
-    const row = (address: string) => ({
-      user_id: `user-${address}`,
-      email: address,
-      role: memberRoles.get(`${address}|${siteId}`) ?? "crew",
-    });
-
-    if (path.endsWith("/list_site_crew"))
-      return respond(
-        memberEmails()
-          .map(row)
-          .sort(
-            (a, b) =>
-              Number(b.role === "supervisor") -
-                Number(a.role === "supervisor") ||
-              a.email.localeCompare(b.email),
-          ),
-      );
-
-    if (failWrites) return apiError("Simulated failure (?fail)", 500);
-
-    if (path.endsWith("/assign_site_member")) {
-      const wanted = String(body.p_email ?? "")
-        .trim()
-        .toLowerCase();
-      if (!wanted)
-        return apiError("Enter the email address of the person to add.", 400);
-      const address = Object.keys(accounts).find(
-        (candidate) => candidate.toLowerCase() === wanted,
-      );
-      if (!address) return apiError("No account uses that email address.", 400);
-      const existing = memberRoles.get(`${address}|${siteId}`);
-      if (existing)
-        return respond({
-          ok: true,
-          outcome: "already_member",
-          user_id: `user-${address}`,
-          email: address,
-          role: existing,
-        });
-      accounts[address].push(siteId);
-      memberRoles.set(`${address}|${siteId}`, "crew");
-      return respond({
-        ok: true,
-        outcome: "assigned",
-        user_id: `user-${address}`,
-        email: address,
-        role: "crew",
-      });
-    }
-
-    // unassign_site_member
-    const address = Object.keys(accounts).find(
-      (candidate) => `user-${candidate}` === body.p_user_id,
-    );
-    const existing = address
-      ? memberRoles.get(`${address}|${siteId}`)
-      : undefined;
-    if (!address || !existing) return respond({ ok: true, removed: false });
-    if (existing !== "crew")
-      return apiError("Supervisors cannot be removed here.", 403);
-    accounts[address] = accounts[address].filter((id) => id !== siteId);
-    memberRoles.delete(`${address}|${siteId}`);
-    return respond({ ok: true, removed: true });
-  }
   if (path === "/rest/v1/sites")
     return respond(
       sites
@@ -788,91 +717,6 @@ async function handle(
         ),
       },
     ]);
-  }
-  if (path === "/rest/v1/site_overview") {
-    const siteId = filterValue(url, "site_id");
-    const row = overviews.find(([id]) => id === siteId);
-    if (!row || !accounts[email].includes(row[0])) return respond([]);
-    const [id, now, next, driver] = row;
-    const site = sites.find((candidate) => candidate.id === id)!;
-    const open = alerts.filter(
-      (a) => a.site_id === id && a.status === "active",
-    );
-    return respond([
-      {
-        site_id: id,
-        name: site.name,
-        lat: site.latitude,
-        lon: site.longitude,
-        timezone: "America/New_York",
-        risk_now: now,
-        risk_tomorrow: next,
-        top_driver: driver,
-        subscores: {},
-        lightning: {
-          status: open.some((a) => a.kind === "lightning")
-            ? "stop_work"
-            : "clear",
-          last_strike_at: null,
-        },
-        active_alert_count: open.length,
-      },
-    ]);
-  }
-  if (path === "/rest/v1/alerts") {
-    if (flags().breakAlerts)
-      return apiError("Simulated outage (?break=alerts)", 503);
-    const siteId = filterValue(url, "site_id");
-    if (!siteId || !accounts[email].includes(siteId)) return respond([]);
-    return respond(
-      alerts.filter(
-        (a) =>
-          a.site_id === siteId &&
-          a.status === (filterValue(url, "status") ?? a.status),
-      ),
-    );
-  }
-  if (path === "/rest/v1/briefings") {
-    const siteId = filterValue(url, "site_id");
-    if (!siteId || !accounts[email].includes(siteId)) return respond([]);
-    return respond(briefings.filter((b) => b.site_id === siteId));
-  }
-  if (path === "/rest/v1/alert_acks") {
-    const ids = (url.searchParams.get("alert_id") ?? "")
-      .replace(/^in\.\(|\)$/g, "")
-      .split(",");
-    const userId = filterValue(url, "user_id") ?? "";
-    return respond(
-      ids
-        .filter((id) => alertAcks.has(`${userId}|${id}`))
-        .map((id) => ({ alert_id: id })),
-    );
-  }
-  if (path === "/rest/v1/briefing_reads") {
-    const briefingId = filterValue(url, "briefing_id") ?? "";
-    const userId = filterValue(url, "user_id") ?? "";
-    return respond(
-      briefingReads.has(`${userId}|${briefingId}`)
-        ? [{ briefing_id: briefingId }]
-        : [],
-    );
-  }
-  if (path === "/rest/v1/rpc/acknowledge_alert") {
-    if (failWrites) return apiError("Simulated failure (?fail)", 500);
-    const alert = alerts.find((a) => a.id === body.p_alert_id);
-    if (!alert || !accounts[email].includes(alert.site_id))
-      return apiError("Unknown alert", 400);
-    alertAcks.add(`user-${email}|${alert.id}`);
-    notifyChange();
-    return respond({ ok: true, acknowledged_at: new Date().toISOString() });
-  }
-  if (path === "/rest/v1/rpc/mark_briefing_read") {
-    if (failWrites) return apiError("Simulated failure (?fail)", 500);
-    const briefing = briefings.find((b) => b.id === body.p_briefing_id);
-    if (!briefing || !accounts[email].includes(briefing.site_id))
-      return apiError("Unknown briefing", 400);
-    briefingReads.add(`user-${email}|${briefing.id}`);
-    return respond({ ok: true });
   }
   if (path === "/rest/v1/hazard_checkin_tasks") return respond(tasks);
   if (path === "/rest/v1/hazard_observations") {
@@ -967,6 +811,249 @@ async function handle(
     tasks = tasks.filter((task) => task.report_id !== report.id);
     notifyChange();
     return respond(null);
+  }
+  const siteParam = String(body.p_site_id ?? filterValue(url, "site_id") ?? "");
+  const memberOf = accounts[email].includes(siteParam);
+  const isSupervisor = memberOf && supervisors.has(email);
+  // ?break=crew pretends the crew-assignment migration has not been applied.
+  if (
+    flags().breakCrew &&
+    /\/rpc\/(assign_site_member|unassign_site_member)$/.test(path)
+  )
+    return respond(
+      {
+        code: "PGRST202",
+        message: `Could not find the function public.${path.split("/").pop()} in the schema cache`,
+        details: null,
+        hint: null,
+      },
+      404,
+    );
+  if (path === "/rest/v1/rpc/assign_site_member") {
+    if (!isSupervisor) return apiError("Supervisor role required", 403);
+    if (failWrites) return apiError("Simulated failure (?fail)", 500);
+    const wanted = String(body.p_email ?? "")
+      .trim()
+      .toLowerCase();
+    if (!wanted)
+      return apiError("Enter the email address of the person to add.", 400);
+    const address = Object.keys(accounts).find(
+      (candidate) => candidate.toLowerCase() === wanted,
+    );
+    if (!address) return apiError("No account uses that email address.", 400);
+    if (accounts[address].includes(siteParam))
+      return respond({
+        ok: true,
+        outcome: "already_member",
+        user_id: `user-${address}`,
+        email: address,
+        role: supervisors.has(address) ? "supervisor" : "crew",
+      });
+    accounts[address].push(siteParam);
+    return respond({
+      ok: true,
+      outcome: "assigned",
+      user_id: `user-${address}`,
+      email: address,
+      role: "crew",
+    });
+  }
+  if (path === "/rest/v1/rpc/unassign_site_member") {
+    if (!isSupervisor) return apiError("Supervisor role required", 403);
+    if (failWrites) return apiError("Simulated failure (?fail)", 500);
+    const address = Object.keys(accounts).find(
+      (candidate) => `user-${candidate}` === body.p_user_id,
+    );
+    if (!address || !accounts[address].includes(siteParam))
+      return respond({ ok: true, removed: false });
+    if (supervisors.has(address))
+      return apiError("Supervisors cannot be removed here.", 403);
+    accounts[address] = accounts[address].filter((id) => id !== siteParam);
+    return respond({ ok: true, removed: true });
+  }
+  if (path === "/rest/v1/alert_acks") {
+    const ids = (url.searchParams.get("alert_id") ?? "")
+      .replace(/^in\.\(|\)$/g, "")
+      .split(",");
+    const userId = filterValue(url, "user_id") ?? "";
+    return respond(
+      ids
+        .filter((id) => alertAcks.has(`${userId}|${id}`))
+        .map((id) => ({ alert_id: id })),
+    );
+  }
+  if (path === "/rest/v1/rpc/acknowledge_alert") {
+    if (failWrites) return apiError("Simulated failure (?fail)", 500);
+    const alert = alerts.find((a) => a.id === body.p_alert_id);
+    if (!alert || !accounts[email].includes(alert.site_id))
+      return apiError("Unknown alert", 400);
+    alertAcks.add(`user-${email}|${alert.id}`);
+    return respond({ ok: true, acknowledged_at: new Date().toISOString() });
+  }
+  if (path === "/rest/v1/site_memberships")
+    return respond(
+      accounts[email].map((site_id) => ({
+        site_id,
+        role: supervisors.has(email) ? "supervisor" : "crew",
+      })),
+    );
+  if (path === "/rest/v1/site_overview")
+    return respond(
+      memberOf
+        ? [
+            {
+              site_id: siteParam,
+              risk_now: 5.2,
+              risk_tomorrow: 6.5,
+              top_driver: "heat subscore 5",
+              active_alert_count: 1,
+              subscores: {
+                heat: 5,
+                weather: 3,
+                lightning: 0,
+                flood: 1.5,
+                wildfire: 0,
+                soil: 2,
+                wildlife: 2,
+              },
+            },
+          ]
+        : [],
+    );
+  if (path === "/rest/v1/alerts") {
+    if (flags().breakAlerts)
+      return apiError("Simulated outage (?break=alerts)", 503);
+    return respond(
+      memberOf
+        ? alerts
+            .filter((a) => a.site_id === siteParam && a.status === "active")
+            .map(({ id, kind, level, created_at, payload }) => ({
+              id,
+              kind,
+              level,
+              created_at,
+              payload,
+            }))
+        : [],
+    );
+  }
+  if (path === "/rest/v1/lightning_state") {
+    if (flags().breakAlerts)
+      return apiError("Simulated outage (?break=alerts)", 503);
+    // ?clear=N makes the stop-work countdown end in N seconds (it runs 30 minutes from the strike).
+    const strike = alerts.find(
+      (a) =>
+        a.site_id === siteParam &&
+        a.kind === "lightning" &&
+        a.status === "active",
+    );
+    return respond(
+      memberOf
+        ? [
+            {
+              site_id: siteParam,
+              status: strike ? "stop_work" : "clear",
+              last_strike_at: strike
+                ? new Date(
+                    Date.now() + lightningClearIn * 1000 - 30 * 60 * 1000,
+                  ).toISOString()
+                : null,
+              last_strike_distance_m: strike
+                ? Math.round(Number(strike.payload.distance_mi) * 1609.344)
+                : null,
+            },
+          ]
+        : [],
+    );
+  }
+  if (path === "/rest/v1/briefing_drafts") {
+    const draft = drafts.get(siteParam);
+    return respond(
+      memberOf && draft && (isSupervisor || draft.status === "sent")
+        ? [draft]
+        : [],
+    );
+  }
+  if (path === "/rest/v1/push_subscriptions") return respond(null, 201);
+  if (path === "/rest/v1/rpc/list_site_crew") {
+    if (!isSupervisor) return apiError("Supervisor role required", 403);
+    const supervisorRows = Object.keys(accounts)
+      .filter(
+        (address) =>
+          accounts[address].includes(siteParam) && supervisors.has(address),
+      )
+      .map((address) => ({
+        user_id: `user-${address}`,
+        name: address.split("@")[0],
+        email: address,
+        role: "supervisor",
+        latitude: null,
+        longitude: null,
+        accuracy_m: null,
+        located_at: null,
+        is_stale: true,
+        has_push: false,
+      }));
+    return respond([
+      ...supervisorRows,
+      ...mockCrew(siteParam).map((m) => ({
+        ...m,
+        role: "crew",
+        accuracy_m: 10,
+        located_at: m.latitude === null ? null : minutesAgo(m.age),
+        is_stale: m.latitude === null || m.age > 5,
+        has_push: m.push,
+      })),
+    ]);
+  }
+  if (path === "/rest/v1/rpc/push_audience") {
+    if (!isSupervisor) return apiError("Supervisor role required", 403);
+    const target = body.p_target as { mode: string; user_ids?: string[] };
+    const people = mockCrew(siteParam).filter((m) =>
+      target.mode === "users"
+        ? target.user_ids?.includes(m.user_id)
+        : target.mode === "near"
+          ? m.latitude !== null && m.age < 10
+          : true,
+    );
+    return respond({
+      targeted: people.length,
+      reachable: people.filter((m) => m.push).length,
+    });
+  }
+  if (path === "/rest/v1/rpc/send_push") {
+    if (!isSupervisor) return apiError("Supervisor role required", 403);
+    if (failWrites) return apiError("Mock write failure", 500);
+    return respond({ ok: true, id: crypto.randomUUID() });
+  }
+  if (path === "/rest/v1/rpc/update_crew_location")
+    return respond({ ok: true, exposed_alerts: [] });
+  if (path === "/rest/v1/rpc/request_briefing_draft") {
+    if (!isSupervisor) return apiError("Supervisor role required", 403);
+    drafts.set(siteParam, {
+      ...mockDraft(siteParam),
+      status: "generating",
+      content: {},
+    });
+    setTimeout(() => {
+      drafts.set(siteParam, mockDraft(siteParam));
+      notifyChange();
+    }, 2500);
+    return respond({ ok: true });
+  }
+  if (path === "/rest/v1/rpc/save_briefing_draft") {
+    const draft = drafts.get(siteParam);
+    if (!isSupervisor || !draft || draft.status === "sent")
+      return apiError("No editable draft for that date", 400);
+    draft.content = body.p_content as Record<string, unknown>;
+    return respond({ ok: true });
+  }
+  if (path === "/rest/v1/rpc/send_briefing") {
+    const draft = drafts.get(siteParam);
+    if (!isSupervisor || !draft) return apiError("Draft is not ready", 400);
+    draft.status = "sent";
+    draft.sent_at = new Date().toISOString();
+    return respond({ ok: true });
   }
   return apiError(`Mock backend has no handler for ${method} ${path}`, 404);
 }

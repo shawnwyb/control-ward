@@ -1,35 +1,5 @@
-import type { Database } from "../database.types";
+import { errorMessage } from "./format";
 import { supabase } from "./supabase";
-
-export type SiteRole = "crew" | "supervisor";
-export type CrewMember =
-  Database["public"]["Functions"]["list_site_crew"]["Returns"][number];
-
-/** The signed-in user's role at each site they belong to. */
-export async function fetchMyRoles(
-  userId: string,
-): Promise<Map<string, SiteRole>> {
-  const { data, error } = await supabase
-    .from("site_memberships")
-    .select("site_id, role")
-    .eq("user_id", userId);
-  if (error) throw error;
-  return new Map(
-    data.map((row) => [
-      row.site_id,
-      row.role === "supervisor" ? "supervisor" : "crew",
-    ]),
-  );
-}
-
-/** Everyone on a site. Supervisors only; the database refuses anyone else. */
-export async function fetchSiteCrew(siteId: string): Promise<CrewMember[]> {
-  const { data, error } = await supabase.rpc("list_site_crew", {
-    p_site_id: siteId,
-  });
-  if (error) throw error;
-  return data;
-}
 
 export type AssignOutcome = {
   outcome: "assigned" | "already_member";
@@ -71,4 +41,11 @@ export function isMissingFunction(error: unknown): boolean {
     "code" in error &&
     (error as { code: unknown }).code === "PGRST202"
   );
+}
+
+/** Says why a crew-management call failed, in words a supervisor can act on. */
+export function describeCrewError(error: unknown): string {
+  return isMissingFunction(error)
+    ? "Crew management needs a database update. Ask whoever runs the project to apply the latest migration."
+    : errorMessage(error);
 }

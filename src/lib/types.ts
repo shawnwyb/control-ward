@@ -37,9 +37,3 @@ export const severityLabels: Record<Severity, string> = {
   2: "Moderate",
   3: "High",
 };
-
-export type Alert = Database["public"]["Tables"]["alerts"]["Row"];
-export type AlertKind = "lightning" | "flood" | "heat" | "wildfire" | "other";
-export type AlertLevel = "info" | "warning" | "stop_work";
-export type SiteOverview = Database["public"]["Views"]["site_overview"]["Row"];
-export type Briefing = Database["public"]["Tables"]["briefings"]["Row"];

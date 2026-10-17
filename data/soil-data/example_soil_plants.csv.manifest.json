@@ -1,0 +1,68 @@
+{
+  "retrieved_at": "2026-10-17T19:13:50Z",
+  "file": "example_soil_plants.csv",
+  "sha256": "e8f19131024e70b0feb54f7b688b86e5cd6be55cf302dba35ac2db554c257bdd",
+  "bytes": 2190,
+  "row_count": 3,
+  "service_base": "https://SDMDataAccess.sc.egov.usda.gov/Tabular/post.rest",
+  "query": {
+    "xlsx": "../power-plants/august_generator2026.xlsx",
+    "sheet": "Operating",
+    "state": [],
+    "plant_id": [
+      136,
+      61666,
+      56407
+    ],
+    "limit": null,
+    "radius_m": 250.0,
+    "fallback_radius_m": 1000.0,
+    "min_coverage": 0.2,
+    "depth_cm": 30.0,
+    "batch": 50
+  },
+  "fallback": {
+    "retried": 0,
+    "improved": 0
+  },
+  "survey_vintages": {
+    "FL105": "8/31/2026 12:41:45 PM",
+    "FL107": "8/31/2026 12:47:45 PM",
+    "FL611": "8/26/2026 6:34:45 PM"
+  },
+  "requests": [
+    {
+      "method": "POST",
+      "url": "https://SDMDataAccess.sc.egov.usda.gov/Tabular/post.rest",
+      "sql_sha256": "44f00882ec2f91701702239c083776c42e69cc9a421f63963e16a2150a398603",
+      "sql_chars": 2509,
+      "rows": 7,
+      "seconds": 0.34
+    },
+    {
+      "method": "POST",
+      "url": "https://SDMDataAccess.sc.egov.usda.gov/Tabular/post.rest",
+      "sql_sha256": "b93e69ec3142737ebc06cfb71bb153be35b7187776bb4d62bd096f43cc1313c3",
+      "sql_chars": 347,
+      "rows": 7,
+      "seconds": 0.25
+    },
+    {
+      "method": "POST",
+      "url": "https://SDMDataAccess.sc.egov.usda.gov/Tabular/post.rest",
+      "sql_sha256": "1dcdd3a4ebac9309a8512686716b46adbae992023fe17f72188f4c5532dffced",
+      "sql_chars": 562,
+      "rows": 37,
+      "seconds": 0.09
+    },
+    {
+      "method": "POST",
+      "url": "https://SDMDataAccess.sc.egov.usda.gov/Tabular/post.rest",
+      "sql_sha256": "65505bede13a660aa4e05662c4be77a1f14408ced4187f9a230af4d809cc0daa",
+      "sql_chars": 355,
+      "rows": 552,
+      "seconds": 0.42
+    }
+  ],
+  "note": ""
+}

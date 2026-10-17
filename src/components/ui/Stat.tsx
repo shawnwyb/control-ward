@@ -8,13 +8,11 @@ type Props = {
   value: ReactNode;
   /** Short qualifier shown beside the value, e.g. "of 10". */
   note?: ReactNode;
-  /** A second, smaller line under the value, e.g. tomorrow's figure. */
-  footnote?: ReactNode;
   /** Full explanation on hover/long-press. */
   title?: string;
 };
 
-export function Stat({ label, valueId, value, note, footnote, title }: Props) {
+export function Stat({ label, valueId, value, note, title }: Props) {
   return (
     <div className={styles.stat} title={title}>
       <span className={styles.label}>{label}</span>
@@ -24,7 +22,6 @@ export function Stat({ label, valueId, value, note, footnote, title }: Props) {
         </strong>
         {note ? <small className={styles.note}>{note}</small> : null}
       </span>
-      {footnote ? <small className={styles.footnote}>{footnote}</small> : null}
     </div>
   );
 }

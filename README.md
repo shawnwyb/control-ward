@@ -98,15 +98,15 @@ The app reads its Supabase settings from `.env.local` (git-ignored), so nothing 
 
 A person's role is per site: `crew` or `supervisor` (the `role` column of `site_memberships`).
 
-|                                                                      | Crew                                          | Supervisor |
-| -------------------------------------------------------------------- | --------------------------------------------- | ---------- |
-| Alerts, briefing, map, report form, feed, weather                    | Yes                                           | Yes        |
-| Stats bar (site risk, open hazards, crew risk, wildlife)             | No (the live-feed indicator sits in the feed) | Yes        |
-| **Crew** tab: see who is on the site, add crew by email, remove crew | No                                            | Yes        |
+|                                                           | Crew                               | Supervisor |
+| --------------------------------------------------------- | ---------------------------------- | ---------- |
+| Alerts, acknowledge, briefing, map, report form, feed     | Yes                                | Yes        |
+| Stats bar (site risk, open hazards, crew risk, wildlife)  | No (the live-feed indicator stays) | Yes        |
+| Supervisor dashboard: plan review, push, **Crew** section | No                                 | Yes        |
 
-Supervisors manage rosters in the app: **Crew** tab, type the email of an account that already exists, **Add to site**. To remove someone, choose **Remove**, then **Remove from site**. The app can add and remove only `crew`. It never promotes, demotes or removes a supervisor, so the first supervisor on a site still comes from SQL (see above).
+Supervisors manage rosters in the app: the dashboard's **Crew** section: type the email of an account that already exists, **Add to site**. To remove someone, choose **Remove**, then **Remove from site**. The app can add and remove only `crew`. It never promotes, demotes or removes a supervisor, so the first supervisor on a site still comes from SQL (see above).
 
-This needs one migration, `supabase/migrations/20261017001400_crew_assignment.sql`, which adds `list_site_crew`, `assign_site_member` and `unassign_site_member`. Apply it with `supabase db push --linked`, or paste the file into the SQL Editor. Without it, the Crew tab says it needs a database update. Then check it:
+This needs one migration, `supabase/migrations/20261017001500_crew_assignment.sql`, which adds `assign_site_member` and `unassign_site_member`. It must run after `20261017001400_push_and_briefing_review.sql`, which provides `list_site_crew`. Apply it with `supabase db push --linked`, or paste the file into the SQL Editor. Without it, the Crew section says it needs a database update. Then check it:
 
 ```sh
 npm run verify:crew-assignment   # rolled back; ends with "ALL CREW ASSIGNMENT CHECKS PASSED"
@@ -114,6 +114,21 @@ CHECK_EMAIL=… CHECK_PASSWORD='…' npm run check:connection   # as a superviso
 ```
 
 The crew screens use the same tables and RPCs as before; the monitoring migrations only add columns to `sites`. The crew screen also reads `alerts`, `site_overview`, `briefings`, `alert_acks` and `briefing_reads`, and calls `acknowledge_alert` and `mark_briefing_read`. `check:connection` tests those reads too. Crew location sharing (`update_crew_location`) is not wired up yet.
+
+## Supervisor dashboard, web push and reviewed briefings
+
+The UI follows the signed-in user's role at the selected site (`site_memberships.role`). Supervisors get risk, alerts with the lightning countdown, the crew roster with last known locations (also on the map), a push composer and the next-day plan review. Crew get live alerts, the approved plan, and opt-ins for push and location sharing.
+
+Push targets: everyone on the site, ticked workers, or workers whose last known position is within a radius of an open hazard. Pushes are queued in `push_outbox` and sent by the `send-push` Edge Function. New or escalated alerts and high next-day risk queue pushes automatically. The daily plan is never sent automatically: `generate-briefing-draft` drafts it (forecast ring around the site, nearby sites, Gemini with Google Search for traffic, school and wildlife context), a supervisor edits it, and **Approve and send** pushes it.
+
+Setup on the hosted project:
+
+1. `supabase db push --linked`
+2. `npx web-push generate-vapid-keys`, then `supabase secrets set VAPID_PUBLIC_KEY=… VAPID_PRIVATE_KEY=… VAPID_SUBJECT=mailto:you@example.com GEMINI_API_KEY=…`
+3. `supabase functions deploy send-push --use-api` and `supabase functions deploy generate-briefing-draft --use-api`
+4. Put the public key in `.env.local` as `VITE_VAPID_PUBLIC_KEY`.
+
+Without `GEMINI_API_KEY` the draft falls back to forecast rules. iPhone needs the app added to the Home Screen before it can receive push.
 
 ### Option B: local stack (Docker)
 

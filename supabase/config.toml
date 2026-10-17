@@ -429,3 +429,9 @@ verify_jwt = false
 
 [functions.ingest-lightning]
 verify_jwt = false
+
+[functions.send-push]
+verify_jwt = false
+
+[functions.generate-briefing-draft]
+verify_jwt = false

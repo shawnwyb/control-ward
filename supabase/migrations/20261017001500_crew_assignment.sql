@@ -1,24 +1,12 @@
--- Crew assignment: a supervisor lists, adds and removes crew at the sites they supervise.
+-- Crew assignment: a supervisor adds and removes crew at the sites they supervise.
 --
 -- site_memberships can only be read by its own user and clients cannot write to it,
--- so these functions are the only way to manage a roster from the app. Each one
+-- so these functions are the only way to change a roster from the app. Each one
 -- checks the caller's role on that site, and only ever adds or removes `crew`:
 -- no one can be promoted, demoted, or locked out through them.
-
-create function public.list_site_crew(p_site_id uuid)
-returns table(user_id uuid, email text, role text)
-language plpgsql stable security definer set search_path='' as $$
-begin
-  if auth.uid() is null or not private.is_site_supervisor(p_site_id) then
-    raise exception 'Supervisor role required' using errcode='42501';
-  end if;
-  return query
-    select m.user_id, u.email::text, m.role
-    from public.site_memberships m
-    join auth.users u on u.id = m.user_id
-    where m.site_id = p_site_id
-    order by (m.role = 'supervisor') desc, lower(u.email::text);
-end; $$;
+--
+-- Listing a roster is public.list_site_crew from 20261017001400_push_and_briefing_review.sql
+-- (supervisors only, with locations). This migration must run after it.
 
 -- Adds an existing account to the site as crew. An existing member is left as they are
 -- (this call never changes a role), so it is safe to repeat.
@@ -74,7 +62,7 @@ begin
   return jsonb_build_object('ok', true, 'removed', true);
 end; $$;
 
-revoke all on function public.list_site_crew(uuid), public.assign_site_member(uuid, text),
+revoke all on function public.assign_site_member(uuid, text),
   public.unassign_site_member(uuid, uuid) from public, anon, authenticated;
-grant execute on function public.list_site_crew(uuid), public.assign_site_member(uuid, text),
+grant execute on function public.assign_site_member(uuid, text),
   public.unassign_site_member(uuid, uuid) to authenticated;

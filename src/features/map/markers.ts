@@ -71,3 +71,17 @@ export function centerMarkerElement(): HTMLElement {
   element.className = styles.center;
   return element;
 }
+
+/** Worker marker for supervisors: initials in a dot, faded when the last fix is stale. */
+export function crewMarkerElement(name: string, stale: boolean): HTMLElement {
+  const element = document.createElement("div");
+  element.className = `${styles.crew} ${stale ? styles.crewStale : ""} crew-marker`;
+  element.textContent = name
+    .split(/\s+/)
+    .map((part) => part[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+  element.title = name;
+  return element;
+}

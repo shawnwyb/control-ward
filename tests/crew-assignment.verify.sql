@@ -1,4 +1,4 @@
--- Rolled-back assertions for crew assignment.
+-- Rolled-back assertions for crew assignment. Needs 20261017001400 (list_site_crew) and 20261017001500.
 -- Run: npm run verify:crew-assignment (expects an error reading "ALL CREW ASSIGNMENT CHECKS PASSED").
 do $$
 declare
@@ -20,11 +20,11 @@ begin
 
   set local role authenticated;
 
-  -- A supervisor sees the roster, supervisors first.
+  -- A supervisor sees the roster (main's list_site_crew, which also carries locations).
   perform set_config('request.jwt.claims',json_build_object('sub',sup,'role','authenticated')::text,true);
   select count(*) into n from public.list_site_crew(site_a);
   assert n=2, 'roster has two members';
-  assert (select role from public.list_site_crew(site_a) limit 1)='supervisor', 'supervisors are listed first';
+  assert (select count(*) from public.list_site_crew(site_a) where role='supervisor')=1, 'one supervisor listed';
 
   -- Adding is case-insensitive and ignores surrounding spaces.
   r:=public.assign_site_member(site_a,'  new.PERSON@assign.local ');

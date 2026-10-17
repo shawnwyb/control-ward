@@ -46,7 +46,3 @@
   color: var(--ink);
   font-size: var(--text-lg);
 }
-
-.connection {
-  margin-bottom: var(--space-3);
-}

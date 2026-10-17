@@ -98,3 +98,13 @@ img {
   white-space: nowrap;
   border: 0;
 }
+
+/* Anchored dashboard sections must clear the sticky section nav. */
+#risk,
+#plan,
+#crew,
+#push,
+#site-map,
+#site-reports {
+  scroll-margin-top: 4rem;
+}

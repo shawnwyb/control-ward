@@ -21,10 +21,6 @@ const bodies = {
   "arrow-right": '<path d="M4 12h16M14 6l6 6-6 6"/>',
   chevron: '<path d="M6 9l6 6 6-6"/>',
   close: '<path d="M6 6l12 12M18 6L6 18"/>',
-  lightning: '<path d="M13 3L6 13h5l-1 8 8-11h-5z"/>',
-  heat: '<path d="M10 14.5V5a2 2 0 1 1 4 0v9.5a4 4 0 1 1-4 0z"/><path d="M12 9v7"/>',
-  wildfire:
-    '<path d="M12 3c.5 3.5 4.5 5 4.5 9.5a4.5 4.5 0 0 1-9 0c0-2 1-3.2 2-4.2.2 1.6 1 2.4 1.8 2.7C10.8 8.6 11 5.6 12 3z"/>',
   alert: '<path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18v.5"/>',
   play: '<path d="M8 5l11 7-11 7z"/>',
   pause: '<path d="M8 5v14M16 5v14"/>',

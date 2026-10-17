@@ -5,15 +5,15 @@ import { useSiteFeed } from "../../hooks/useSiteFeed";
 import { errorMessage } from "../../lib/format";
 import { checkinRequestId, completeCheckin } from "../../lib/submission";
 import { sendCheckin } from "../../lib/api";
-import type { SiteRole } from "../../lib/crew";
+import type { Role } from "../../lib/monitoring";
 import type { Site } from "../../lib/types";
+import { useCrewRoster } from "../../hooks/useCrewRoster";
+import { CrewTools } from "../crewtools/CrewTools";
+import { SupervisorDashboard } from "../dashboard/SupervisorDashboard";
+import { scrollToSection } from "../dashboard/SectionNav";
 import { ErrorBoundary } from "../../components/ErrorBoundary";
-import { Panel, cx } from "../../components/ui";
+import { Panel } from "../../components/ui";
 import { ReportFeed } from "../feed/ReportFeed";
-import { AlertList } from "../monitoring/AlertList";
-import { AlertsUnavailable } from "../monitoring/AlertsUnavailable";
-import { BriefingPanel } from "../monitoring/BriefingPanel";
-import { useMonitoring } from "../monitoring/useMonitoring";
 import { SiteMap } from "../map/SiteMap";
 import { ReportForm } from "../report/ReportForm";
 import type { ReportDraft } from "../report/types";
@@ -24,19 +24,21 @@ import styles from "./SiteWorkspace.module.css";
 /** Everything for one site. Remounted per site, so form and feed state reset on switch. */
 export function SiteWorkspace({
   site,
-  userId,
   role,
+  userId,
 }: {
   site: Site;
+  role: Role;
   userId: string;
-  role: SiteRole;
 }) {
   const { announce } = useNotice();
   const { busy, isBusy, setBusy } = useBusy();
   const feed = useSiteFeed(site.id, (message) => announce(message, true));
-  const monitoring = useMonitoring(site.id, userId, (message) =>
+  const supervisor = role === "supervisor";
+  const roster = useCrewRoster(site.id, supervisor, (message) =>
     announce(message, true),
   );
+  const [crewFocus, setCrewFocus] = useState<{ id: string; nonce: number }>();
   const [draft, setDraft] = useState<ReportDraft>({
     type: "debris",
     severity: 2,
@@ -101,32 +103,33 @@ export function SiteWorkspace({
 
   return (
     <div id="site-workspace" className={styles.workspace}>
-      {/* Alerts come first: stop-work must never sit below the fold. */}
-      <ErrorBoundary fallback={<AlertsUnavailable />}>
-        {monitoring.failed ? (
-          <AlertsUnavailable onRetry={() => void monitoring.retry()} />
-        ) : (
-          <AlertList
-            alerts={monitoring.alerts}
-            acknowledged={monitoring.acknowledged}
-            pending={monitoring.pending}
-            onAcknowledge={(alertId) => void monitoring.acknowledge(alertId)}
-          />
-        )}
-      </ErrorBoundary>
-      {/* The stats bar is a supervisor view; crew keep the live-feed indicator in the feed. */}
-      {role === "supervisor" ? (
-        <StatusStrip
-          metrics={feed.metrics}
-          loaded={feed.loaded}
-          connection={feed.connection}
-          overview={monitoring.overview}
-          overviewLoaded={monitoring.loaded}
+      {supervisor ? (
+        <SupervisorDashboard
+          siteId={site.id}
+          siteName={site.name}
+          userId={userId}
+          onCrewChanged={() => void roster.refresh()}
+          reports={feed.reports}
+          crewTerm={feed.metrics.crewRisk}
+          crew={roster.crew}
+          crewLoaded={roster.loaded}
+          onLocate={(member) => {
+            setCrewFocus((last) => ({
+              id: member.user_id,
+              nonce: (last?.nonce ?? 0) + 1,
+            }));
+            scrollToSection("site-map");
+          }}
         />
       ) : null}
-      <div
-        className={cx(styles.grid, monitoring.briefing && styles.withBriefing)}
-      >
+      <CrewTools siteId={site.id} userId={userId} showAlerts={!supervisor} />
+      <StatusStrip
+        metrics={feed.metrics}
+        loaded={feed.loaded}
+        connection={feed.connection}
+        connectionOnly
+      />
+      <div className={styles.grid}>
         <ReportForm
           className={styles.form}
           draft={draft}
@@ -150,6 +153,8 @@ export function SiteWorkspace({
             className={styles.map}
             site={site}
             reports={feed.reports}
+            crew={supervisor ? roster.crew : undefined}
+            crewFocus={crewFocus}
             pin={{
               latitude: Number(draft.latitude),
               longitude: Number(draft.longitude),
@@ -160,24 +165,11 @@ export function SiteWorkspace({
             onPin={setPin}
           />
         </ErrorBoundary>
-        {monitoring.briefing ? (
-          <ErrorBoundary fallback={null}>
-            <BriefingPanel
-              className={styles.briefing}
-              briefing={monitoring.briefing}
-              read={monitoring.briefingRead}
-              onMarkRead={() =>
-                void monitoring.markRead(monitoring.briefing!.id)
-              }
-            />
-          </ErrorBoundary>
-        ) : null}
         <ReportFeed
           className={styles.feed}
           reports={feed.reports}
           reminderCount={feed.reminderCount}
           busy={busy}
-          connection={role === "crew" ? feed.connection : undefined}
           onCheckin={checkin}
           onHover={setHoveredId}
           onSelect={(id) =>

@@ -11,5 +11,4 @@ export { Segmented } from "./Segmented";
 export { SeverityMark, severityMarkup, severityShape } from "./SeverityMark";
 export { Stat } from "./Stat";
 export { StatusDot } from "./StatusDot";
-export { TabPanel, Tabs } from "./Tabs";
 export { TimeSlider } from "./TimeSlider";
