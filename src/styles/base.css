@@ -85,3 +85,13 @@ img {
     outline-color: Highlight;
   }
 }
+
+/* Anchored dashboard sections must clear the sticky section nav. */
+#risk,
+#plan,
+#crew,
+#push,
+#site-map,
+#site-reports {
+  scroll-margin-top: 4rem;
+}

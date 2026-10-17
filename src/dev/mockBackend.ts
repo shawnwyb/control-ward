@@ -422,6 +422,99 @@ const apiError = (message: string, status = 400) =>
 const filterValue = (url: URL, column: string) =>
   url.searchParams.get(column)?.replace(/^eq\./, "");
 
+// --- Monitoring, crew roster, push and briefing review (design mode only) ---
+const supervisors = new Set(["supervisor@planit.local"]);
+const mockCrew = (siteId: string) => {
+  const site = sites.find((candidate) => candidate.id === siteId)!;
+  const place = (north: number, east: number) => offsetPoint(site, north, east);
+  return [
+    {
+      user_id: "u-alex",
+      name: "Alex Rivera",
+      email: "crew@planit.local",
+      ...place(120, -80),
+      age: 2,
+      push: true,
+    },
+    {
+      user_id: "u-jordan",
+      name: "Jordan Lee",
+      email: "jordan@planit.local",
+      ...place(-200, 340),
+      age: 18,
+      push: false,
+    },
+    {
+      user_id: "u-sam",
+      name: "Sam Okafor",
+      email: "sam@planit.local",
+      latitude: null,
+      longitude: null,
+      age: 0,
+      push: true,
+    },
+  ];
+};
+type MockDraft = {
+  site_id: string;
+  for_date: string;
+  status: "generating" | "draft" | "sent";
+  source: "gemini" | "rules";
+  updated_at: string;
+  sent_at: string | null;
+  content: Record<string, unknown>;
+};
+const drafts = new Map<string, MockDraft>();
+function mockDraft(
+  siteId: string,
+  status: MockDraft["status"] = "draft",
+): MockDraft {
+  const date = new Date(Date.now() + 86400000).toISOString().slice(0, 10);
+  const hourly = Array.from({ length: 24 }, (_, hour) => {
+    const blocked = hour >= 13 && hour <= 15;
+    return {
+      hour,
+      wbgt: blocked ? 89 : 80,
+      gust: 12,
+      pop: blocked ? 70 : 10,
+      mm: 0,
+      safe: !blocked,
+      blocked_by: blocked ? ["storms"] : [],
+    };
+  });
+  return {
+    site_id: siteId,
+    for_date: date,
+    status,
+    source: "gemini",
+    updated_at: new Date().toISOString(),
+    sent_at: null,
+    content: {
+      work_window: { start: "07:00", end: "13:00" },
+      summary:
+        "Start early and wrap up by 1 PM. Afternoon storms are likely from 1 to 4 PM.",
+      reasons: ["Storm chance reaches 70% mid-afternoon."],
+      context: {
+        traffic:
+          "Lane closure on the main access road until 9 AM; allow extra time for deliveries.",
+        school:
+          "Elementary school nearby is in session; expect bus traffic 7:30 to 8:15 AM and 3 PM.",
+        wildlife:
+          "Gopher tortoises and snakes are active on warm mornings; watch the access road verges.",
+      },
+      hourly,
+      neighbors: [
+        {
+          name: "Neighbor Plant · Demo",
+          distance_km: 14.2,
+          risk_tomorrow: 6.5,
+          driver: "weather subscore 6.5",
+        },
+      ],
+    },
+  };
+}
+
 async function handle(
   request: { method: string; url: URL; headers: Headers; body: unknown },
   path: string,
@@ -590,6 +683,137 @@ async function handle(
     tasks = tasks.filter((task) => task.report_id !== report.id);
     notifyChange();
     return respond(null);
+  }
+  const siteParam = String(body.p_site_id ?? filterValue(url, "site_id") ?? "");
+  const memberOf = accounts[email].includes(siteParam);
+  const isSupervisor = memberOf && supervisors.has(email);
+  if (path === "/rest/v1/site_memberships")
+    return respond(
+      accounts[email].map((site_id) => ({
+        site_id,
+        role: supervisors.has(email) ? "supervisor" : "crew",
+      })),
+    );
+  if (path === "/rest/v1/site_overview")
+    return respond(
+      memberOf
+        ? [
+            {
+              site_id: siteParam,
+              risk_now: 5.2,
+              risk_tomorrow: 6.5,
+              top_driver: "heat subscore 5",
+              active_alert_count: 1,
+              subscores: {
+                heat: 5,
+                weather: 3,
+                lightning: 0,
+                flood: 1.5,
+                wildfire: 0,
+                soil: 2,
+                wildlife: 2,
+              },
+            },
+          ]
+        : [],
+    );
+  if (path === "/rest/v1/alerts")
+    return respond(
+      memberOf
+        ? [
+            {
+              id: "a1",
+              kind: "heat",
+              level: "warning",
+              created_at: minutesAgo(25),
+              payload: {},
+            },
+          ]
+        : [],
+    );
+  if (path === "/rest/v1/lightning_state")
+    return respond(
+      memberOf
+        ? [
+            {
+              site_id: siteParam,
+              status: "clear",
+              last_strike_at: null,
+              last_strike_distance_m: null,
+            },
+          ]
+        : [],
+    );
+  if (path === "/rest/v1/briefing_drafts") {
+    const draft = drafts.get(siteParam);
+    return respond(
+      memberOf && draft && (isSupervisor || draft.status === "sent")
+        ? [draft]
+        : [],
+    );
+  }
+  if (path === "/rest/v1/push_subscriptions") return respond(null, 201);
+  if (path === "/rest/v1/rpc/list_site_crew") {
+    if (!isSupervisor) return apiError("Supervisor role required", 403);
+    return respond(
+      mockCrew(siteParam).map((m) => ({
+        ...m,
+        role: "crew",
+        accuracy_m: 10,
+        located_at: m.latitude === null ? null : minutesAgo(m.age),
+        is_stale: m.latitude === null || m.age > 5,
+        has_push: m.push,
+      })),
+    );
+  }
+  if (path === "/rest/v1/rpc/push_audience") {
+    if (!isSupervisor) return apiError("Supervisor role required", 403);
+    const target = body.p_target as { mode: string; user_ids?: string[] };
+    const people = mockCrew(siteParam).filter((m) =>
+      target.mode === "users"
+        ? target.user_ids?.includes(m.user_id)
+        : target.mode === "near"
+          ? m.latitude !== null && m.age < 10
+          : true,
+    );
+    return respond({
+      targeted: people.length,
+      reachable: people.filter((m) => m.push).length,
+    });
+  }
+  if (path === "/rest/v1/rpc/send_push") {
+    if (!isSupervisor) return apiError("Supervisor role required", 403);
+    if (failWrites) return apiError("Mock write failure", 500);
+    return respond({ ok: true, id: crypto.randomUUID() });
+  }
+  if (path === "/rest/v1/rpc/update_crew_location")
+    return respond({ ok: true, exposed_alerts: [] });
+  if (path === "/rest/v1/rpc/request_briefing_draft") {
+    if (!isSupervisor) return apiError("Supervisor role required", 403);
+    drafts.set(siteParam, {
+      ...mockDraft(siteParam),
+      status: "generating",
+      content: {},
+    });
+    setTimeout(() => {
+      drafts.set(siteParam, mockDraft(siteParam));
+      notifyChange();
+    }, 2500);
+    return respond({ ok: true });
+  }
+  if (path === "/rest/v1/rpc/save_briefing_draft") {
+    const draft = drafts.get(siteParam);
+    if (!isSupervisor || !draft || draft.status === "sent")
+      return apiError("No editable draft for that date", 400);
+    draft.content = body.p_content as Record<string, unknown>;
+    return respond({ ok: true });
+  }
+  if (path === "/rest/v1/rpc/send_briefing") {
+    const draft = drafts.get(siteParam);
+    if (!isSupervisor || !draft) return apiError("Draft is not ready", 400);
+    draft.status = "sent";
+    draft.sent_at = new Date().toISOString();
+    return respond({ ok: true });
   }
   return apiError(`Mock backend has no handler for ${method} ${path}`, 404);
 }

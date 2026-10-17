@@ -26,7 +26,7 @@ export function ReportFeed({
   const [showResolved, setShowResolved] = useState(false);
   const visible = reports.filter((report) => showResolved || report.is_active);
   return (
-    <Panel className={className} aria-labelledby="feed-title">
+    <Panel id="site-reports" className={className} aria-labelledby="feed-title">
       <PanelHeader
         titleId="feed-title"
         title={
