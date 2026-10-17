@@ -56,7 +56,26 @@ const accounts: Record<string, string[]> = {
   "other@planit.local": ["site-south"],
   "supervisor@planit.local": sites.map((site) => site.id),
   "outsider@planit.local": [],
+  // More people for the Crew tab: two already on North, two with no site yet.
+  "jordan.lee@example.com": ["site-north"],
+  "sam.ortiz@example.com": ["site-north"],
+  "taylor.kim@example.com": [],
+  "riley.chen@example.com": [],
 };
+/** Role of each person at each site. Only supervisor@planit.local supervises; everyone else is crew. */
+const memberRoles = new Map<string, "crew" | "supervisor">(
+  Object.entries(accounts).flatMap(([email, siteIds]) =>
+    siteIds.map(
+      (siteId) =>
+        [
+          `${email}|${siteId}`,
+          email === "supervisor@planit.local" ? "supervisor" : "crew",
+        ] as const,
+    ),
+  ),
+);
+const isSupervisorAt = (email: string, siteId: string) =>
+  memberRoles.get(`${email}|${siteId}`) === "supervisor";
 
 type Report = {
   id: string;
@@ -192,9 +211,14 @@ const latency = Number(params.get("latency") ?? 150);
 const failWrites = params.has("fail");
 // ?break=alerts, or window.__mockFlags.breakAlerts at runtime, makes alert reads fail.
 // Created on first use, not at import, so importing this module has no side effects.
-function flags(): { breakAlerts: boolean } {
-  const w = window as unknown as { __mockFlags?: { breakAlerts: boolean } };
-  return (w.__mockFlags ??= { breakAlerts: params.get("break") === "alerts" });
+type Flags = { breakAlerts: boolean; breakCrew: boolean };
+function flags(): Flags {
+  const w = window as unknown as { __mockFlags?: Flags };
+  return (w.__mockFlags ??= {
+    breakAlerts: params.get("break") === "alerts",
+    // ?break=crew pretends the crew-assignment migration has not been applied.
+    breakCrew: params.get("break") === "crew",
+  });
 }
 
 /* ---------- monitoring: alerts, site risk, briefings ---------- */
@@ -632,6 +656,102 @@ async function handle(
   if (path === "/auth/v1/logout") return respond(null, 204);
   if (!email || !(email in accounts)) return apiError("JWT required", 401);
 
+  if (path === "/rest/v1/site_memberships") {
+    // Row-level security: a user reads only their own memberships.
+    const userId = filterValue(url, "user_id");
+    if (userId !== `user-${email}`) return respond([]);
+    return respond(
+      accounts[email].map((siteId) => ({
+        site_id: siteId,
+        role: memberRoles.get(`${email}|${siteId}`) ?? "crew",
+      })),
+    );
+  }
+  if (
+    path.startsWith("/rest/v1/rpc/") &&
+    /\/(list_site_crew|assign_site_member|unassign_site_member)$/.test(path)
+  ) {
+    if (flags().breakCrew)
+      return respond(
+        {
+          code: "PGRST202",
+          message: `Could not find the function public.${path.split("/").pop()} in the schema cache`,
+          details: null,
+          hint: null,
+        },
+        404,
+      );
+    const siteId = String(body.p_site_id ?? "");
+    if (!isSupervisorAt(email, siteId))
+      return apiError("Supervisor role required", 403);
+    const memberEmails = () =>
+      Object.keys(accounts).filter((address) =>
+        accounts[address].includes(siteId),
+      );
+    const row = (address: string) => ({
+      user_id: `user-${address}`,
+      email: address,
+      role: memberRoles.get(`${address}|${siteId}`) ?? "crew",
+    });
+
+    if (path.endsWith("/list_site_crew"))
+      return respond(
+        memberEmails()
+          .map(row)
+          .sort(
+            (a, b) =>
+              Number(b.role === "supervisor") -
+                Number(a.role === "supervisor") ||
+              a.email.localeCompare(b.email),
+          ),
+      );
+
+    if (failWrites) return apiError("Simulated failure (?fail)", 500);
+
+    if (path.endsWith("/assign_site_member")) {
+      const wanted = String(body.p_email ?? "")
+        .trim()
+        .toLowerCase();
+      if (!wanted)
+        return apiError("Enter the email address of the person to add.", 400);
+      const address = Object.keys(accounts).find(
+        (candidate) => candidate.toLowerCase() === wanted,
+      );
+      if (!address) return apiError("No account uses that email address.", 400);
+      const existing = memberRoles.get(`${address}|${siteId}`);
+      if (existing)
+        return respond({
+          ok: true,
+          outcome: "already_member",
+          user_id: `user-${address}`,
+          email: address,
+          role: existing,
+        });
+      accounts[address].push(siteId);
+      memberRoles.set(`${address}|${siteId}`, "crew");
+      return respond({
+        ok: true,
+        outcome: "assigned",
+        user_id: `user-${address}`,
+        email: address,
+        role: "crew",
+      });
+    }
+
+    // unassign_site_member
+    const address = Object.keys(accounts).find(
+      (candidate) => `user-${candidate}` === body.p_user_id,
+    );
+    const existing = address
+      ? memberRoles.get(`${address}|${siteId}`)
+      : undefined;
+    if (!address || !existing) return respond({ ok: true, removed: false });
+    if (existing !== "crew")
+      return apiError("Supervisors cannot be removed here.", 403);
+    accounts[address] = accounts[address].filter((id) => id !== siteId);
+    memberRoles.delete(`${address}|${siteId}`);
+    return respond({ ok: true, removed: true });
+  }
   if (path === "/rest/v1/sites")
     return respond(
       sites

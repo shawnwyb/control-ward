@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Badge, Icon, Panel, PanelHeader } from "../../components/ui";
 import type { Report } from "../../lib/types";
+import type { ConnectionState } from "../../hooks/useSiteFeed";
+import { ConnectionStatus } from "../workspace/ConnectionStatus";
 import { ReportRow } from "./ReportRow";
 import styles from "./ReportFeed.module.css";
 
@@ -9,6 +11,8 @@ type Props = {
   reminderCount: number;
   busy: boolean;
   className?: string;
+  /** When given, shows whether the feed is live (used where there is no stats bar). */
+  connection?: ConnectionState;
   onCheckin: (reportId: string, stillThere: boolean) => void;
   onHover: (reportId: string | null) => void;
   onSelect: (reportId: string) => void;
@@ -19,6 +23,7 @@ export function ReportFeed({
   reminderCount,
   busy,
   className,
+  connection,
   onCheckin,
   onHover,
   onSelect,
@@ -49,6 +54,11 @@ export function ReportFeed({
           </label>
         }
       />
+      {connection ? (
+        <p className={styles.connection}>
+          <ConnectionStatus connection={connection} />
+        </p>
+      ) : null}
       <div id="reminders">
         {reminderCount ? (
           <div className={styles.reminder}>

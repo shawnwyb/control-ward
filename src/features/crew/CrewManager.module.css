@@ -1,0 +1,86 @@
+.panel {
+  max-width: 48rem;
+}
+
+.add {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+}
+
+.addField {
+  flex: 1;
+  min-width: 14rem;
+}
+
+.counts {
+  margin-bottom: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--ink-muted);
+}
+
+.roster {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: var(--rule-width) solid var(--rule);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) 0;
+  border-bottom: var(--rule-width) solid var(--rule);
+}
+
+.email {
+  overflow-wrap: anywhere;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+}
+
+.you {
+  color: var(--ink-muted);
+  font-family: var(--font-sans);
+}
+
+.confirm {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.note {
+  margin-top: var(--space-3);
+  color: var(--ink-muted);
+}
+
+.error {
+  display: grid;
+  gap: var(--space-3);
+  justify-items: start;
+  padding: var(--space-4);
+  border: var(--rule-width) solid var(--rule-strong);
+  border-left: 6px solid var(--sev-2);
+  background: var(--sev-2-bg);
+}
+
+@media (max-width: 40rem) {
+  /* email on its own line, then role and action beneath */
+  .row {
+    grid-template-columns: auto 1fr;
+  }
+
+  .email {
+    grid-column: 1 / -1;
+  }
+
+  .row > :last-child {
+    justify-self: end;
+  }
+}

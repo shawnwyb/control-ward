@@ -94,6 +94,25 @@ The app reads its Supabase settings from `.env.local` (git-ignored), so nothing 
 
    `check:connection` is read-only. It confirms the project is reachable and the key is accepted, then signs in and reads sites, the crew feed and the metrics call. Without `CHECK_EMAIL` and `CHECK_PASSWORD` it only checks reachability. It never prints keys.
 
+### Roles and crew management
+
+A person's role is per site: `crew` or `supervisor` (the `role` column of `site_memberships`).
+
+|                                                                      | Crew                                          | Supervisor |
+| -------------------------------------------------------------------- | --------------------------------------------- | ---------- |
+| Alerts, briefing, map, report form, feed, weather                    | Yes                                           | Yes        |
+| Stats bar (site risk, open hazards, crew risk, wildlife)             | No (the live-feed indicator sits in the feed) | Yes        |
+| **Crew** tab: see who is on the site, add crew by email, remove crew | No                                            | Yes        |
+
+Supervisors manage rosters in the app: **Crew** tab, type the email of an account that already exists, **Add to site**. To remove someone, choose **Remove**, then **Remove from site**. The app can add and remove only `crew`. It never promotes, demotes or removes a supervisor, so the first supervisor on a site still comes from SQL (see above).
+
+This needs one migration, `supabase/migrations/20261017001400_crew_assignment.sql`, which adds `list_site_crew`, `assign_site_member` and `unassign_site_member`. Apply it with `supabase db push --linked`, or paste the file into the SQL Editor. Without it, the Crew tab says it needs a database update. Then check it:
+
+```sh
+npm run verify:crew-assignment   # rolled back; ends with "ALL CREW ASSIGNMENT CHECKS PASSED"
+CHECK_EMAIL=… CHECK_PASSWORD='…' npm run check:connection   # as a supervisor, also tests the crew list
+```
+
 The crew screens use the same tables and RPCs as before; the monitoring migrations only add columns to `sites`. The crew screen also reads `alerts`, `site_overview`, `briefings`, `alert_acks` and `briefing_reads`, and calls `acknowledge_alert` and `mark_briefing_read`. `check:connection` tests those reads too. Crew location sharing (`update_crew_location`) is not wired up yet.
 
 ### Option B: local stack (Docker)

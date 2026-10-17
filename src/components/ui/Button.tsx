@@ -3,7 +3,7 @@ import { cx } from "./cx";
 import styles from "./Button.module.css";
 
 type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant?: "primary" | "secondary" | "quiet" | "ghost";
+  variant?: "primary" | "secondary" | "quiet" | "ghost" | "danger";
   /** Stretch to the full width of the container. */
   block?: boolean;
   /** Work in progress: keeps full contrast, shows a spinner, ignores clicks. */

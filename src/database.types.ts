@@ -1058,6 +1058,10 @@ export type Database = {
         Args: { p_alert_id: string; p_request_id: string }
         Returns: Json
       }
+      assign_site_member: {
+        Args: { p_email: string; p_site_id: string }
+        Returns: Json
+      }
       checkin_hazard_report: {
         Args: {
           p_report_id: string
@@ -1104,6 +1108,14 @@ export type Database = {
       }
       ingest_readings: { Args: { p_batch: Json }; Returns: Json }
       ingest_strikes: { Args: { p_batch: Json }; Returns: Json }
+      list_site_crew: {
+        Args: { p_site_id: string }
+        Returns: {
+          email: string
+          role: string
+          user_id: string
+        }[]
+      }
       mark_briefing_read: { Args: { p_briefing_id: string }; Returns: Json }
       prune_hazard_photo_reservations: {
         Args: { p_photo_ids: string[] }
@@ -1142,6 +1154,10 @@ export type Database = {
         Returns: Json
       }
       sweep_lightning: { Args: never; Returns: Json }
+      unassign_site_member: {
+        Args: { p_site_id: string; p_user_id: string }
+        Returns: Json
+      }
       update_crew_location: {
         Args: {
           p_accuracy_m?: number

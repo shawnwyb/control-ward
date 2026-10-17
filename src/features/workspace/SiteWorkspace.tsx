@@ -5,6 +5,7 @@ import { useSiteFeed } from "../../hooks/useSiteFeed";
 import { errorMessage } from "../../lib/format";
 import { checkinRequestId, completeCheckin } from "../../lib/submission";
 import { sendCheckin } from "../../lib/api";
+import type { SiteRole } from "../../lib/crew";
 import type { Site } from "../../lib/types";
 import { ErrorBoundary } from "../../components/ErrorBoundary";
 import { Panel, cx } from "../../components/ui";
@@ -24,9 +25,11 @@ import styles from "./SiteWorkspace.module.css";
 export function SiteWorkspace({
   site,
   userId,
+  role,
 }: {
   site: Site;
   userId: string;
+  role: SiteRole;
 }) {
   const { announce } = useNotice();
   const { busy, isBusy, setBusy } = useBusy();
@@ -111,13 +114,16 @@ export function SiteWorkspace({
           />
         )}
       </ErrorBoundary>
-      <StatusStrip
-        metrics={feed.metrics}
-        loaded={feed.loaded}
-        connection={feed.connection}
-        overview={monitoring.overview}
-        overviewLoaded={monitoring.loaded}
-      />
+      {/* The stats bar is a supervisor view; crew keep the live-feed indicator in the feed. */}
+      {role === "supervisor" ? (
+        <StatusStrip
+          metrics={feed.metrics}
+          loaded={feed.loaded}
+          connection={feed.connection}
+          overview={monitoring.overview}
+          overviewLoaded={monitoring.loaded}
+        />
+      ) : null}
       <div
         className={cx(styles.grid, monitoring.briefing && styles.withBriefing)}
       >
@@ -171,6 +177,7 @@ export function SiteWorkspace({
           reports={feed.reports}
           reminderCount={feed.reminderCount}
           busy={busy}
+          connection={role === "crew" ? feed.connection : undefined}
           onCheckin={checkin}
           onHover={setHoveredId}
           onSelect={(id) =>

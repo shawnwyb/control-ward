@@ -1,8 +1,6 @@
-import { Stat, StatusDot } from "../../components/ui";
-import {
-  connectionLabels,
-  type ConnectionState,
-} from "../../hooks/useSiteFeed";
+import { Stat } from "../../components/ui";
+import { type ConnectionState } from "../../hooks/useSiteFeed";
+import { ConnectionStatus } from "./ConnectionStatus";
 import type { SiteMetrics, SiteOverview } from "../../lib/types";
 import styles from "./StatusStrip.module.css";
 
@@ -64,18 +62,7 @@ export function StatusStrip({
         </p>
       ) : null}
       <div className={styles.connection} title="Shared with your site team">
-        <span id="connection" className={styles.status}>
-          <StatusDot
-            state={
-              connection === "live"
-                ? "live"
-                : connection === "unavailable"
-                  ? "off"
-                  : "pending"
-            }
-          />
-          {connectionLabels[connection]}
-        </span>
+        <ConnectionStatus connection={connection} />
       </div>
     </section>
   );

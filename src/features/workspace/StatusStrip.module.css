@@ -26,14 +26,6 @@
   font-size: var(--text-sm);
 }
 
-.status {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  font-weight: 500;
-  color: var(--ink);
-}
-
 @media (min-width: 48rem) {
   .strip {
     grid-template-columns: repeat(4, minmax(0, 1fr)) minmax(0, 1.4fr);
