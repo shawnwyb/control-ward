@@ -14,6 +14,7 @@
     "test": "node --test --test-concurrency=1 tests/backend.test.mjs",
     "test:ui": "playwright test",
     "local:cleanup": "node scripts/cleanup-photos.mjs",
+    "check:connection": "node scripts/check-connection.mjs",
     "db:lint": "supabase db lint --local --schema public,private --level warning",
     "format": "prettier --write vite.config.ts src scripts tests docs index.html package.json tsconfig.json playwright.config.ts README.md",
     "format:check": "prettier --check vite.config.ts src scripts tests docs index.html package.json tsconfig.json playwright.config.ts README.md",
