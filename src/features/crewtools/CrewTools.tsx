@@ -73,7 +73,8 @@ export function CrewTools({
   const support = pushSupport();
   const [pushOn, setPushOn] = useState(false);
 
-  const [message, setMessage] = useState<{ title: string; body: string }>();
+  // Disabled: this showed a second, blue copy of every push next to the alert cards.
+  // const [message, setMessage] = useState<{ title: string; body: string }>();
 
   useEffect(() => {
     void isPushEnabled()
@@ -87,16 +88,16 @@ export function CrewTools({
   }, [userId]);
 
   // The service worker forwards every push to open windows, so it is visible even if the OS hides it.
-  useEffect(() => {
-    if (!("serviceWorker" in navigator)) return;
-    const onMessage = (event: MessageEvent) => {
-      if (event.data?.type !== "push") return;
-      setMessage({ title: event.data.title, body: event.data.body });
-    };
-    navigator.serviceWorker.addEventListener("message", onMessage);
-    return () =>
-      navigator.serviceWorker.removeEventListener("message", onMessage);
-  }, []);
+  // useEffect(() => {
+  //   if (!("serviceWorker" in navigator)) return;
+  //   const onMessage = (event: MessageEvent) => {
+  //     if (event.data?.type !== "push") return;
+  //     setMessage({ title: event.data.title, body: event.data.body });
+  //   };
+  //   navigator.serviceWorker.addEventListener("message", onMessage);
+  //   return () =>
+  //     navigator.serviceWorker.removeEventListener("message", onMessage);
+  // }, []);
 
   async function testNotification() {
     try {
@@ -133,6 +134,7 @@ export function CrewTools({
           compact
         />
       ) : null}
+      {/* Disabled: duplicate blue card for pushes.
       {message ? (
         <div className={styles.sentPlan} id="push-message" role="status">
           <strong>{message.title}</strong>
@@ -142,6 +144,7 @@ export function CrewTools({
           </Button>
         </div>
       ) : null}
+      */}
       {sent ? (
         <div className={styles.sentPlan} id="crew-plan">
           <strong>
