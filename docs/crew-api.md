@@ -84,7 +84,29 @@ const reminders = await supabase
   .is("completed_at", null); // RLS automatically scopes recipients
 ```
 
-History contains observation coordinates, site, type, action, actor, severity and time. Events are durable, and the alert/briefing worker can query `hazard_events` with `.gt('id', lastProcessedId).order('id').limit(100)`. Each consumer must persist its own cursor and deduplicate outbound delivery by event ID. Events describe changes; resolve each report's current state when composing a briefing.
+History contains observation coordinates, site, type, action, actor, severity and time. Events describe changes; resolve each report's current state when composing a briefing.
+
+Trusted alert/briefing workers use leased delivery rather than an ID cursor. Sequence numbers are assigned before commit, so a cursor could skip an earlier ID that commits later.
+
+```ts
+const { data: events, error } = await worker.rpc("claim_hazard_events", {
+  p_consumer: "crew-alerts", // stable, distinct name for each independent consumer
+  p_limit: 100,
+  p_lease_seconds: 60,
+});
+if (error) throw error;
+for (const event of events) {
+  // Deliver using event.event_id as an idempotency key. Then acknowledge:
+  const ack = await worker.rpc("ack_hazard_event", {
+    p_consumer: "crew-alerts",
+    p_event_id: event.event_id,
+    p_lease_token: event.lease_token,
+  });
+  // ack.data is true only if this unexpired lease was acknowledged.
+}
+```
+
+Unacknowledged events become eligible when the lease expires; independent consumers each see the full stream. Delivery is at least once, so external side effects still need idempotency. Choose a lease longer than processing time and a bounded batch. These worker RPCs are unavailable to browser roles.
 
 ## Live updates
 

@@ -20,6 +20,7 @@ const clients = {};
 const users = {};
 const sites = [];
 const channels = [];
+const consumers = [];
 const lat = 29.652;
 const lon = -82.325;
 const png = Buffer.from(
@@ -106,6 +107,10 @@ describe(
     });
     after(async () => {
       for (const channel of channels) await channel.unsubscribe();
+      await db.query(
+        "delete from private.hazard_event_deliveries where consumer=any($1::text[])",
+        [consumers],
+      );
       const photos = await db.query(
         "select object_path from public.hazard_photos where site_id=any($1::uuid[])",
         [sites],
@@ -514,6 +519,126 @@ describe(
           .open_report_count,
         1,
       );
+    });
+
+    test("worker delivery handles out-of-order commits, leases and independent consumers", async () => {
+      const id = await site();
+      const report = ok(await submit(id)).report;
+      const consumer = `test-${randomUUID()}`;
+      const secondConsumer = `test-${randomUUID()}`;
+      consumers.push(consumer, secondConsumer);
+      const connection = await db.connect();
+      try {
+        await connection.query("begin");
+        const {
+          rows: [observation],
+        } = await connection.query(
+          "insert into public.hazard_observations(report_id,action,location,severity) select id,'confirmed',location,severity from public.hazard_reports where id=$1 returning id",
+          [report.id],
+        );
+        const {
+          rows: [early],
+        } = await connection.query(
+          "insert into public.hazard_events(report_id,observation_id,action) values($1,$2,'confirmed') returning id",
+          [report.id, observation.id],
+        );
+        const later = ok(await submit(id, { p_type: "wildlife" })).report;
+        const firstBatch = ok(
+          await admin.rpc("claim_hazard_events", {
+            p_consumer: consumer,
+            p_limit: 1000,
+          }),
+        );
+        assert.ok(firstBatch.some((e) => e.report_id === later.id));
+        assert.ok(!firstBatch.some((e) => String(e.event_id) === early.id));
+        await connection.query("commit");
+        const nextBatch = ok(
+          await admin.rpc("claim_hazard_events", {
+            p_consumer: consumer,
+            p_limit: 1000,
+          }),
+        );
+        const lateCommit = nextBatch.find(
+          (e) => String(e.event_id) === early.id,
+        );
+        assert.ok(
+          lateCommit,
+          "The lower event ID committed later must still be delivered",
+        );
+        const event = firstBatch.find((e) => e.report_id === later.id);
+        assert.equal(
+          ok(
+            await admin.rpc("ack_hazard_event", {
+              p_consumer: consumer,
+              p_event_id: event.event_id,
+              p_lease_token: randomUUID(),
+            }),
+          ),
+          false,
+        );
+        assert.equal(
+          ok(
+            await admin.rpc("ack_hazard_event", {
+              p_consumer: consumer,
+              p_event_id: event.event_id,
+              p_lease_token: event.lease_token,
+            }),
+          ),
+          true,
+        );
+        assert.equal(
+          ok(
+            await admin.rpc("claim_hazard_events", {
+              p_consumer: consumer,
+              p_limit: 1000,
+            }),
+          ).length,
+          0,
+        );
+        await db.query(
+          "update private.hazard_event_deliveries set leased_until=now()-interval '1 second' where consumer=$1 and delivered_at is null",
+          [consumer],
+        );
+        const retryBatch = ok(
+          await admin.rpc("claim_hazard_events", {
+            p_consumer: consumer,
+            p_limit: 1000,
+          }),
+        );
+        assert.ok(!retryBatch.some((e) => e.event_id === event.event_id));
+        const retried = retryBatch.find(
+          (e) => e.event_id === lateCommit.event_id,
+        );
+        assert.notEqual(retried.lease_token, lateCommit.lease_token);
+        assert.equal(
+          ok(
+            await admin.rpc("ack_hazard_event", {
+              p_consumer: consumer,
+              p_event_id: lateCommit.event_id,
+              p_lease_token: lateCommit.lease_token,
+            }),
+          ),
+          false,
+        );
+        assert.ok(
+          ok(
+            await admin.rpc("claim_hazard_events", {
+              p_consumer: secondConsumer,
+              p_limit: 1000,
+            }),
+          ).some((e) => e.event_id === event.event_id),
+        );
+        assert.ok(
+          (
+            await clients.crew.rpc("claim_hazard_events", {
+              p_consumer: consumer,
+            })
+          ).error,
+        );
+      } finally {
+        await connection.query("rollback");
+        connection.release();
+      }
     });
 
     test("excludes 48-hour-old hazards immediately and persists expiry once", async () => {

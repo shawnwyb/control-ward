@@ -69,19 +69,19 @@ Keep service-role credentials on trusted workers only. The cleanup script derive
 
 See [RPC examples and consumer queries](docs/crew-api.md).
 
-| Interface                                               | Consumer                                                       |
-| ------------------------------------------------------- | -------------------------------------------------------------- |
-| `submit_hazard_report`                                  | Crew reporting form                                            |
-| `checkin_hazard_report`                                 | Crew “still there” / “gone” controls                           |
-| `reserve_hazard_photo` + private `hazard-photos` bucket | Crew photo upload                                              |
-| `crew_hazard_feed`                                      | Dashboard, heatmap, open hazards in briefing                   |
-| `crew_observation_feed`                                 | Spatial history / repeated affected areas for ML               |
-| `get_site_crew_metrics`                                 | Risk-score and wildlife-subscore owners                        |
-| `hazard_events`                                         | Alert / briefing workers; use increasing event IDs as a cursor |
-| `hazard_checkin_tasks`                                  | Assigned crew's in-app reminder inbox                          |
+| Interface                                               | Consumer                                              |
+| ------------------------------------------------------- | ----------------------------------------------------- |
+| `submit_hazard_report`                                  | Crew reporting form                                   |
+| `checkin_hazard_report`                                 | Crew “still there” / “gone” controls                  |
+| `reserve_hazard_photo` + private `hazard-photos` bucket | Crew photo upload                                     |
+| `crew_hazard_feed`                                      | Dashboard, heatmap, open hazards in briefing          |
+| `crew_observation_feed`                                 | Spatial history / repeated affected areas for ML      |
+| `get_site_crew_metrics`                                 | Risk-score and wildlife-subscore owners               |
+| `hazard_events` + claim/ack RPCs                        | Alert / briefing workers; independent leased delivery |
+| `hazard_checkin_tasks`                                  | Assigned crew's in-app reminder inbox                 |
 
 The minimal shared `sites` and `site_memberships` schema must be reconciled with your team's site registry before combining migrations. Authenticated consumers are site-scoped. Trusted service-role workers can read all sites and calculate metrics.
 
 This slice does not implement weather ingestion, the overall risk score, Python ML, supervisor dashboard, briefing generation, or outbound SMS/push delivery. It supplies their data interfaces. “Local crews” currently means assigned site members; GPS-based recipient selection is a separate policy decision.
 
-For larger deployments, replace the simple site-wide serialization with a measured locking strategy, paginate long feeds/history, define confirmation abuse controls and retention, and give independent notification workers their own durable cursors/retry tracking. Current mutations are designed for Postgres's default READ COMMITTED isolation and the documented hackathon workload.
+For larger deployments, replace the simple site-wide serialization with a measured locking strategy, paginate long feeds/history, and define confirmation abuse controls and retention. Notification consumers already have independent leases and acknowledgements; outbound providers still need idempotency. Current mutations are designed for Postgres's default READ COMMITTED isolation and the documented hackathon workload.

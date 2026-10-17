@@ -438,6 +438,10 @@ export type Database = {
       }
     }
     Functions: {
+      ack_hazard_event: {
+        Args: { p_consumer: string; p_event_id: number; p_lease_token: string }
+        Returns: boolean
+      }
       checkin_hazard_report: {
         Args: {
           p_report_id: string
@@ -445,6 +449,17 @@ export type Database = {
           p_still_there: boolean
         }
         Returns: Json
+      }
+      claim_hazard_events: {
+        Args: { p_consumer: string; p_lease_seconds?: number; p_limit?: number }
+        Returns: {
+          action: Database["public"]["Enums"]["hazard_action"]
+          created_at: string
+          event_id: number
+          lease_token: string
+          observation_id: string
+          report_id: string
+        }[]
       }
       get_site_crew_metrics: {
         Args: { p_site_id: string }
