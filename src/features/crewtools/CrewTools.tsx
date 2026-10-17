@@ -15,7 +15,9 @@ import {
   enablePush,
   isPushEnabled,
   pushSupport,
+  showTestNotification,
 } from "../../lib/push";
+import { Button } from "../../components/ui";
 import { AlertsSection } from "../dashboard/AlertsSection";
 import styles from "../dashboard/Dashboard.module.css";
 import { useLocationSharing } from "./useLocationSharing";
@@ -71,11 +73,36 @@ export function CrewTools({
   const support = pushSupport();
   const [pushOn, setPushOn] = useState(false);
 
+  const [message, setMessage] = useState<{ title: string; body: string }>();
+
   useEffect(() => {
     void isPushEnabled()
       .then(setPushOn)
       .catch(() => undefined);
   }, []);
+
+  // The service worker forwards every push to open windows, so it is visible even if the OS hides it.
+  useEffect(() => {
+    if (!("serviceWorker" in navigator)) return;
+    const onMessage = (event: MessageEvent) => {
+      if (event.data?.type !== "push") return;
+      setMessage({ title: event.data.title, body: event.data.body });
+    };
+    navigator.serviceWorker.addEventListener("message", onMessage);
+    return () =>
+      navigator.serviceWorker.removeEventListener("message", onMessage);
+  }, []);
+
+  async function testNotification() {
+    try {
+      await showTestNotification();
+      announce(
+        "Test sent. If nothing appeared, allow notifications for your browser in system settings and turn off Focus or Do Not Disturb.",
+      );
+    } catch (error) {
+      announce(errorMessage(error), true);
+    }
+  }
 
   async function togglePush(on: boolean) {
     try {
@@ -101,6 +128,15 @@ export function CrewTools({
           compact
         />
       ) : null}
+      {message ? (
+        <div className={styles.sentPlan} id="push-message" role="status">
+          <strong>{message.title}</strong>
+          <span>{message.body}</span>
+          <Button variant="ghost" onClick={() => setMessage(undefined)}>
+            Dismiss
+          </Button>
+        </div>
+      ) : null}
       {sent ? (
         <div className={styles.sentPlan} id="crew-plan">
           <strong>
@@ -122,6 +158,11 @@ export function CrewTools({
           />
           Notify me about alerts and plans
         </label>
+        {pushOn ? (
+          <Button variant="ghost" onClick={() => void testNotification()}>
+            Test notification
+          </Button>
+        ) : null}
         {location.supported ? (
           <label className={styles.toggle}>
             <input
