@@ -116,6 +116,65 @@ export type Database = {
           },
         ]
       }
+      briefing_drafts: {
+        Row: {
+          content: Json
+          for_date: string
+          sent_at: string | null
+          site_id: string
+          source: string | null
+          status: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          content?: Json
+          for_date: string
+          sent_at?: string | null
+          site_id: string
+          source?: string | null
+          status?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          content?: Json
+          for_date?: string
+          sent_at?: string | null
+          site_id?: string
+          source?: string | null
+          status?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
+      push_outbox: {
+        Row: {
+          body: string
+          created_at: string
+          created_by: string | null
+          dedup_key: string | null
+          id: string
+          kind: string
+          result: Json | null
+          sent_at: string | null
+          site_id: string
+          status: string
+          target: Json
+          title: string
+        }
+        Insert: {
+          body: string
+          kind: string
+          site_id: string
+          title: string
+        }
+        Update: {
+          status?: string
+        }
+        Relationships: []
+      }
       briefing_reads: {
         Row: {
           briefing_id: string
@@ -1139,6 +1198,38 @@ export type Database = {
           p_site_id: string
           p_type: Database["public"]["Enums"]["hazard_type"]
         }
+        Returns: Json
+      }
+      list_site_crew: {
+        Args: { p_site_id: string }
+        Returns: {
+          accuracy_m: number | null
+          email: string
+          has_push: boolean
+          is_stale: boolean
+          latitude: number | null
+          located_at: string | null
+          longitude: number | null
+          name: string
+          role: string
+          user_id: string
+        }[]
+      }
+      push_audience: {
+        Args: { p_site_id: string; p_target: Json }
+        Returns: Json
+      }
+      request_briefing_draft: { Args: { p_site_id: string }; Returns: Json }
+      save_briefing_draft: {
+        Args: { p_content: Json; p_for_date: string; p_site_id: string }
+        Returns: Json
+      }
+      send_briefing: {
+        Args: { p_for_date: string; p_site_id: string }
+        Returns: Json
+      }
+      send_push: {
+        Args: { p_body: string; p_site_id: string; p_target: Json; p_title: string }
         Returns: Json
       }
       sweep_lightning: { Args: never; Returns: Json }

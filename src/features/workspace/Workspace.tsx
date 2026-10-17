@@ -3,6 +3,7 @@ import { Field, Select } from "../../components/ui";
 import { useBusy } from "../../hooks/busy";
 import { useNotice } from "../../hooks/notice";
 import { fetchSites } from "../../lib/api";
+import { fetchRoles, type Role } from "../../lib/monitoring";
 import { errorMessage } from "../../lib/format";
 import { discardPhoto } from "../../lib/submission";
 import type { Site } from "../../lib/types";
@@ -11,17 +12,19 @@ import { PageHeader } from "../shell/PageHeader";
 import { SiteWorkspace } from "./SiteWorkspace";
 
 /** Signed-in area. Mounted per user, so it always starts from a clean state. */
-export function Workspace() {
+export function Workspace({ userId }: { userId: string }) {
   const { announce } = useNotice();
   const { busy, isBusy } = useBusy();
   const [sites, setSites] = useState<Site[]>();
+  const [roles, setRoles] = useState<Record<string, Role>>({});
   const [siteId, setSiteId] = useState<string>();
 
   useEffect(() => {
     let cancelled = false;
-    fetchSites()
-      .then((result) => {
+    Promise.all([fetchSites(), fetchRoles()])
+      .then(([result, memberships]) => {
         if (cancelled) return;
+        setRoles(memberships);
         setSites(result);
         setSiteId(result[0]?.id);
       })
@@ -42,9 +45,19 @@ export function Workspace() {
   return (
     <section id="workspace">
       <PageHeader
+        title={
+          site && roles[site.id] === "supervisor"
+            ? "Site control"
+            : "Crew reporting"
+        }
         actions={
           sites?.length ? (
-            <Field id="site" label="Your site">
+            <Field
+              id="site"
+              label={
+                site && roles[site.id] === "supervisor" ? "Site" : "Your site"
+              }
+            >
               <Select
                 id="site"
                 value={siteId ?? ""}
@@ -62,7 +75,14 @@ export function Workspace() {
         }
       />
       {sites && sites.length === 0 ? <NoSites /> : null}
-      {site ? <SiteWorkspace key={site.id} site={site} /> : null}
+      {site ? (
+        <SiteWorkspace
+          key={site.id}
+          site={site}
+          role={roles[site.id] ?? "crew"}
+          userId={userId}
+        />
+      ) : null}
     </section>
   );
 }

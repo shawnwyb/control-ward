@@ -1,0 +1,17 @@
+{
+  "name": "PlanIT Control",
+  "short_name": "PlanIT",
+  "description": "Site safety for utility field crews",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f3f1ea",
+  "theme_color": "#f3f1ea",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

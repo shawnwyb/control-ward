@@ -95,6 +95,21 @@ The app reads its Supabase settings from `.env.local` (git-ignored), so nothing 
 
 The crew screens use the same tables and RPCs as before; the monitoring migrations only add columns to `sites`. Alerts, site risk, briefings and the lightning countdown are in the database but not yet shown in the UI.
 
+## Supervisor dashboard, web push and reviewed briefings
+
+The UI follows the signed-in user's role at the selected site (`site_memberships.role`). Supervisors get risk, alerts with the lightning countdown, the crew roster with last known locations (also on the map), a push composer and the next-day plan review. Crew get live alerts, the approved plan, and opt-ins for push and location sharing.
+
+Push targets: everyone on the site, ticked workers, or workers whose last known position is within a radius of an open hazard. Pushes are queued in `push_outbox` and sent by the `send-push` Edge Function. New or escalated alerts and high next-day risk queue pushes automatically. The daily plan is never sent automatically: `generate-briefing-draft` drafts it (forecast ring around the site, nearby sites, Gemini with Google Search for traffic, school and wildlife context), a supervisor edits it, and **Approve and send** pushes it.
+
+Setup on the hosted project:
+
+1. `supabase db push --linked`
+2. `npx web-push generate-vapid-keys`, then `supabase secrets set VAPID_PUBLIC_KEY=… VAPID_PRIVATE_KEY=… VAPID_SUBJECT=mailto:you@example.com GEMINI_API_KEY=…`
+3. `supabase functions deploy send-push --use-api` and `supabase functions deploy generate-briefing-draft --use-api`
+4. Put the public key in `.env.local` as `VITE_VAPID_PUBLIC_KEY`.
+
+Without `GEMINI_API_KEY` the draft falls back to forecast rules. iPhone needs the app added to the Home Screen before it can receive push.
+
 ### Option B: local stack (Docker)
 
 ```sh

@@ -142,3 +142,21 @@
   font-weight: 500;
   text-align: right;
 }
+
+.crew {
+  display: grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--surface);
+  border: 2px solid var(--surface);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.crewStale {
+  opacity: 0.55;
+}

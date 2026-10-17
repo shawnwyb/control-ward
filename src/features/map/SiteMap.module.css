@@ -39,6 +39,13 @@
   box-shadow: 0 0 0 3px var(--brand-soft);
 }
 
+.crewSample {
+  width: 0.875rem;
+  height: 0.875rem;
+  border-radius: 50%;
+  background: var(--ink);
+}
+
 @media (max-width: 40rem) {
   .placeholder {
     aspect-ratio: 4 / 3;

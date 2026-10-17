@@ -15,10 +15,13 @@ import {
   ringPolygon,
 } from "../../lib/geo";
 import { type Report, type Site } from "../../lib/types";
+import type { CrewMember } from "../../lib/monitoring";
+import { timeAgo } from "../../lib/format";
 import { basemapStyle, offlineStyle } from "./mapStyle";
 import {
   centerMarkerElement,
   hazardCardElement,
+  crewMarkerElement,
   hazardMarkerElement,
   pinMarkerElement,
 } from "./markers";
@@ -31,6 +34,10 @@ import styles from "./MapCanvas.module.css";
 export type MapCanvasProps = {
   site: Site;
   reports: Report[];
+  /** Supervisors only: last known worker positions. */
+  crew?: CrewMember[];
+  /** Pan to a worker and open their card. */
+  crewFocus?: { id: string; nonce: number };
   pin: { latitude: number; longitude: number };
   disabled: boolean;
   /** Hazard linked to a hovered feed row: ringed on the map with its card open. */
@@ -52,6 +59,8 @@ const cssColor = (name: string) =>
 export default function MapCanvas({
   site,
   reports,
+  crew,
+  crewFocus,
   pin,
   disabled,
   highlightId,
@@ -66,6 +75,9 @@ export default function MapCanvas({
   const pinMarker = useRef<Marker | null>(null);
   const hazardMarkers = useRef(
     new Map<string, { marker: Marker; key: string; report: Report }>(),
+  );
+  const crewMarkers = useRef(
+    new Map<string, { marker: Marker; key: string }>(),
   );
   const popup = useRef<Popup | null>(null);
   const openCard = useRef<string | null>(null);
@@ -358,6 +370,57 @@ export default function MapCanvas({
       if (openCard.current === report.id) showCard(report.id);
     }
   }, [reports]);
+
+  // Last known worker positions (supervisors only).
+  useEffect(() => {
+    const instance = map.current;
+    if (!instance) return;
+    const markers = crewMarkers.current;
+    const located = (crew ?? []).filter(
+      (member) => member.latitude !== null && member.longitude !== null,
+    );
+    const live = new Set(located.map((member) => member.user_id));
+    for (const [id, entry] of markers)
+      if (!live.has(id)) {
+        entry.marker.remove();
+        markers.delete(id);
+      }
+    for (const member of located) {
+      const key = `${member.latitude}:${member.longitude}:${member.is_stale}:${member.located_at}`;
+      const existing = markers.get(member.user_id);
+      if (existing?.key === key) continue;
+      existing?.marker.remove();
+      const card = document.createElement("div");
+      const strong = document.createElement("strong");
+      strong.textContent = member.name;
+      const when = document.createElement("div");
+      when.textContent = member.located_at
+        ? `Last seen ${timeAgo(member.located_at)}`
+        : "Location unknown";
+      card.append(strong, when);
+      const marker = new Marker({
+        element: crewMarkerElement(member.name, member.is_stale),
+      })
+        .setLngLat([member.longitude!, member.latitude!])
+        .setPopup(
+          new Popup({ offset: 16, closeButton: false }).setDOMContent(card),
+        )
+        .addTo(instance);
+      markers.set(member.user_id, { marker, key });
+    }
+  }, [crew]);
+
+  useEffect(() => {
+    if (!crewFocus) return;
+    const entry = crewMarkers.current.get(crewFocus.id);
+    const instance = map.current;
+    if (!entry || !instance) return;
+    instance.easeTo({
+      center: entry.marker.getLngLat(),
+      zoom: Math.max(instance.getZoom(), 15),
+    });
+    if (!entry.marker.getPopup()?.isOpen()) entry.marker.togglePopup();
+  }, [crewFocus]);
 
   // A hovered feed row rings its marker and opens the same card as hovering the marker.
   const rowCard = useRef<string | null>(null);
