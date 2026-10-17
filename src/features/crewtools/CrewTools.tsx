@@ -77,9 +77,14 @@ export function CrewTools({
 
   useEffect(() => {
     void isPushEnabled()
-      .then(setPushOn)
+      .then((on) => {
+        setPushOn(on);
+        // The browser can still hold a subscription the server has dropped (pruned, or replaced
+        // from another device). Re-register it so "on" here always means "reachable".
+        if (on) return enablePush(userId);
+      })
       .catch(() => undefined);
-  }, []);
+  }, [userId]);
 
   // The service worker forwards every push to open windows, so it is visible even if the OS hides it.
   useEffect(() => {

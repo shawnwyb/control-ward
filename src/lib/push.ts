@@ -96,11 +96,15 @@ export async function enablePush(userId: string): Promise<void> {
   // Drop whatever this browser registered before, under this id or under the same endpoint.
   await removeOwn(userId, `"deviceId":"${id}"`);
   if (json.endpoint) await removeOwn(userId, `"endpoint":"${json.endpoint}"`);
-  const { error } = await supabase.from("push_subscriptions").insert({
-    user_id: userId,
-    channel: "web_push",
-    address: JSON.stringify({ ...json, deviceId: id }),
-  });
+  // Two overlapping calls (e.g. the page-load re-register and a click) may insert the same row.
+  const { error } = await supabase.from("push_subscriptions").upsert(
+    {
+      user_id: userId,
+      channel: "web_push",
+      address: JSON.stringify({ ...json, deviceId: id }),
+    },
+    { onConflict: "user_id,channel,address", ignoreDuplicates: true },
+  );
   if (error) throw error;
 }
 
