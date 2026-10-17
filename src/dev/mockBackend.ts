@@ -753,6 +753,10 @@ async function handle(
     );
   }
   if (path === "/rest/v1/push_subscriptions") return respond(null, 201);
+  if (path === "/rest/v1/push_outbox")
+    return respond([
+      { status: "sent", result: { recipients: 2, delivered: 2, failed: 0 } },
+    ]);
   if (path === "/rest/v1/rpc/list_site_crew") {
     if (!isSupervisor) return apiError("Supervisor role required", 403);
     return respond(

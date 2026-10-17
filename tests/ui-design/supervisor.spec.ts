@@ -31,6 +31,10 @@ test("send explains why it is disabled, then enables", async ({ page }) => {
   await expect(page.locator("#push-blocker")).toHaveText("Add a message.");
   await page.locator("#push-body").fill("Wrap up by 1 PM.");
   await expect(send).toBeEnabled();
+  await send.click();
+  await expect(page.getByText("Delivered to 2 of 2 devices")).toBeVisible({
+    timeout: 10000,
+  });
   await page.getByLabel("Selected (0)").check();
   await expect(page.locator("#push-blocker")).toContainText(
     "Tick at least one worker",

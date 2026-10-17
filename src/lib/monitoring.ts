@@ -211,14 +211,45 @@ export async function sendPush(
   title: string,
   body: string,
   target: PushTarget,
-): Promise<void> {
-  const { error } = await supabase.rpc("send_push", {
+): Promise<string> {
+  const { data, error } = await supabase.rpc("send_push", {
     p_site_id: siteId,
     p_title: title,
     p_body: body,
     p_target: target as unknown as Json,
   });
   if (error) throw error;
+  return (data as { id: string }).id;
+}
+
+export type PushOutcome = {
+  status: "pending" | "sending" | "sent" | "failed";
+  recipients: number;
+  delivered: number;
+  failed: number;
+};
+
+/** Waits for the sender to process a queued push (up to about 20 s) and returns what happened. */
+export async function waitForPush(id: string): Promise<PushOutcome | null> {
+  for (let attempt = 0; attempt < 20; attempt++) {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    const { data, error } = await supabase
+      .from("push_outbox")
+      .select("status, result")
+      .eq("id", id)
+      .maybeSingle();
+    if (error) return null;
+    if (data && (data.status === "sent" || data.status === "failed")) {
+      const result = (data.result ?? {}) as Record<string, number>;
+      return {
+        status: data.status,
+        recipients: result.recipients ?? 0,
+        delivered: result.delivered ?? 0,
+        failed: result.failed ?? 0,
+      };
+    }
+  }
+  return null;
 }
 
 export async function shareLocation(
