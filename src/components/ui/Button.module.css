@@ -56,6 +56,18 @@
   border-color: var(--brand-pressed);
 }
 
+/* Only for confirming something that cannot be undone from the screen. */
+.danger {
+  background: var(--danger);
+  border-color: var(--danger);
+  color: #fff;
+}
+
+.danger:not(:disabled):hover {
+  background: color-mix(in srgb, var(--danger) 82%, #000);
+  border-color: color-mix(in srgb, var(--danger) 82%, #000);
+}
+
 .secondary {
   background: var(--surface);
   border-color: var(--ink);

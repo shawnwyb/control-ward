@@ -1,11 +1,17 @@
 import { Badge, Panel, PanelHeader } from "../../components/ui";
 import { timeAgo } from "../../lib/format";
 import type { CrewMember } from "../../lib/monitoring";
+import { CrewAccess } from "./CrewAccess";
 import styles from "./Dashboard.module.css";
+import { RemoveCrew } from "./RemoveCrew";
 
 type Props = {
   crew: CrewMember[];
   loaded: boolean;
+  siteId: string;
+  siteName: string;
+  /** Reload the roster after someone is added or removed. */
+  onCrewChanged: () => void;
   selected: Set<string>;
   onToggle: (userId: string) => void;
   onSelectAll: (all: boolean) => void;
@@ -15,6 +21,9 @@ type Props = {
 export function CrewPanel({
   crew,
   loaded,
+  siteId,
+  siteName,
+  onCrewChanged,
   selected,
   onToggle,
   onSelectAll,
@@ -30,6 +39,11 @@ export function CrewPanel({
         title="Crew"
         description="Last known location from workers who share it. Tick people to message them."
         aside={<Badge>{workers.length}</Badge>}
+      />
+      <CrewAccess
+        siteId={siteId}
+        siteName={siteName}
+        onChanged={onCrewChanged}
       />
       {loaded && workers.length === 0 ? (
         <p className={styles.muted}>No crew are assigned to this site yet.</p>
@@ -72,6 +86,12 @@ export function CrewPanel({
                 </button>
               ) : null}
               <Badge>{m.has_push ? "Push on" : "No push"}</Badge>
+              <RemoveCrew
+                siteId={siteId}
+                siteName={siteName}
+                member={m}
+                onChanged={onCrewChanged}
+              />
             </span>
           </li>
         ))}

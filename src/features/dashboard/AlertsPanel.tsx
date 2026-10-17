@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Panel, PanelHeader, cx } from "../../components/ui";
+import { Button, Panel, PanelHeader, StatusTag, cx } from "../../components/ui";
 import type { AlertRow, LightningView } from "../../lib/monitoring";
 import { timeAgo } from "../../lib/format";
 import styles from "./Dashboard.module.css";
@@ -25,15 +25,39 @@ function useNow(active: boolean) {
 }
 
 /** Shared by the supervisor dashboard and the crew banner. */
+export type Acknowledgement = {
+  acknowledged: Set<string>;
+  pending: Set<string>;
+  onAcknowledge: (alertId: string) => void;
+};
+
 export function AlertsPanel({
   alerts,
   lightning,
   compact,
+  acknowledgement,
 }: {
   alerts: AlertRow[];
   lightning: LightningView;
   compact?: boolean;
+  /** When given, each alert gets an Acknowledge button. */
+  acknowledgement?: Acknowledgement;
 }) {
+  const ack = (alertId?: string) =>
+    !acknowledgement || !alertId ? null : acknowledgement.acknowledged.has(
+        alertId,
+      ) ? (
+      <StatusTag>Acknowledged</StatusTag>
+    ) : (
+      <Button
+        variant="secondary"
+        busy={acknowledgement.pending.has(alertId)}
+        onClick={() => acknowledgement.onAcknowledge(alertId)}
+      >
+        Acknowledge
+      </Button>
+    );
+  const lightningAlert = alerts.find((a) => a.kind === "lightning");
   const stop = lightning.status === "stop_work";
   const now = useNow(stop);
   const remaining =
@@ -66,6 +90,7 @@ export function AlertsPanel({
           <span className={styles.countdown}>
             {mm}:{ss}
           </span>
+          {ack(lightningAlert?.id)}
         </div>
       ) : null}
       {others.map((alert) => (
@@ -87,6 +112,7 @@ export function AlertsPanel({
               {timeAgo(alert.created_at)}
             </span>
           </span>
+          {ack(alert.id)}
         </div>
       ))}
     </>

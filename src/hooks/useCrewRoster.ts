@@ -14,7 +14,7 @@ export function useCrewRoster(
     (id: string) => (enabled ? fetchCrew(id) : Promise.resolve(none)),
     [enabled],
   );
-  const { data, loaded } = useLive(
+  const { data, loaded, refresh } = useLive(
     siteId,
     enabled ? ["crew_locations"] : [],
     load,
@@ -22,5 +22,5 @@ export function useCrewRoster(
     30000,
     onError,
   );
-  return { crew: data, loaded };
+  return { crew: data, loaded, refresh };
 }

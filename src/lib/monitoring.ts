@@ -277,3 +277,30 @@ export function riskLevel(risk: number | null): {
   if (risk >= 4) return { label: "Elevated", tone: "caution" };
   return { label: "Low", tone: "ok" };
 }
+
+/** Which of these alerts the signed-in user has acknowledged (row-level security allows only their own rows). */
+export async function fetchAcknowledged(
+  alertIds: string[],
+  userId: string,
+): Promise<Set<string>> {
+  if (!alertIds.length) return new Set();
+  const { data, error } = await supabase
+    .from("alert_acks")
+    .select("alert_id")
+    .in("alert_id", alertIds)
+    .eq("user_id", userId);
+  if (error) throw error;
+  return new Set(data.map((row) => row.alert_id));
+}
+
+/** Acknowledge an alert. Safe to repeat: the database keeps the first acknowledgement time. */
+export async function acknowledgeAlert(
+  requestId: string,
+  alertId: string,
+): Promise<void> {
+  const { error } = await supabase.rpc("acknowledge_alert", {
+    p_request_id: requestId,
+    p_alert_id: alertId,
+  });
+  if (error) throw error;
+}

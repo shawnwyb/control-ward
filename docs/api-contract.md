@@ -149,15 +149,20 @@ Only the service role can call these.
 
 Signed-in users can call these.
 
-| RPC                                                                                              | Request                                      | Response                                                           |
-| ------------------------------------------------------------------------------------------------ | -------------------------------------------- | ------------------------------------------------------------------ |
-| `update_crew_location`                                                                           | `{ p_site_id, p_lat, p_lon, p_accuracy_m? }` | `{ ok, exposed_alerts: [{ alert_id, kind, level, distance_mi }] }` |
-| `acknowledge_alert`                                                                              | `{ p_request_id, p_alert_id }`               | `{ ok, acknowledged_at }`                                          |
-| `mark_briefing_read`                                                                             | `{ p_briefing_id }`                          | `{ ok }`                                                           |
-| `demo_inject` (supervisor)                                                                       | `{ p_scenario, p_site_id, p_params? }`       | `{ ok, injected, result }`                                         |
-| `demo_reset` (supervisor)                                                                        | `{ p_site_id }`                              | `{ ok, deleted_rows }`                                             |
-| `demo_generate_briefing` (supervisor)                                                            | `{ p_site_id }`                              | `{ ok, briefing_id }`                                              |
-| `submit_hazard_report`, `checkin_hazard_report`, `reserve_hazard_photo`, `get_site_crew_metrics` | See `docs/crew-api.md`.                      |                                                                    |
+| RPC                                                                                              | Request                                      | Response                                                                |
+| ------------------------------------------------------------------------------------------------ | -------------------------------------------- | ----------------------------------------------------------------------- |
+| `update_crew_location`                                                                           | `{ p_site_id, p_lat, p_lon, p_accuracy_m? }` | `{ ok, exposed_alerts: [{ alert_id, kind, level, distance_mi }] }`      |
+| `acknowledge_alert`                                                                              | `{ p_request_id, p_alert_id }`               | `{ ok, acknowledged_at }`                                               |
+| `mark_briefing_read`                                                                             | `{ p_briefing_id }`                          | `{ ok }`                                                                |
+| `list_site_crew` (supervisor)                                                                    | `{ p_site_id }`                              | `[{ user_id, name, email, role, latitude, longitude, … has_push }]`     |
+| `assign_site_member` (supervisor)                                                                | `{ p_site_id, p_email }`                     | `{ ok, outcome: 'assigned' or 'already_member', user_id, email, role }` |
+| `unassign_site_member` (supervisor)                                                              | `{ p_site_id, p_user_id }`                   | `{ ok, removed }`                                                       |
+| `demo_inject` (supervisor)                                                                       | `{ p_scenario, p_site_id, p_params? }`       | `{ ok, injected, result }`                                              |
+| `demo_reset` (supervisor)                                                                        | `{ p_site_id }`                              | `{ ok, deleted_rows }`                                                  |
+| `demo_generate_briefing` (supervisor)                                                            | `{ p_site_id }`                              | `{ ok, briefing_id }`                                                   |
+| `submit_hazard_report`, `checkin_hazard_report`, `reserve_hazard_photo`, `get_site_crew_metrics` | See `docs/crew-api.md`.                      |                                                                         |
+
+A supervisor can add an existing account to a site they supervise as `crew`, and remove `crew` from it. These calls never promote, demote or remove a supervisor, and `assign_site_member` leaves an existing member's role unchanged. Only `site_memberships` rows for the caller are readable by clients, so these are the only way to see or change a roster from the app. Check them with `npm run verify:crew-assignment`.
 
 `update_crew_location` keeps one row for each user. Clients should send a position after about 50 m of movement or every 60 seconds. `crew_locations_live` marks a row `is_stale` after 5 minutes.
 

@@ -16,7 +16,7 @@ import {
   isPushEnabled,
   pushSupport,
 } from "../../lib/push";
-import { AlertsPanel } from "../dashboard/AlertsPanel";
+import { AlertsSection } from "../dashboard/AlertsSection";
 import styles from "../dashboard/Dashboard.module.css";
 import { useLocationSharing } from "./useLocationSharing";
 
@@ -94,7 +94,12 @@ export function CrewTools({
   return (
     <div className={styles.stack} id="crew-tools">
       {showAlerts ? (
-        <AlertsPanel alerts={alerts.data} lightning={lightning.data} compact />
+        <AlertsSection
+          alerts={alerts}
+          lightning={lightning}
+          userId={userId}
+          compact
+        />
       ) : null}
       {sent ? (
         <div className={styles.sentPlan} id="crew-plan">
