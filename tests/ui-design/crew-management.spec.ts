@@ -45,3 +45,47 @@ test("crew can acknowledge a stop-work alert", async ({ page }) => {
   await ack.click();
   await expect(page.getByText("Acknowledged").first()).toBeVisible();
 });
+
+test("a supervisor alert shows on the crew's screen like a safety alert", async ({
+  page,
+}) => {
+  await signIn(page, "supervisor@planit.local");
+  await page.locator("#site").selectOption({ label: "North Plant · Demo" });
+  await page.locator("#push-title-input").fill("Wrap up early");
+  await page
+    .locator("#push-body")
+    .fill("Storm cell moving in. Be off the roof by 1 PM.");
+  await page.getByRole("button", { name: "Send alert" }).click();
+  await expect(page.getByText("Alert sent")).toBeVisible();
+
+  await page.getByRole("button", { name: "Sign out" }).click();
+  await page.getByLabel("Email").fill("crew@planit.local");
+  await page.getByLabel("Password").fill("CrewDemo123!");
+  await page.getByRole("button", { name: /sign in/i }).click();
+  await expect(page.getByText("Wrap up early")).toBeVisible();
+  await expect(page.getByText("Be off the roof by 1 PM.")).toBeVisible();
+  await page.getByRole("button", { name: "Acknowledge" }).last().click();
+  await expect(page.getByText("Acknowledged").first()).toBeVisible();
+});
+
+test("only the chosen crew see a targeted supervisor alert", async ({
+  page,
+}) => {
+  await signIn(page, "supervisor@planit.local");
+  await page.locator("#site").selectOption({ label: "North Plant · Demo" });
+  await page.getByLabel("Selected (0)").check();
+  await page.getByLabel("Select Jordan Lee").check();
+  await page.locator("#push-title-input").fill("Jordan only");
+  await page.locator("#push-body").fill("Meet at gate 2.");
+  await page.getByRole("button", { name: "Send alert" }).click();
+  await expect(page.getByText("Alert sent")).toBeVisible();
+
+  await page.getByRole("button", { name: "Sign out" }).click();
+  await page.getByLabel("Email").fill("crew@planit.local");
+  await page.getByLabel("Password").fill("CrewDemo123!");
+  await page.getByRole("button", { name: /sign in/i }).click();
+  await expect(
+    page.getByRole("button", { name: "Acknowledge" }).first(),
+  ).toBeVisible();
+  await expect(page.getByText("Jordan only")).toHaveCount(0);
+});

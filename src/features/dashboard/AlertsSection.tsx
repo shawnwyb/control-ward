@@ -2,6 +2,8 @@ import { useCallback } from "react";
 import { useAcknowledgements } from "../../hooks/useAcknowledgements";
 import { useNotice } from "../../hooks/notice";
 import type { AlertRow, LightningView } from "../../lib/monitoring";
+import { clearSupervisorAlert } from "../../lib/monitoring";
+import { errorMessage } from "../../lib/format";
 import { AlertsPanel } from "./AlertsPanel";
 import { AlertsUnavailable } from "./AlertsUnavailable";
 
@@ -16,11 +18,14 @@ export function AlertsSection({
   lightning,
   userId,
   compact,
+  canClear,
 }: {
   alerts: Live<AlertRow[]>;
   lightning: Live<LightningView>;
   userId: string;
   compact?: boolean;
+  /** Supervisors can clear their own messages. */
+  canClear?: boolean;
 }) {
   const { announce } = useNotice();
   const onError = useCallback((m: string) => announce(m, true), [announce]);
@@ -28,6 +33,18 @@ export function AlertsSection({
     alerts.data.map((alert) => alert.id),
     userId,
     onError,
+  );
+  const clear = useCallback(
+    async (alertId: string) => {
+      try {
+        await clearSupervisorAlert(alertId);
+        await alerts.refresh();
+        announce("Alert cleared.");
+      } catch (error) {
+        announce(errorMessage(error), true);
+      }
+    },
+    [alerts, announce],
   );
   if (alerts.failed || lightning.failed)
     return (
@@ -43,6 +60,7 @@ export function AlertsSection({
       alerts={alerts.data}
       lightning={lightning.data}
       compact={compact}
+      onClear={canClear ? (id) => void clear(id) : undefined}
       acknowledgement={{
         acknowledged: ack.acknowledged,
         pending: ack.pending,

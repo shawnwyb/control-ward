@@ -107,7 +107,12 @@ export function SupervisorDashboard({
         openHazards={reports.filter((r) => r.is_active).length}
         crewTerm={crewTerm}
       />
-      <AlertsSection alerts={alerts} lightning={lightning} userId={userId} />
+      <AlertsSection
+        alerts={alerts}
+        lightning={lightning}
+        userId={userId}
+        canClear
+      />
       <div className={styles.columns}>
         <BriefingPanel siteId={siteId} />
         <CrewPanel

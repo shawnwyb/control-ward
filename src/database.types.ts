@@ -76,6 +76,7 @@ export type Database = {
           payload: Json
           site_id: string
           status: string
+          target_user_ids: string[] | null
         }
         Insert: {
           cleared_at?: string | null
@@ -87,6 +88,7 @@ export type Database = {
           payload?: Json
           site_id: string
           status?: string
+          target_user_ids?: string[] | null
         }
         Update: {
           cleared_at?: string | null
@@ -98,6 +100,7 @@ export type Database = {
           payload?: Json
           site_id?: string
           status?: string
+          target_user_ids?: string[] | null
         }
         Relationships: [
           {
@@ -1230,6 +1233,10 @@ export type Database = {
       }
       send_briefing: {
         Args: { p_for_date: string; p_site_id: string }
+        Returns: Json
+      }
+      clear_supervisor_alert: {
+        Args: { p_alert_id: string }
         Returns: Json
       }
       send_push: {

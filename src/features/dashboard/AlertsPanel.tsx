@@ -12,6 +12,7 @@ const kindLabels: Record<string, string> = {
   flood: "Flood",
   wildfire: "Wildfire",
   other: "Severe weather",
+  supervisor: "Message from your supervisor",
 };
 
 function useNow(active: boolean) {
@@ -36,12 +37,15 @@ export function AlertsPanel({
   lightning,
   compact,
   acknowledgement,
+  onClear,
 }: {
   alerts: AlertRow[];
   lightning: LightningView;
   compact?: boolean;
   /** When given, each alert gets an Acknowledge button. */
   acknowledgement?: Acknowledgement;
+  /** Supervisors only: takes a supervisor message off the crew's screens. */
+  onClear?: (alertId: string) => void;
 }) {
   const ack = (alertId?: string) =>
     !acknowledgement || !alertId ? null : acknowledgement.acknowledged.has(
@@ -102,17 +106,34 @@ export function AlertsPanel({
           )}
           role={alert.level === "stop_work" ? "alert" : undefined}
         >
-          <span>
-            <strong>
-              {alert.level === "stop_work" ? "Stop work · " : ""}
-              {kindLabels[alert.kind] ?? alert.kind}
-            </strong>
-            <span className={styles.muted}>
-              {alert.level === "info" ? "Advisory" : "Warning"} · raised{" "}
-              {timeAgo(alert.created_at)}
+          {alert.kind === "supervisor" ? (
+            <span>
+              <strong>
+                {String(alert.payload.title ?? "Supervisor message")}
+              </strong>
+              <span>{String(alert.payload.body ?? "")}</span>
+              <span className={styles.muted}>
+                From your supervisor · {timeAgo(alert.created_at)}
+              </span>
             </span>
-          </span>
+          ) : (
+            <span>
+              <strong>
+                {alert.level === "stop_work" ? "Stop work · " : ""}
+                {kindLabels[alert.kind] ?? alert.kind}
+              </strong>
+              <span className={styles.muted}>
+                {alert.level === "info" ? "Advisory" : "Warning"} · raised{" "}
+                {timeAgo(alert.created_at)}
+              </span>
+            </span>
+          )}
           {ack(alert.id)}
+          {onClear && alert.kind === "supervisor" ? (
+            <Button variant="quiet" onClick={() => onClear(alert.id)}>
+              Clear
+            </Button>
+          ) : null}
         </div>
       ))}
     </>

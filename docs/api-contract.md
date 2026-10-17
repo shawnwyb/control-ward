@@ -162,6 +162,8 @@ Signed-in users can call these.
 | `demo_generate_briefing` (supervisor)                                                            | `{ p_site_id }`                              | `{ ok, briefing_id }`                                                   |
 | `submit_hazard_report`, `checkin_hazard_report`, `reserve_hazard_photo`, `get_site_crew_metrics` | See `docs/crew-api.md`.                      |                                                                         |
 
+Supervisor alerts: `send_push` also creates an `alerts` row with `kind = 'supervisor'` (`payload.title`, `payload.body`). `target_user_ids` is null for everyone, or the list of chosen workers; row-level security shows it only to them and to the site's supervisors. Crew see it in the same alert list as automatic safety alerts and can acknowledge it. `clear_supervisor_alert({ p_alert_id })` (supervisor) takes it off their screens. Requires `20261017001600_supervisor_alerts.sql`.
+
 A supervisor can add an existing account to a site they supervise as `crew`, and remove `crew` from it. These calls never promote, demote or remove a supervisor, and `assign_site_member` leaves an existing member's role unchanged. Only `site_memberships` rows for the caller are readable by clients, so these are the only way to see or change a roster from the app. Check them with `npm run verify:crew-assignment`.
 
 `update_crew_location` keeps one row for each user. Clients should send a position after about 50 m of movement or every 60 seconds. `crew_locations_live` marks a row `is_stale` after 5 minutes.

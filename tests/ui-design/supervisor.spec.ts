@@ -24,7 +24,7 @@ test("supervisor sees risk, one alerts section and a role-aware heading", async 
 
 test("send explains why it is disabled, then enables", async ({ page }) => {
   await signIn(page, "supervisor@planit.local");
-  const send = page.getByRole("button", { name: "Send push" });
+  const send = page.getByRole("button", { name: "Send alert" });
   await expect(send).toBeDisabled();
   await expect(page.locator("#push-blocker")).toHaveText("Add a title.");
   await page.locator("#push-title-input").fill("Heads up");
@@ -60,7 +60,7 @@ test("crew does not get the dashboard or section nav", async ({ page }) => {
     page.getByRole("heading", { name: "Crew reporting" }),
   ).toBeVisible();
   await expect(page.locator("#supervisor-dashboard")).toHaveCount(0);
-  await expect(page.getByRole("button", { name: "Send push" })).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Send alert" })).toHaveCount(0);
 });
 
 test("plan draft generates, shows blocked hours and can be approved", async ({
