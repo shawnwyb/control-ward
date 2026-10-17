@@ -22,7 +22,11 @@ import type {
 } from "./api";
 import styles from "./SafetyPanel.module.css";
 
-export function nextWorkDate(timezone = "America/New_York", now = new Date()) {
+export function localWorkDate(
+  timezone = "America/New_York",
+  now = new Date(),
+  offset = 0,
+) {
   const parts = new Intl.DateTimeFormat("en-US", {
     timeZone: timezone,
     year: "numeric",
@@ -33,13 +37,45 @@ export function nextWorkDate(timezone = "America/New_York", now = new Date()) {
   const date = new Date(
     `${value("year")}-${value("month")}-${value("day")}T12:00:00Z`,
   );
-  date.setUTCDate(date.getUTCDate() + 1);
+  date.setUTCDate(date.getUTCDate() + offset);
   return date.toISOString().slice(0, 10);
 }
 export function SafetyPanel({ site, role }: { site: Site; role: Role }) {
-  const [date, setDate] = useState(() => nextWorkDate(site.timezone));
+  const [date, setDate] = useState<string | undefined>(() =>
+    role === "supervisor"
+      ? localWorkDate(site.timezone, new Date(), 1)
+      : undefined,
+  );
+  const manualDate = useRef(false);
+  useEffect(() => {
+    if (role === "supervisor") return;
+    let active = true;
+    const today = localWorkDate(site.timezone),
+      tomorrow = localWorkDate(site.timezone, new Date(), 1);
+    // Prefer the current workday's publication; before it exists, show the approved next-day checklist.
+    void (async () => {
+      let chosen = today;
+      try {
+        const current = await api.fetchWorkspace(site.id, today);
+        if (!current.publication) {
+          const next = await api.fetchWorkspace(site.id, tomorrow);
+          if (next.publication) chosen = tomorrow;
+        }
+      } catch {
+        /* The workspace presents the authorized read error with a retry. */
+      }
+      if (active && !manualDate.current) setDate(chosen);
+    })();
+    return () => {
+      active = false;
+    };
+  }, [site.id, site.timezone, role]);
   return (
-    <Panel id="safety-checklist" aria-labelledby="safety-title">
+    <Panel
+      id="safety-checklist"
+      className={styles.panel}
+      aria-labelledby="safety-title"
+    >
       <PanelHeader
         title="Task safety checklist"
         titleId="safety-title"
@@ -49,20 +85,27 @@ export function SafetyPanel({ site, role }: { site: Site; role: Role }) {
             <Input
               id="safety-date"
               type="date"
-              value={date}
+              value={date ?? localWorkDate(site.timezone)}
               onChange={(e) => {
-                if (e.target.value) setDate(e.target.value);
+                if (e.target.value) {
+                  manualDate.current = true;
+                  setDate(e.target.value);
+                }
               }}
             />
           </Field>
         }
       />
-      <SafetyWorkspace
-        key={`${site.id}:${date}:${role}`}
-        siteId={site.id}
-        date={date}
-        supervisor={role === "supervisor"}
-      />
+      {date ? (
+        <SafetyWorkspace
+          key={`${site.id}:${date}:${role}`}
+          siteId={site.id}
+          date={date}
+          supervisor={role === "supervisor"}
+        />
+      ) : (
+        <p>Loading applicable safety checklist…</p>
+      )}
     </Panel>
   );
 }

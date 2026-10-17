@@ -48,6 +48,7 @@ test("supervisor drafts, edits, publishes; crew sees only publication and exact 
     .getByRole("region", { name: "Published worker checklist" })
     .getByText("FICTIONAL DEMO company pre-job procedure")
     .click();
+  await panel.screenshot({ path: "test-results/safety-supervisor.png" });
   await page.getByRole("button", { name: "Sign out" }).click();
   await login(page, "crew@planit.local", false);
   await expect(
@@ -65,6 +66,14 @@ test("supervisor drafts, edits, publishes; crew sees only publication and exact 
   await expect(
     panel.getByRole("button", { name: "Receipt recorded", exact: true }),
   ).toBeDisabled();
+  await panel.screenshot({ path: "test-results/safety-crew.png" });
+  await page.setViewportSize({ width: 390, height: 844 });
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= window.innerWidth,
+    ),
+  ).toBe(true);
+  await panel.screenshot({ path: "test-results/safety-crew-mobile.png" });
   expect(errors).toEqual([]);
 });
 test("stale guidance is visible and cannot be acknowledged; crew alerts remain", async ({
