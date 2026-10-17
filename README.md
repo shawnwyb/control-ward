@@ -75,6 +75,32 @@ supabase stop                # Stop this project's local services; preserves loc
 
 Keep service-role credentials on trusted workers only. The cleanup script derives its credentials from the local CLI and refuses non-loopback URLs. For hosted deployment, schedule an equivalent janitor using server-side credentials. Expiry and in-app reminder generation are already scheduled inside Postgres.
 
+## Connect the frontend to the hosted Supabase project
+
+The app reads its Supabase settings from `.env.local` (git-ignored), so nothing secret lives in the repo.
+
+1. Copy `.env.example` to `.env.local`. Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` from **Project Settings → API**. Use the **anon** key only, never the service-role key. Leave `VITE_LOCAL_DEMO` out, so the demo accounts box stays hidden.
+2. Make sure the project has the migrations (`supabase db push --linked`). They create the crew tables, the private `hazard-photos` bucket and the realtime publications the app relies on.
+3. Create a user under **Authentication → Users** (confirmed email, with a password), then give them access to a site. The demo accounts exist only in the local `seed.sql`, and `seed-sites.sql` loads plants without memberships, so a user with no rows sees "No sites assigned":
+
+   ```sql
+   insert into public.site_memberships (site_id, user_id, role)
+   select id, '<user uuid from Authentication → Users>', 'crew'   -- or 'supervisor'
+   from public.sites
+   where name = '<plant name>';
+   ```
+
+4. Check the connection, then run the app:
+
+   ```bash
+   CHECK_EMAIL=you@example.com CHECK_PASSWORD='…' npm run check:connection
+   npm run dev
+   ```
+
+   `check:connection` is read-only. It confirms the project is reachable and the key is accepted, then signs in and reads sites, the crew feed and the metrics call. Without `CHECK_EMAIL` and `CHECK_PASSWORD` it only checks reachability. It never prints keys.
+
+The crew screens use the same tables and RPCs as before; the monitoring migrations only add columns to `sites`. Alerts, site risk, briefings and the lightning countdown are in the database but not yet shown in the UI.
+
 ## Monitoring backend (hosted Supabase)
 
 Feeds, rules, alerts, briefings and the lightning countdown run on the linked hosted project with no local Docker: pg_cron calls Edge Functions, which write readings; Postgres derives subscores, alerts and risk. See [the monitoring contract](docs/api-contract.md) for schedules, reading units, rule thresholds, payloads and operations. `npm run test:functions`, `npm run verify:monitoring` and `npm run verify:rules` check it. Heat thresholds and the WBGT estimate still need validation, and ML scoring is not part of this layer.
