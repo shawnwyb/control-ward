@@ -82,6 +82,16 @@ Open <http://127.0.0.1:5173>. Studio is at <http://127.0.0.1:54323>. `local:star
 
 Edge Functions are not part of the local start script, so the live feeds run only on the hosted project.
 
+**Design-only mode (no Docker or Supabase):** `npm run dev:design` runs the UI against an in-browser mock backend with seeded demo data. Sign in with any demo account and `CrewDemo123!`. Add `?latency=1500` to slow responses or `?fail` to make writes fail, to design busy and error states. State resets on reload, and the mock is excluded from production builds.
+
+The site map uses MapLibre GL with the free OpenFreeMap "positron" basemap (no API key; needs internet). Set `VITE_MAP_STYLE_URL` to use a different MapLibre style. If the basemap can't load, the map falls back to a plain ground with the site ring and hazard markers.
+
+**Weather overlays** (Off / Rain / Wind / Temp, with an hourly scrubber) are off by default and request nothing until you turn one on. Turning one on frames the whole forecast area (about 300 km) and restores your view when you turn it off.
+
+- _Rain, Radar_: live US radar from NOAA nowCOAST (about 2.5 hours, new frame every ~4 minutes). No key. US only.
+- _Rain, Forecast / Wind / Temp_: the next 12 hours from [Open-Meteo](https://open-meteo.com/), drawn by the app as colour fields and animated wind streaks. No key. One request per site fetches a 9×7 grid (63 points) and is cached in the browser for an hour. The free API is **non-commercial only** (10,000 calls/day) and the data is CC BY 4.0, so keep the "Weather data by Open-Meteo.com" credit. A commercial launch needs an Open-Meteo plan.
+- With reduced motion on, wind shows as still arrows instead of moving streaks.
+
 | Local account             | Site access |
 | ------------------------- | ----------- |
 | `crew@planit.local`       | North Plant |

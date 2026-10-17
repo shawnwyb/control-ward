@@ -1,0 +1,59 @@
+.group {
+  display: inline-flex;
+  border: var(--rule-width) solid var(--rule-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+}
+
+.option {
+  position: relative;
+  display: block;
+}
+
+.option + .option {
+  border-left: var(--rule-width) solid var(--rule-strong);
+}
+
+.input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.face {
+  display: grid;
+  place-items: center;
+  min-width: 3.5rem;
+  min-height: var(--tap-min);
+  padding: 0 var(--space-3);
+  font-weight: 500;
+  white-space: nowrap;
+  transition: background-color var(--duration-fast) var(--ease);
+}
+
+.option:hover .input:not(:checked) + .face {
+  background: var(--surface-sunken);
+}
+
+.input:checked + .face {
+  background: var(--ink);
+  color: var(--surface);
+  font-weight: 600;
+}
+
+.input:focus-visible + .face {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+@media (forced-colors: active) {
+  .input:checked + .face {
+    forced-color-adjust: none;
+    background: Highlight;
+    color: HighlightText;
+  }
+}

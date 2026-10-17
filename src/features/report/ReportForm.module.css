@@ -1,0 +1,128 @@
+.form {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.group {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.legend {
+  padding: 0;
+  margin-bottom: var(--space-2);
+  font-weight: 600;
+}
+
+.types {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-2);
+}
+
+/* Five types in a 3-column grid: let the last one fill the row. */
+.types > :last-child:nth-child(3n + 2) {
+  grid-column: span 2;
+}
+
+.severities {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-2);
+}
+
+.levelTop {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.level {
+  font-family: var(--font-mono);
+}
+
+.help {
+  color: var(--ink-muted);
+  font-size: var(--text-sm);
+}
+
+.coordinates {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+
+.optional {
+  margin-left: var(--space-1);
+  font-size: var(--text-sm);
+  font-weight: 400;
+  color: var(--ink-muted);
+}
+
+.upload {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 4rem;
+  padding: var(--space-3) var(--space-4);
+  border: var(--rule-width) dashed var(--rule-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  cursor: pointer;
+  min-width: 0;
+}
+
+.upload:hover {
+  border-color: var(--ink);
+  background: var(--surface-sunken);
+}
+
+.upload:focus-within {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.uploadText {
+  display: grid;
+  min-width: 0;
+  font-size: var(--text-sm);
+  color: var(--ink-muted);
+}
+
+.uploadText strong {
+  color: var(--ink);
+  font-size: var(--text-base);
+  overflow-wrap: anywhere;
+}
+
+.fileInput {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.fileInput:disabled {
+  cursor: not-allowed;
+}
+
+.merge {
+  padding-left: var(--space-3);
+  border-left: 3px solid var(--brand);
+  color: var(--ink-muted);
+  font-size: var(--text-sm);
+}
+
+/* Bleeds to the panel edges so content never shows through behind it. */
+.actions {
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+  margin: 0 calc(-1 * var(--panel-pad)) calc(-1 * var(--panel-pad));
+  padding: var(--space-3) var(--panel-pad);
+  background: var(--surface);
+  border-top: var(--rule-width) solid var(--rule);
+}

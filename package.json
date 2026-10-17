@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
+    "dev:design": "vite --mode design --host 127.0.0.1",
     "build": "tsc --noEmit && vite build",
     "local:start": "supabase start -x edge-runtime,imgproxy,logflare,vector && node scripts/local-env.mjs",
     "local:reset": "node scripts/reset-local.mjs",
@@ -14,17 +15,25 @@
     "test:ui": "playwright test",
     "local:cleanup": "node scripts/cleanup-photos.mjs",
     "db:lint": "supabase db lint --local --schema public,private --level warning",
-    "format": "prettier --write src scripts tests docs index.html package.json tsconfig.json playwright.config.ts README.md",
-    "format:check": "prettier --check src scripts tests docs index.html package.json tsconfig.json playwright.config.ts README.md",
+    "format": "prettier --write vite.config.ts src scripts tests docs index.html package.json tsconfig.json playwright.config.ts README.md",
+    "format:check": "prettier --check vite.config.ts src scripts tests docs index.html package.json tsconfig.json playwright.config.ts README.md",
     "verify:monitoring": "supabase db query --linked -f tests/monitoring.verify.sql",
     "verify:rules": "supabase db query --linked -f tests/rules.verify.sql",
     "test:functions": "node --test tests/functions/shared.test.mjs"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.118.0"
+    "@fontsource-variable/ibm-plex-sans": "^5.3.0",
+    "@fontsource/ibm-plex-mono": "^5.3.0",
+    "@supabase/supabase-js": "^2.118.0",
+    "maplibre-gl": "^6.14.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
   },
   "devDependencies": {
     "@playwright/test": "^1.64.1",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^4.7.0",
     "exceljs": "^4.4.0",
     "jsfive": "^0.4.2",
     "pg": "^8.23.1",

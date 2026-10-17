@@ -1,0 +1,75 @@
+/* Pinned above the thumb zone on phones; bottom-left of the page on desktop. */
+.region {
+  position: fixed;
+  z-index: var(--z-toast);
+  left: var(--page-gutter);
+  right: var(--page-gutter);
+  /* clears the sticky submit bar in the report form */
+  bottom: calc(var(--tap-comfort) + var(--space-8) + var(--space-4));
+  pointer-events: none;
+}
+
+.toast {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-2) var(--space-3) var(--space-4);
+  border: var(--rule-width) solid var(--ink);
+  border-left-width: 6px;
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--ink);
+  font-weight: 500;
+  animation: rise var(--duration) var(--ease);
+}
+
+.success {
+  border-left-color: var(--ok);
+}
+
+.error {
+  border-left-color: var(--danger);
+}
+
+.message {
+  flex: 1;
+  padding-top: var(--space-2);
+  padding-bottom: var(--space-2);
+}
+
+.dismiss {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: var(--tap-min);
+  height: var(--tap-min);
+  border: 0;
+  background: transparent;
+  color: var(--ink-muted);
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.dismiss:hover {
+  color: var(--ink);
+  background: var(--surface-sunken);
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+@media (min-width: 64rem) {
+  .region {
+    left: max(
+      var(--page-gutter),
+      calc((100vw - var(--page-max)) / 2 + var(--page-gutter))
+    );
+    right: auto;
+    bottom: var(--space-6);
+    width: min(28rem, calc(100vw - 2 * var(--page-gutter)));
+  }
+}

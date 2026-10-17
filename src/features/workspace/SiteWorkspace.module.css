@@ -1,0 +1,44 @@
+.workspace {
+  display: grid;
+  gap: var(--space-5);
+}
+
+/*
+ * DOM order is form → map → feed so phones get the report form first.
+ * On wide screens the map and feed sit left, with the form as a right rail.
+ */
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-5);
+}
+
+@media (min-width: 48rem) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr) 21rem;
+    grid-template-areas:
+      "map form"
+      "feed form";
+    align-items: start;
+    gap: var(--space-5);
+  }
+
+  .form {
+    grid-area: form;
+  }
+
+  .map {
+    grid-area: map;
+  }
+
+  .feed {
+    grid-area: feed;
+  }
+}
+
+@media (min-width: 64rem) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr) 26rem;
+    gap: var(--space-6);
+  }
+}

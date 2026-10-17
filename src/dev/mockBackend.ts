@@ -1,0 +1,641 @@
+/*
+ * Dev-only in-browser mock of the Supabase HTTP + realtime API, for iterating
+ * on the UI without Docker. Started by `npm run dev:design`; never bundled into
+ * production builds (see src/dev/installMock.ts).
+ *
+ * Query flags: ?latency=1500 slows every response (to design busy states) and
+ * ?fail makes report submissions and check-ins fail (to design error states).
+ */
+
+import { offsetPoint } from "../lib/geo";
+
+type Row = Record<string, unknown>;
+
+const PASSWORD = "CrewDemo123!";
+/** Fictional plants at plausible Florida industrial and utility locations. */
+const sites = [
+  {
+    id: "site-north",
+    name: "North Plant · Demo",
+    latitude: 29.652,
+    longitude: -82.325,
+  },
+  {
+    id: "site-south",
+    name: "South Plant · Demo",
+    latitude: 29.6296,
+    longitude: -82.3498,
+  },
+  {
+    id: "site-tampa",
+    name: "Tampa Bay Terminal · Demo",
+    latitude: 27.9335,
+    longitude: -82.4385,
+  },
+  {
+    id: "site-jax",
+    name: "Jacksonville Terminal · Demo",
+    latitude: 30.356,
+    longitude: -81.629,
+  },
+  {
+    id: "site-manatee",
+    name: "Port Manatee Terminal · Demo",
+    latitude: 27.637,
+    longitude: -82.56,
+  },
+  {
+    id: "site-everglades",
+    name: "Port Everglades Tank Farm · Demo",
+    latitude: 26.088,
+    longitude: -80.127,
+  },
+];
+const accounts: Record<string, string[]> = {
+  "crew@planit.local": ["site-north"],
+  "other@planit.local": ["site-south"],
+  "supervisor@planit.local": sites.map((site) => site.id),
+  "outsider@planit.local": [],
+};
+
+type Report = {
+  id: string;
+  site_id: string;
+  type: string;
+  severity: number;
+  status: "open" | "resolved" | "expired";
+  confirmations: number;
+  last_confirmed_at: string;
+  latitude: number;
+  longitude: number;
+  is_active: boolean;
+};
+type Observation = {
+  id: string;
+  report_id: string;
+  action: string;
+  severity: number;
+  created_at: string;
+};
+type Photo = {
+  id: string;
+  site_id: string;
+  object_path: string;
+  observation_id?: string;
+};
+
+const minutesAgo = (minutes: number) =>
+  new Date(Date.now() - minutes * 60000).toISOString();
+type Seed = [
+  type: string,
+  severity: number,
+  confirmations: number,
+  ageMinutes: number,
+  metersNorth: number,
+  metersEast: number,
+  active?: boolean,
+];
+
+/** Places each report by metres from its site's center: inside the 300 m ring,
+ * out toward the 1200 m × 800 m edge, and a few just beyond it ("near" the site). */
+function seedSite(siteId: string, entries: Seed[]): Report[] {
+  const site = sites.find((candidate) => candidate.id === siteId)!;
+  return entries.map(
+    (
+      [type, severity, confirmations, age, north, east, active = true],
+      index,
+    ) => {
+      const point = offsetPoint(site, north, east);
+      return {
+        id: `r-${siteId}-${index}`,
+        site_id: siteId,
+        type,
+        severity,
+        confirmations,
+        latitude: point.latitude,
+        longitude: point.longitude,
+        last_confirmed_at: minutesAgo(age),
+        status: active ? "open" : "resolved",
+        is_active: active,
+      } satisfies Report;
+    },
+  );
+}
+
+const reports: Report[] = [
+  ...seedSite("site-north", [
+    ["downed_line", 3, 4, 20, 90, -140],
+    ["wildlife", 2, 1, 180, -60, 220],
+    ["debris", 1, 2, 50, 30, 45],
+    ["debris", 2, 3, 95, 210, 310],
+    ["washout", 3, 2, 240, -280, -120],
+    ["other", 1, 1, 400, 340, -480],
+    ["wildlife", 1, 1, 1000, -20, -560],
+    ["washout", 2, 2, 1560, -200, 410, false],
+    ["downed_line", 2, 1, 70, 520, 140],
+  ]),
+  ...seedSite("site-south", [
+    ["debris", 2, 1, 35, 40, 70],
+    ["wildlife", 3, 3, 15, -120, -90],
+    ["washout", 2, 2, 160, 180, -260],
+    ["other", 1, 1, 600, -310, 380],
+    ["downed_line", 3, 5, 8, 260, 120],
+    ["debris", 1, 2, 2000, -40, 20, false],
+  ]),
+  ...seedSite("site-tampa", [
+    ["washout", 3, 4, 25, 60, -110],
+    ["debris", 2, 2, 90, -140, 200],
+    ["downed_line", 2, 1, 130, 230, 60],
+    ["wildlife", 1, 1, 310, -250, -300],
+    ["other", 2, 2, 55, 20, 420],
+    ["debris", 1, 1, 2400, -90, -40, false],
+  ]),
+  ...seedSite("site-jax", [
+    ["debris", 3, 3, 12, -80, 130],
+    ["other", 2, 2, 75, 150, -200],
+    ["wildlife", 2, 1, 200, 310, 330],
+    ["downed_line", 1, 1, 420, -330, -380],
+    ["washout", 2, 2, 45, 10, -60],
+  ]),
+  ...seedSite("site-manatee", [
+    ["downed_line", 3, 3, 14, -60, 150],
+    ["debris", 2, 2, 85, 90, -170],
+    ["washout", 2, 1, 220, -150, -260],
+    ["wildlife", 1, 1, 540, 240, 330],
+    ["other", 3, 2, 30, 20, 60],
+    ["debris", 1, 1, 1900, -200, 120, false],
+  ]),
+  ...seedSite("site-everglades", [
+    ["wildlife", 3, 6, 18, 70, 90],
+    ["downed_line", 3, 2, 40, -190, -150],
+    ["debris", 2, 1, 110, 240, -280],
+    ["washout", 1, 1, 500, -310, 410],
+    ["other", 2, 1, 65, 120, -30],
+    ["wildlife", 2, 2, 1700, 30, 260, false],
+  ]),
+];
+const observations: Observation[] = reports.map((report) => ({
+  id: `o-${report.id}`,
+  report_id: report.id,
+  action: report.is_active ? "created" : "resolved",
+  severity: report.severity,
+  created_at: report.last_confirmed_at,
+}));
+const photos: Photo[] = [];
+let tasks = [
+  { id: "t-north", report_id: "r-site-north-0" },
+  { id: "t-south", report_id: "r-site-south-4" },
+];
+
+const params = new URLSearchParams(location.search);
+const latency = Number(params.get("latency") ?? 150);
+const failWrites = params.has("fail");
+
+function base64url(value: object): string {
+  return btoa(JSON.stringify(value))
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/, "");
+}
+function makeSession(email: string) {
+  const expiresAt = Math.floor(Date.now() / 1000) + 3600;
+  const user = {
+    id: `user-${email}`,
+    aud: "authenticated",
+    role: "authenticated",
+    email,
+    app_metadata: {},
+    user_metadata: {},
+    created_at: new Date().toISOString(),
+  };
+  return {
+    access_token: `${base64url({ alg: "HS256", typ: "JWT" })}.${base64url({
+      sub: user.id,
+      email,
+      role: "authenticated",
+      exp: expiresAt,
+    })}.mock`,
+    token_type: "bearer",
+    expires_in: 3600,
+    expires_at: expiresAt,
+    refresh_token: `mock-refresh:${email}`,
+    user,
+  };
+}
+function emailFromAuthorization(headers: Headers): string | undefined {
+  const token = headers.get("authorization")?.replace(/^Bearer /i, "");
+  const payload = token?.split(".")[1];
+  if (!payload) return undefined;
+  try {
+    const decoded = JSON.parse(
+      atob(payload.replace(/-/g, "+").replace(/_/g, "/")),
+    );
+    return typeof decoded.email === "string" ? decoded.email : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+function metersBetween(a: Report, latitude: number, longitude: number): number {
+  const dy = (latitude - a.latitude) * 111320;
+  const dx =
+    (longitude - a.longitude) * 111320 * Math.cos((a.latitude * Math.PI) / 180);
+  return Math.hypot(dx, dy);
+}
+function log(report: Report, action: string, severity = report.severity) {
+  observations.unshift({
+    id: crypto.randomUUID(),
+    report_id: report.id,
+    action,
+    severity,
+    created_at: new Date().toISOString(),
+  });
+}
+
+/* ---------- realtime ---------- */
+
+type Channel = { topic: string; joinRef: string | null; ids: number[] };
+const channels = new Set<Channel>();
+const sockets = new Set<MockSocket>();
+
+function notifyChange() {
+  for (const socket of sockets)
+    for (const channel of socket.channels) {
+      socket.push([
+        channel.joinRef,
+        null,
+        channel.topic,
+        "postgres_changes",
+        {
+          ids: channel.ids,
+          data: {
+            schema: "public",
+            table: "hazard_reports",
+            commit_timestamp: new Date().toISOString(),
+            type: "UPDATE",
+            columns: [],
+            record: {},
+            old_record: {},
+            errors: null,
+          },
+        },
+      ]);
+    }
+}
+
+class MockSocket extends EventTarget {
+  static readonly CONNECTING = 0;
+  static readonly OPEN = 1;
+  static readonly CLOSING = 2;
+  static readonly CLOSED = 3;
+  readonly CONNECTING = 0;
+  readonly OPEN = 1;
+  readonly CLOSING = 2;
+  readonly CLOSED = 3;
+  readyState = 0;
+  binaryType = "arraybuffer";
+  protocol = "";
+  extensions = "";
+  bufferedAmount = 0;
+  onopen: ((event: Event) => void) | null = null;
+  onmessage: ((event: MessageEvent) => void) | null = null;
+  onclose: ((event: CloseEvent) => void) | null = null;
+  onerror: ((event: Event) => void) | null = null;
+  channels = new Set<Channel>();
+
+  constructor(readonly url: string) {
+    super();
+    sockets.add(this);
+    setTimeout(() => {
+      this.readyState = 1;
+      this.emit("open", new Event("open"));
+    }, 50);
+  }
+
+  private emit(type: "open" | "message" | "close", event: Event) {
+    this.dispatchEvent(event);
+    const handler = this[`on${type}` as "onopen" | "onmessage" | "onclose"] as
+      ((event: Event) => void) | null;
+    handler?.call(this, event);
+  }
+
+  push(message: unknown[]) {
+    if (this.readyState !== 1) return;
+    this.emit(
+      "message",
+      new MessageEvent("message", { data: JSON.stringify(message) }),
+    );
+  }
+
+  send(data: string) {
+    if (typeof data !== "string") return;
+    const [joinRef, ref, topic, event, payload] = JSON.parse(data) as [
+      string | null,
+      string | null,
+      string,
+      string,
+      { config?: { postgres_changes?: Row[] } },
+    ];
+    if (event === "heartbeat") {
+      this.push([
+        null,
+        ref,
+        "phoenix",
+        "phx_reply",
+        { status: "ok", response: {} },
+      ]);
+    } else if (event === "phx_join") {
+      const bindings = (payload.config?.postgres_changes ?? []).map(
+        (binding, index) => ({
+          ...binding,
+          id: index + 1,
+        }),
+      );
+      const channel = {
+        topic,
+        joinRef,
+        ids: bindings.map((binding) => binding.id as number),
+      };
+      this.channels.add(channel);
+      channels.add(channel);
+      setTimeout(() => {
+        this.push([
+          joinRef,
+          ref,
+          topic,
+          "phx_reply",
+          { status: "ok", response: { postgres_changes: bindings } },
+        ]);
+        setTimeout(
+          () =>
+            this.push([
+              joinRef,
+              null,
+              topic,
+              "system",
+              {
+                extension: "postgres_changes",
+                status: "ok",
+                message: "Subscribed to PostgreSQL",
+                channel: topic,
+              },
+            ]),
+          30,
+        );
+      }, 20);
+    } else if (event === "phx_leave") {
+      for (const channel of this.channels)
+        if (channel.topic === topic) this.channels.delete(channel);
+      this.push([
+        joinRef,
+        ref,
+        topic,
+        "phx_reply",
+        { status: "ok", response: {} },
+      ]);
+      this.push([joinRef, null, topic, "phx_close", {}]);
+    }
+  }
+
+  close(code = 1000, reason = "") {
+    this.readyState = 3;
+    sockets.delete(this);
+    this.emit(
+      "close",
+      new CloseEvent("close", { code, reason, wasClean: true }),
+    );
+  }
+}
+
+/* ---------- HTTP ---------- */
+
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+function respond(body: unknown, status = 200): Response {
+  if (status === 204) return new Response(null, { status });
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { "content-type": "application/json" },
+  });
+}
+const apiError = (message: string, status = 400) =>
+  respond({ message, code: "MOCK", details: null, hint: null }, status);
+const filterValue = (url: URL, column: string) =>
+  url.searchParams.get(column)?.replace(/^eq\./, "");
+
+async function handle(
+  request: { method: string; url: URL; headers: Headers; body: unknown },
+  path: string,
+): Promise<Response> {
+  const { method, url, headers } = request;
+  const body = (request.body ?? {}) as Row;
+  const email = emailFromAuthorization(headers);
+
+  if (path === "/auth/v1/token") {
+    const grant = url.searchParams.get("grant_type");
+    if (grant === "refresh_token") {
+      const refreshed = String(body.refresh_token ?? "").replace(
+        "mock-refresh:",
+        "",
+      );
+      return refreshed in accounts
+        ? respond(makeSession(refreshed))
+        : apiError("Invalid refresh token", 400);
+    }
+    const attempted = String(body.email ?? "").toLowerCase();
+    if (!(attempted in accounts) || body.password !== PASSWORD)
+      return respond(
+        {
+          code: 400,
+          error_code: "invalid_credentials",
+          msg: "Invalid login credentials",
+        },
+        400,
+      );
+    return respond(makeSession(attempted));
+  }
+  if (path === "/auth/v1/user")
+    return email
+      ? respond(makeSession(email).user)
+      : apiError("Not signed in", 401);
+  if (path === "/auth/v1/logout") return respond(null, 204);
+  if (!email || !(email in accounts)) return apiError("JWT required", 401);
+
+  if (path === "/rest/v1/sites")
+    return respond(
+      sites
+        .filter((site) => accounts[email].includes(site.id))
+        .sort((a, b) => a.name.localeCompare(b.name)),
+    );
+  if (path === "/rest/v1/crew_hazard_feed") {
+    const siteId = filterValue(url, "site_id");
+    return respond(
+      reports
+        .filter(
+          (report) =>
+            report.site_id === siteId &&
+            accounts[email].includes(report.site_id),
+        )
+        .sort((a, b) => b.last_confirmed_at.localeCompare(a.last_confirmed_at)),
+    );
+  }
+  if (path === "/rest/v1/rpc/get_site_crew_metrics") {
+    const open = reports.filter(
+      (report) => report.site_id === body.p_site_id && report.is_active,
+    );
+    const wildlife = open.filter((report) => report.type === "wildlife");
+    return respond([
+      {
+        open_report_count: open.length,
+        crew_risk_term: Math.min(
+          2,
+          open.reduce((sum, report) => sum + report.severity, 0) * 0.14,
+        ),
+        wildlife_subscore: Math.min(
+          10,
+          wildlife.reduce((sum, report) => sum + report.severity * 1.6, 0),
+        ),
+      },
+    ]);
+  }
+  if (path === "/rest/v1/hazard_checkin_tasks") return respond(tasks);
+  if (path === "/rest/v1/hazard_observations") {
+    const reportId = filterValue(url, "report_id");
+    return respond(
+      observations.filter((observation) => observation.report_id === reportId),
+    );
+  }
+  if (path === "/rest/v1/hazard_photos") {
+    const ids = (url.searchParams.get("observation_id") ?? "")
+      .replace(/^in\.\(|\)$/g, "")
+      .split(",");
+    return respond(
+      photos.filter(
+        (photo) => photo.observation_id && ids.includes(photo.observation_id),
+      ),
+    );
+  }
+  if (path === "/rest/v1/rpc/reserve_hazard_photo") {
+    const photo: Photo = {
+      id: String(body.p_photo_id),
+      site_id: String(body.p_site_id),
+      object_path: `${body.p_site_id}/mock/${body.p_photo_id}.png`,
+    };
+    photos.push(photo);
+    return respond(photo);
+  }
+  if (path.startsWith("/storage/v1/object/hazard-photos/"))
+    return respond({ Key: "hazard-photos/mock", Id: "mock" });
+  if (path.startsWith("/storage/v1/object/sign/hazard-photos/"))
+    return respond({
+      signedURL: "/object/sign/hazard-photos/mock.svg?token=mock",
+    });
+  if (method === "DELETE" && path.startsWith("/storage/")) return respond([]);
+
+  if (path === "/rest/v1/rpc/submit_hazard_report") {
+    if (failWrites) return apiError("Simulated failure (?fail)", 500);
+    const lat = Number(body.p_lat);
+    const lon = Number(body.p_lon);
+    const existing = reports.find(
+      (report) =>
+        report.site_id === body.p_site_id &&
+        report.is_active &&
+        report.type === body.p_type &&
+        metersBetween(report, lat, lon) <= 100,
+    );
+    let report: Report;
+    let outcome: "created" | "merged";
+    if (existing) {
+      existing.confirmations++;
+      existing.last_confirmed_at = new Date().toISOString();
+      report = existing;
+      outcome = "merged";
+      log(report, "confirmed", Number(body.p_severity));
+    } else {
+      report = {
+        id: crypto.randomUUID(),
+        site_id: String(body.p_site_id),
+        type: String(body.p_type),
+        severity: Number(body.p_severity),
+        status: "open",
+        confirmations: 1,
+        last_confirmed_at: new Date().toISOString(),
+        latitude: lat,
+        longitude: lon,
+        is_active: true,
+      };
+      reports.unshift(report);
+      outcome = "created";
+      log(report, "created");
+    }
+    const photo = photos.find((candidate) => candidate.id === body.p_photo_id);
+    if (photo) photo.observation_id = observations[0].id;
+    notifyChange();
+    return respond({ outcome, report });
+  }
+  if (path === "/rest/v1/rpc/checkin_hazard_report") {
+    if (failWrites) return apiError("Simulated failure (?fail)", 500);
+    const report = reports.find(
+      (candidate) => candidate.id === body.p_report_id,
+    );
+    if (!report) return apiError("Report not found", 404);
+    if (body.p_still_there) {
+      report.confirmations++;
+      report.last_confirmed_at = new Date().toISOString();
+      log(report, "confirmed");
+    } else {
+      report.is_active = false;
+      report.status = "resolved";
+      log(report, "resolved");
+    }
+    tasks = tasks.filter((task) => task.report_id !== report.id);
+    notifyChange();
+    return respond(null);
+  }
+  return apiError(`Mock backend has no handler for ${method} ${path}`, 404);
+}
+
+export function installMockBackend(): void {
+  const base = new URL(import.meta.env.VITE_SUPABASE_URL as string);
+  const realFetch = window.fetch.bind(window);
+
+  window.fetch = async (input, init) => {
+    const request = input instanceof Request ? input : undefined;
+    const url = new URL(request?.url ?? String(input), location.href);
+    if (url.origin !== base.origin || !url.pathname.startsWith(base.pathname))
+      return realFetch(input, init);
+    const method = (init?.method ?? request?.method ?? "GET").toUpperCase();
+    const headers = new Headers(init?.headers ?? request?.headers);
+    const rawBody = init?.body;
+    let body: unknown;
+    if (typeof rawBody === "string") {
+      try {
+        body = JSON.parse(rawBody);
+      } catch {
+        body = undefined;
+      }
+    }
+    if (method === "OPTIONS") return respond(null, 204);
+    await delay(latency);
+    return handle(
+      { method, url, headers, body },
+      url.pathname.slice(base.pathname.length),
+    );
+  };
+
+  const RealWebSocket = window.WebSocket;
+  window.WebSocket = new Proxy(RealWebSocket, {
+    construct(target, args: [string | URL, (string | string[])?]) {
+      return String(args[0]).includes(`${base.pathname}/realtime/`)
+        ? (new MockSocket(String(args[0])) as unknown as WebSocket)
+        : Reflect.construct(target, args);
+    },
+  });
+
+  document.title = `[mock] ${document.title}`;
+  console.info(
+    "%cMock backend active",
+    "font-weight:bold",
+    `\nSign in with any demo account (${Object.keys(accounts).join(", ")}) and password ${PASSWORD}.` +
+      "\nAdd ?latency=1500 to slow responses, ?fail to make writes fail. State resets on reload.",
+  );
+}
