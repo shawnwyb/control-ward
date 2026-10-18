@@ -837,3 +837,68 @@ for (const [name, size] of [
       .toBe(true);
   });
 }
+
+test("report: switching site with the drawer open still flies to the new site", async ({
+  page,
+}) => {
+  await signIn(page, "supervisor@planit.local");
+  await page.locator("#site").selectOption("site-north");
+  await page.getByRole("button", { name: "Report hazard" }).click();
+  await expect(
+    page.getByRole("dialog", { name: "Report a hazard" }),
+  ).toBeVisible();
+  await page.locator("#site").selectOption("site-south");
+  const pin = page.locator('.site-pin[data-site-id="site-south"]');
+  const map = page.locator("#site-map");
+  await expect
+    .poll(
+      async () => {
+        const [p, m] = await Promise.all([
+          pin.boundingBox(),
+          map.boundingBox(),
+        ]);
+        if (!p || !m) return false;
+        const dx = p.x + p.width / 2 - (m.x + m.width / 2);
+        const dy = p.y + p.height / 2 - (m.y + m.height / 2);
+        return Math.abs(dx) < m.width / 4 && Math.abs(dy) < m.height / 4;
+      },
+      { timeout: 15000 },
+    )
+    .toBe(true);
+});
+
+test("report: one Escape closes only the legend, the next closes the drawer", async ({
+  page,
+}) => {
+  await signIn(page, "supervisor@planit.local");
+  const drawer = page.getByRole("dialog", { name: "Report a hazard" });
+  await page.getByRole("button", { name: "Report hazard" }).click();
+  await expect(drawer).toBeVisible();
+  const legend = page.getByRole("button", { name: "Legend" });
+  await legend.click();
+  await expect(legend).toHaveAttribute("aria-expanded", "true");
+  await page.keyboard.press("Escape");
+  await expect(legend).toHaveAttribute("aria-expanded", "false");
+  await expect(drawer).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(drawer).toBeHidden();
+});
+
+test("report: after denial, placing the pin by hand updates the hint", async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, "geolocation", {
+      value: {
+        getCurrentPosition: (_ok: unknown, fail: (e: unknown) => void) =>
+          setTimeout(() => fail({ code: 1, message: "denied" }), 0),
+      },
+    });
+  });
+  await signIn(page, "supervisor@planit.local");
+  const drawer = page.getByRole("dialog", { name: "Report a hazard" });
+  await page.getByRole("button", { name: "Report hazard" }).click();
+  await expect(drawer.getByText(/Couldn't get your location/)).toBeVisible();
+  await page.locator("#pin-map").click({ position: { x: 120, y: 200 } });
+  await expect(drawer.getByText(/Pin placed on the map/)).toBeVisible();
+});
