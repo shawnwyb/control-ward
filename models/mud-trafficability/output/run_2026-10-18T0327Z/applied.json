@@ -1,0 +1,23 @@
+{
+ "applied_at": "2026-10-18T03:44:31+00:00",
+ "project_ref": "zarkusdtiwdquimnplya",
+ "action": "push",
+ "metric": "p90",
+ "sql": "ml_scores_push.sql",
+ "rows_expected": 120,
+ "rows_read_back": 120,
+ "read_back": [
+  {
+   "hi": 6.5,
+   "horizon": "now",
+   "lo": 2.2,
+   "n": 60
+  },
+  {
+   "hi": 6.5,
+   "horizon": "tomorrow",
+   "lo": 2.2,
+   "n": 60
+  }
+ ]
+}

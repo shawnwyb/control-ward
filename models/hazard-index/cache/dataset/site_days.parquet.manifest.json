@@ -1,0 +1,22 @@
+{
+  "retrieved_at": "2026-10-18T03:11:19Z",
+  "file": "site_days.parquet",
+  "sha256": "d81c90fc3c9c8078ed2b96114f232c511af864c197c961fd929ad810fb68ea93",
+  "bytes": 10299237,
+  "row_count": 174895,
+  "service_base": "local",
+  "query": {
+    "years": [
+      2018,
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025
+    ]
+  },
+  "requests": [],
+  "note": ""
+}

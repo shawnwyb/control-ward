@@ -1,0 +1,46 @@
+{
+  "retrieved_at": "2026-10-17T23:11:24Z",
+  "file": "6251_2023.parquet",
+  "sha256": "d4832a9e136f17ab89a3f37dbaf5059cdd753d602910474aad76e315c61b8263",
+  "bytes": 161503,
+  "row_count": 8760,
+  "service_base": "https://archive-api.open-meteo.com/v1/archive",
+  "query": {
+    "eia_plant_id": "6251",
+    "year": 2023,
+    "weight": 26.071428571428573,
+    "grid_latitude": 28.800003,
+    "grid_longitude": -96.0,
+    "elevation": 19.0,
+    "latitude": "28.7950",
+    "longitude": "-96.0481",
+    "start_date": "2023-01-01",
+    "end_date": "2023-12-31",
+    "hourly": "temperature_2m,relative_humidity_2m,wind_speed_10m,wind_gusts_10m,shortwave_radiation,precipitation,soil_moisture_0_to_7cm,soil_moisture_7_to_28cm,pressure_msl",
+    "models": "era5_seamless",
+    "timezone": "UTC",
+    "temperature_unit": "fahrenheit",
+    "wind_speed_unit": "mph",
+    "precipitation_unit": "mm"
+  },
+  "requests": [
+    {
+      "method": "GET",
+      "url": "https://archive-api.open-meteo.com/v1/archive",
+      "params": {
+        "latitude": "28.7950",
+        "longitude": "-96.0481",
+        "start_date": "2023-01-01",
+        "end_date": "2023-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,wind_speed_10m,wind_gusts_10m,shortwave_radiation,precipitation,soil_moisture_0_to_7cm,soil_moisture_7_to_28cm,pressure_msl",
+        "models": "era5_seamless",
+        "timezone": "UTC",
+        "temperature_unit": "fahrenheit",
+        "wind_speed_unit": "mph",
+        "precipitation_unit": "mm"
+      },
+      "at": "2026-10-17T23:11:24Z"
+    }
+  ],
+  "note": ""
+}
