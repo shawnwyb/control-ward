@@ -53,7 +53,7 @@ Then:
 npm run dev
 ```
 
-Open <http://127.0.0.1:5173>, choose **Sign in** (or open <http://127.0.0.1:5173/#/sign-in> directly), sign in, and select the assigned worksite. Open **Daily safety** for the automatic safety checklist. Expand **View detailed forecast & sources** on the same page for the full forecast/model report. On phones, open **Menu** to access navigation and the site selector. Both roles can read the safety checklist and expand its scope/citations. Supervisors also see research details. Acknowledge only a current version; a new version requires a new receipt.
+Open <http://127.0.0.1:5173>, choose **Sign in** (or open <http://127.0.0.1:5173/#/sign-in> directly), sign in, and select the assigned worksite. Open **Daily safety** for the automatic safety checklist, then open **Next-day report** for the full forecast/model report. On phones, open **Menu** to access navigation and the site selector. Both roles can read the safety checklist and expand its scope/citations. Supervisors also see research details. Acknowledge only a current version; a new version requires a new receipt.
 
 This uses the hosted project's existing ingestion, saved predictions and checklist generation. It does not enable CodeAct or start a model job. The project owner must separately keep the CodeAct executor running and activate its queue mode; see [safety operations](safety-operations.md#start-against-the-real-database). A local frontend does not need Docker for this path.
 
@@ -256,7 +256,7 @@ After both models finish, run from the repository root:
 reports/next-day/run.sh build --site 56407 --for today
 ```
 
-This writes `public/reports/56407/<date>/report.json` and updates `public/reports/index.json`. Open **Daily safety** for West County and expand **View detailed forecast & sources**. Use `--for tomorrow` for the following day's report. External data fetches can take several minutes; inspect the report's gaps and input timestamps when it finishes. This report is independent of the automatic safety checklist on the Daily safety page.
+This writes `public/reports/56407/<date>/report.json` and updates `public/reports/index.json`. Open **Next-day report** for West County. Use `--for tomorrow` for the following day's report. External data fetches can take several minutes; inspect the report's gaps and input timestamps when it finishes. This report is independent of the automatic safety checklist on the Daily safety page.
 
 If the report files are absent, the app shows **No report yet** even when database predictions or a safety checklist exist. Generated reports are local static files: a hosted frontend only includes files present when it builds. Generation also changes caches, output pointers and report indexes; inspect `git status` and select intended artifacts before committing. Model scores still require the separate database publishing steps above.
 

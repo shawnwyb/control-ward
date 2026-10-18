@@ -8,6 +8,7 @@ export type Page =
   | "site"
   | "alerts"
   | "daily-safety"
+  | "next-day-report"
   | "crew"
   | "reports";
 
@@ -18,6 +19,7 @@ const pages: readonly Page[] = [
   "site",
   "alerts",
   "daily-safety",
+  "next-day-report",
   "crew",
   "reports",
 ];
@@ -28,7 +30,7 @@ const crewOnly: readonly Page[] = ["site"];
 /** `#/alerts` becomes "alerts". An empty or unknown hash is the landing page. */
 export function parseRoute(hash: string): Page {
   const name = hash.replace(/^#\/?/, "");
-  if (name === "briefing" || name === "next-day-report") return "daily-safety";
+  if (name === "briefing") return "daily-safety";
   return pages.find((page) => page === name) ?? "landing";
 }
 

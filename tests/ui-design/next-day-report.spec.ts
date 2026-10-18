@@ -19,10 +19,7 @@ async function openReport(page: Page, siteName = "Turkey Point · Report demo") 
   if (!(await nav.isVisible()))
     await page.getByRole("button", { name: /Menu/ }).click();
   await page.locator("#site").selectOption({ label: siteName });
-  await go(page, "Daily safety");
-  await page
-    .getByText("View detailed forecast & sources", { exact: true })
-    .click();
+  await go(page, "Next-day report");
 }
 
 test("shows the verdict, heat timeline, map, flood and gaps for a site with a report", async ({

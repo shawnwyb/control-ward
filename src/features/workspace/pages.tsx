@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ErrorBoundary } from "../../components/ErrorBoundary";
 import { NextDayReport } from "../nextday/NextDayReport";
 import {
@@ -7,7 +7,14 @@ import {
   type LightningView,
   type Role,
 } from "../../lib/monitoring";
-import { Icon, type IconName } from "../../components/ui";
+import {
+  Button,
+  Icon,
+  Panel,
+  PanelHeader,
+  type IconName,
+} from "../../components/ui";
+import type { Page } from "../../lib/route";
 import type { Report, Site } from "../../lib/types";
 import { CrewPlanCard, DeviceSettings } from "../crewtools/CrewTools";
 import { AlertsSection } from "../dashboard/AlertsSection";
@@ -71,17 +78,11 @@ export function AlertsPage({
   );
 }
 
-export function DailySafetyPage({ site, role }: Base) {
-  const [reportOpened, setReportOpened] = useState(
-    () => window.location.hash === "#/next-day-report",
-  );
-  useEffect(() => {
-    const openLegacyReport = () => {
-      if (window.location.hash === "#/next-day-report") setReportOpened(true);
-    };
-    window.addEventListener("hashchange", openLegacyReport);
-    return () => window.removeEventListener("hashchange", openLegacyReport);
-  }, []);
+export function DailySafetyPage({
+  site,
+  role,
+  onNavigate,
+}: Base & { onNavigate: (page: Page) => void }) {
   const supervisor = role === "supervisor";
   return (
     <div className={dashboard.stack}>
@@ -92,32 +93,41 @@ export function DailySafetyPage({ site, role }: Base) {
       ) : (
         <CrewPlanCard siteId={site.id} />
       )}
-      <details
-        className={styles.forecast}
-        open={reportOpened || undefined}
-        onToggle={(event) => setReportOpened(event.currentTarget.open)}
+      <Panel className={styles.reportCta}>
+        <PanelHeader title="Next-day report" />
+        <p className={styles.hint}>
+          The detailed forecast, model layers and sources live on their own
+          page. Check the dates there: it may cover a different day from the
+          checklist or work plan.
+        </p>
+        <Button
+          variant="secondary"
+          onClick={() => onNavigate("next-day-report")}
+        >
+          View Next-day report
+        </Button>
+      </Panel>
+    </div>
+  );
+}
+
+export function NextDayReportPage({ site }: Base) {
+  return (
+    <div className={dashboard.stack}>
+      <PageTitle title="Next-day report" icon="brief" hint={site.name} />
+      <p className={styles.hint}>
+        Check the dates: this forecast may cover a different day from the
+        checklist or work plan. Its data gaps and freshness are shown below.
+      </p>
+      <ErrorBoundary
+        fallback={
+          <p role="alert">
+            The detailed forecast could not load. Reload the page to try again.
+          </p>
+        }
       >
-        <summary>View detailed forecast &amp; sources</summary>
-        {reportOpened ? (
-          <div className={styles.forecastBody}>
-            <p className={styles.hint}>
-              Check the dates: this forecast may cover a different day from the
-              checklist or work plan. Its data gaps and freshness are shown
-              below.
-            </p>
-            <ErrorBoundary
-              fallback={
-                <p role="alert">
-                  The detailed forecast could not load. Reload the page to try
-                  again.
-                </p>
-              }
-            >
-              <NextDayReport site={site} />
-            </ErrorBoundary>
-          </div>
-        ) : null}
-      </details>
+        <NextDayReport site={site} />
+      </ErrorBoundary>
     </div>
   );
 }

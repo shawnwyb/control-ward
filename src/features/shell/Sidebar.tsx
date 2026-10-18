@@ -16,6 +16,7 @@ const supervisorItems: Item[] = [
   { page: "sites", label: "Sites", icon: "tower" },
   { page: "alerts", label: "Alerts", icon: "bell" },
   { page: "daily-safety", label: "Daily safety", icon: "brief" },
+  { page: "next-day-report", label: "Next-day report", icon: "brief" },
   { page: "crew", label: "Crew", icon: "paw" },
   { page: "reports", label: "Reports", icon: "camera" },
 ];
@@ -24,6 +25,7 @@ const crewItems: Item[] = [
   { page: "site", label: "My site", icon: "tower" },
   { page: "alerts", label: "Alerts", icon: "bell" },
   { page: "daily-safety", label: "Daily safety", icon: "brief" },
+  { page: "next-day-report", label: "Next-day report", icon: "brief" },
   { page: "reports", label: "Reports", icon: "camera" },
 ];
 
