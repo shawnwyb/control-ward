@@ -259,3 +259,61 @@ test("landing: carousel does not auto-advance under reduced motion", async ({
     "true",
   );
 });
+
+test("landing: carousel navigation is steady and does not skip", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const region = page.getByRole("region", { name: "What PlanIT Control does" });
+  await region.scrollIntoViewIfNeeded();
+  await page.mouse.move(2, 2);
+  const current = () =>
+    region.evaluate((el) =>
+      [...el.querySelectorAll("button[aria-label^='Slide ']")].findIndex(
+        (b) => b.getAttribute("aria-current") === "true",
+      ),
+    );
+
+  // During a Next transition the active dot only ever reports start or target.
+  await region.getByRole("button", { name: "Next" }).click();
+  const seen = new Set<number>();
+  for (let i = 0; i < 12; i++) {
+    seen.add(await current());
+    await page.waitForTimeout(40);
+  }
+  expect([...seen].every((n) => n === 1)).toBe(true);
+  await expect.poll(current).toBe(1);
+
+  // Two quick clicks land two slides on.
+  await region.getByRole("button", { name: "Next" }).dblclick();
+  await expect.poll(current).toBe(3);
+  await page.waitForTimeout(1200);
+  expect(await current()).toBe(3);
+
+  // Previous, a dot, and wrap-around both ways.
+  await region.getByRole("button", { name: "Previous" }).click();
+  await expect.poll(current).toBe(2);
+  await region.getByRole("button", { name: "Slide 1" }).click();
+  await expect.poll(current).toBe(0);
+  await region.getByRole("button", { name: "Previous" }).click();
+  await expect.poll(current).toBe(5);
+  await region.getByRole("button", { name: "Next" }).click();
+  await expect.poll(current).toBe(0);
+});
+
+for (const [width, height] of [
+  [1280, 800],
+  [390, 844],
+]) {
+  test(`landing: no horizontal overflow at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height });
+    await page.goto("/");
+    await page
+      .getByRole("region", { name: "What PlanIT Control does" })
+      .scrollIntoViewIfNeeded();
+    const overflow = await page.evaluate(
+      () => document.documentElement.scrollWidth - window.innerWidth,
+    );
+    expect(overflow).toBeLessThanOrEqual(0);
+  });
+}

@@ -3,6 +3,7 @@ import {
   useEffect,
   useRef,
   useState,
+  type PointerEvent as ReactPointerEvent,
   type ReactNode,
 } from "react";
 import { Icon } from "../../components/ui/Icon";
@@ -75,6 +76,8 @@ export function FeatureCarousel() {
   const [current, setCurrent] = useState(0);
   const [hovered, setHovered] = useState(false);
   const [focused, setFocused] = useState(false);
+  const [touched, setTouched] = useState(false);
+  const touchTimer = useRef<number>(0);
   const [reduced, setReduced] = useState(prefersReducedMotion);
 
   useEffect(() => {
@@ -92,44 +95,100 @@ export function FeatureCarousel() {
     return first && second ? second.offsetLeft - first.offsetLeft : 0;
   }, []);
 
+  // Index we are scrolling to (or resting on). Scroll events from our own
+  // smooth scroll are ignored until it settles, so the dot never flickers.
+  const targetRef = useRef(0);
+  const animatingRef = useRef(false);
+  const settleTimer = useRef<number>(0);
+
+  const readIndex = useCallback(() => {
+    const track = trackRef.current;
+    const width = step();
+    if (!track || !width) return 0;
+    const index = Math.round(track.scrollLeft / width);
+    return Math.min(slides.length - 1, Math.max(0, index));
+  }, [step]);
+
+  const settle = useCallback(() => {
+    window.clearTimeout(settleTimer.current);
+    animatingRef.current = false;
+    const index = readIndex();
+    targetRef.current = index;
+    setCurrent(index);
+  }, [readIndex]);
+
   const goTo = useCallback(
     (index: number) => {
       const track = trackRef.current;
       if (!track) return;
+      targetRef.current = index;
+      animatingRef.current = true;
+      setCurrent(index);
       track.scrollTo({
         left: index * step(),
         behavior: prefersReducedMotion() ? "auto" : "smooth",
       });
-      setCurrent(index);
+      // `scrollend` settles it; the timer covers browsers without that event.
+      window.clearTimeout(settleTimer.current);
+      settleTimer.current = window.setTimeout(settle, 1000);
     },
-    [step],
+    [step, settle],
   );
 
-  const onScroll = () => {
+  useEffect(() => {
     const track = trackRef.current;
-    const width = step();
-    if (!track || !width) return;
-    const index = Math.round(track.scrollLeft / width);
-    setCurrent(Math.min(slides.length - 1, Math.max(0, index)));
+    track?.addEventListener("scrollend", settle);
+    return () => {
+      track?.removeEventListener("scrollend", settle);
+      window.clearTimeout(settleTimer.current);
+    };
+  }, [settle]);
+
+  const onScroll = () => {
+    if (animatingRef.current) return;
+    const index = readIndex();
+    targetRef.current = index;
+    setCurrent(index);
   };
 
   const move = useCallback(
-    (delta: number) => goTo((current + delta + slides.length) % slides.length),
-    [current, goTo],
+    (delta: number) =>
+      goTo((targetRef.current + delta + slides.length) % slides.length),
+    [goTo],
   );
 
-  const paused = hovered || focused || reduced;
+  const moveRef = useRef(move);
+  useEffect(() => {
+    moveRef.current = move;
+  }, [move]);
+
+  const paused = hovered || focused || touched || reduced;
   useEffect(() => {
     if (paused) return;
-    const timer = window.setInterval(() => move(1), AUTO_ADVANCE_MS);
+    const timer = window.setInterval(() => moveRef.current(1), AUTO_ADVANCE_MS);
     return () => window.clearInterval(timer);
-  }, [paused, move]);
+  }, [paused]);
+
+  useEffect(() => () => window.clearTimeout(touchTimer.current), []);
+
+  const releaseTouch = (e: ReactPointerEvent<HTMLDivElement>) => {
+    if (e.pointerType !== "touch") return;
+    window.clearTimeout(touchTimer.current);
+    touchTimer.current = window.setTimeout(() => setTouched(false), 8000);
+  };
 
   return (
     <div
       className={styles.car}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
+      onPointerEnter={(e) => e.pointerType === "mouse" && setHovered(true)}
+      onPointerLeave={(e) => e.pointerType === "mouse" && setHovered(false)}
+      onPointerDown={(e) => {
+        if (e.pointerType !== "touch") return;
+        window.clearTimeout(touchTimer.current);
+        setTouched(true);
+      }}
+      onPointerUp={releaseTouch}
+      onPointerCancel={releaseTouch}
       onFocus={() => setFocused(true)}
       onBlur={(event) => {
         if (!event.currentTarget.contains(event.relatedTarget as Node | null))
