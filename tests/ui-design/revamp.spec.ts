@@ -16,10 +16,14 @@ test("theme: Notion surfaces and fonts", async ({ page }) => {
     return {
       bg: body.backgroundColor,
       font: body.fontFamily,
-      emoji: /\p{Extended_Pictographic}/u.test(document.body.innerText),
+      // (c), (R) and TM (e.g. the map attribution) are pictographic but not emoji.
+      emoji:
+        document.body.innerText.match(
+          /(?![\u00a9\u00ae\u2122])\p{Extended_Pictographic}/gu,
+        ) ?? [],
     };
   });
   expect(bg).toBe("rgb(255, 255, 255)");
   expect(font).not.toContain("IBM Plex");
-  expect(emoji).toBe(false);
+  expect(emoji).toEqual([]);
 });
