@@ -24,6 +24,7 @@
 }
 
 .mapSlot {
+  position: relative;
   /* Always the 1fr row, even when there is no banner above it, so the map fills its pane. */
   grid-row: 2;
   display: grid;

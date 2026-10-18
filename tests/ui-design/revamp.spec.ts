@@ -143,6 +143,49 @@ test("supervisor: can share their location from the Sites map", async ({
   await expect(page.getByText("Couldn’t read your location")).toHaveCount(0);
 });
 
+for (const [label, width, height] of [
+  ["desktop", 1280, 800],
+  ["phone", 390, 844],
+] as const)
+  for (const stop of [true, false]) {
+    test(`supervisor: location pill clears the banner and chips (${label}, ${stop ? "stop-work" : "clear"})`, async ({
+      page,
+    }) => {
+      await page.setViewportSize({ width, height });
+      await signIn(page, "supervisor@planit.local");
+      await page
+        .getByRole("region", { name: "Sites" })
+        .getByRole("button", { name: stop ? "North Plant" : "South Plant" })
+        .click();
+      const banner = page.getByRole("alert").filter({ hasText: "Stop work" });
+      await expect(banner).toHaveCount(stop ? 1 : 0);
+      const pill = page.getByRole("switch", {
+        name: "Share my location with my supervisor",
+      });
+      await expect(pill).toBeVisible();
+      await page.waitForTimeout(800);
+      const box = async (l: typeof pill) => (await l.boundingBox())!;
+      const pillBox = await box(pill.locator("xpath=.."));
+      const others = [
+        ...(stop ? [await box(banner)] : []),
+        ...(await Promise.all(
+          (await page.locator("#site-map button[aria-pressed]").all()).map(
+            (c) => box(c),
+          ),
+        )),
+      ];
+      expect(others.length).toBeGreaterThan(0);
+      for (const o of others) {
+        const apart =
+          pillBox.x + pillBox.width <= o.x ||
+          o.x + o.width <= pillBox.x ||
+          pillBox.y + pillBox.height <= o.y ||
+          o.y + o.height <= pillBox.y;
+        expect(apart, JSON.stringify({ pillBox, o })).toBe(true);
+      }
+    });
+  }
+
 test("reports: Mine with nothing reported says so", async ({ page }) => {
   await signIn(page, "crew@planit.local");
   await go(page, "Reports");

@@ -298,14 +298,12 @@ export function SiteWorkspace({
             lightning={lightning.data}
             onSelectSite={onSiteChange}
             renderMap={siteMap}
-            mapOverlay={
-              <>
-                {reportLayer}
-                <div className={styles.pillSlot}>
-                  {/* Supervisors are on the roster too; keyed so a site switch restarts it. */}
-                  <LocationPill key={site.id} siteId={site.id} />
-                </div>
-              </>
+            mapOverlay={reportLayer}
+            mapSlotOverlay={
+              <div className={styles.pillSlot}>
+                {/* Supervisors are on the roster too; keyed so a site switch restarts it. */}
+                <LocationPill key={site.id} siteId={site.id} />
+              </div>
             }
           />
         ) : null}

@@ -35,6 +35,7 @@ export function SitesPage({
   onSelectSite,
   renderMap,
   mapOverlay,
+  mapSlotOverlay,
 }: {
   site: Site;
   reports: Report[];
@@ -47,6 +48,8 @@ export function SitesPage({
   renderMap: (sites: SiteSummary[]) => ReactNode;
   /** Floats over the map pane (the report button and drawer). */
   mapOverlay?: ReactNode;
+  /** Floats over the map itself, below any banner (e.g. the location pill). */
+  mapSlotOverlay?: ReactNode;
 }) {
   const { announce } = useNotice();
   const onError = useCallback((m: string) => announce(m, true), [announce]);
@@ -76,7 +79,10 @@ export function SitesPage({
       <div className={styles.map}>
         {/* Not part of the map: the stop-work signal must show even if the map cannot load. */}
         <StopWorkBanner siteName={site.name} lightning={lightning} />
-        <div className={styles.mapSlot}>{renderMap(overview.sites)}</div>
+        <div className={styles.mapSlot}>
+          {renderMap(overview.sites)}
+          {mapSlotOverlay}
+        </div>
         {mapOverlay}
       </div>
       <div className={styles.detail}>
