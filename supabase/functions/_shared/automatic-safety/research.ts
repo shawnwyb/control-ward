@@ -188,6 +188,10 @@ export async function fetchOfficialDocument(
       if (!target) throw new Error("source_redirect_not_official");
       continue;
     }
+    if (!response.ok) {
+      await response.body?.cancel();
+      throw new Error(`source_http_${response.status}`);
+    }
     if (response.url && !officialUrl(response.url))
       throw new Error("source_not_official");
     if (!/text\/(html|plain)/i.test(response.headers.get("content-type") ?? ""))

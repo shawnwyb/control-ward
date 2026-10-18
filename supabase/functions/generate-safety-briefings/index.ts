@@ -1,6 +1,7 @@
 import { rpc, serve } from "../_shared/runtime.ts";
 import {
   automaticFailureDiagnostics,
+  providerFailureInfo,
   geminiResearch,
   runAutomaticSafety,
 } from "../_shared/automatic-safety/agent.ts";
@@ -40,7 +41,7 @@ serve("generate-safety-briefings", async () => {
         p_documents: output.documents,
         p_diagnostics: output.diagnostics,
       });
-      results.push({ run_id: run.id, saved });
+      results.push({ run_id: run.id, saved, research: output.research });
     } catch (error) {
       const allowed = [
         "provider_unconfigured",
@@ -50,6 +51,8 @@ serve("generate-safety-briefings", async () => {
         "resource_limit",
         "invalid_usage",
         "invalid_model_json",
+        "source_too_large",
+        "source_unavailable",
         "invalid_checklist",
         "invalid_item",
         "invalid_citation",
@@ -67,7 +70,16 @@ serve("generate-safety-briefings", async () => {
         p_error: category,
         p_diagnostics: automaticFailureDiagnostics(error),
       });
-      results.push({ run_id: run.id, error: category });
+      results.push({
+        run_id: run.id,
+        error: category,
+        provider: providerFailureInfo(error),
+        failure_type: error instanceof Error ? error.name : "Unknown",
+        failure_code:
+          error instanceof Error && /^[a-z_]{1,60}$/.test(error.message)
+            ? error.message
+            : undefined,
+      });
     }
   }
   return { results };

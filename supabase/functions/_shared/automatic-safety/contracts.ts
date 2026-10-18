@@ -74,6 +74,11 @@ export interface ModelResult {
   value: unknown;
   tokens: number;
   grounded: boolean;
+  research_info?: {
+    search_queries: number;
+    grounding_chunks: number;
+    citations: number;
+  };
   search_entry_point?: string;
 }
 export interface ResearchModel {

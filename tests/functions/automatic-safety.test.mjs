@@ -2,6 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   automaticFailureDiagnostics,
+  providerFailureInfo,
   runAutomaticSafety,
   validateItems,
   geminiResearch,
@@ -316,23 +317,41 @@ test("Gemini performs grounded discovery and ignores thought text while retainin
     async (_url, init) => {
       request = JSON.parse(init.body);
       return Response.json({
-        candidates: [
+        steps: [
           {
-            content: {
-              parts: [
-                { thought: true, text: "private thought" },
-                { text: JSON.stringify(discovery) },
-              ],
-            },
-            groundingMetadata: {
-              groundingChunks: [{ web: { uri: discovery.sources[0].url } }],
-              searchEntryPoint: {
-                renderedContent: "<p>Google Search suggestions</p>",
+            type: "model_output",
+            content: [
+              { type: "text", text: "Searching official sources first." },
+            ],
+          },
+          {
+            type: "thought",
+            summary: [{ type: "text", text: "private thought" }],
+          },
+          {
+            type: "google_search_call",
+            arguments: { queries: ["official safety regulations"] },
+          },
+          {
+            type: "google_search_result",
+            result: [
+              { search_suggestions: "<p>Google Search suggestions</p>" },
+            ],
+          },
+          {
+            type: "model_output",
+            content: [
+              {
+                type: "text",
+                text: JSON.stringify(discovery),
+                annotations: [
+                  { type: "url_citation", url: discovery.sources[0].url },
+                ],
               },
-            },
+            ],
           },
         ],
-        usageMetadata: { totalTokenCount: 123 },
+        usage: { total_tokens: 123 },
       });
     },
   );
@@ -341,8 +360,10 @@ test("Gemini performs grounded discovery and ignores thought text while retainin
     true,
     AbortSignal.timeout(1000),
   );
-  assert.deepEqual(request.tools, [{ google_search: {} }]);
-  assert.equal(request.generationConfig.thinkingConfig.includeThoughts, false);
+  assert.deepEqual(request.tools, [{ type: "google_search" }]);
+  assert.equal(request.store, false);
+  assert.equal(request.generation_config.tool_choice, "auto");
+  assert.equal(request.generation_config.thinking_summaries, "none");
   assert.deepEqual(result.value, discovery);
   assert.equal(result.grounded, true);
   assert.equal(result.tokens, 123);
@@ -390,4 +411,168 @@ test("fresh non-heat readings cannot hide missing heat data", async () => {
       g.startsWith("Current heat readings are missing"),
     ),
   );
+});
+
+test("blocked OSHA pages retain their failure status and do not prevent independently fetched CDC guidance", async () => {
+  const output = await runAutomaticSafety(snapshot, fixtureModel(), {
+    reservedUsdPerTurn: 0.1,
+    fetcher: async (url) =>
+      String(url).includes("osha.gov")
+        ? new Response("Forbidden", { status: 403 })
+        : fetcher(url),
+  });
+  assert.ok(
+    output.content.sources.some((s) =>
+      s.url.startsWith("https://www.cdc.gov/niosh/"),
+    ),
+  );
+  assert.equal(output.research.fetch_failures.length, 2);
+  assert.ok(
+    output.research.fetch_failures.every(
+      (f) => f.category === "source_http_403",
+    ),
+  );
+});
+
+test("search is unverified until a successful search result completes", async () => {
+  const adapter = geminiResearch("fixture-key", "gemini-3.8-flash", async () =>
+    Response.json({
+      steps: [
+        {
+          type: "google_search_call",
+          arguments: { queries: ["fixture query"] },
+        },
+        { type: "google_search_result", is_error: true, result: [] },
+        {
+          type: "model_output",
+          content: [{ type: "text", text: JSON.stringify(discovery) }],
+        },
+      ],
+      usage: { total_tokens: 40 },
+    }),
+  );
+  const result = await adapter.ask(
+    "Find sources",
+    true,
+    AbortSignal.timeout(1000),
+  );
+  assert.equal(result.grounded, false);
+  assert.equal(result.research_info.search_queries, 1);
+});
+
+test("instruction extraction remains a bounded non-search model call", async () => {
+  let request;
+  const adapter = geminiResearch(
+    "fixture-key",
+    "gemini-3.8-flash",
+    async (url, init) => {
+      assert.match(String(url), /:generateContent$/);
+      request = JSON.parse(init.body);
+      return Response.json({
+        candidates: [
+          {
+            content: {
+              parts: [
+                { thought: true, text: "private thought" },
+                { text: JSON.stringify(items) },
+              ],
+            },
+          },
+        ],
+        usageMetadata: { totalTokenCount: 60 },
+      });
+    },
+  );
+  const result = await adapter.ask(
+    "Extract exact quotes",
+    false,
+    AbortSignal.timeout(1000),
+  );
+  assert.deepEqual(result.value, items);
+  assert.equal(request.tools, undefined);
+  assert.equal(request.generationConfig.maxOutputTokens, 4096);
+  assert.equal(request.generationConfig.thinkingConfig.includeThoughts, false);
+});
+
+test("provider failures expose bounded status information and redact credentials", async () => {
+  const adapter = geminiResearch(
+    "fixture-secret",
+    "gemini-3.8-flash",
+    async () =>
+      Response.json(
+        {
+          error: {
+            status: "INVALID_ARGUMENT",
+            message: "Invalid configuration fixture-secret",
+          },
+        },
+        { status: 400 },
+      ),
+  );
+  await assert.rejects(
+    adapter.ask("Find sources", true, AbortSignal.timeout(1000)),
+    (error) => {
+      assert.equal(error.message, "provider_failed");
+      const info = providerFailureInfo(error);
+      assert.equal(info.http_status, 400);
+      assert.equal(info.code, "INVALID_ARGUMENT");
+      assert.ok(!info.detail.includes("fixture-secret"));
+      return true;
+    },
+  );
+});
+
+test("full discovery cannot crowd out the verified heat fallback or duplicate source IDs", async () => {
+  const full = {
+    sources: Array.from({ length: 8 }, (_, i) => ({
+      ...discovery.sources[i % 3],
+      url: discovery.sources[i % 3].url + `/${i}`,
+    })),
+  };
+  const output = await runAutomaticSafety(
+    snapshot,
+    fixtureModel((v, search) => (search ? full : v)),
+    { fetcher, reservedUsdPerTurn: 0.1 },
+  );
+  assert.equal(output.content.sources.length, 8);
+  assert.ok(
+    output.content.sources.some((s) =>
+      s.url.startsWith("https://www.cdc.gov/niosh/"),
+    ),
+  );
+  assert.equal(new Set(output.content.sources.map((s) => s.id)).size, 8);
+  for (const level of ["state", "county", "city"])
+    assert.ok(output.content.sources.some((s) => s.level === level));
+});
+
+test("bounded search metadata and whitespace around fenced final JSON do not discard a valid research response", async () => {
+  const adapter = geminiResearch("fixture-key", "gemini-3.8-flash", async () =>
+    Response.json({
+      metadata_padding: "x".repeat(180000),
+      steps: [
+        {
+          type: "google_search_result",
+          result: [{ search_suggestions: "<p>Search suggestions</p>" }],
+        },
+        {
+          type: "model_output",
+          content: [
+            {
+              type: "text",
+              text: "\n```json\n" + JSON.stringify(discovery) + "\n```\n",
+            },
+          ],
+        },
+      ],
+      usage: { total_tokens: 60 },
+    }),
+  );
+  const result = await adapter.ask(
+    "Find sources",
+    true,
+    AbortSignal.timeout(1000),
+  );
+  assert.deepEqual(result.value, discovery);
+  assert.equal(result.grounded, true);
+  assert.ok(JSON.stringify(result).length < 5000);
 });

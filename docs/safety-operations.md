@@ -66,7 +66,7 @@ set model = '<same model ID as SAFETY_MODEL>', enabled = true;
 
 Invoke `/functions/v1/generate-safety-briefings` with `X-Cron-Secret`, or let the configured schedule run. It automatically queues eligible sites, claims one, researches the site and publishes validated content. Inspect `automatic_safety_runs` for state, error category, diagnostics and private source documents; inspect `automatic_safety_checklists` for generated content. The model must match the snapshot configuration.
 
-Check that the site resolves to its actual jurisdiction, source links load, selected quotes retain their scope, units/times match the readings and unavailable sources produce explicit gaps. Provider failures retry automatically. A successful fake-provider test does not substitute for this live check. No supervisor publication action follows it.
+Check that the site resolves to its actual jurisdiction, source links load, selected quotes retain their scope, units/times match the readings and unavailable sources produce explicit gaps. A worker HTTP 200 or `saved=true` can represent an empty, limited-information checklist. Inspect item/source counts and the response's bounded `research` health fields before treating generation as ready. OSHA may return HTTP 403; independently fetched CDC/NIOSH workplace heat guidance provides a fallback while blocked sources remain explicit gaps. Provider failures retry automatically. A successful fake-provider test does not substitute for this live check. No supervisor publication action follows it.
 
 ## Real database with a local frontend
 
