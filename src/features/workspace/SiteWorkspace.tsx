@@ -4,6 +4,9 @@ import { Panel } from "../../components/ui";
 import { useBusy } from "../../hooks/busy";
 import { useCrewRoster } from "../../hooks/useCrewRoster";
 import { useLive } from "../../hooks/useLive";
+import { useNow } from "../../hooks/useNow";
+import { allClearRemaining } from "../../lib/countdown";
+import { distanceMeters } from "../../lib/geo";
 import { useNotice } from "../../hooks/notice";
 import type { useSiteFeed } from "../../hooks/useSiteFeed";
 import { sendCheckin } from "../../lib/api";
@@ -20,6 +23,7 @@ import { checkinRequestId, completeCheckin } from "../../lib/submission";
 import type { SiteSummary } from "../../lib/sites";
 import type { MutationResult, Site } from "../../lib/types";
 import { LocationPill } from "../crewtools/CrewTools";
+import { useLocationSharing } from "../crewtools/useLocationSharing";
 import { SiteMap } from "../map/SiteMap";
 import { SitesPage } from "../sites/SitesPage";
 import { markForDropIn } from "../map/markers";
@@ -39,6 +43,9 @@ const noLightning: LightningView = {
   lastStrikeAt: null,
   lastStrikeDistanceM: null,
 };
+
+/** A location fix farther than this from the site is not used for the report pin. */
+const FAR_FROM_SITE_M = 2000;
 
 const freshDraft = (site: Site): ReportDraft => ({
   type: "debris",
@@ -98,6 +105,13 @@ export function SiteWorkspace({
     30000,
     onError,
   );
+  // One stop-work value for the ring, camera fit and banner: lightning says so AND the window is open.
+  const stopNow = useNow(lightning.data.status === "stop_work");
+  const stopWorkActive =
+    lightning.data.status === "stop_work" &&
+    allClearRemaining(lightning.data.lastStrikeAt, stopNow) !== null;
+  // Runs here, not in the pill, so sharing carries on across every page while the workspace is open.
+  const location = useLocationSharing(site.id, onError);
   const alertCount = alerts.data.length;
   // Report only a loaded count: the sidebar keeps the last one while a new site's loads.
   const alertsLoaded = alerts.loaded;
@@ -123,6 +137,7 @@ export function SiteWorkspace({
   const [reportOpen, setReportOpen] = useState(false);
   const [locating, setLocating] = useState<Locating>("idle");
   const [accuracyFt, setAccuracyFt] = useState<number>();
+  const [farMiles, setFarMiles] = useState<number>();
   const reportButton = useRef<HTMLButtonElement>(null);
   // Bumped whenever a pending location answer should be ignored (closed, pin moved, site changed).
   const locateToken = useRef(0);
@@ -138,6 +153,7 @@ export function SiteWorkspace({
     setReportOpen(false);
     setLocating("idle");
     setAccuracyFt(undefined);
+    setFarMiles(undefined);
     setSelectedCrew(new Set());
     setCrewFocus(undefined);
     setFocusRequest(undefined);
@@ -181,6 +197,20 @@ export function SiteWorkspace({
     navigator.geolocation.getCurrentPosition(
       (position) => {
         if (token !== locateToken.current) return;
+        const meters = distanceMeters(
+          site.latitude,
+          site.longitude,
+          position.coords.latitude,
+          position.coords.longitude,
+        );
+        if (meters > FAR_FROM_SITE_M) {
+          // Not at the site: a pin there would be a bad report. Keep it at the centre.
+          setPin(site.latitude, site.longitude);
+          setAccuracyFt(undefined);
+          setFarMiles(Math.round(meters / 1609.34));
+          setLocating("far");
+          return;
+        }
         setPin(position.coords.latitude, position.coords.longitude);
         setAccuracyFt(Math.round(position.coords.accuracy * 3.28084));
         setLocating("idle");
@@ -240,6 +270,7 @@ export function SiteWorkspace({
         busy={busy}
         locating={locating}
         accuracyFt={accuracyFt}
+        farMiles={farMiles}
         onChange={patch}
         onSubmit={() => submit(draft)}
         onClose={closeReport}
@@ -274,7 +305,7 @@ export function SiteWorkspace({
         focusRequest={focusRequest}
         sites={sites}
         onSelectSite={sites ? onSiteChange : undefined}
-        stopWork={lightning.data.status === "stop_work"}
+        stopWork={stopWorkActive}
         fitStopWork
         onPin={placePin}
       />
@@ -301,7 +332,7 @@ export function SiteWorkspace({
             mapSlotOverlay={
               <div className={styles.pillSlot}>
                 {/* Supervisors are on the roster too; keyed so a site switch restarts it. */}
-                <LocationPill key={site.id} siteId={site.id} />
+                <LocationPill location={location} />
               </div>
             }
           />
@@ -312,6 +343,8 @@ export function SiteWorkspace({
             lightning={lightning.data}
             map={siteMap()}
             overlay={reportLayer}
+            location={location}
+            alertCount={alertCount}
           />
         ) : null}
         {page === "alerts" ? (

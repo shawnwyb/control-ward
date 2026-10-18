@@ -9,9 +9,12 @@ import styles from "./AppShell.module.css";
  */
 export function AppShell({
   sidebar,
+  alertCount = 0,
   children,
 }: {
   sidebar: ReactNode;
+  /** Active alerts, shown on the phone menu button (the sidebar badge is behind it). */
+  alertCount?: number;
   children: ReactNode;
 }) {
   const [open, setOpen] = useState(false);
@@ -31,14 +34,23 @@ export function AppShell({
         <button
           type="button"
           className={styles.menu}
-          aria-label="Menu"
+          aria-label={
+            alertCount > 0
+              ? `Menu, ${alertCount} active ${alertCount === 1 ? "alert" : "alerts"}`
+              : "Menu"
+          }
           aria-expanded={open}
           aria-controls="sidebar"
           onClick={() => setOpen((current) => !current)}
         >
           <Icon name="menu" size={18} />
+          {alertCount > 0 ? (
+            <span className={styles.menuBadge} aria-hidden="true">
+              {alertCount}
+            </span>
+          ) : null}
         </button>
-        <span className={styles.title}>PlanIT Control</span>
+        <span>PlanIT Control</span>
       </header>
       <div
         id="sidebar"

@@ -183,7 +183,7 @@ export function SitesTable({
                           />
                           <span className={styles.nameText}>{site.name}</span>
                         </span>
-                        <span className={styles.index}>
+                        <span>
                           <IndexTag value={site.riskNow} />
                         </span>
                         <span className={styles.hazards}>

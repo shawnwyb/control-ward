@@ -795,6 +795,8 @@ test("report: drawer sends with location", async ({ page, context }) => {
     accuracy: 30,
   });
   await signIn(page, "supervisor@planit.local");
+  // The fix is at North Plant, so report there (a fix far from the site is not used).
+  await page.locator("#site").selectOption("site-north");
   const open = page.getByRole("button", { name: "Report hazard" });
   const drawer = page.getByRole("dialog", { name: "Report a hazard" });
   await expect(drawer).toBeHidden();
@@ -1093,4 +1095,104 @@ test("motion: reduced motion disables animation", async ({ page }) => {
     return bad;
   });
   expect(long).toEqual([]);
+});
+
+test("location sharing keeps its watch when the worker leaves the map page", async ({
+  page,
+  context,
+}) => {
+  await context.grantPermissions(["geolocation"]);
+  await page.addInitScript(() => {
+    const w = window as unknown as { watches: number[]; cleared: number[] };
+    w.watches = [];
+    w.cleared = [];
+    Object.defineProperty(navigator, "geolocation", {
+      value: {
+        watchPosition: () => {
+          const id = w.watches.length + 1;
+          w.watches.push(id);
+          return id;
+        },
+        clearWatch: (id: number) => w.cleared.push(id),
+        getCurrentPosition: () => undefined,
+      },
+    });
+  });
+  await signIn(page, "crew@planit.local");
+  await page
+    .getByRole("switch", { name: "Share my location with my supervisor" })
+    .check();
+  const state = () =>
+    page.evaluate(() => {
+      const w = window as unknown as { watches: number[]; cleared: number[] };
+      return { watches: w.watches.length, cleared: w.cleared.length };
+    });
+  await expect.poll(async () => (await state()).watches).toBe(1);
+  await go(page, "Alerts");
+  await expect(
+    page.getByRole("heading", { level: 1, name: "Alerts" }),
+  ).toBeVisible();
+  await go(page, "Reports");
+  await expect(
+    page.getByRole("heading", { level: 1, name: "Reports" }),
+  ).toBeVisible();
+  expect(await state()).toEqual({ watches: 1, cleared: 0 });
+});
+
+test("report: a fix far from the site keeps the pin at the site centre", async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, "geolocation", {
+      value: {
+        getCurrentPosition: (ok: (p: unknown) => void) =>
+          setTimeout(
+            () =>
+              ok({
+                coords: { latitude: 30.5, longitude: -82.3, accuracy: 10 },
+              }),
+            0,
+          ),
+      },
+    });
+  });
+  await signIn(page, "supervisor@planit.local");
+  await page.locator("#site").selectOption("site-north");
+  await page.getByRole("button", { name: "Report hazard" }).click();
+  const drawer = page.getByRole("dialog", { name: "Report a hazard" });
+  await expect(
+    drawer.getByText(
+      /You're \d+ mi from this site — pin placed at the site centre\. Click the map to move it\./,
+    ),
+  ).toBeVisible();
+  await page.evaluate(() => {
+    const w = window as unknown as { sent: Record<string, unknown>[] };
+    w.sent = [];
+    const real = window.fetch.bind(window);
+    window.fetch = (input, init) => {
+      if (String(input).includes("submit_hazard_report"))
+        w.sent.push(JSON.parse(String(init?.body)));
+      return real(input, init);
+    };
+  });
+  await drawer.getByRole("button", { name: "Send report" }).click();
+  await expect(drawer).toBeHidden();
+  const [body] = await page.evaluate(
+    () => (window as unknown as { sent: Record<string, unknown>[] }).sent,
+  );
+  expect(Number(body.p_lat)).toBeCloseTo(29.652, 3);
+  expect(Number(body.p_lon)).toBeCloseTo(-82.325, 3);
+});
+
+test("phone: crew see the active alert count on the menu and My site", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await signIn(page, "crew@planit.local");
+  const menu = page.getByRole("button", { name: /^Menu, \d+ active alerts?$/ });
+  await expect(menu).toBeVisible();
+  const chip = page.getByRole("link", { name: /^\d+ active alerts?$/ });
+  await expect(chip).toBeVisible();
+  await chip.click();
+  await expect(page).toHaveURL(/#\/alerts$/);
 });

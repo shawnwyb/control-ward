@@ -66,7 +66,7 @@ export function RiskPanel({
               className={cx(styles.bar, styles[`tone_${riskTone(value)}`])}
             >
               <Icon name={hazardInfo[key].icon} size={16} />
-              <span className={styles.name}>{hazardInfo[key].name}</span>
+              <span>{hazardInfo[key].name}</span>
               <span className={styles.track} aria-hidden="true">
                 <span
                   className={styles.fill}

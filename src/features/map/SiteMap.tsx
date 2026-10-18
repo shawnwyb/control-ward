@@ -80,7 +80,6 @@ type Props = {
   pinActive: boolean;
   disabled: boolean;
   className?: string;
-  highlightId?: string | null;
   focusRequest?: { id: string; nonce: number };
   /** Supervisors' Sites page: every site as a score pin; clicking one selects it. */
   sites?: SiteSummary[];
@@ -147,7 +146,6 @@ export function SiteMap({
   pinActive,
   disabled,
   className,
-  highlightId,
   focusRequest,
   sites,
   onSelectSite,
@@ -361,7 +359,6 @@ export function SiteMap({
               pin={pin}
               pinActive={pinActive}
               disabled={disabled}
-              highlightId={highlightId}
               focusRequest={focusRequest}
               weather={weather}
               regional={overlay !== "off"}

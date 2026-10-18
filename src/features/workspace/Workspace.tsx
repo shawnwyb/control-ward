@@ -92,6 +92,7 @@ export function Workspace({
 
   return (
     <AppShell
+      alertCount={alertCount}
       sidebar={
         <Sidebar
           role={role}

@@ -207,16 +207,6 @@
   }
 }
 
-/* A hovered feed row rings its marker. */
-.highlight::after {
-  content: "";
-  position: absolute;
-  inset: -5px;
-  border: 2px solid var(--ink);
-  border-radius: 50%;
-  pointer-events: none;
-}
-
 /* 44px hit area so the pin can be dragged with a thumb. */
 .pin {
   display: grid;

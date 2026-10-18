@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { ComponentProps, ReactNode } from "react";
 import { IndexTag } from "../../components/ui";
 import { useLive } from "../../hooks/useLive";
 import { useNotice } from "../../hooks/notice";
@@ -30,6 +30,8 @@ export function MySitePage({
   lightning,
   map,
   overlay,
+  location,
+  alertCount,
 }: {
   site: Site;
   /** The selected site's live lightning state (drives the banner). */
@@ -38,6 +40,9 @@ export function MySitePage({
   map: ReactNode;
   /** Floats over the map pane (the report button and drawer). */
   overlay?: ReactNode;
+  location: ComponentProps<typeof LocationPill>["location"];
+  /** Active alerts at this site; a link to them shows when there are any. */
+  alertCount: number;
 }) {
   const { announce } = useNotice();
   const risk = useLive(
@@ -57,8 +62,12 @@ export function MySitePage({
           <IndexTag value={risk.data.riskNow} showLabel />
         </header>
         <StopWorkBanner siteName={site.name} lightning={lightning} />
-        {/* Keyed: this page stays mounted across site switches (for the map). */}
-        <LocationPill key={site.id} siteId={site.id} />
+        {alertCount > 0 ? (
+          <a className={styles.alertChip} href="#/alerts">
+            {alertCount} active {alertCount === 1 ? "alert" : "alerts"}
+          </a>
+        ) : null}
+        <LocationPill location={location} />
       </div>
       {overlay}
     </div>

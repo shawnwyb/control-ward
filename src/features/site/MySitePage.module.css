@@ -55,3 +55,14 @@
     height: calc(100dvh - 3rem - 2 * var(--space-5));
   }
 }
+
+.alertChip {
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--bg);
+  box-shadow: var(--shadow-float);
+  color: var(--ink);
+  font-size: var(--text-sm, 0.875rem);
+  font-weight: 600;
+  text-decoration: none;
+}

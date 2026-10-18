@@ -17,7 +17,7 @@ import {
 import type { ReportDraft } from "./types";
 import styles from "./ReportDrawer.module.css";
 
-export type Locating = "idle" | "pending" | "denied";
+export type Locating = "idle" | "pending" | "denied" | "far";
 
 type Props = {
   open: boolean;
@@ -28,6 +28,8 @@ type Props = {
   locating: Locating;
   /** Accuracy of the location fix, in feet (shown in the hint when known). */
   accuracyFt?: number;
+  /** Miles from the site when the fix was too far away to pin. */
+  farMiles?: number;
   onChange: (patch: Partial<ReportDraft>) => void;
   onSubmit: () => void;
   onClose: () => void;
@@ -35,7 +37,9 @@ type Props = {
 
 const hazardTypes = Object.keys(hazardLabels) as HazardType[];
 const severities: Severity[] = [1, 2, 3];
-function hint(locating: Locating, accuracyFt?: number) {
+function hint(locating: Locating, accuracyFt?: number, farMiles?: number) {
+  if (locating === "far")
+    return `You're ${farMiles} mi from this site — pin placed at the site centre. Click the map to move it.`;
   if (locating === "denied")
     return "Couldn't get your location. Click the map to place the pin.";
   if (locating === "pending") return "Finding your location…";
@@ -55,6 +59,7 @@ export function ReportDrawer({
   busy,
   locating,
   accuracyFt,
+  farMiles,
   onChange,
   onSubmit,
   onClose,
@@ -121,9 +126,12 @@ export function ReportDrawer({
       </header>
       <p id={`${titleId}-hint`} className={styles.hint} aria-live="polite">
         <span
-          className={cx(styles.dot, locating === "denied" && styles.warn)}
+          className={cx(
+            styles.dot,
+            (locating === "denied" || locating === "far") && styles.warn,
+          )}
         />
-        {hint(locating, accuracyFt)}
+        {hint(locating, accuracyFt, farMiles)}
         <span className={styles.siteName}> {site.name}</span>
       </p>
       <form id="report-form" className={styles.form} onSubmit={submit}>

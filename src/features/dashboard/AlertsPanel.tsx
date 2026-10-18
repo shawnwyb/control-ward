@@ -74,9 +74,11 @@ export function AlertsPanel({
                 : ""}
             </span>
           </span>
-          <span className={styles.countdown}>
-            {formatCountdown(remaining ?? 0)}
-          </span>
+          {remaining !== null ? (
+            <span className={styles.countdown}>
+              {formatCountdown(remaining)}
+            </span>
+          ) : null}
           {ack(lightningAlert?.id)}
         </div>
       ) : null}

@@ -49,7 +49,6 @@ export type MapCanvasProps = {
   pinActive: boolean;
   disabled: boolean;
   /** Hazard linked to a hovered feed row: ringed on the map with its card open. */
-  highlightId?: string | null;
   /** A feed row was clicked: pan to its marker. `nonce` re-fires the same id. */
   focusRequest?: { id: string; nonce: number };
   /** Weather to show; null or absent means no overlay. */
@@ -100,7 +99,6 @@ export default function MapCanvas({
   pin,
   pinActive,
   disabled,
-  highlightId,
   focusRequest,
   weather,
   regional,
@@ -741,23 +739,6 @@ export default function MapCanvas({
     pendingCrew.current = crewFocus.id;
     applyCrewFocus();
   }, [crewFocus]);
-
-  // A hovered feed row rings its marker and opens the same card as hovering the marker.
-  const rowCard = useRef<string | null>(null);
-  useEffect(() => {
-    const markers = hazardMarkers.current;
-    for (const [id, entry] of markers)
-      entry.marker
-        .getElement()
-        .classList.toggle(styles.highlight, id === highlightId);
-    if (highlightId && markers.has(highlightId)) {
-      rowCard.current = highlightId;
-      showCard(highlightId);
-    } else if (rowCard.current) {
-      if (openCard.current === rowCard.current) hideCard();
-      rowCard.current = null;
-    }
-  }, [highlightId, reports]);
 
   // A clicked feed row brings its marker to the middle of the map, now or once it exists.
   function applyHazardFocus() {

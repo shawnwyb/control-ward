@@ -12,7 +12,7 @@ import {
 import styles from "../dashboard/Dashboard.module.css";
 import { Icon } from "../../components/ui";
 import pill from "./LocationPill.module.css";
-import { useLocationSharing } from "./useLocationSharing";
+import type { useLocationSharing } from "./useLocationSharing";
 
 const supportNote = {
   ready: "",
@@ -47,9 +47,15 @@ export function CrewPlanCard({ siteId }: { siteId: string }) {
 }
 
 /** Floating pill on the My site map: share this device's location with the supervisor. */
-export function LocationPill({ siteId }: { siteId: string }) {
-  const { announce } = useNotice();
-  const location = useLocationSharing(siteId, (m) => announce(m, true));
+export function LocationPill({
+  location,
+}: {
+  /** From `useLocationSharing`, which the workspace runs so sharing outlives page changes. */
+  location: Pick<
+    ReturnType<typeof useLocationSharing>,
+    "enabled" | "setEnabled" | "supported"
+  >;
+}) {
   if (!location.supported) return null;
   return (
     <label className={pill.pill}>
