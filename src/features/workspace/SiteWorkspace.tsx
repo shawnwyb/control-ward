@@ -19,6 +19,7 @@ import { homeFor, type Page } from "../../lib/route";
 import { checkinRequestId, completeCheckin } from "../../lib/submission";
 import type { SiteSummary } from "../../lib/sites";
 import type { MutationResult, Site } from "../../lib/types";
+import { LocationPill } from "../crewtools/CrewTools";
 import { SiteMap } from "../map/SiteMap";
 import { SitesPage } from "../sites/SitesPage";
 import { markForDropIn } from "../map/markers";
@@ -297,7 +298,15 @@ export function SiteWorkspace({
             lightning={lightning.data}
             onSelectSite={onSiteChange}
             renderMap={siteMap}
-            mapOverlay={reportLayer}
+            mapOverlay={
+              <>
+                {reportLayer}
+                <div className={styles.pillSlot}>
+                  {/* Supervisors are on the roster too; keyed so a site switch restarts it. */}
+                  <LocationPill key={site.id} siteId={site.id} />
+                </div>
+              </>
+            }
           />
         ) : null}
         {page === "site" ? (

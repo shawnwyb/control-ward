@@ -73,7 +73,9 @@ test("crew: my site is the map with report button", async ({ page }) => {
   ).toBeVisible();
   // No Sites table, and the location toggle floats on the map.
   await expect(page.locator("#sites-title")).toHaveCount(0);
-  await expect(page.locator("#site-map")).toBeVisible();
+  await expect(
+    page.getByRole("switch", { name: "Share my location with my supervisor" }),
+  ).toBeVisible();
   const nav = page.getByRole("navigation", { name: "Pages" });
   await expect(
     nav.getByRole("link", { name: "Tomorrow's briefing" }),
@@ -106,6 +108,39 @@ test("crew: stop-work banner shows on My site beside the map", async ({
   await expect(
     page.getByRole("alert").filter({ hasText: "Stop work" }),
   ).toBeVisible();
+});
+
+test("crew: stop-work frames the whole ring on My site", async ({ page }) => {
+  await signIn(page, "crew@planit.local");
+  await expect(
+    page.getByRole("alert").filter({ hasText: "Stop work" }),
+  ).toBeVisible();
+  // A 10-mile ring fits at a far lower zoom than the street view the map opens at.
+  await expect
+    .poll(async () =>
+      Number(await page.locator("#pin-map").getAttribute("data-zoom")),
+    )
+    .toBeLessThan(11);
+});
+
+test("supervisor: can share their location from the Sites map", async ({
+  page,
+  context,
+}) => {
+  await context.grantPermissions(["geolocation"]);
+  await context.setGeolocation({ latitude: 29.65, longitude: -82.34 });
+  await signIn(page, "supervisor@planit.local");
+  const toggle = page.getByRole("switch", {
+    name: "Share my location with my supervisor",
+  });
+  await expect(toggle).toBeVisible();
+  await toggle.check();
+  await expect(toggle).toBeChecked();
+  // The sharing flow ran: it is remembered, and a granted fix raised no error.
+  expect(
+    await page.evaluate(() => localStorage.getItem("planit.shareLocation")),
+  ).toBe("1");
+  await expect(page.getByText("Couldn’t read your location")).toHaveCount(0);
 });
 
 test("reports: Mine with nothing reported says so", async ({ page }) => {

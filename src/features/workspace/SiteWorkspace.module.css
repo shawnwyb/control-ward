@@ -20,3 +20,16 @@
     animation: none;
   }
 }
+
+/* Over the top left of the Sites map, under the weather chips. */
+.pillSlot {
+  position: absolute;
+  z-index: 3;
+  top: 3.25rem;
+  left: var(--space-3);
+  pointer-events: none;
+}
+
+.pillSlot > * {
+  pointer-events: auto;
+}

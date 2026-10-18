@@ -302,6 +302,12 @@ export default function MapCanvas({
       fellBack = true;
       instance.setStyle(offlineStyle());
     };
+    // Test hook: the current zoom, readable from the DOM.
+    const publishZoom = () => {
+      node.dataset.zoom = instance.getZoom().toFixed(2);
+    };
+    instance.on("moveend", publishZoom);
+    publishZoom();
     instance.on("style.load", () => {
       styleReady = true;
       styleLoaded.current = true;
@@ -366,6 +372,8 @@ export default function MapCanvas({
       pinMarker.current = null;
       centerMarker.current = null;
       boltMarker.current = null;
+      // A new map (a dev remount) has not framed the ring yet.
+      fittedFor.current = null;
       map.current = null;
       instance.remove();
     };
