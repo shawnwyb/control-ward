@@ -12,7 +12,7 @@ Location does not establish employer sector, task, qualification or complete leg
 
 ## Research and evidence
 
-Each run uses Google Search grounding to discover current federal, state, county and city sources dynamically. Search suggestions are not evidence: the host separately fetches the official page. Accepted hosts are HTTPS `.gov` and `*.state.XX.us`, with credentials, custom ports and nonofficial redirects rejected. Pages on delegated commercial code hosts, PDFs, blocked pages and unsupported formats cannot supply instructions in this version; their absence remains a coverage gap.
+Each run requires Google Search through the Gemini Interactions API to discover current federal, state, county and city sources dynamically. Search suggestions are not evidence: the host separately fetches the official page. Accepted hosts are HTTPS `.gov` and `*.state.XX.us`, with credentials, custom ports and nonofficial redirects rejected. Pages on delegated commercial code hosts, PDFs, blocked pages and unsupported formats cannot supply instructions in this version; their absence remains a coverage gap.
 
 Fetched HTML/plain text is bounded to 1.5 MB and 55,000 normalized characters per source, with eight seconds per request and at most four requests in a redirect chain. At most eight sources are retained. The model sees bounded excerpts of those documents and the site's existing conditions. State/local suggestions must name the resolved jurisdiction. Missing evidence is never a conclusion that no local requirement exists.
 

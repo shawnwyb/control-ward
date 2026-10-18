@@ -316,23 +316,35 @@ test("Gemini performs grounded discovery and ignores thought text while retainin
     async (_url, init) => {
       request = JSON.parse(init.body);
       return Response.json({
-        candidates: [
+        steps: [
           {
-            content: {
-              parts: [
-                { thought: true, text: "private thought" },
-                { text: JSON.stringify(discovery) },
-              ],
-            },
-            groundingMetadata: {
-              groundingChunks: [{ web: { uri: discovery.sources[0].url } }],
-              searchEntryPoint: {
-                renderedContent: "<p>Google Search suggestions</p>",
+            type: "thought",
+            summary: [{ type: "text", text: "private thought" }],
+          },
+          {
+            type: "google_search_call",
+            arguments: { queries: ["official safety regulations"] },
+          },
+          {
+            type: "google_search_result",
+            result: [
+              { search_suggestions: "<p>Google Search suggestions</p>" },
+            ],
+          },
+          {
+            type: "model_output",
+            content: [
+              {
+                type: "text",
+                text: JSON.stringify(discovery),
+                annotations: [
+                  { type: "url_citation", url: discovery.sources[0].url },
+                ],
               },
-            },
+            ],
           },
         ],
-        usageMetadata: { totalTokenCount: 123 },
+        usage: { total_tokens: 123 },
       });
     },
   );
@@ -341,8 +353,10 @@ test("Gemini performs grounded discovery and ignores thought text while retainin
     true,
     AbortSignal.timeout(1000),
   );
-  assert.deepEqual(request.tools, [{ google_search: {} }]);
-  assert.equal(request.generationConfig.thinkingConfig.includeThoughts, false);
+  assert.deepEqual(request.tools, [{ type: "google_search" }]);
+  assert.equal(request.store, false);
+  assert.equal(request.generation_config.tool_choice, "any");
+  assert.equal(request.generation_config.thinking_summaries, "none");
   assert.deepEqual(result.value, discovery);
   assert.equal(result.grounded, true);
   assert.equal(result.tokens, 123);
