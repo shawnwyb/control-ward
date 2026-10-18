@@ -1,4 +1,4 @@
-import { useId, type ReactNode } from "react";
+import { useId, type ReactNode, type Ref } from "react";
 
 type Props = {
   viewBox?: string;
@@ -6,6 +6,8 @@ type Props = {
   calm?: boolean;
   /** Drawn in map coordinates (600 by 380) above the base map. */
   children?: ReactNode;
+  /** The root svg, for callers that animate its viewBox. */
+  svgRef?: Ref<SVGSVGElement>;
 };
 
 /** The stylized Everglades map used by the landing page. Decorative. */
@@ -13,6 +15,7 @@ export function MiniMap({
   viewBox = "0 0 600 380",
   calm = false,
   children,
+  svgRef,
 }: Props) {
   const uid = useId().replace(/:/g, "");
   const wet = `${uid}-wet`;
@@ -21,6 +24,7 @@ export function MiniMap({
   const storm = `${uid}-storm`;
   return (
     <svg
+      ref={svgRef}
       viewBox={viewBox}
       preserveAspectRatio="xMidYMid slice"
       style={{ width: "100%", height: "100%", display: "block" }}

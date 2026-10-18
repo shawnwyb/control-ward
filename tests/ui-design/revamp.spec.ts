@@ -317,3 +317,28 @@ for (const [width, height] of [
     expect(overflow).toBeLessThanOrEqual(0);
   });
 }
+
+test("landing: see it running plays", async ({ page }) => {
+  await page.goto("/");
+  const demo = page.getByRole("img", { name: /^Animated demo/ });
+  await demo.scrollIntoViewIfNeeded();
+  const first = demo.locator('[data-demo-row][data-rank="0"]');
+  await expect(first).toContainText("Big Cypress Sub", { timeout: 6000 });
+  await expect(first).toContainText("8.6", { timeout: 6000 });
+  const banner = demo.locator("[data-demo-banner]");
+  await expect(banner).toContainText("Stop work", { timeout: 6000 });
+  await expect(banner).toContainText(/\d\d:\d\d/);
+});
+
+test("landing: see it running shows the final state under reduced motion", async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  const demo = page.getByRole("img", { name: /^Animated demo/ });
+  await demo.scrollIntoViewIfNeeded();
+  const first = demo.locator('[data-demo-row][data-rank="0"]');
+  await expect(first).toContainText("Big Cypress Sub", { timeout: 1000 });
+  await expect(first).toContainText("8.6", { timeout: 1000 });
+  await expect(demo.locator("[data-demo-banner]")).toContainText("Stop work");
+});

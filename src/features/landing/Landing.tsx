@@ -1,6 +1,7 @@
 import { Icon, type IconName } from "../../components/ui/Icon";
 import { Footer } from "../shell/Footer";
 import { FeatureCarousel } from "./FeatureCarousel";
+import { LiveDemo } from "./LiveDemo";
 import { Puzzle } from "./Puzzle";
 import styles from "./Landing.module.css";
 
@@ -116,7 +117,6 @@ export function Landing({ onSignIn }: { onSignIn: () => void }) {
         <FeatureCarousel />
       </section>
 
-      {/* PLACEHOLDER (Task 5): replace this section with the "See it running" demo. */}
       <section
         id="running"
         className={styles.section}
@@ -125,6 +125,10 @@ export function Landing({ onSignIn }: { onSignIn: () => void }) {
         <h2 id="running-title" className={styles.h2}>
           See it running
         </h2>
+        <p className={styles.lede}>
+          A lightning strike near Big Cypress Sub, live in the supervisor view.
+        </p>
+        <LiveDemo />
       </section>
 
       <section

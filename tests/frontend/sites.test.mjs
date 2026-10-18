@@ -28,7 +28,10 @@ test("rankSites does not mutate its input and keeps several nulls ordered by nam
 });
 
 test("topHazards returns the highest non-zero subscores first", () => {
-  assert.deepEqual(topHazards({ heat: 9, soil: 7, flood: 0 }), ["heat", "soil"]);
+  assert.deepEqual(topHazards({ heat: 9, soil: 7, flood: 0 }), [
+    "heat",
+    "soil",
+  ]);
   assert.deepEqual(topHazards({ heat: 9, soil: 7, flood: 8 }, 3), [
     "heat",
     "flood",
