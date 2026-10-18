@@ -170,3 +170,39 @@ test("crew page: ticked workers stay ticked after visiting another page", async 
   ).toBeVisible();
   await expect(page.getByLabel("Select Jordan Lee")).not.toBeChecked();
 });
+
+test("landing: judges see the pitch and reach sign-in", async ({ page }) => {
+  await page.goto("/");
+  const h1 = page.getByRole("heading", {
+    level: 1,
+    name: "Every hazard on site. One picture.",
+  });
+  await expect(h1).toBeVisible();
+  // No paragraph between the headline and the buttons.
+  const between = await page.evaluate(
+    () => document.querySelector("h1")!.nextElementSibling?.tagName === "P",
+  );
+  expect(between).toBe(false);
+  for (const name of [
+    "Extreme heat",
+    "Lightning",
+    "Flooding",
+    "Soil",
+    "Wildfire",
+    "Wildlife",
+  ])
+    await expect(
+      page.getByRole("img", { name: new RegExp(`^${name}`) }),
+    ).toBeVisible();
+  await expect(
+    page.getByText("Try it with 50+ real power plant sites."),
+  ).toBeVisible();
+  expect(await page.locator("body").innerText()).not.toContain("Florida");
+  await page
+    .getByRole("button", { name: /Open live demo/ })
+    .first()
+    .click();
+  await expect(page.getByLabel("Email")).toBeVisible();
+  await page.getByRole("link", { name: "Back to home" }).click();
+  await expect(h1).toBeVisible();
+});

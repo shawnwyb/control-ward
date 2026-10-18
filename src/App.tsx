@@ -4,7 +4,9 @@ import { NoticeProvider, useNotice } from "./hooks/notice";
 import { useSession } from "./hooks/useSession";
 import { Notice } from "./components/ui";
 import { LoginPanel } from "./features/auth/LoginPanel";
+import { Landing } from "./features/landing/Landing";
 import { SetupMissing } from "./features/auth/SetupMissing";
+import { Footer } from "./features/shell/Footer";
 import page from "./features/shell/Page.module.css";
 import { Workspace } from "./features/workspace/Workspace";
 import { useRoute } from "./lib/route";
@@ -48,24 +50,17 @@ function Shell() {
           onSignOut={() => void signOut()}
         />
       ) : signedOut ? (
-        <main className={page.page}>
-          {route === "landing" ? <LandingPlaceholder /> : <LoginPanel />}
-        </main>
+        route === "landing" ? (
+          <Landing onSignIn={() => setRoute("sign-in")} />
+        ) : (
+          <main className={page.page}>
+            <LoginPanel />
+            <Footer />
+          </main>
+        )
       ) : null}
       <Notice message={notice?.message} tone={notice?.tone} onDismiss={clear} />
     </>
-  );
-}
-
-/** Stands in until the real landing page arrives. */
-function LandingPlaceholder() {
-  return (
-    <section>
-      <h1>PlanIT Control</h1>
-      <p>
-        <a href="#/sign-in">Sign in</a>
-      </p>
-    </section>
   );
 }
 
