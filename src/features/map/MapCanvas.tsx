@@ -31,6 +31,13 @@ import {
   sitePinElement,
   stopWorkMarkerElement,
 } from "./markers";
+import {
+  MUD_CLICKABLE,
+  applyMud,
+  mudPopupElement,
+  type MudRoutes,
+} from "./mud/mudLayer";
+import { applySatellite } from "./satelliteLayer";
 import { forecastBounds } from "./weather/forecast";
 import type { WeatherView } from "./weather/types";
 import { applyWeather } from "./weather/weatherLayer";
@@ -55,6 +62,10 @@ export type MapCanvasProps = {
   weather?: WeatherView | null;
   /** Weather is on: frame the whole forecast area instead of the site. */
   regional?: boolean;
+  /** Flagged mud routes to draw for one equipment class; null or absent means none. */
+  mud?: MudRoutes | null;
+  /** Show satellite imagery under the overlays. */
+  satellite?: boolean;
   /** Every site the user can see, drawn as score pins (sites without coordinates are skipped). */
   sites?: SiteSummary[];
   /** A site pin was clicked or pressed. */
@@ -102,6 +113,8 @@ export default function MapCanvas({
   focusRequest,
   weather,
   regional,
+  mud,
+  satellite = false,
   sites,
   onSelectSite,
   stopWork = false,
@@ -137,6 +150,8 @@ export default function MapCanvas({
     site,
     stopWork,
     onSelectSite,
+    mud,
+    satellite,
   });
   useEffect(() => {
     latest.current = {
@@ -148,6 +163,8 @@ export default function MapCanvas({
       site,
       stopWork,
       onSelectSite,
+      mud,
+      satellite,
     };
   });
   // The basemap style is (re)loaded asynchronously; overlays wait for it.
@@ -309,6 +326,8 @@ export default function MapCanvas({
       addOverlays();
       // A new style (e.g. the offline fallback) drops our sources: put weather back.
       applyWeather(instance, latest.current.weather ?? null);
+      applyMud(instance, latest.current.mud ?? null);
+      applySatellite(instance, latest.current.satellite);
     });
     // Basemap unreachable: keep the overlays on a plain ground instead of a blank box.
     instance.on("error", () => {
@@ -328,7 +347,40 @@ export default function MapCanvas({
       className: styles.popup,
     });
 
+    // A click on a flagged route opens its card and never moves the report pin.
+    const mudPopup = new Popup({
+      closeButton: true,
+      closeOnClick: true,
+      maxWidth: "none",
+    });
+    instance.on("click", [...MUD_CLICKABLE], (event) => {
+      const props = event.features?.[0]?.properties;
+      if (!props) return;
+      mudPopup
+        .setLngLat(event.lngLat)
+        .setDOMContent(mudPopupElement(props))
+        .addTo(instance);
+    });
+    for (const id of MUD_CLICKABLE) {
+      instance.on(
+        "mouseenter",
+        id,
+        () => (instance.getCanvas().style.cursor = "pointer"),
+      );
+      instance.on(
+        "mouseleave",
+        id,
+        () => (instance.getCanvas().style.cursor = ""),
+      );
+    }
+
     instance.on("click", (event) => {
+      const onRoute = MUD_CLICKABLE.filter((id) => instance.getLayer(id));
+      if (
+        onRoute.length &&
+        instance.queryRenderedFeatures(event.point, { layers: onRoute }).length
+      )
+        return;
       // A tap on the map first dismisses an open card (touch has no hover).
       if (openCard.current) return hideCard();
       if (latest.current.disabled || !latest.current.pinActive) return;
@@ -600,6 +652,56 @@ export default function MapCanvas({
     if (instance && styleLoaded.current)
       applyWeather(instance, weather ?? null);
   }, [weather]);
+
+  // Satellite imagery: a raster layer under labels and overlays.
+  useEffect(() => {
+    const instance = map.current;
+    if (container.current)
+      container.current.dataset.satellite = satellite ? "on" : "off";
+    if (instance && styleLoaded.current) applySatellite(instance, satellite);
+  }, [satellite]);
+
+  // Mud routes: drawn under the markers and framed when they appear.
+  useEffect(() => {
+    const instance = map.current;
+    if (instance && styleLoaded.current) applyMud(instance, mud ?? null);
+  }, [mud]);
+  const mudRoutes = mud?.routes;
+  const mudFramedFor = useRef<string | null>(null);
+  useEffect(() => {
+    const instance = map.current;
+    if (!instance || regional) return;
+    const duration = reducedMotion() ? 0 : 700;
+    const current = latest.current.site;
+    if (!mudRoutes) {
+      // Routes went away (turned off): return to the site, but not when the site itself changed.
+      if (mudFramedFor.current === current.id)
+        instance.fitBounds(siteBounds(current), { padding: 24, duration });
+      mudFramedFor.current = null;
+      return;
+    }
+    let [[minX, minY], [maxX, maxY]] = siteBounds(current);
+    for (const feature of mudRoutes.features) {
+      const coordinates = (feature.geometry as { coordinates: number[][] })
+        .coordinates;
+      for (const [x, y] of coordinates) {
+        minX = Math.min(minX, x);
+        maxX = Math.max(maxX, x);
+        minY = Math.min(minY, y);
+        maxY = Math.max(maxY, y);
+      }
+    }
+    mudFramedFor.current = current.id;
+    instance.fitBounds(
+      [
+        [minX, minY],
+        [maxX, maxY],
+      ],
+      { padding: 24, maxZoom: 16, duration },
+    );
+    // Only when routes appear or go away; the camera is the person's own otherwise.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mudRoutes]);
 
   // Wind is a canvas of moving streaks, not a raster layer.
   useEffect(() => {

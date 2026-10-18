@@ -17,6 +17,8 @@ import {
   type IconName,
 } from "../../components/ui";
 import { SITE_RADIUS_M } from "../../lib/geo";
+import { EQUIPMENT_SHORT, countFlags } from "./mud/mudLayer";
+import { useHasMud, useMudFile } from "./mud/useMudLayer";
 import type { CrewMember } from "../../lib/monitoring";
 import type { SiteSummary } from "../../lib/sites";
 import type { Report, Severity, Site } from "../../lib/types";
@@ -182,6 +184,27 @@ export function SiteMap({
     };
   }, [legendOpen]);
 
+  // Flagged unpaved routes from the mud forecast: every site in the newest model run has a layer.
+  const [satellite, setSatellite] = useState(false);
+  const [mudOn, setMudOn] = useState(false);
+  const [mudEquipment, setMudEquipment] = useState<string | null>(null);
+  const eia = site.eia_plant_id;
+  const hasMud = useHasMud(eia);
+  const mudShown = mudOn && hasMud;
+  const mudState = useMudFile(eia, mudShown);
+  const mudFile = mudState.status === "ready" ? mudState.file : null;
+  const equipmentList = mudFile?.equipment ?? [];
+  const equipment =
+    equipmentList.find((e) => e.key === mudEquipment)?.key ??
+    mudFile?.default_equipment ??
+    equipmentList[0]?.key ??
+    "";
+  const mud = useMemo(
+    () => (mudFile ? { routes: mudFile.routes, equipment } : null),
+    [mudFile, equipment],
+  );
+  const mudCounts = mud ? countFlags(mud.routes, equipment) : null;
+
   const radarOn = overlay === "rain" && rainSource === "radar";
   const forecastOn = overlay !== "off" && !radarOn;
   const radar = useRadar(radarOn);
@@ -316,6 +339,18 @@ export function SiteMap({
           {["", "Low", "Moderate", "High"][severity]}
         </li>
       ))}
+      {mudShown ? (
+        <>
+          <li>
+            <span className={styles.holdSample} aria-hidden="true" />
+            Hold: rut 8 in or more (thick line)
+          </li>
+          <li>
+            <span className={styles.inspectSample} aria-hidden="true" />
+            Inspect: rut 4 to 8 in (dashed line)
+          </li>
+        </>
+      ) : null}
       <li className={styles.note}>
         Dashed ring: {SITE_RADIUS_M} m from site center
       </li>
@@ -362,6 +397,8 @@ export function SiteMap({
               focusRequest={focusRequest}
               weather={weather}
               regional={overlay !== "off"}
+              mud={mud}
+              satellite={satellite}
               sites={sites}
               onSelectSite={onSelectSite}
               stopWork={stopWork}
@@ -392,6 +429,32 @@ export function SiteMap({
                 </button>
               ))}
             </div>
+            <div
+              role="group"
+              aria-label="Ground layers"
+              className={styles.chipGroup}
+            >
+              <button
+                type="button"
+                className={styles.chip}
+                aria-pressed={satellite}
+                onClick={() => setSatellite(!satellite)}
+              >
+                <Icon name="globe" size={14} />
+                Satellite
+              </button>
+              {hasMud ? (
+                <button
+                  type="button"
+                  className={styles.chip}
+                  aria-pressed={mudOn}
+                  onClick={() => setMudOn(!mudOn)}
+                >
+                  <Icon name="mud" size={14} />
+                  Mud
+                </button>
+              ) : null}
+            </div>
             {overlay === "rain" ? (
               <div
                 role="group"
@@ -413,6 +476,46 @@ export function SiteMap({
               </div>
             ) : null}
           </div>
+          {mudShown ? (
+            <div className={styles.mudBox}>
+              {mudShown ? (
+                <div
+                  role="group"
+                  aria-label="Mud equipment"
+                  className={styles.chipGroup}
+                >
+                  {equipmentList.map((e) => (
+                    <button
+                      key={e.key}
+                      type="button"
+                      className={styles.chip}
+                      aria-pressed={equipment === e.key}
+                      aria-label={e.label}
+                      onClick={() => setMudEquipment(e.key)}
+                    >
+                      {EQUIPMENT_SHORT[e.key] ?? e.label.split(":")[0]}
+                    </button>
+                  ))}
+                </div>
+              ) : null}
+              {mudShown ? (
+                <p className={styles.mudNote}>
+                  {mudState.status === "loading"
+                    ? "Loading routes…"
+                    : mudState.status === "error"
+                      ? "The mud layer isn’t available right now."
+                      : mudFile
+                        ? `${
+                            mudCounts &&
+                            mudCounts.inspect + mudCounts.hold === 0
+                              ? "No unpaved routes are flagged for this equipment."
+                              : `${mudCounts?.hold ?? 0} to hold, ${mudCounts?.inspect ?? 0} to inspect.`
+                          } ${mudFile.horizon.label}. ${mudFile.label}`
+                        : ""}
+                </p>
+              ) : null}
+            </div>
+          ) : null}
           {weatherEl}
           <div ref={legendBox} className={styles.legendBox}>
             <div hidden={!legendOpen}>{legendEl}</div>

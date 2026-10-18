@@ -204,3 +204,38 @@
 .legendBox [hidden] {
   display: none;
 }
+
+/* Under the weather chips and the location pill, over the top left of the map. */
+.mudBox {
+  position: absolute;
+  top: 5.75rem;
+  left: var(--space-3);
+  right: calc(var(--tap-min) + var(--space-5));
+  display: grid;
+  justify-items: start;
+  gap: var(--space-2);
+  pointer-events: none;
+}
+
+.mudNote {
+  max-width: 28rem;
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-card);
+  background: var(--bg);
+  box-shadow: var(--shadow-float);
+  color: var(--ink-2);
+  font-size: var(--text-sm);
+}
+
+.holdSample {
+  width: 1.5rem;
+  height: 0;
+  border-top: 5px solid var(--risk-high);
+}
+
+.inspectSample {
+  width: 1.5rem;
+  height: 0;
+  border-top: 4px dashed var(--risk-elevated);
+}
