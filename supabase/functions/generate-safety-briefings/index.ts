@@ -40,7 +40,7 @@ serve("generate-safety-briefings", async () => {
         p_documents: output.documents,
         p_diagnostics: output.diagnostics,
       });
-      results.push({ run_id: run.id, saved });
+      results.push({ run_id: run.id, saved, research: output.research });
     } catch (error) {
       const allowed = [
         "provider_unconfigured",

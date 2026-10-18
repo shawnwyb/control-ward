@@ -170,6 +170,18 @@ export function geminiResearch(
       return {
         value,
         tokens,
+        research_info: {
+          search_queries:
+            candidate?.groundingMetadata?.webSearchQueries?.length ?? 0,
+          grounding_chunks:
+            candidate?.groundingMetadata?.groundingChunks?.length ?? 0,
+          citations:
+            candidate?.content?.parts?.reduce(
+              (n: number, p: { annotations?: unknown[] }) =>
+                n + (p.annotations?.length ?? 0),
+              0,
+            ) ?? 0,
+        },
         grounded: !!candidate?.groundingMetadata?.groundingChunks?.some(
           (chunk: { web?: unknown }) => chunk.web,
         ),
@@ -352,6 +364,26 @@ Return ONLY {"items":[{"kind":"regulation|guidance","title":"short topic","text"
     return {
       content,
       documents,
+      research: {
+        grounded: discovery.grounded,
+        provider: discovery.research_info,
+        discovered_sources: discovery.sources.length,
+        verified_sources: documents.length,
+        fetch_failures: results.flatMap((r, i) =>
+          r.status === "rejected"
+            ? [
+                {
+                  source_id: candidates[i].id,
+                  category:
+                    r.reason instanceof Error &&
+                    /^source_[a-z_0-9]+$/.test(r.reason.message)
+                      ? r.reason.message
+                      : "source_unavailable",
+                },
+              ]
+            : [],
+        ),
+      },
       diagnostics: {
         model: snapshot.model,
         turns,
