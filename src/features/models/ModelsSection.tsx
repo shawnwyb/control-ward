@@ -15,6 +15,7 @@ import { formatReportDate } from "../../lib/nextDayReport";
 import type { Site } from "../../lib/types";
 import { useReport } from "../nextday/useReport";
 import { Gauge, RouteArt, scoreFlag, WARNING_AT, WATCH_AT } from "./ModelArt";
+import { HazardIndexFlow, MudFlow } from "./ModelFlow";
 import styles from "./ModelsSection.module.css";
 
 const FAMILY: Record<string, string> = {
@@ -172,6 +173,11 @@ function HazardIndexCard({
 
       <div className={styles.explain}>
         <h4 className={styles.sub}>How it works</h4>
+        <HazardIndexFlow
+          score={score}
+          probabilities={ok ? hi.probabilities : undefined}
+          topDriver={ok ? hi.top_driver : undefined}
+        />
         <p>
           Each hazard family has its own model. It estimates the chance that
           NOAA records a severe event of that kind near the plant tomorrow,
@@ -336,6 +342,12 @@ function MudCard({
 
       <div className={styles.explain}>
         <h4 className={styles.sub}>How it works</h4>
+        <MudFlow
+          counts={ok && counts ? counts : undefined}
+          score={ml?.score}
+          inspectIn={inspect}
+          holdIn={hold}
+        />
         <p>
           Every unpaved route near the site is split into segments. For each
           one, the model reads soil type from SSURGO, slope from 3DEP and the
@@ -386,11 +398,17 @@ export function ModelsSection({ site }: { site: Site }) {
       </p>
       <div className={styles.grid}>
         <HazardIndexCard
+          key={`hi-${site.id}`}
           hi={report?.hazard_index ?? null}
           ml={ml.data.hazard_index}
           why={why}
         />
-        <MudCard mud={report?.mud ?? null} ml={ml.data.mud} why={why} />
+        <MudCard
+          key={`mud-${site.id}`}
+          mud={report?.mud ?? null}
+          ml={ml.data.mud}
+          why={why}
+        />
       </div>
     </section>
   );

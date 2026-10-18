@@ -90,7 +90,10 @@ export function allocateFlags(counts: Record<Flag, number>, n: number): Flag[] {
       const gap = exact[i] - take[i];
       if (
         eligible &&
-        (pick < 0 || (spare > 0 ? gap > exact[pick] - take[pick] : gap < exact[pick] - take[pick]))
+        (pick < 0 ||
+          (spare > 0
+            ? gap > exact[pick] - take[pick]
+            : gap < exact[pick] - take[pick]))
       ) {
         pick = i;
       }

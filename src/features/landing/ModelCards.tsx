@@ -1,9 +1,7 @@
-import { Gauge, RouteArt } from "../models/ModelArt";
+import { HazardIndexFlow, MudFlow } from "../models/ModelFlow";
 import styles from "./ModelCards.module.css";
 
-const SAMPLE_INDEX = 6.5;
-
-/** The two forecast models behind the daily briefing, shown as illustrated cards. */
+/** The two forecast models behind the daily briefing, each with its animated architecture diagram. */
 export function ModelCards() {
   return (
     <ul className={styles.grid}>
@@ -12,10 +10,7 @@ export function ModelCards() {
         <p className={styles.desc}>
           One calibrated model per hazard family: heat, storm, flood, fire.
         </p>
-        <Gauge value={SAMPLE_INDEX} />
-        <p className={styles.reading}>
-          <strong>{SAMPLE_INDEX}</strong> watch
-        </p>
+        <HazardIndexFlow />
         <code className={styles.chip}>
           NOAA Storm Events × OSHA severity → 0–10
         </code>
@@ -25,7 +20,7 @@ export function ModelCards() {
         <p className={styles.desc}>
           STRAM-inspired rutting forecast for unpaved routes.
         </p>
-        <RouteArt />
+        <MudFlow />
         <code className={styles.chip}>
           SSURGO soil · 3DEP terrain · OSM routes · Open-Meteo
         </code>

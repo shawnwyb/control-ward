@@ -123,3 +123,19 @@ The verify scripts are `tests/monitoring.verify.sql`, `tests/rules.verify.sql`, 
 - `reports/` and `public/reports/` hold the next-day generator and sample outputs
 - `docs/` is setup, contracts, and briefs
 - `tests/` is backend, frontend, and verify scripts
+
+
+## References
+
+- Jones, Marie F. and Paul Alexander Arp. “Soil Trafficability Forecasting.” Open Journal of Forestry (2019): n. pag.
+- U.S. Energy Information Administration. (n.d.). Preliminary monthly electric generator inventory (based on Form EIA-860M as a supplement to Form EIA-860) [Data set]. Retrieved October 18, 2026, from 
+https://www.eia.gov/electricity/data/eia860m/
+- National Oceanic and Atmospheric Administration, National Centers for Environmental Information. (n.d.). Storm Events Database [Data set]. Retrieved October 18, 2026, from 
+https://www.ncei.noaa.gov/stormevents/
+- Iowa State University, Department of Agronomy. (n.d.). Iowa Environmental Mesonet [Data portal]. Retrieved October 18, 2026, from 
+https://mesonet.agron.iastate.edu/
+- Occupational Safety and Health Administration. (n.d.). Severe injury reports [Data set]. U.S. Department of Labor. Retrieved October 18, 2026, from https://www.osha.gov/severe-injury-reports
+- U.S. Army Corps of Engineers. (n.d.). National Levee Database [Geospatial database]. Retrieved October 18, 2026, from 
+https://levees.sec.usace.army.mil/
+- National Oceanic and Atmospheric Administration, Center for Operational Oceanographic Products and Services. (n.d.). Tides & currents [Data portal]. Retrieved October 18, 2026, from https://tidesandcurrents.noaa.gov/
+- Federal Emergency Management Agency. (n.d.). FEMA Flood Map Service Center [Geospatial data portal]. U.S. Department of Homeland Security. Retrieved October 18, 2026, from https://msc.fema.gov/portal/home
