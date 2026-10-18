@@ -28,7 +28,7 @@ cached; `--force` refetches.
 
 | Machine class | Signal | Flag |
 |---|---|---|
-| Road trucks (bucket/line, dump, lowboy) | STRAM ground index, from the study's own forwarder (Eq 1 → 3 → 4 → 5 × 7). | Worse of: index ≥ 4 in inspect / ≥ 8 in hold; NRCS MIL type-7 rating poor → hold, fair → inspect. |
+| Road trucks (bucket/line, dump, lowboy) | STRAM ground index, from the study's own forwarder (Eq 1 → 3 → paper NCI/CI of 2.008 per MPa → 5 × 7). | Worse of: index ≥ 4 in inspect / ≥ 8 in hold; NRCS MIL type-7 rating poor → hold, fair → inspect. |
 | Tracked excavator, crawler crane | NRCS MIL type 3 / 4 rating, wet or dry season by forecast, 1 or 50 passes. | Poor → hold, fair → inspect. |
 
 Overrides that apply to every class:

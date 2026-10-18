@@ -56,6 +56,13 @@ def eq4_nci(ci_psi, diameter_in, width_in, section_height_in, tire_load_lbf, pre
     return scale * np.asarray(ci_psi, dtype=float) * width_in * diameter_in / tire_load_lbf * geom
 
 
+def reference_nci(ci_psi):
+    """NCI of the reference forwarder (JD1510E) as the paper computed it: a fixed 2.008 per MPa of CI (Table 5,
+    Blocks 1 and 2). Eq 5 was fitted on these values, so feeding it this scale keeps the chain consistent. Eq 4 with
+    Table 3's specs cannot reproduce them (see PROJECT_BRIEF.md, Eq 4 mismatch)."""
+    return C.REFERENCE_NCI_PER_MPA * np.asarray(ci_psi, dtype=float) / C.MPA_TO_PSI
+
+
 def equipment_nci(ci_psi, equipment: C.Equipment, scale: float = C.EQ4_NCI_SCALE):
     """Lowest NCI over the machine's axle groups, i.e. its worst-loaded tire."""
     if equipment.kind != "wheeled":
