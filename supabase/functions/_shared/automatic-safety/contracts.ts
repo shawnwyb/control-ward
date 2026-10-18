@@ -68,11 +68,13 @@ export interface ChecklistContent {
   items: ChecklistItem[];
   sources: Source[];
   coverage_gaps: string[];
+  search_entry_point?: string;
 }
 export interface ModelResult {
   value: unknown;
   tokens: number;
   grounded: boolean;
+  search_entry_point?: string;
 }
 export interface ResearchModel {
   ask(
