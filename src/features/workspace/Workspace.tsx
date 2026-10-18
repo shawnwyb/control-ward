@@ -92,7 +92,6 @@ export function Workspace({
 
   return (
     <AppShell
-      pageKey={page}
       sidebar={
         <Sidebar
           role={role}

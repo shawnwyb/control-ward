@@ -69,6 +69,7 @@ const isSupervisorAt = (email: string, siteId: string) =>
 
 type Report = {
   id: string;
+  reporter_id?: string;
   site_id: string;
   type: string;
   severity: number;
@@ -787,6 +788,7 @@ async function handle(
     } else {
       report = {
         id: crypto.randomUUID(),
+        reporter_id: `user-${email}`,
         site_id: String(body.p_site_id),
         type: String(body.p_type),
         severity: Number(body.p_severity),

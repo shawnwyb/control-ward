@@ -25,14 +25,6 @@
 .page {
   max-width: var(--page-max);
   margin: 0 auto;
-  animation: page-in 160ms var(--ease-out);
-}
-
-@keyframes page-in {
-  from {
-    opacity: 0;
-    transform: translateY(4px);
-  }
 }
 
 @media (max-width: 47.99rem) {
@@ -104,10 +96,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .page {
-    animation: none;
-  }
-
   .side {
     transition: none;
   }

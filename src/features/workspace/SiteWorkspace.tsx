@@ -88,6 +88,7 @@ export function SiteWorkspace({
   useEffect(() => () => onAlertCount(0), [onAlertCount]);
 
   const roster = useCrewRoster(site.id, supervisor, onError);
+  const [selectedCrew, setSelectedCrew] = useState<Set<string>>(new Set());
   const [crewFocus, setCrewFocus] = useState<{ id: string; nonce: number }>();
   const [draft, setDraft] = useState<ReportDraft>({
     type: "debris",
@@ -194,49 +195,59 @@ export function SiteWorkspace({
   const base = { site, role, userId };
   return (
     <div id="site-workspace" className={styles.workspace}>
-      {page === "sites" ? (
-        <SitesPage
-          {...base}
-          reports={feed.reports}
-          crewTerm={feed.metrics.crewRisk}
-        >
-          {mapAndForm}
-        </SitesPage>
-      ) : null}
-      {page === "site" ? <MySitePage {...base}>{mapAndForm}</MySitePage> : null}
-      {page === "alerts" ? (
-        <AlertsPage {...base} alerts={alerts} lightning={lightning} />
-      ) : null}
-      {page === "briefing" ? <BriefingPage {...base} /> : null}
-      {page === "crew" ? (
-        <CrewPage
-          {...base}
-          reports={feed.reports}
-          crew={roster.crew}
-          crewLoaded={roster.loaded}
-          onCrewChanged={() => void roster.refresh()}
-          onLocate={(member) => {
-            setCrewFocus((last) => ({
-              id: member.user_id,
-              nonce: (last?.nonce ?? 0) + 1,
-            }));
-            onNavigate(homeFor(role));
-          }}
-        />
-      ) : null}
-      {page === "reports" ? (
-        <ReportsPage
-          {...base}
-          reports={feed.reports}
-          reminderCount={feed.reminderCount}
-          busy={busy}
-          onCheckin={checkin}
-          onSelect={(id) => {
-            setFocusRequest((last) => ({ id, nonce: (last?.nonce ?? 0) + 1 }));
-            onNavigate(homeFor(role));
-          }}
-        />
-      ) : null}
+      {/* Only this wrapper is keyed by page, so state above it survives page changes. */}
+      <div key={page} className={styles.pageIn}>
+        {page === "sites" ? (
+          <SitesPage
+            {...base}
+            reports={feed.reports}
+            crewTerm={feed.metrics.crewRisk}
+          >
+            {mapAndForm}
+          </SitesPage>
+        ) : null}
+        {page === "site" ? (
+          <MySitePage {...base}>{mapAndForm}</MySitePage>
+        ) : null}
+        {page === "alerts" ? (
+          <AlertsPage {...base} alerts={alerts} lightning={lightning} />
+        ) : null}
+        {page === "briefing" ? <BriefingPage {...base} /> : null}
+        {page === "crew" ? (
+          <CrewPage
+            {...base}
+            reports={feed.reports}
+            crew={roster.crew}
+            crewLoaded={roster.loaded}
+            selected={selectedCrew}
+            onSelectedChange={setSelectedCrew}
+            onCrewChanged={() => void roster.refresh()}
+            onLocate={(member) => {
+              setCrewFocus((last) => ({
+                id: member.user_id,
+                nonce: (last?.nonce ?? 0) + 1,
+              }));
+              onNavigate(homeFor(role));
+            }}
+          />
+        ) : null}
+        {page === "reports" ? (
+          <ReportsPage
+            {...base}
+            reports={feed.reports}
+            reminderCount={feed.reminderCount}
+            busy={busy}
+            onCheckin={checkin}
+            onSelect={(id) => {
+              setFocusRequest((last) => ({
+                id,
+                nonce: (last?.nonce ?? 0) + 1,
+              }));
+              onNavigate(homeFor(role));
+            }}
+          />
+        ) : null}
+      </div>
     </div>
   );
 }

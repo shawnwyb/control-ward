@@ -143,7 +143,12 @@ export function CrewPage({
   crewLoaded,
   onCrewChanged,
   onLocate,
+  selected,
+  onSelectedChange,
 }: Base & {
+  /** Workers ticked for a message. Held by the site workspace so it survives page changes. */
+  selected: Set<string>;
+  onSelectedChange: (next: Set<string>) => void;
   reports: Report[];
   crew: CrewMember[];
   crewLoaded: boolean;
@@ -151,15 +156,13 @@ export function CrewPage({
   onCrewChanged: () => void;
   onLocate: (member: CrewMember) => void;
 }) {
-  const [selected, setSelected] = useState<Set<string>>(new Set());
-  const toggle = (id: string) =>
-    setSelected((current) => {
-      const next = new Set(current);
-      if (!next.delete(id)) next.add(id);
-      return next;
-    });
+  const toggle = (id: string) => {
+    const next = new Set(selected);
+    if (!next.delete(id)) next.add(id);
+    onSelectedChange(next);
+  };
   const selectAll = (all: boolean) =>
-    setSelected(
+    onSelectedChange(
       new Set(
         all ? crew.filter((m) => m.role === "crew").map((m) => m.user_id) : [],
       ),

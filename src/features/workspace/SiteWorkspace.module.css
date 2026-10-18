@@ -54,3 +54,21 @@
     gap: var(--space-6);
   }
 }
+
+/* A quick fade and rise each time the page changes. */
+.pageIn {
+  animation: page-in 160ms var(--ease-out);
+}
+
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pageIn {
+    animation: none;
+  }
+}

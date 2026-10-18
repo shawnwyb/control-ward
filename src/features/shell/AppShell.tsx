@@ -9,12 +9,9 @@ import styles from "./AppShell.module.css";
  */
 export function AppShell({
   sidebar,
-  pageKey,
   children,
 }: {
   sidebar: ReactNode;
-  /** Changes with the page, so each page fades in. */
-  pageKey?: string;
   children: ReactNode;
 }) {
   const [open, setOpen] = useState(false);
@@ -54,9 +51,7 @@ export function AppShell({
       </div>
       <div className={styles.scrim} onClick={() => setOpen(false)} />
       <main className={styles.main}>
-        <div key={pageKey} className={styles.page}>
-          {children}
-        </div>
+        <div className={styles.page}>{children}</div>
         <Footer />
       </main>
     </div>

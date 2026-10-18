@@ -112,11 +112,9 @@ export function Sidebar({
               <Icon name={item.icon} size={16} className={styles.icon} />
               <span className={styles.label}>{item.label}</span>
               {item.page === "alerts" && alertCount > 0 ? (
-                <span
-                  className={styles.count}
-                  aria-label={`${alertCount} active`}
-                >
+                <span className={styles.count}>
                   {alertCount}
+                  <span className={styles.sr}> active</span>
                 </span>
               ) : null}
             </a>

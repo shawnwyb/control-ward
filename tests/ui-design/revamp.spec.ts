@@ -81,3 +81,92 @@ test("phone: sidebar collapses to a menu button and opens pages", async ({
   await expect(page.getByRole("heading", { name: "Sites" })).toBeVisible();
   await expect(page.locator("#site-map")).toBeVisible();
 });
+
+test("reports: Mine narrows the list to the signed-in user's reports", async ({
+  page,
+}) => {
+  await signIn(page, "crew@planit.local");
+  await go(page, "Reports");
+  const cards = page.locator(".report-card");
+  await expect(cards.first()).toBeVisible();
+  const before = await cards.count();
+  expect(before).toBeGreaterThan(1);
+  await go(page, "My site");
+  await page.getByRole("radio", { name: /Wildlife/ }).check();
+  await page.getByRole("button", { name: "Submit hazard report" }).click();
+  await expect(page.getByRole("status")).toContainText("Hazard reported");
+  await go(page, "Reports");
+  await expect(cards).toHaveCount(before + 1);
+  await page.getByLabel("Mine").check();
+  await expect(cards).toHaveCount(1);
+  await expect(cards.first()).toContainText("Wildlife");
+  await page.getByLabel("Mine").uncheck();
+  await expect(cards).toHaveCount(before + 1);
+});
+
+test("sidebar: Alerts badge counts the selected site's active alerts", async ({
+  page,
+}) => {
+  await signIn(page, "supervisor@planit.local");
+  const link = page
+    .getByRole("navigation", { name: "Pages" })
+    .getByRole("link", { name: /^Alerts/ });
+  await page.locator("#site").selectOption("site-north");
+  await expect(link).toHaveAccessibleName("Alerts 2 active");
+  await page.locator("#site").selectOption("site-south");
+  await expect(link).toHaveAccessibleName("Alerts 1 active");
+});
+
+test("site switcher: the choice survives a reload, and storage failures are harmless", async ({
+  page,
+}) => {
+  await signIn(page, "supervisor@planit.local");
+  await page.locator("#site").selectOption("site-south");
+  await page.reload();
+  await expect(page.locator("#site")).toHaveValue("site-south");
+
+  // Blocked storage for our key must not stop the app loading or switching sites.
+  await page.addInitScript(() => {
+    const get = Storage.prototype.getItem;
+    const set = Storage.prototype.setItem;
+    Storage.prototype.getItem = function (key: string) {
+      if (key === "planit.site") throw new Error("blocked");
+      return get.call(this, key);
+    };
+    Storage.prototype.setItem = function (key: string, value: string) {
+      if (key === "planit.site") throw new Error("blocked");
+      return set.call(this, key, value);
+    };
+  });
+  await page.reload();
+  await expect(page.locator("#site")).toBeVisible();
+  await page.locator("#site").selectOption("site-north");
+  await expect(page.locator("#site")).toHaveValue("site-north");
+  await expect(page.getByRole("heading", { name: "Sites" })).toBeVisible();
+});
+
+test("crew page: ticked workers stay ticked after visiting another page", async ({
+  page,
+}) => {
+  await signIn(page, "supervisor@planit.local");
+  await page.locator("#site").selectOption({ label: "North Plant · Demo" });
+  await go(page, "Crew");
+  // The site switch finishes asynchronously; wait for it before ticking.
+  await expect(
+    page.locator("main").getByText("North Plant · Demo").first(),
+  ).toBeVisible();
+  await page.getByLabel("Select Jordan Lee").check();
+  await go(page, "Reports");
+  await go(page, "Crew");
+  await expect(page.getByLabel("Select Jordan Lee")).toBeChecked();
+  // A different site starts clean.
+  await page.locator("#site").selectOption({ label: "South Plant · Demo" });
+  await expect(
+    page.locator("main").getByText("South Plant · Demo").first(),
+  ).toBeVisible();
+  await page.locator("#site").selectOption({ label: "North Plant · Demo" });
+  await expect(
+    page.locator("main").getByText("North Plant · Demo").first(),
+  ).toBeVisible();
+  await expect(page.getByLabel("Select Jordan Lee")).not.toBeChecked();
+});
