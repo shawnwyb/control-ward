@@ -21,7 +21,8 @@
 /* Panels that the section links jump to must clear the sticky links on phones. */
 .stack section[id],
 .cols section[id] {
-  scroll-margin-top: 4rem;
+  /* Clear both the mobile app bar and the report section links. */
+  scroll-margin-top: 7rem;
 }
 
 .muted {

@@ -26,6 +26,6 @@
 }
 @media (min-width: 48rem) {
   .sectionNav {
-    top: 0;
+    display: none;
   }
 }

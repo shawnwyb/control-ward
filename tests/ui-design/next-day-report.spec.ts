@@ -11,6 +11,9 @@ const sample = (eia: string) =>
 
 async function openReport(page: Page, siteName = "Turkey Point · Report demo") {
   await signIn(page, "supervisor@planit.local");
+  const nav = page.getByRole("navigation", { name: "Pages" });
+  if (!(await nav.isVisible()))
+    await page.getByRole("button", { name: /Menu/ }).click();
   await page.locator("#site").selectOption({ label: siteName });
   await go(page, "Next-day report");
 }
@@ -316,6 +319,13 @@ test("phones get section links that jump to a panel; wide screens do not", async
   ).toBe(true);
   await nav.getByRole("link", { name: "Routes" }).click();
   await expect(page.locator("#routes")).toBeInViewport();
+  await expect
+    .poll(async () => {
+      const heading = await page.locator("#routes h2").first().boundingBox();
+      const links = await nav.boundingBox();
+      return !!heading && !!links && heading.y >= links.y + links.height - 1;
+    })
+    .toBe(true);
   await nav.getByRole("link", { name: "Gaps" }).click();
   await expect(page.locator("#gaps")).toBeInViewport();
   await page.setViewportSize({ width: 1280, height: 900 });

@@ -494,9 +494,9 @@ test("map: site pins and fly-to", async ({ page }) => {
   await signIn(page, "supervisor@planit.local");
   await page.locator("#site").selectOption("site-north");
   const map = page.locator("#site-map");
-  // One score pin per site with coordinates (the mock's six), the selected one marked.
+  // One score pin per site, including main's Turkey Point report fixture.
   const pins = map.locator('[aria-label*="hazard index"]');
-  await expect(pins).toHaveCount(6);
+  await expect(pins).toHaveCount(7);
   await expect(
     map.getByRole("button", { name: "North Plant · Demo, hazard index 5.2" }),
   ).toHaveAttribute("aria-current", "true");

@@ -94,6 +94,8 @@
 
 /* Site score pin: the index on a pill in its band colour, with a pointer at the site. */
 .sitePin {
+  /* Site navigation must remain clickable above overlapping hazard markers. */
+  z-index: 1;
   --pin: var(--risk-none);
   display: grid;
   justify-items: center;

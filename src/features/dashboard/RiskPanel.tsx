@@ -95,7 +95,12 @@ export function RiskPanel({
                   >
                     <span>{art.title}</span>
                     <span className={evidenceStyles.articleSource}>
-                      ({art.source}) ↗
+                      ({art.source}){" "}
+                      <Icon
+                        name="arrow-right"
+                        size={12}
+                        style={{ transform: "rotate(-45deg)" }}
+                      />
                     </span>
                   </a>
                   {art.snippet ? (
