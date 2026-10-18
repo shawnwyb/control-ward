@@ -1184,6 +1184,21 @@ export function installMockBackend(): void {
   window.fetch = async (input, init) => {
     const request = input instanceof Request ? input : undefined;
     const url = new URL(request?.url ?? String(input), location.href);
+    // Fixed site conditions so design tests are deterministic (no internet call).
+    if (
+      url.hostname === "api.open-meteo.com" &&
+      url.searchParams.has("current")
+    )
+      return respond({
+        current: {
+          temperature_2m: 91,
+          apparent_temperature: 104,
+          precipitation: 0.12,
+          wind_speed_10m: 12,
+          wind_direction_10m: 250,
+          wind_gusts_10m: 22,
+        },
+      });
     if (url.origin !== base.origin || !url.pathname.startsWith(base.pathname))
       return realFetch(input, init);
     const method = (init?.method ?? request?.method ?? "GET").toUpperCase();

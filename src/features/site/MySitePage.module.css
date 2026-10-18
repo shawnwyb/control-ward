@@ -66,3 +66,60 @@
   font-weight: 600;
   text-decoration: none;
 }
+
+.conditions {
+  display: grid;
+  gap: var(--space-2);
+  max-width: 100%;
+}
+
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  justify-self: start;
+  padding: 6px 12px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--bg);
+  box-shadow: var(--shadow-float);
+  color: var(--ink);
+  font: inherit;
+  font-size: var(--text-sm, 0.875rem);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.toggle svg {
+  color: var(--icon);
+}
+
+.chevOpen {
+  transform: rotate(180deg);
+}
+
+.body {
+  padding: var(--space-3);
+  border-radius: var(--radius-card);
+  background: var(--bg);
+  box-shadow: var(--shadow-float);
+  max-height: calc(100dvh - 22rem);
+  overflow: auto;
+}
+
+.body[hidden] {
+  display: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .chevOpen {
+    transition: transform 0.15s ease;
+  }
+}
+
+/* On phones the card stops short of the Report hazard button and scrolls inside. */
+@media (max-width: 47.99rem) {
+  .body {
+    max-height: calc(100dvh - 33rem);
+  }
+}

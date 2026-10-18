@@ -1,5 +1,5 @@
-import type { ComponentProps, ReactNode } from "react";
-import { IndexTag } from "../../components/ui";
+import { useState, type ComponentProps, type ReactNode } from "react";
+import { Icon, IndexTag } from "../../components/ui";
 import { useLive } from "../../hooks/useLive";
 import { useNotice } from "../../hooks/notice";
 import {
@@ -10,6 +10,7 @@ import {
 import type { Site } from "../../lib/types";
 import { StopWorkBanner } from "../alerts/StopWorkBanner";
 import { LocationPill } from "../crewtools/CrewTools";
+import { ConditionsCard } from "./ConditionsCard";
 import styles from "./MySitePage.module.css";
 
 const noRisk: SiteRiskView = {
@@ -45,6 +46,9 @@ export function MySitePage({
   alertCount: number;
 }) {
   const { announce } = useNotice();
+  const [open, setOpen] = useState(
+    () => typeof window === "undefined" || window.innerWidth >= 1024,
+  );
   const risk = useLive(
     site.id,
     ["site_risk", "site_subscores"],
@@ -68,6 +72,31 @@ export function MySitePage({
           </a>
         ) : null}
         <LocationPill location={location} />
+        <section className={styles.conditions} aria-label="Site conditions">
+          <button
+            type="button"
+            className={styles.toggle}
+            aria-expanded={open}
+            aria-controls="conditions-body"
+            onClick={() => setOpen((o) => !o)}
+          >
+            <Icon name="rain" size={16} />
+            Conditions
+            <Icon
+              name="chevron"
+              size={14}
+              className={open ? styles.chevOpen : undefined}
+            />
+          </button>
+          <div id="conditions-body" hidden={!open} className={styles.body}>
+            <ConditionsCard
+              site={site}
+              lightning={lightning}
+              subscores={risk.data.subscores}
+              subscoresLoaded={risk.loaded}
+            />
+          </div>
+        </section>
       </div>
       {overlay}
     </div>

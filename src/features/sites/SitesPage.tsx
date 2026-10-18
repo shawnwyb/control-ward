@@ -87,7 +87,8 @@ export function SitesPage({
       </div>
       <div className={styles.detail}>
         <SiteDetail
-          siteName={site.name}
+          site={site}
+          lightning={lightning}
           risk={risk.data}
           loaded={risk.loaded}
           openHazards={reports.filter((r) => r.is_active).length}

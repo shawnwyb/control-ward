@@ -1196,3 +1196,57 @@ test("phone: crew see the active alert count on the menu and My site", async ({
   await chip.click();
   await expect(page).toHaveURL(/#\/alerts$/);
 });
+
+test("conditions: crew My site shows weather and hazard numbers", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await signIn(page, "crew@planit.local");
+  const card = page.locator("#conditions-body");
+  await expect(card.getByText("91°F", { exact: true })).toBeVisible();
+  await expect(card.getByText("104°F")).toBeVisible();
+  await expect(card.getByText("0.12 in/hr")).toBeVisible();
+  await expect(card.getByText("12 mph WSW")).toBeVisible();
+  await expect(card.getByText("gusts 22")).toBeVisible();
+  await expect(card.getByText("Open-Meteo")).toBeVisible();
+  const scores = card.getByRole("list", { name: "Hazard scores" });
+  await expect(scores.getByText("Heat")).toBeVisible();
+  await expect(scores.getByText(/^\d\.\d$/).first()).toBeVisible();
+  await page.screenshot({
+    path: ".superpowers/sdd/2026-10-17-ui-revamp/shots/conditions-crew.png",
+  });
+});
+
+test("conditions: supervisor Sites hazard detail shows the weather numbers", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await signIn(page, "supervisor@planit.local");
+  const detail = page.getByRole("region", { name: "Hazard detail" });
+  await expect(detail.getByText("91°F", { exact: true })).toBeVisible();
+  await expect(detail.getByText("0.12 in/hr")).toBeVisible();
+  await expect(detail.getByText("12 mph WSW")).toBeVisible();
+  await detail.scrollIntoViewIfNeeded();
+  await page.screenshot({
+    path: ".superpowers/sdd/2026-10-17-ui-revamp/shots/conditions-sites.png",
+  });
+});
+
+test("conditions: phone starts collapsed and opens without covering Report hazard", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await signIn(page, "crew@planit.local");
+  const toggle = page.getByRole("button", { name: "Conditions" });
+  await expect(toggle).toHaveAttribute("aria-expanded", "false");
+  await expect(page.locator("#conditions-body")).toBeHidden();
+  await toggle.click();
+  const body = page.locator("#conditions-body");
+  await expect(body.getByText("91°F", { exact: true })).toBeVisible();
+  const report = await page
+    .getByRole("button", { name: "Report hazard" })
+    .boundingBox();
+  const box = await body.boundingBox();
+  expect(report && box).toBeTruthy();
+  expect(box!.y + box!.height).toBeLessThanOrEqual(report!.y + 1);
+});
