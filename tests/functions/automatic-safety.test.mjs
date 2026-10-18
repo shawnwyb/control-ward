@@ -426,3 +426,63 @@ test("blocked OSHA pages retain their failure status and do not prevent independ
     ),
   );
 });
+
+test("search is unverified until a successful search result completes", async () => {
+  const adapter = geminiResearch("fixture-key", "gemini-3.8-flash", async () =>
+    Response.json({
+      steps: [
+        {
+          type: "google_search_call",
+          arguments: { queries: ["fixture query"] },
+        },
+        { type: "google_search_result", is_error: true, result: [] },
+        {
+          type: "model_output",
+          content: [{ type: "text", text: JSON.stringify(discovery) }],
+        },
+      ],
+      usage: { total_tokens: 40 },
+    }),
+  );
+  const result = await adapter.ask(
+    "Find sources",
+    true,
+    AbortSignal.timeout(1000),
+  );
+  assert.equal(result.grounded, false);
+  assert.equal(result.research_info.search_queries, 1);
+});
+
+test("instruction extraction remains a bounded non-search model call", async () => {
+  let request;
+  const adapter = geminiResearch(
+    "fixture-key",
+    "gemini-3.8-flash",
+    async (url, init) => {
+      assert.match(String(url), /:generateContent$/);
+      request = JSON.parse(init.body);
+      return Response.json({
+        candidates: [
+          {
+            content: {
+              parts: [
+                { thought: true, text: "private thought" },
+                { text: JSON.stringify(items) },
+              ],
+            },
+          },
+        ],
+        usageMetadata: { totalTokenCount: 60 },
+      });
+    },
+  );
+  const result = await adapter.ask(
+    "Extract exact quotes",
+    false,
+    AbortSignal.timeout(1000),
+  );
+  assert.deepEqual(result.value, items);
+  assert.equal(request.tools, undefined);
+  assert.equal(request.generationConfig.maxOutputTokens, 4096);
+  assert.equal(request.generationConfig.thinkingConfig.includeThoughts, false);
+});
