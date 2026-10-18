@@ -1,4 +1,12 @@
-import { lazy, Suspense, useId, useMemo, useState } from "react";
+import {
+  lazy,
+  Suspense,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   Badge,
   Button,
@@ -157,6 +165,27 @@ export function SiteMap({
   const [rainSource, setRainSource] = useState<RainSource>("radar");
   const [legendOpen, setLegendOpen] = useState(false);
   const legendId = useId();
+  const legendBox = useRef<HTMLDivElement>(null);
+  const legendButton = useRef<HTMLButtonElement>(null);
+  // The legend popover closes on Escape (focus returns to its button) and on a click elsewhere.
+  useEffect(() => {
+    if (!legendOpen) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      setLegendOpen(false);
+      legendButton.current?.focus();
+    };
+    const onDown = (event: PointerEvent) => {
+      if (!legendBox.current?.contains(event.target as Node))
+        setLegendOpen(false);
+    };
+    document.addEventListener("keydown", onKey);
+    document.addEventListener("pointerdown", onDown);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.removeEventListener("pointerdown", onDown);
+    };
+  }, [legendOpen]);
   const fill = variant === "fill";
 
   const radarOn = overlay === "rain" && rainSource === "radar";
@@ -404,11 +433,12 @@ export function SiteMap({
           {fill ? (
             <>
               {weatherEl}
-              <div className={styles.legendBox}>
+              <div ref={legendBox} className={styles.legendBox}>
                 <div hidden={!legendOpen}>{legendEl}</div>
                 <button
                   type="button"
                   className={styles.chip}
+                  ref={legendButton}
                   aria-expanded={legendOpen}
                   aria-controls={legendId}
                   onClick={() => setLegendOpen(!legendOpen)}

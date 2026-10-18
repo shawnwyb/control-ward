@@ -123,7 +123,7 @@ test("site switcher: the choice survives a reload, and storage failures are harm
   await signIn(page, "supervisor@planit.local");
   await page.locator("#site").selectOption("site-south");
   await page.reload();
-  await expect(page.locator("#site")).not.toHaveValue("site-north");
+  await expect(page.locator("#site")).toHaveValue("site-south");
 
   // Blocked storage for our key must not stop the app loading or switching sites.
   await page.addInitScript(() => {
@@ -371,7 +371,7 @@ test("map: site pins and fly-to", async ({ page }) => {
     await expect(south).toBeInViewport({ timeout: 800 });
   }).toPass({ timeout: 15000 });
   await south.click();
-  await expect(page.locator("#site")).not.toHaveValue("site-north");
+  await expect(page.locator("#site")).toHaveValue("site-south");
   await expect(south).toHaveAttribute("aria-current", "true");
   // Per-site state still resets without a remount: the draft starts at the new site.
   await expect(page.locator("#latitude")).toHaveValue("29.629600");
@@ -498,7 +498,7 @@ test("sites: ranked table drives the page", async ({ page }) => {
   await expect(alertsLink).toHaveAccessibleName("Alerts 2 active");
   // Another site carries its own count.
   await rows.filter({ hasText: "South Plant" }).click();
-  await expect(page.locator("#site")).not.toHaveValue("site-north");
+  await expect(page.locator("#site")).toHaveValue("site-south");
   await expect(alertsLink).toHaveAccessibleName("Alerts 1 active");
 });
 
@@ -523,6 +523,7 @@ test("sites: stop-work banner follows the selected site", async ({ page }) => {
 test("sites: stop-work banner leaves when the countdown ends", async ({
   page,
 }) => {
+  test.setTimeout(60_000);
   await signIn(page, "supervisor@planit.local", "?clear=25");
   const banner = page.getByRole("alert").filter({ hasText: "Stop work" });
   await page
@@ -607,4 +608,23 @@ test("sites: Table / Map switch hides the list", async ({ page }) => {
   await expect(
     table.getByRole("button", { name: /South Plant/ }),
   ).toBeVisible();
+});
+
+test("sites: the map legend closes on Escape and outside click", async ({
+  page,
+}) => {
+  await signIn(page, "supervisor@planit.local");
+  const legend = page.getByRole("button", { name: "Legend" });
+  const text = page.getByText("Pins: each site");
+  await expect(text).toBeHidden();
+  await legend.click();
+  await expect(legend).toHaveAttribute("aria-expanded", "true");
+  await expect(text).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(text).toBeHidden();
+  await expect(legend).toBeFocused();
+  await legend.click();
+  await expect(text).toBeVisible();
+  await page.getByRole("heading", { name: "Sites", level: 1 }).click();
+  await expect(text).toBeHidden();
 });
