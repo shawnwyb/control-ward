@@ -1,0 +1,82 @@
+.root {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.props {
+  display: grid;
+  grid-template-columns: 9.5rem minmax(0, 1fr);
+  row-gap: var(--space-1);
+  margin: 0;
+}
+
+.props dt {
+  color: var(--ink-2);
+}
+
+.props dd {
+  margin: 0;
+  min-width: 0;
+}
+
+.muted {
+  color: var(--ink-2);
+}
+
+.bars {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bar {
+  display: grid;
+  grid-template-columns: 1rem 7.5rem minmax(0, 1fr) 2rem;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.bar svg {
+  color: var(--icon);
+}
+
+.bar strong {
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.track {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--fill);
+  overflow: hidden;
+}
+
+.fill {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+  background: var(--bar-color, var(--risk-none));
+  transition: width 0.5s var(--ease-out);
+}
+
+.tone_high {
+  --bar-color: var(--risk-high);
+}
+.tone_elevated {
+  --bar-color: var(--risk-elevated);
+}
+.tone_low {
+  --bar-color: var(--risk-low);
+}
+.tone_none {
+  --bar-color: var(--risk-none);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fill {
+    transition: none;
+  }
+}

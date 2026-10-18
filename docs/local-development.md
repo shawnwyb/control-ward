@@ -47,7 +47,7 @@ Then:
 npm run dev
 ```
 
-Open <http://127.0.0.1:5173>, sign in, and select the assigned worksite. Both roles can read the safety checklist and expand its scope/citations. Supervisors also see research details. Acknowledge only a current version; a new version requires a new receipt.
+Open <http://127.0.0.1:5173>, choose **Sign in** (or open <http://127.0.0.1:5173/#/sign-in> directly), sign in, and select the assigned worksite. Open **Next-day briefing** (supervisor) or **Tomorrow's briefing** (worker) for the automatic safety checklist. **Next-day report** is the separate full forecast/model report. On phones, open **Menu** to access navigation and the site selector. Both roles can read the safety checklist and expand its scope/citations. Supervisors also see research details. Acknowledge only a current version; a new version requires a new receipt.
 
 This uses the hosted project's existing ingestion, saved predictions and checklist generation. It does not enable CodeAct or start a model job. The project owner must separately keep the CodeAct executor running and activate its queue mode; see [safety operations](safety-operations.md#start-against-the-real-database). A local frontend does not need Docker for this path.
 
@@ -181,10 +181,10 @@ The database queues work each minute; the worker polls for CodeAct jobs. Local w
 
 ### E. Verify both roles
 
-1. Sign in to the frontend as the local supervisor and select **West County Energy Center**. Refresh the page if it was open before the membership insert.
+1. Sign in to the frontend as the local supervisor, select **West County Energy Center**, and open **Next-day briefing**. Refresh the page if it was open before the membership insert.
 2. Confirm the checklist appears automatically with no Generate/Publish step.
 3. Inspect condition timestamps, current/stale state, the action titles, scope, exact quotes, official source links and coverage notes.
-4. Sign out and repeat as the local worker. Acknowledge the current checklist; expect **Receipt recorded**. Missing/expired guidance must not be acknowledged.
+4. Sign out and repeat as the local worker, opening **Tomorrow's briefing**. Acknowledge the current checklist; expect **Receipt recorded**. Missing/expired guidance must not be acknowledged.
 5. Inspect local Studio's `automatic_safety_runs` for state/errors and `automatic_safety_checklists` for the published content. Private action traces live in `private.safety_codeact_attempts`.
 
 If a site shows no instructions, inspect the gaps. A blocked government page or unresolved jurisdiction is not proof that no regulation applies. Do not replace a failed live run with fictional results while describing it as live.
@@ -242,7 +242,7 @@ Showing a previously generated real result is valid if you identify its timestam
 npm run dev:design
 ```
 
-Open <http://127.0.0.1:5173>. Sign in as `supervisor@planit.local` or `crew@planit.local` with `CrewDemo123!`, and select North. This uses browser-only fixtures: no real database, research, model execution or provider charges. It is useful for UI development and an explicitly labeled fallback, not proof of the AI pipeline.
+Open <http://127.0.0.1:5173/#/sign-in>. Sign in as `supervisor@planit.local` or `crew@planit.local` with `CrewDemo123!`, select North, and open the briefing page for its safety checklist. This uses browser-only fixtures: no real database, research, model execution or provider charges. It is useful for UI development and an explicitly labeled fallback, not proof of the AI pipeline.
 
 ## Troubleshooting
 

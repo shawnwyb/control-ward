@@ -17,3 +17,4 @@ reports/next-day/cache/
 public/reports/**/report.prev.json
 docs/*
 docs/screenshots/
+.superpowers/

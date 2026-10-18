@@ -1,8 +1,8 @@
 .footer {
   margin-top: var(--space-12);
-  border-top: var(--rule-width) solid var(--rule-strong);
-  color: var(--ink-muted);
-  font-size: var(--text-sm);
+  border-top: var(--rule-width) solid var(--line);
+  color: var(--ink-3);
+  font-size: var(--text-xs);
 }
 
 .inner {
@@ -14,10 +14,8 @@
 }
 
 .name {
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  letter-spacing: 0.08em;
-  color: var(--ink);
+  font-weight: 600;
+  color: var(--ink-2);
 }
 
 @media (min-width: 48rem) {

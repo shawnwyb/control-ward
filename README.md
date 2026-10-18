@@ -148,7 +148,9 @@ Edge Functions are not part of the local start script, so the live feeds run onl
 
 **Design-only mode (no Docker or Supabase):** `npm run dev:design` runs the UI against an in-browser mock backend with seeded demo data. Sign in with any demo account and `CrewDemo123!`. Add `?latency=1500` to slow responses or `?fail` to make writes fail, to design busy and error states. State resets on reload, and the mock is excluded from production builds.
 
-The site map uses MapLibre GL with the free OpenFreeMap "positron" basemap (no API key; needs internet). Set `VITE_MAP_STYLE_URL` to use a different MapLibre style. If the basemap can't load, the map falls back to a plain ground with the site ring and hazard markers.
+**The app:** the landing page is at `/`. Pages use hash routes such as `#/sites`, `#/alerts`, `#/site` (crew's My site) and `#/next-day-report` (the full model report), with the sidebar as navigation. `npm run test:frontend` runs the pure-logic tests (routes, ranking, countdowns, design tokens). The UI tests for the redesign run against the mock backend with `PLAYWRIGHT_MODE=design npx playwright test`.
+
+The site map uses MapLibre GL with the free OpenFreeMap "liberty" basemap (no API key; needs internet). Set `VITE_MAP_STYLE_URL` to use a different MapLibre style. If the basemap can't load, the map falls back to a plain ground with the site ring and hazard markers.
 
 **Weather overlays** (Off / Rain / Wind / Temp, with an hourly scrubber) are off by default and request nothing until you turn one on. Turning one on frames the whole forecast area (about 300 km) and restores your view when you turn it off.
 
@@ -241,7 +243,7 @@ Request and response shapes are in [the monitoring contract](docs/api-contract.m
 
 ## Automatic worker safety checklists
 
-The agent uses each assigned registry worksite's coordinates to resolve its state, county and city, research official safety regulations/guidance, and generate a cited worker checklist from local conditions such as heat. It refreshes and publishes automatically. Supervisors do not enter job plans, approve sources or publish checklists. Both roles read the checklist and acknowledge its exact version.
+The agent uses each assigned registry worksite's coordinates to resolve its state, county and city, research official safety regulations/guidance, and generate a cited worker checklist from local conditions such as heat. It refreshes and publishes automatically. Supervisors do not enter job plans, approve sources or publish checklists. Both roles read the checklist and acknowledge its exact version. Open **Next-day briefing** (supervisor) or **Tomorrow's briefing** (worker) in the sidebar for the checklist; the full model forecast is under **Next-day report**.
 
 Missing sources, unknown applicability and stale conditions are shown as gaps. Existing weather briefings, risk, live alerts and stop-work rules remain independent. Generation defaults off until the server model, credentials and schedules are configured.
 

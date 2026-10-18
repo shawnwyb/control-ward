@@ -1,5 +1,6 @@
-import type { HTMLAttributes } from "react";
+import { useEffect, useRef, type HTMLAttributes } from "react";
 import type { Severity } from "../../lib/types";
+import { riskLevel, riskTone } from "../../lib/risk";
 import { cx } from "./cx";
 import { SeverityMark } from "./SeverityMark";
 import styles from "./Badge.module.css";
@@ -23,4 +24,29 @@ export function SeverityTag({ severity, children }: TagProps) {
 
 export function StatusTag({ children }: { children: string }) {
   return <span className={cx(styles.tag, styles.neutral)}>{children}</span>;
+}
+
+type IndexTagProps = { value: number | null; showLabel?: boolean };
+
+/** Hazard index (0 to 10) as a tag: the number, plus the band word where space allows. */
+export function IndexTag({ value, showLabel = false }: IndexTagProps) {
+  const tone = riskTone(value);
+  const text = value === null ? "\u2014" : value.toFixed(1);
+  // The number ticks in when it changes (not on first paint).
+  const shown = useRef(text);
+  const changed = shown.current !== text;
+  useEffect(() => {
+    shown.current = text;
+  }, [text]);
+  return (
+    <span
+      className={cx(styles.index, styles[`index-${tone}`])}
+      data-tone={tone}
+    >
+      <span key={text} className={changed ? styles.tick : undefined}>
+        {text}
+      </span>
+      {showLabel && value !== null ? ` \u00b7 ${riskLevel(value).label}` : null}
+    </span>
+  );
 }

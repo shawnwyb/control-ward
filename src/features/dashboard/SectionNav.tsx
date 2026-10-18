@@ -1,4 +1,4 @@
-import styles from "./Dashboard.module.css";
+import styles from "./SectionNav.module.css";
 
 const dashboardSections = [
   ["risk", "Risk"],

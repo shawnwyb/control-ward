@@ -3,54 +3,33 @@
   gap: var(--space-5);
 }
 
-/*
- * DOM order is form → map → feed so phones get the report form first.
- * On wide screens the map and feed sit left, with the form as a right rail.
- */
-.grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: var(--space-5);
+/* A quick fade and rise each time the page changes. */
+.pageIn {
+  animation: page-in 160ms var(--ease-out);
 }
 
-@media (min-width: 48rem) {
-  .grid {
-    grid-template-columns: minmax(0, 1fr) 21rem;
-    grid-template-areas:
-      "map form"
-      "feed form";
-    align-items: start;
-    gap: var(--space-5);
-  }
-
-  .form {
-    grid-area: form;
-  }
-
-  .map {
-    grid-area: map;
-  }
-
-  .feed {
-    grid-area: feed;
-  }
-
-  .briefing {
-    grid-area: briefing;
-  }
-
-  /* A third row only when there is a briefing, so no empty gap appears otherwise. */
-  .withBriefing {
-    grid-template-areas:
-      "map form"
-      "briefing form"
-      "feed form";
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
   }
 }
 
-@media (min-width: 64rem) {
-  .grid {
-    grid-template-columns: minmax(0, 1fr) 26rem;
-    gap: var(--space-6);
+@media (prefers-reduced-motion: reduce) {
+  .pageIn {
+    animation: none;
   }
+}
+
+/* Over the top left of the Sites map, under the weather chips. */
+.pillSlot {
+  position: absolute;
+  z-index: 3;
+  top: 3.25rem;
+  left: var(--space-3);
+  pointer-events: none;
+}
+
+.pillSlot > * {
+  pointer-events: auto;
 }

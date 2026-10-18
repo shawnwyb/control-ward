@@ -1,0 +1,98 @@
+.root {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr));
+  gap: var(--space-2);
+}
+
+.tile {
+  display: grid;
+  gap: 2px;
+  align-content: start;
+  padding: 8px 10px;
+  border-radius: var(--radius-card);
+  box-shadow: 0 0 0 1px var(--line);
+  min-width: 0;
+}
+
+.label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink-2);
+  font-size: var(--text-xs);
+}
+
+.label svg {
+  color: var(--icon);
+}
+
+.value {
+  font-size: var(--text-xl);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.unit {
+  font-size: var(--text-sm);
+  font-weight: 400;
+  color: var(--ink-2);
+}
+
+.note {
+  color: var(--ink-3);
+  font-size: var(--text-xs);
+}
+
+.skeleton {
+  height: 3.75rem;
+  border-radius: var(--radius-card);
+  background: var(--line);
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.45;
+  }
+}
+
+.quiet {
+  margin: 0;
+  color: var(--ink-3);
+  font-size: var(--text-sm);
+}
+
+.scores {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr));
+  gap: 4px var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.score {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+}
+
+.foot {
+  margin: 0;
+  color: var(--ink-3);
+  font-size: var(--text-xs);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+  }
+}

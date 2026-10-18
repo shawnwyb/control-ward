@@ -1,5 +1,15 @@
 import type { Json } from "../database.types";
 import { supabase } from "./supabase";
+import { riskLevel, riskTone } from "./risk";
+import {
+  rankSites,
+  siteSummaryFromRow,
+  topHazards,
+  type SiteSummary,
+} from "./sites";
+
+export { riskLevel, riskTone, rankSites, topHazards };
+export type { SiteSummary };
 
 export type Role = "crew" | "supervisor";
 
@@ -134,6 +144,16 @@ export async function fetchSiteRisk(siteId: string): Promise<SiteRiskView> {
     subscores: (data?.subscores ?? {}) as Subscores,
     activeAlerts: data?.active_alert_count ?? 0,
   };
+}
+
+/** One summary per site the caller can see (row-level security scopes the view). */
+export async function fetchSiteOverviews(): Promise<SiteSummary[]> {
+  const { data, error } = await supabase.from("site_overview").select("*");
+  if (error) throw error;
+  return data.flatMap((row) => {
+    const summary = siteSummaryFromRow(row);
+    return summary ? [summary] : [];
+  });
 }
 
 export async function fetchAlerts(siteId: string): Promise<AlertRow[]> {
@@ -285,17 +305,6 @@ export async function shareLocation(
     p_accuracy_m: accuracy,
   });
   if (error) throw error;
-}
-
-/** Heat, rain, wind and storms at a glance. Matches the rules engine's 0 to 10 scale. */
-export function riskLevel(risk: number | null): {
-  label: string;
-  tone: "ok" | "caution" | "danger" | "unknown";
-} {
-  if (risk === null) return { label: "No data", tone: "unknown" };
-  if (risk >= 7) return { label: "High", tone: "danger" };
-  if (risk >= 4) return { label: "Elevated", tone: "caution" };
-  return { label: "Low", tone: "ok" };
 }
 
 /** Which of these alerts the signed-in user has acknowledged (row-level security allows only their own rows). */

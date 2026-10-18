@@ -328,28 +328,28 @@ export function RoutePanel({
         <li>
           <span
             className={styles.swatch}
-            style={{ background: "var(--sev-3)" }}
+            style={{ background: "var(--severity-3)" }}
           />{" "}
           Hold: predicted rut 8 in or more (thick line)
         </li>
         <li>
           <span
             className={styles.swatch}
-            style={{ background: "var(--sev-2)" }}
+            style={{ background: "var(--severity-2)" }}
           />{" "}
           Inspect: predicted rut 4 to 8 in (dashed line)
         </li>
         <li>
           <span
             className={styles.swatch}
-            style={{ background: "var(--brand)", opacity: 0.5 }}
+            style={{ background: "var(--accent)", opacity: 0.5 }}
           />{" "}
           Tide can reach this ground (dark blue)
         </li>
         <li>
           <span
             className={styles.swatch}
-            style={{ background: "var(--brand)", opacity: 0.2 }}
+            style={{ background: "var(--accent)", opacity: 0.2 }}
           />{" "}
           Within 0.3 m of the high-tide level (light blue)
         </li>

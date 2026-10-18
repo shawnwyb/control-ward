@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { errorMessage } from "../lib/format";
+import { liveView, requestGate, type LiveState } from "../lib/live";
 import { supabase } from "../lib/supabase";
 
 let sequence = 0;
@@ -7,6 +8,10 @@ let sequence = 0;
 /**
  * Loads data with `load`, then reloads when any watched table changes for the site, with a polling fallback.
  * The same pattern as useSiteFeed, kept generic so each panel can own one query.
+ *
+ * The hook survives a site switch, so it never shows one site's data for another:
+ * held data is tagged with its site (anything else reads as not loaded yet), and
+ * answers for a site that is no longer selected, or for a superseded request, are dropped.
  */
 export function useLive<T>(
   siteId: string,
@@ -16,9 +21,13 @@ export function useLive<T>(
   pollMs = 60000,
   onError?: (message: string) => void,
 ) {
-  const [data, setData] = useState<T>(initial);
-  const [loaded, setLoaded] = useState(false);
-  const [failed, setFailed] = useState(false);
+  const [state, setState] = useState<LiveState<T>>(() => ({
+    siteId,
+    data: initial,
+    loaded: false,
+    failed: false,
+  }));
+  const gate = useRef(requestGate(siteId));
   const loadRef = useRef(load);
   const errorRef = useRef(onError);
   const initialRef = useRef(initial);
@@ -29,12 +38,18 @@ export function useLive<T>(
   });
 
   const refresh = useCallback(async () => {
+    const isCurrent = gate.current.start(siteId);
     try {
-      setData(await loadRef.current(siteId));
-      setLoaded(true);
-      setFailed(false);
+      const data = await loadRef.current(siteId);
+      if (!isCurrent()) return;
+      setState({ siteId, data, loaded: true, failed: false });
     } catch (error) {
-      setFailed(true);
+      if (!isCurrent()) return;
+      // Keep the last good data for this site; just mark the read as failed.
+      setState((prev) => ({
+        ...liveView(prev, siteId, initialRef.current),
+        failed: true,
+      }));
       errorRef.current?.(errorMessage(error));
     }
   }, [siteId]);
@@ -46,9 +61,8 @@ export function useLive<T>(
       clearTimeout(timer);
       timer = setTimeout(() => !cancelled && void refresh(), 200);
     };
-    setData(initialRef.current);
-    setLoaded(false);
-    setFailed(false);
+    // Earlier requests (another site's, or this site's before it was left) no longer land.
+    gate.current.select(siteId);
     void refresh();
     let channel = supabase.channel(`live-${tablesKey}-${siteId}-${++sequence}`);
     for (const table of tablesKey.split(",").filter(Boolean))
@@ -77,5 +91,6 @@ export function useLive<T>(
     };
   }, [siteId, tablesKey, pollMs, refresh]);
 
+  const { data, loaded, failed } = liveView(state, siteId, initialRef.current);
   return { data, loaded, failed, refresh };
 }

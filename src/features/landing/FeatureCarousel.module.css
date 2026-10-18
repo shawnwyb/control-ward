@@ -1,0 +1,163 @@
+/* Bleed to the section edges so slides slide in from the viewport sides. */
+.car {
+  --car-gap: 18px;
+  --car-pad: var(--space-4);
+  margin: 0 calc(var(--car-pad) * -1);
+}
+
+.track {
+  display: flex;
+  gap: var(--car-gap);
+  margin: 0;
+  list-style: none;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding: 6px var(--car-pad) 18px;
+  scroll-padding: 0 var(--car-pad);
+  scrollbar-width: none;
+}
+
+.track::-webkit-scrollbar {
+  display: none;
+}
+
+/* Room after the last slide so every slide can reach the start edge. */
+.track::after {
+  content: "";
+  flex: 0 0 calc(100% - min(560px, 82%) - var(--car-gap));
+}
+
+.slide {
+  flex: 0 0 min(560px, 82%);
+  scroll-snap-align: start;
+  border-radius: 16px;
+  background: var(--sidebar);
+  padding: 14px;
+  transition: transform 0.2s var(--ease-out);
+}
+
+.slide:hover {
+  transform: translateY(-2px);
+}
+
+.pic {
+  height: 250px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow:
+    0 0 0 1px var(--line),
+    0 8px 24px rgba(15, 15, 15, 0.08);
+  font-size: 13px;
+}
+
+.inner {
+  height: 100%;
+}
+
+.cap {
+  display: flex;
+  gap: 14px;
+  padding: 16px 6px 4px;
+}
+
+.title {
+  margin: 0 0 4px;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.text {
+  margin: 0;
+  color: var(--ink-2);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.num {
+  padding-top: 3px;
+  color: var(--ink-3);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+.ctl {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 var(--car-pad);
+}
+
+.gap {
+  flex: 1;
+}
+
+.dots {
+  display: flex;
+  gap: 6px;
+}
+
+/* A 24px hit area around the visible 7px dot. */
+.dot {
+  position: relative;
+  width: 7px;
+  height: 7px;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  background: #e3e2e0;
+  cursor: pointer;
+  transition:
+    width 0.3s var(--ease-out),
+    background 0.3s;
+}
+
+.dot::before {
+  content: "";
+  position: absolute;
+  inset: -9px -3px;
+}
+
+.dot[aria-current="true"] {
+  width: 22px;
+  background: var(--ink);
+}
+
+.arrow {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: #fff;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.arrow:hover {
+  background: var(--fill);
+}
+
+.dot:focus-visible,
+.arrow:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (min-width: 768px) {
+  .car {
+    --car-pad: 40px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slide,
+  .dot {
+    transition: none;
+  }
+
+  .slide:hover {
+    transform: none;
+  }
+}

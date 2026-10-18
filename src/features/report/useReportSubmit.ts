@@ -3,7 +3,7 @@ import { useBusy } from "../../hooks/busy";
 import { useNotice } from "../../hooks/notice";
 import { errorMessage } from "../../lib/format";
 import { submitHazardReport } from "../../lib/submission";
-import type { Site } from "../../lib/types";
+import type { MutationResult, Site } from "../../lib/types";
 import type { ReportDraft } from "./types";
 
 const allowedPhotoTypes = ["image/jpeg", "image/png", "image/webp"];
@@ -12,7 +12,8 @@ const maxPhotoBytes = 5242880;
 export function useReportSubmit(
   site: Site,
   refresh: () => Promise<void>,
-  onSaved: () => void,
+  /** Runs once the report is stored, before the feed refreshes. */
+  onSaved: (response: MutationResult) => void,
 ) {
   const { announce } = useNotice();
   const { isBusy, setBusy } = useBusy();
@@ -37,11 +38,11 @@ export function useReportSubmit(
           longitude: Number(draft.longitude),
           file,
         });
-        onSaved();
+        onSaved(response);
         announce(
           response.outcome === "merged"
             ? `Merged with a nearby hazard. ${response.report.confirmations} confirmations recorded.`
-            : "Hazard reported. Your site team can now see it.",
+            : "Report sent. Your site team can now see it.",
         );
         await refresh().catch(() =>
           announce(

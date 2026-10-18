@@ -77,6 +77,7 @@ const isSupervisorAt = (email: string, siteId: string) =>
 
 type Report = {
   id: string;
+  reporter_id?: string;
   site_id: string;
   type: string;
   severity: number;
@@ -213,15 +214,28 @@ let tasks = [
 const params = new URLSearchParams(location.search);
 const latency = Number(params.get("latency") ?? 150);
 const failWrites = params.has("fail");
+// ?slow=site-north delays that site's alerts and lightning reads by 1.5 s, to test
+// that a late answer for a site you have already left is ignored.
+const slowSite = params.get("slow");
+const slowDown = (siteId: string | null) =>
+  siteId && siteId === slowSite
+    ? new Promise((resolve) => setTimeout(resolve, 1500))
+    : Promise.resolve();
 // ?break=alerts, or window.__mockFlags.breakAlerts at runtime, makes alert reads fail.
 // Created on first use, not at import, so importing this module has no side effects.
-type Flags = { breakAlerts: boolean; breakCrew: boolean };
+type Flags = {
+  breakAlerts: boolean;
+  breakCrew: boolean;
+  /** window.__mockFlags.scores = { "site-jax": 9 } overrides a site's index in the site list (tests re-ranking). */
+  scores: Record<string, number | null>;
+};
 function flags(): Flags {
   const w = window as unknown as { __mockFlags?: Flags };
   return (w.__mockFlags ??= {
     breakAlerts: params.get("break") === "alerts",
     // ?break=crew pretends the crew-assignment migration has not been applied.
     breakCrew: params.get("break") === "crew",
+    scores: {},
   });
 }
 
@@ -801,6 +815,7 @@ async function handle(
     } else {
       report = {
         id: crypto.randomUUID(),
+        reporter_id: `user-${email}`,
         site_id: String(body.p_site_id),
         type: String(body.p_type),
         severity: Number(body.p_severity),
@@ -924,30 +939,72 @@ async function handle(
         role: supervisors.has(email) ? "supervisor" : "crew",
       })),
     );
+  const overviewRow = (site: (typeof sites)[number]) => {
+    // Distinct values per site (north matches the old single-site row).
+    const scores: Record<string, number | null> = {
+      "site-north": 5.2,
+      "site-south": 8.6,
+      "site-tampa": 6.9,
+      "site-jax": 4.1,
+      "site-manatee": 2.3,
+      "site-everglades": null,
+    };
+    const override = flags().scores[site.id];
+    const risk = override !== undefined ? override : (scores[site.id] ?? null);
+    const struck = alerts.find(
+      (a) =>
+        a.site_id === site.id &&
+        a.kind === "lightning" &&
+        a.status === "active",
+    );
+    return {
+      site_id: site.id,
+      name: site.name,
+      lat: site.latitude,
+      lon: site.longitude,
+      risk_now: risk,
+      risk_tomorrow: risk === null ? null : Math.min(10, risk + 1.3),
+      top_driver: risk === null ? null : "heat subscore 5",
+      active_alert_count: alerts.filter(
+        (a) => a.site_id === site.id && a.status === "active",
+      ).length,
+      subscores:
+        risk === null
+          ? {}
+          : {
+              heat: Math.min(10, Math.round(risk)),
+              weather: 3,
+              lightning: struck ? 6 : 0,
+              flood: 1.5,
+              wildfire: 0,
+              soil: 2,
+              wildlife: 2,
+            },
+      lightning: {
+        status: struck ? "stop_work" : "clear",
+        last_strike_at: struck
+          ? new Date(
+              Date.now() + lightningClearIn * 1000 - 30 * 60 * 1000,
+            ).toISOString()
+          : null,
+      },
+    };
+  };
+  if (path === "/rest/v1/site_overview" && !siteParam) {
+    return respond(
+      sites
+        .filter((site) => accounts[email].includes(site.id))
+        .map(overviewRow),
+    );
+  }
   if (path === "/rest/v1/site_overview")
     return respond(
       memberOf
-        ? [
-            {
-              site_id: siteParam,
-              risk_now: 5.2,
-              risk_tomorrow: 6.5,
-              top_driver: "heat subscore 5",
-              active_alert_count: 1,
-              subscores: {
-                heat: 5,
-                weather: 3,
-                lightning: 0,
-                flood: 1.5,
-                wildfire: 0,
-                soil: 2,
-                wildlife: 2,
-              },
-            },
-          ]
+        ? sites.filter((site) => site.id === siteParam).map(overviewRow)
         : [],
     );
   if (path === "/rest/v1/alerts") {
+    await slowDown(siteParam);
     if (flags().breakAlerts)
       return apiError("Simulated outage (?break=alerts)", 503);
     return respond(
@@ -972,6 +1029,7 @@ async function handle(
     );
   }
   if (path === "/rest/v1/lightning_state") {
+    await slowDown(siteParam);
     if (flags().breakAlerts)
       return apiError("Simulated outage (?break=alerts)", 503);
     // ?clear=N makes the stop-work countdown end in N seconds (it runs 30 minutes from the strike).
@@ -1177,6 +1235,21 @@ export function installMockBackend(): void {
   window.fetch = async (input, init) => {
     const request = input instanceof Request ? input : undefined;
     const url = new URL(request?.url ?? String(input), location.href);
+    // Fixed site conditions so design tests are deterministic (no internet call).
+    if (
+      url.hostname === "api.open-meteo.com" &&
+      url.searchParams.has("current")
+    )
+      return respond({
+        current: {
+          temperature_2m: 91,
+          apparent_temperature: 104,
+          precipitation: 0.12,
+          wind_speed_10m: 12,
+          wind_direction_10m: 250,
+          wind_gusts_10m: 22,
+        },
+      });
     if (url.origin !== base.origin || !url.pathname.startsWith(base.pathname))
       return realFetch(input, init);
     const method = (init?.method ?? request?.method ?? "GET").toUpperCase();

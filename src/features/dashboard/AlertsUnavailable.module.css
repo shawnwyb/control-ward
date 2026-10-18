@@ -4,10 +4,9 @@
   align-items: center;
   gap: var(--space-3) var(--space-4);
   padding: var(--space-4);
-  border: var(--rule-width) solid var(--rule-strong);
-  border-left: 6px solid var(--sev-2);
-  border-radius: var(--radius-sm);
-  background: var(--sev-2-bg);
+  border-radius: 8px;
+  background: var(--tag-orange-bg);
+  color: var(--tag-orange-fg);
 }
 
 .box p {

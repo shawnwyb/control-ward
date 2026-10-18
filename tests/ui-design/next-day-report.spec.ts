@@ -1,5 +1,6 @@
 import { readFileSync } from "node:fs";
 import { test, expect, type Page } from "@playwright/test";
+import { go, signIn } from "./helpers";
 
 // Runs against the mock backend: PLAYWRIGHT_MODE=design npx playwright test tests/ui-design/next-day-report.spec.ts
 // The mock has a demo site mapped to Turkey Point (EIA 621). Its report is public/reports/621/latest.json,
@@ -9,13 +10,9 @@ const sample = (eia: string) =>
   JSON.parse(readFileSync(`public/reports/${eia}/latest.json`, "utf8"));
 
 async function openReport(page: Page, siteName = "Turkey Point · Report demo") {
-  await page.goto("/");
-  await page.getByLabel("Email").fill("supervisor@planit.local");
-  await page.getByLabel("Password").fill("CrewDemo123!");
-  await page.getByRole("button", { name: /sign in/i }).click();
-  await page.waitForSelector("#workspace select");
-  await page.selectOption("#site", { label: siteName });
-  await page.locator("label", { hasText: "Next-day report" }).click();
+  await signIn(page, "supervisor@planit.local");
+  await page.locator("#site").selectOption({ label: siteName });
+  await go(page, "Next-day report");
 }
 
 test("shows the verdict, heat timeline, map, flood and gaps for a site with a report", async ({

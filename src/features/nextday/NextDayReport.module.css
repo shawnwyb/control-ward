@@ -25,13 +25,13 @@
 }
 
 .muted {
-  color: var(--ink-muted);
+  color: var(--ink-2);
   font-size: var(--text-sm);
 }
 
 .small {
   font-size: var(--text-xs);
-  color: var(--ink-muted);
+  color: var(--ink-2);
 }
 
 .row {
@@ -47,7 +47,7 @@
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--ink-muted);
+  color: var(--ink-2);
 }
 
 .list {
@@ -67,20 +67,20 @@
 
 /* ---- verdict banner */
 .verdict {
-  border: var(--rule-width) solid var(--rule);
-  border-left: var(--heavy-rule) solid var(--ok);
-  background: var(--surface);
+  border: var(--rule-width) solid var(--line);
+  border-left: var(--heavy-rule) solid var(--risk-low);
+  background: var(--bg);
   padding: var(--space-4) var(--space-5);
   display: grid;
   gap: var(--space-3);
 }
 
 .verdict[data-level="limits"] {
-  border-left-color: var(--sev-2);
+  border-left-color: var(--severity-2);
 }
 
 .verdict[data-level="reschedule"] {
-  border-left-color: var(--sev-3);
+  border-left-color: var(--severity-3);
 }
 
 .verdictHead {
@@ -100,8 +100,8 @@
 }
 
 .banner {
-  border: var(--rule-width) solid var(--sev-2);
-  background: var(--sev-2-bg);
+  border: var(--rule-width) solid var(--severity-2);
+  background: var(--severity-2-bg);
   padding: var(--space-3) var(--space-4);
   font-size: var(--text-sm);
 }
@@ -112,7 +112,7 @@
   grid-auto-flow: column;
   grid-auto-columns: minmax(2.4rem, 1fr);
   overflow-x: auto;
-  border: var(--rule-width) solid var(--rule);
+  border: var(--rule-width) solid var(--line);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -125,9 +125,9 @@
   gap: var(--space-1);
   justify-items: center;
   padding: var(--space-2) var(--space-1);
-  border-left: var(--rule-width) solid var(--rule);
+  border-left: var(--rule-width) solid var(--line);
   font-size: var(--text-xs);
-  background: var(--surface);
+  background: var(--bg);
 }
 
 .cell:first-child {
@@ -147,20 +147,20 @@
 }
 
 .cell[data-band="caution"] {
-  background: var(--sev-1-bg);
+  background: var(--severity-1-bg);
 }
 
 .cell[data-band="extreme_caution"] {
-  background: var(--sev-2-bg);
+  background: var(--severity-2-bg);
 }
 
 .cell[data-band="danger"],
 .cell[data-band="extreme_danger"] {
-  background: var(--sev-3-bg);
+  background: var(--severity-3-bg);
 }
 
 .cell[data-band="extreme_danger"] {
-  outline: 2px solid var(--sev-3);
+  outline: 2px solid var(--severity-3);
   outline-offset: -2px;
 }
 
@@ -190,7 +190,7 @@
 .table th,
 .table td {
   padding: var(--space-2) var(--space-2);
-  border-bottom: var(--rule-width) solid var(--rule);
+  border-bottom: var(--rule-width) solid var(--line);
   text-align: right;
   white-space: nowrap;
 }
@@ -200,7 +200,7 @@
   text-align: left;
   position: sticky;
   left: 0;
-  background: var(--surface);
+  background: var(--bg);
 }
 
 /* A table that wraps instead of scrolling: short text columns in a half-width panel. */
@@ -227,7 +227,7 @@
 
 .table td[data-over="true"] {
   font-weight: 700;
-  background: var(--sev-2-bg);
+  background: var(--severity-2-bg);
 }
 
 .mono {
@@ -241,7 +241,7 @@
   list-style: none;
   display: grid;
   gap: 0;
-  border: var(--rule-width) solid var(--rule);
+  border: var(--rule-width) solid var(--line);
 }
 
 .step {
@@ -249,7 +249,7 @@
   grid-template-columns: 11.5rem minmax(0, 1fr);
   gap: var(--space-3);
   padding: var(--space-3) var(--space-4);
-  border-top: var(--rule-width) solid var(--rule);
+  border-top: var(--rule-width) solid var(--line);
 }
 
 .step:first-child {
@@ -321,8 +321,8 @@
 .mapBox {
   position: relative;
   height: 26rem;
-  border: var(--rule-width) solid var(--rule);
-  background: var(--map-ground);
+  border: var(--rule-width) solid var(--line);
+  background: var(--fill);
 }
 
 .mapBox > div {
@@ -331,7 +331,7 @@
 }
 
 .mapBox > div:focus-visible {
-  outline: 3px solid var(--focus);
+  outline: 3px solid var(--accent);
   outline-offset: -3px;
 }
 
@@ -345,7 +345,7 @@
   background:
     linear-gradient(var(--ink), var(--ink)) center / 2px 100% no-repeat,
     linear-gradient(var(--ink), var(--ink)) center / 100% 2px no-repeat,
-    color-mix(in srgb, var(--surface) 55%, transparent);
+    color-mix(in srgb, var(--bg) 55%, transparent);
 }
 
 /* "About this data": folded notes. */
@@ -359,7 +359,7 @@
   align-items: center;
   min-height: var(--tap-min);
   cursor: pointer;
-  color: var(--ink-muted);
+  color: var(--ink-2);
   font-weight: 500;
 }
 
