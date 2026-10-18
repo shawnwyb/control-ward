@@ -14,6 +14,7 @@ Brief: `docs/PROJECT_BRIEF.md`. Results: `notebooks/results.ipynb` and `artifact
 models/hazard-index/run.sh                          # live scores for today and tomorrow (~220 Open-Meteo calls)
 models/hazard-index/run.sh replay 2024-08-14 56407  # a past day from the ERA5 cache, offline
 models/hazard-index/run.sh rescore 20261018T001527Z # saved live responses with the current model, offline
+models/hazard-index/run.sh score --date 2026-10-18  # same date for every plant (default: each plant's local today)
 models/hazard-index/run.sh status                   # download coverage, current model, test metrics, latest scores
 models/hazard-index/run.sh fetch 5000               # download what is missing (exit 3 = daily quota; run again after 00:00 UTC)
 models/hazard-index/run.sh train                    # build_dataset -> compute_severity -> train -> evaluate

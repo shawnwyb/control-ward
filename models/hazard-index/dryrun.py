@@ -19,6 +19,7 @@ Usage
   python dryrun.py
   python dryrun.py --site-map site_ids.csv          # payload with site_id (CSV columns: id,eia_plant_id)
   python dryrun.py --from-raw 20261017T220000Z      # rescore saved responses, no network
+  python dryrun.py --date 2026-10-18                # 18 Oct as `now`, 19 Oct as `tomorrow` for every plant
   python dryrun.py --replay 2024-08-14 --plants 56407   # a past day from the ERA5 archive cache, no network
 
 Exit codes: 0 ok, 1 error, 2 blocked by network policy, 3 API quota used up.
@@ -228,6 +229,9 @@ def main(argv: list[str] | None = None, client: Client | None = None, now: datet
     ap.add_argument("--from-raw", dest="from_raw", help="stamp of saved responses in cache/dryrun_raw/")
     ap.add_argument("--replay", help="YYYY-MM-DD: score that day and the next from the ERA5 archive cache")
     ap.add_argument("--plants", nargs="+", help="EIA plant ids (default: all 60)")
+    ap.add_argument("--date", type=date.fromisoformat,
+                    help="YYYY-MM-DD: score this date as `now` and the next as `tomorrow` for every plant, "
+                         "instead of each plant's local today (live and --from-raw runs)")
     ap.add_argument("--out-dir", type=Path, default=paths.DRYRUN, dest="out_dir")
     ap.add_argument("--raw-dir", type=Path, default=RAW_DIR, dest="raw_dir")
     ap.add_argument("--ledger", type=Path, default=paths.WEATHER_LEDGER)
@@ -272,10 +276,10 @@ def main(argv: list[str] | None = None, client: Client | None = None, now: datet
                 h, src = plant_hourly(body[i], soil_list[i] if soil_list and i < len(soil_list) else None)
                 hourly[s.eia_plant_id], soil[s.eia_plant_id] = h, src
             def days_for(s):
-                today = localtime.local_date(now_ms, s.timezone)
+                today = args.date.isoformat() if args.date else localtime.local_date(now_ms, s.timezone)
                 return [("now", today), ("tomorrow", localtime.add_days(today, 1))]
             rows = build_rows(sites, hourly, soil, now_ms, days_for, bundle, version, "best_match", run_at)
-            stem = f"ml_scores_{stamp}"
+            stem = f"ml_scores_{stamp}" + (f"_for{args.date:%Y%m%d}" if args.date else "")
         out, pf = write_outputs(rows, stem, site_map, args.out_dir)
         print(f"wrote {out} ({len(rows)} rows)")
         print(f"wrote {pf} ({len(rows)} rows)")

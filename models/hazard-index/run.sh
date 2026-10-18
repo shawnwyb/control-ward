@@ -5,7 +5,7 @@
 #   ./run.sh                      live scores for today and tomorrow (same as: ./run.sh score)
 #   ./run.sh score [args]         dryrun.py [args], e.g. --site-map site_ids.csv   (Open-Meteo, ~220 calls)
 #   ./run.sh replay DATE [EIA..]  score a past day from the ERA5 cache, e.g. replay 2024-08-14 56407   (offline)
-#   ./run.sh rescore STAMP        rescore saved live responses, e.g. rescore 20261018T001527Z   (offline)
+#   ./run.sh rescore STAMP [args] rescore saved live responses, e.g. rescore 20261018T042429Z --date 2026-10-18
 #   ./run.sh train                build_dataset -> compute_severity -> train -> evaluate   (offline, cached data)
 #   ./run.sh fetch [BUDGET]       Storm Events, NWS zones (once), Open-Meteo archive (default budget 8500 calls)
 #   ./run.sh all [BUDGET]         fetch -> train -> score
@@ -77,9 +77,10 @@ cmd_replay() {
 
 cmd_rescore() {
   need_model
-  if [ $# -ne 1 ]; then echo "usage: $SELF rescore STAMP   (a file name in cache/dryrun_raw/, without .json)" >&2; exit 1; fi
-  step "Rescore saved responses $1 (dryrun.py --from-raw)"
-  "$PY" dryrun.py --from-raw "$1"
+  if [ $# -lt 1 ]; then echo "usage: $SELF rescore STAMP [dryrun args]   (STAMP: a file in cache/dryrun_raw/, without .json)" >&2; exit 1; fi
+  local stamp="$1"; shift
+  step "Rescore saved responses $stamp (dryrun.py --from-raw)"
+  "$PY" dryrun.py --from-raw "$stamp" "$@"
   latest_scores
 }
 
