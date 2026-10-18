@@ -14,7 +14,12 @@ export type RoadGraph = {
 };
 
 export type Avoid = "hold" | "hold_inspect";
-export type RouteOptions = { equipment: string; avoid: Avoid; avoidTide: boolean; allowPrivate: boolean };
+export type RouteOptions = {
+  equipment: string;
+  avoid: Avoid;
+  avoidTide: boolean;
+  allowPrivate: boolean;
+};
 
 export type RouteResult = {
   coordinates: [number, number][];
@@ -32,13 +37,21 @@ const PRIVATE = 2;
 const TIDE_WET = 4;
 
 const METERS_PER_DEG_LAT = 110_540;
-export function metersBetween(a: [number, number], b: [number, number]): number {
+export function metersBetween(
+  a: [number, number],
+  b: [number, number],
+): number {
   const kx = Math.cos(((a[1] + b[1]) / 2) * (Math.PI / 180)) * 111_320;
   return Math.hypot((b[0] - a[0]) * kx, (b[1] - a[1]) * METERS_PER_DEG_LAT);
 }
 
 /** Nearest node to a point, or null if none is within `maxMeters` (a click far from any mapped road). */
-export function nearestNode(graph: RoadGraph, lon: number, lat: number, maxMeters = 400): number | null {
+export function nearestNode(
+  graph: RoadGraph,
+  lon: number,
+  lat: number,
+  maxMeters = 400,
+): number | null {
   let best = -1;
   let bestD = Infinity;
   graph.nodes.forEach((n, i) => {
@@ -53,13 +66,18 @@ export function nearestNode(graph: RoadGraph, lon: number, lat: number, maxMeter
 
 type Arc = { to: number; edge: number[]; flag: number };
 
-function adjacency(graph: RoadGraph, options: RouteOptions | null, equipmentIndex: number): Arc[][] {
+function adjacency(
+  graph: RoadGraph,
+  options: RouteOptions | null,
+  equipmentIndex: number,
+): Arc[][] {
   const out: Arc[][] = graph.nodes.map(() => []);
   for (const e of graph.edges) {
     const bits = e[e.length - 1];
     const flag = e[3 + equipmentIndex];
     if (options) {
-      if (flag === 2 || (options.avoid === "hold_inspect" && flag === 1)) continue;
+      if (flag === 2 || (options.avoid === "hold_inspect" && flag === 1))
+        continue;
       if (options.avoidTide && bits & TIDE_WET) continue;
     }
     if (!(options?.allowPrivate ?? true) && bits & PRIVATE) continue;
@@ -108,7 +126,13 @@ class MinHeap {
   }
 }
 
-function search(graph: RoadGraph, from: number, to: number, options: RouteOptions | null, equipment: string): RouteResult | null {
+function search(
+  graph: RoadGraph,
+  from: number,
+  to: number,
+  options: RouteOptions | null,
+  equipment: string,
+): RouteResult | null {
   const eq = Math.max(0, graph.equipment.indexOf(equipment));
   const adj = adjacency(graph, options, eq);
   const dist = new Float64Array(graph.nodes.length).fill(Infinity);
@@ -133,7 +157,14 @@ function search(graph: RoadGraph, from: number, to: number, options: RouteOption
   }
   if (!Number.isFinite(dist[to])) return null;
   const nodes: number[] = [];
-  const result: RouteResult = { coordinates: [], meters: dist[to], rated: { ok: 0, inspect: 0, hold: 0 }, unrated: 0, privateRoad: 0, tideWet: 0 };
+  const result: RouteResult = {
+    coordinates: [],
+    meters: dist[to],
+    rated: { ok: 0, inspect: 0, hold: 0 },
+    unrated: 0,
+    privateRoad: 0,
+    tideWet: 0,
+  };
   for (let n = to; n !== -1; n = prev[n]) {
     nodes.push(n);
     const arc = via[n];
@@ -160,10 +191,16 @@ export type Detour = {
   to: number | null;
 };
 
-export function planDetour(graph: RoadGraph, a: [number, number], b: [number, number], options: RouteOptions): Detour {
+export function planDetour(
+  graph: RoadGraph,
+  a: [number, number],
+  b: [number, number],
+  options: RouteOptions,
+): Detour {
   const from = nearestNode(graph, a[0], a[1]);
   const to = nearestNode(graph, b[0], b[1]);
-  if (from === null || to === null) return { direct: null, detour: null, from, to };
+  if (from === null || to === null)
+    return { direct: null, detour: null, from, to };
   return {
     direct: search(graph, from, to, null, options.equipment),
     detour: search(graph, from, to, options, options.equipment),

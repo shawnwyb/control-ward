@@ -4,17 +4,17 @@ A safety platform for utility field crews, built for SwampHacks 2026. It combine
 
 ## Status
 
-| Area                                                                | Status                                                                  |
-| ------------------------------------------------------------------- | ----------------------------------------------------------------------- |
-| Crew hazard reporting (photos, duplicate merging, check-ins)        | Built, with a crew UI                                                   |
-| Site registry (60 real plants from EIA-860M)                        | Built                                                                   |
-| Live feeds (weather, heat, rain, soil, rivers, wildfire, lightning) | Built, scheduled, running on the hosted project                         |
-| Rules, alerts, risk score, evening briefing                         | Built                                                                   |
-| Demo scenarios for lightning, rain, heat, fire and wildlife         | Built (RPCs only, no panel)                                             |
-| Crew app: alerts, lightning countdown, site risk, evening briefing  | Built (read from the monitoring tables; acknowledge and mark-read RPCs) |
-| Crew location sharing, supervisor dashboard (PlanIt Dash)           | Not built here. Another developer owns the UI.                          |
+| Area                                                                | Status                                                                                                                  |
+| ------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| Crew hazard reporting (photos, duplicate merging, check-ins)        | Built, with a crew UI                                                                                                   |
+| Site registry (60 real plants from EIA-860M)                        | Built                                                                                                                   |
+| Live feeds (weather, heat, rain, soil, rivers, wildfire, lightning) | Built, scheduled, running on the hosted project                                                                         |
+| Rules, alerts, risk score, evening briefing                         | Built                                                                                                                   |
+| Demo scenarios for lightning, rain, heat, fire and wildlife         | Built (RPCs only, no panel)                                                                                             |
+| Crew app: alerts, lightning countdown, site risk, evening briefing  | Built (read from the monitoring tables; acknowledge and mark-read RPCs)                                                 |
+| Crew location sharing, supervisor dashboard (PlanIt Dash)           | Not built here. Another developer owns the UI.                                                                          |
 | ML scores (`ml_scores`)                                             | Two offline models push per-model rows: `mud` (`models/mud-trafficability`) and `hazard_index` (`models/hazard-index`). |
-| SMS and web push                                                    | Not built. Alerts reach clients through Realtime.                       |
+| SMS and web push                                                    | Not built. Alerts reach clients through Realtime.                                                                       |
 
 ## How it works
 

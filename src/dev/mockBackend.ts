@@ -1016,14 +1016,16 @@ async function handle(
                 "National Weather Service flood statements and hydrologic updates indicate rising river levels and saturated drainage basins across the plant perimeter following heavy antecedent rainfall.",
               articles: [
                 {
-                  title: "Regional River Basin Flood Advisory and Water Level Updates",
+                  title:
+                    "Regional River Basin Flood Advisory and Water Level Updates",
                   url: "https://water.weather.gov/ahps",
                   source: "weather.gov",
                   snippet:
                     "Elevated gauge readings and localized road ponding active across low-lying access corridors.",
                 },
                 {
-                  title: "Heavy Rainfall Prompts Flood Watches and Travel Advisories",
+                  title:
+                    "Heavy Rainfall Prompts Flood Watches and Travel Advisories",
                   url: "https://www.localnews.com/weather/flood-watch",
                   source: "localnews.com",
                   snippet:

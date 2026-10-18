@@ -10,6 +10,7 @@ While the score and driver are quantitative, supervisors and field crew operator
 
 Intended outcome:
 An end-to-end evidence grounding pipeline that:
+
 1. Identifies plants where the Hazard Index or rule score is elevated (at Watch tier $\ge 3.0$ or higher) and inspects their main driver (`top_driver`).
 2. Gathers the power plant site's geographic context (plant name, coordinates, county, state, and recent forecast metrics like precipitation, gust, or heat).
 3. Uses Gemini with Google Search Grounding to search for recent news articles, reports, and advisories about that specific hazard near the site.
@@ -24,6 +25,7 @@ An end-to-end evidence grounding pipeline that:
 ## Scope
 
 ### In scope
+
 1. **Python Evidence Pipeline (`models/hazard-index/fetch_evidence.py`)**:
    - Reads the latest dryrun CSV (e.g. `artifacts/dryrun/ml_scores_*.csv`).
    - Filters for elevated sites (default: Hazard Index $\ge 3.0$ or rule maximum $\ge 3.0$).
@@ -58,16 +60,19 @@ An end-to-end evidence grounding pipeline that:
    - Frontend component tests / typecheck (`npm run build`).
 
 ### Out of scope
+
 - Scraping arbitrary third-party paywalled websites directly.
 - Overwriting or removing existing ML scoring models or rule engines.
 - Retraining or altering the hazard index feature math.
 
 ## Technical constraints & integrations
+
 - LLM Provider: Google Gemini (`gemini-2.5-flash` or `gemini-1.5-flash` with Google Search tool) using `GEMINI_API_KEY`.
 - Language & Runtimes: Python 3.11 in `.venv`, Node 24 / Vite React TypeScript frontend, PostgreSQL 15 on Supabase.
 - Graceful offline fallback: If `GEMINI_API_KEY` is not set or network is disabled, `fetch_evidence.py` can generate mock/dry-run evidence or report an explicit exit code without crashing.
 
 ## Acceptance criteria
+
 1. Running `models/hazard-index/run.sh evidence` parses the dryrun CSV, identifies plants at $\ge 3.0$, and queries news/backing evidence for each plant's confounding driver.
 2. The output JSON file contains valid news references (title, url, snippet) and a 2-3 sentence grounded summary.
 3. `push.py` can upload the evidence to production `public.hazard_evidence` alongside `ml_scores`.
