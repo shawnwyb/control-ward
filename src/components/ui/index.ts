@@ -1,4 +1,4 @@
-export { Badge, SeverityTag, StatusTag } from "./Badge";
+export { Badge, IndexTag, SeverityTag, StatusTag } from "./Badge";
 export { Button } from "./Button";
 export { cx } from "./cx";
 export { Field, Input, Select } from "./Field";

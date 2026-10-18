@@ -10,7 +10,7 @@ html {
 
 body {
   margin: 0;
-  background: var(--paper);
+  background: var(--bg);
   color: var(--ink);
   font-family: var(--font-sans);
   font-size: var(--text-base);
@@ -48,7 +48,7 @@ fieldset {
 }
 
 a {
-  color: var(--brand);
+  color: var(--accent);
 }
 
 code {
@@ -61,7 +61,7 @@ img {
 }
 
 :focus-visible {
-  outline: 3px solid var(--focus);
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
 

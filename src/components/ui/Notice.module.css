@@ -14,21 +14,31 @@
   align-items: flex-start;
   gap: var(--space-3);
   padding: var(--space-3) var(--space-2) var(--space-3) var(--space-4);
-  border: var(--rule-width) solid var(--ink);
-  border-left-width: 6px;
-  border-radius: var(--radius-sm);
-  background: var(--surface);
+  border: 0;
+  border-radius: var(--radius-card);
+  background: var(--bg);
+  box-shadow: var(--shadow-float);
   color: var(--ink);
   font-weight: 500;
-  animation: rise var(--duration) var(--ease);
+  animation: rise 240ms var(--ease-out);
 }
 
 .success {
-  border-left-color: var(--ok);
+  --toast-mark: var(--risk-low);
 }
 
 .error {
-  border-left-color: var(--danger);
+  --toast-mark: var(--risk-high);
+}
+
+.toast::before {
+  content: "";
+  flex: none;
+  align-self: center;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--toast-mark);
 }
 
 .message {
@@ -45,20 +55,21 @@
   height: var(--tap-min);
   border: 0;
   background: transparent;
-  color: var(--ink-muted);
+  color: var(--ink-2);
+  border-radius: var(--radius);
   cursor: pointer;
   pointer-events: auto;
 }
 
 .dismiss:hover {
   color: var(--ink);
-  background: var(--surface-sunken);
+  background: var(--hover);
 }
 
 @keyframes rise {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(12px);
   }
 }
 

@@ -1,5 +1,8 @@
 import type { Json } from "../database.types";
 import { supabase } from "./supabase";
+import { riskLevel, riskTone } from "./risk";
+
+export { riskLevel, riskTone };
 
 export type Role = "crew" | "supervisor";
 
@@ -265,17 +268,6 @@ export async function shareLocation(
     p_accuracy_m: accuracy,
   });
   if (error) throw error;
-}
-
-/** Heat, rain, wind and storms at a glance. Matches the rules engine's 0 to 10 scale. */
-export function riskLevel(risk: number | null): {
-  label: string;
-  tone: "ok" | "caution" | "danger" | "unknown";
-} {
-  if (risk === null) return { label: "No data", tone: "unknown" };
-  if (risk >= 7) return { label: "High", tone: "danger" };
-  if (risk >= 4) return { label: "Elevated", tone: "caution" };
-  return { label: "Low", tone: "ok" };
 }
 
 /** Which of these alerts the signed-in user has acknowledged (row-level security allows only their own rows). */

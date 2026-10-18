@@ -4,7 +4,7 @@
   height: 0.625rem;
   flex: none;
   border-radius: 50%;
-  border: 2px solid var(--ink-faint);
+  border: 2px solid var(--ink-3);
 }
 
 .live {
@@ -14,10 +14,10 @@
 
 .pending {
   background: transparent;
-  border-color: var(--ink-faint);
+  border-color: var(--ink-3);
 }
 
 .off {
   background: transparent;
-  border-color: var(--sev-2);
+  border-color: var(--risk-elevated);
 }

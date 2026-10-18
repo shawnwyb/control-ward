@@ -2,9 +2,9 @@
   display: grid;
   place-items: center;
   flex: none;
-  width: 2.75rem;
-  height: 2.75rem;
-  border: var(--rule-width) solid var(--rule-strong);
-  border-radius: var(--radius-sm);
-  background: var(--paper);
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: var(--radius);
+  background: var(--fill);
+  color: var(--icon);
 }

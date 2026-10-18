@@ -6,7 +6,8 @@
 
 .label {
   font-size: var(--text-sm);
-  font-weight: 600;
+  font-weight: 500;
+  color: var(--ink-2);
 }
 
 .hint {
@@ -19,14 +20,14 @@
   min-width: 0;
   min-height: var(--tap-comfort);
   padding: 0 var(--space-3);
-  border: var(--rule-width) solid var(--rule-strong);
-  border-radius: var(--radius-sm);
-  background: var(--surface);
-  font-size: var(--text-base); /* 16px: prevents iOS zoom on focus */
+  border: var(--rule-width) solid var(--line-strong);
+  border-radius: var(--radius);
+  background: var(--bg);
+  font-size: var(--text-base);
 }
 
 .control:hover:not(:disabled) {
-  border-color: var(--ink);
+  background: var(--hover);
 }
 
 .control:disabled {
@@ -36,7 +37,7 @@
 
 .control:focus-visible {
   outline-offset: 0;
-  border-color: var(--focus);
+  border-color: var(--accent);
 }
 
 .mono {
@@ -54,4 +55,11 @@
     calc(100% - 13px) 50%;
   background-size: 5px 5px;
   background-repeat: no-repeat;
+}
+
+/* iOS zooms inputs under 16px on focus; keep them at 16px on touch screens. */
+@media (pointer: coarse) {
+  .control {
+    font-size: 1rem;
+  }
 }
