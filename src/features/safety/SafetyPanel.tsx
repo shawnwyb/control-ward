@@ -4,7 +4,7 @@ import { errorMessage } from "../../lib/format";
 import type { Role } from "../../lib/monitoring";
 import type { Site } from "../../lib/types";
 import * as api from "./api";
-import type { Reading, Workspace } from "./api";
+import type { ChecklistContent, Reading, Workspace } from "./api";
 import styles from "./SafetyPanel.module.css";
 
 export function localWorkDate(
@@ -47,7 +47,7 @@ function conditionRows(readings: Reading[]) {
     .sort((a, b) => Number(b.hazard === "heat") - Number(a.hazard === "heat"))
     .slice(0, 12);
 }
-export function SafetyPanel({ site }: { site: Site; role: Role }) {
+export function SafetyPanel({ site, role }: { site: Site; role: Role }) {
   const [date, setDate] = useState(() => localWorkDate(site.timezone));
   const automaticDate = useRef(true);
   useEffect(() => {
@@ -65,7 +65,7 @@ export function SafetyPanel({ site }: { site: Site; role: Role }) {
       <PanelHeader
         title="Task safety checklist"
         titleId="safety-title"
-        description="Generated automatically from this worksite's location, official safety sources and local conditions. Live alerts and stop-work directions apply immediately."
+        description="Priority actions from local conditions and official sources. Follow live alerts and stop-work directions immediately."
         aside={
           <Field id="safety-date" label="Checklist work date">
             <Input
@@ -86,6 +86,7 @@ export function SafetyPanel({ site }: { site: Site; role: Role }) {
         key={`${site.id}:${date}`}
         siteId={site.id}
         date={date}
+        role={role}
       />
     </Panel>
   );
@@ -93,9 +94,11 @@ export function SafetyPanel({ site }: { site: Site; role: Role }) {
 function AutomaticChecklist({
   siteId,
   date,
+  role,
 }: {
   siteId: string;
   date: string;
+  role: Role;
 }) {
   const [data, setData] = useState<Workspace>();
   const [error, setError] = useState("");
@@ -139,6 +142,7 @@ function AutomaticChecklist({
   }
   const checklist = data?.checklist;
   const content = checklist?.content;
+  const readings = conditionRows(content?.conditions ?? []);
   return (
     <div className={styles.body}>
       {error ? (
@@ -149,49 +153,123 @@ function AutomaticChecklist({
       {!data ? <p>Loading automatic safety checklist...</p> : null}
       {data && !data.enabled ? (
         <p className={styles.warning}>
-          Automatic safety generation is not configured. Existing weather plans
-          and live alerts remain available.
+          Automatic safety generation is not configured. Follow live alerts and
+          existing site procedures.
         </p>
       ) : null}
       {data?.run && data.run.state !== "succeeded" ? (
         <p role="status">
-          Updating automatically: {data.run.state} · Attempt {data.run.attempt}
-          {data.run.error_category ? ` · ${data.run.error_category}` : ""}. No
-          supervisor action is required to generate a checklist.
+          {data.run.state === "failed"
+            ? "Checklist update unavailable. Follow live alerts and site procedures."
+            : "Checklist updating automatically. No supervisor action required."}
         </p>
       ) : null}
       {data && !checklist ? (
         <p>
-          No generated checklist for this site and date yet. The site worker
-          prepares it automatically; follow live alerts and existing site
-          procedures while it is unavailable.
+          No generated checklist for this site and date yet. Follow live alerts
+          and existing site procedures while it is unavailable.
         </p>
       ) : null}
       {checklist && content ? (
-        <>
-          <section
-            className={styles.box}
-            aria-label="Automatic worker checklist"
-          >
-            <h3>Automatic worker checklist</h3>
+        <section className={styles.box} aria-label="Automatic worker checklist">
+          <h3>Automatic worker checklist</h3>
+          <p>
+            <strong>
+              {checklist.current ? "Current" : "Updating / out of date"}
+            </strong>{" "}
+            · Work date {checklist.work_date}
+          </p>
+          {!checklist.current ? (
+            <p className={styles.warning}>
+              Conditions changed or this checklist expired. Follow live alerts
+              while a replacement is prepared. Acknowledgement is unavailable.
+            </p>
+          ) : null}
+          {readings.length ? (
+            <ul
+              className={styles.conditions}
+              aria-label="Priority local conditions"
+            >
+              {readings.slice(0, 3).map((r) => (
+                <li key={`${r.hazard}:${r.unit}:${r.forecast_for}`}>
+                  <strong>
+                    {units[r.unit] ?? `${r.hazard} (${r.unit})`}:{" "}
+                    {Number(r.value.toFixed(1))}
+                  </strong>
+                  <span className={styles.muted}>
+                    {" "}
+                    · {r.forecast_for === "-infinity" ? "Observed" : "Forecast"}
+                    {Date.now() - Date.parse(r.observed_at) > 7200000
+                      ? " · STALE"
+                      : ""}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className={styles.warning}>
+              No current local readings are available. Check conditions before
+              work.
+            </p>
+          )}
+          <p className={styles.muted}>
+            Read scope before applying an action. Coverage is incomplete; site
+            procedures and live alerts still apply.
+          </p>
+          {content.items.length ? (
+            <>
+              <ol className={styles.list} aria-label="Priority worker actions">
+                {content.items.slice(0, 5).map((item) => (
+                  <Instruction
+                    key={item.id}
+                    item={item}
+                    sources={content.sources}
+                  />
+                ))}
+              </ol>
+              {content.items.length > 5 ? (
+                <details className={styles.evidence}>
+                  <summary>
+                    {content.items.length - 5} additional instructions from this
+                    version
+                  </summary>
+                  <ol className={styles.list} start={6}>
+                    {content.items.slice(5).map((item) => (
+                      <Instruction
+                        key={item.id}
+                        item={item}
+                        sources={content.sources}
+                      />
+                    ))}
+                  </ol>
+                </details>
+              ) : null}
+            </>
+          ) : (
             <p>
-              <strong>
-                {checklist.current ? "Current" : "Updating / out of date"}
-              </strong>{" "}
-              · Work date {checklist.work_date}
+              No verified instruction could be extracted. Follow site procedures
+              and check coverage details.
             </p>
-            <p className={styles.muted}>
-              Generated {new Date(checklist.generated_at).toLocaleString()} ·
-              Valid until {new Date(checklist.valid_until).toLocaleString()}
-            </p>
-            {!checklist.current ? (
-              <p className={styles.warning}>
-                Conditions changed or this checklist expired. A replacement is
-                prepared automatically. Follow live alerts; acknowledgement is
-                unavailable until current guidance arrives.
-              </p>
-            ) : null}
-            <p>{content.summary}</p>
+          )}
+          {content.coverage_gaps.length ? (
+            <details className={`${styles.evidence} ${styles.warning}`}>
+              <summary>
+                Coverage is limited · {content.coverage_gaps.length} notes
+              </summary>
+              <ul>
+                {content.coverage_gaps.map((gap, i) => (
+                  <li key={i}>{gap}</li>
+                ))}
+              </ul>
+            </details>
+          ) : null}
+          <details className={styles.evidence}>
+            <summary>
+              {role === "supervisor"
+                ? "Research details"
+                : "Sources and conditions"}{" "}
+              · {content.sources.length} sources
+            </summary>
             <p>
               Jurisdiction:{" "}
               {[
@@ -202,144 +280,107 @@ function AutomaticChecklist({
                 .filter(Boolean)
                 .join(", ") || "Lookup unavailable"}
             </p>
-            <h4>Local conditions</h4>
-            {content.conditions.length ? (
-              <ul className={styles.list}>
-                {conditionRows(content.conditions).map((reading) => (
-                  <li
-                    key={`${reading.hazard}:${reading.unit}:${reading.forecast_for}`}
-                  >
-                    <strong>
-                      {units[reading.unit] ??
-                        `${reading.hazard} (${reading.unit})`}
-                      : {Number(reading.value.toFixed(1))}
-                    </strong>
-                    <span className={styles.muted}>
-                      {" "}
-                      ·{" "}
-                      {reading.forecast_for === "-infinity"
-                        ? "Observation"
-                        : `Forecast for ${new Date(reading.forecast_for).toLocaleString()}`}{" "}
-                      · Recorded{" "}
-                      {new Date(reading.observed_at).toLocaleString()}
-                      {Date.now() - Date.parse(reading.observed_at) > 7200000
-                        ? " · STALE"
-                        : ""}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className={styles.warning}>
-                No current local readings are available. Check conditions before
-                work.
-              </p>
-            )}
-            <h4>Worker checklist</h4>
-            {content.items.length ? (
-              <ol className={styles.list}>
-                {content.items.map((item) => (
-                  <li key={item.id}>
-                    <div className={styles.item}>
-                      <span className={styles.label}>
-                        {item.kind === "regulation"
-                          ? "Regulatory source — applicability depends on scope"
-                          : "Safety guidance"}
-                      </span>
-                      <strong>{item.title}</strong>
-                      <span>{item.text}</span>
-                      <span className={styles.muted}>{item.conditions}</span>
-                      {item.citations.map((citation, i) => {
-                        const source = content.sources.find(
-                          (s) => s.id === citation.source_id,
-                        );
-                        return (
-                          <details className={styles.evidence} key={i}>
-                            <summary>
-                              {source?.title ?? "Supporting source"}
-                            </summary>
-                            <blockquote>{citation.quote}</blockquote>
-                            {source?.url ? (
-                              <a
-                                href={source.url}
-                                target="_blank"
-                                rel="noreferrer"
-                              >
-                                Open official source
-                              </a>
-                            ) : null}
-                          </details>
-                        );
-                      })}
-                    </div>
-                  </li>
-                ))}
-              </ol>
-            ) : (
-              <p>
-                No verified instruction could be extracted. See the coverage
-                gaps below.
-              </p>
-            )}
-            {content.coverage_gaps.length ? (
-              <div className={styles.warning}>
-                <strong>Coverage and unavailable information</strong>
-                <ul>
-                  {content.coverage_gaps.map((gap, i) => (
-                    <li key={i}>{gap}</li>
-                  ))}
-                </ul>
-              </div>
-            ) : null}
-            <h4>Sources checked automatically</h4>
-            {content.sources.map((source) => (
-              <details className={styles.evidence} key={source.id}>
-                <summary>{source.title}</summary>
-                <p>
-                  {source.level} · {source.jurisdiction} · Checked{" "}
-                  {new Date(source.checked_at).toLocaleString()}
-                </p>
-                {source.url ? (
-                  <a href={source.url} target="_blank" rel="noreferrer">
-                    Open official source
-                  </a>
-                ) : null}
-              </details>
-            ))}
-            {content.search_entry_point ? (
-              <iframe
-                title="Google Search source suggestions"
-                sandbox="allow-popups"
-                srcDoc={content.search_entry_point}
-                className={styles.searchSuggestions}
-              />
-            ) : null}
-            <p className={styles.muted}>
-              Acknowledgement records receipt of this version. It does not
-              establish training, qualification or work completion.
+            <p>
+              Generated {new Date(checklist.generated_at).toLocaleString()} ·
+              Valid until {new Date(checklist.valid_until).toLocaleString()}
             </p>
-            <Button
-              variant="primary"
-              disabled={
-                busy || !!error || !checklist.current || checklist.acknowledged
-              }
-              onClick={() => void acknowledge()}
-            >
-              {checklist.acknowledged
-                ? "Receipt recorded"
-                : "Acknowledge this checklist"}
-            </Button>
-          </section>
-        </>
+            <p>{content.summary}</p>
+            {role === "supervisor" && data?.run ? (
+              <p>
+                Updating automatically: {data.run.state} · Attempt{" "}
+                {data.run.attempt}
+                {data.run.error_category ? ` · ${data.run.error_category}` : ""}
+              </p>
+            ) : null}
+            <ul>
+              {readings.map((r) => (
+                <li key={`${r.hazard}:${r.unit}:${r.forecast_for}`}>
+                  {units[r.unit] ?? `${r.hazard} (${r.unit})`}:{" "}
+                  {Number(r.value.toFixed(1))} ·{" "}
+                  {r.forecast_for === "-infinity"
+                    ? "Observation"
+                    : `Forecast for ${new Date(r.forecast_for).toLocaleString()}`}{" "}
+                  · Recorded {new Date(r.observed_at).toLocaleString()}
+                </li>
+              ))}
+            </ul>
+            {content.sources.map((source) => (
+              <p key={source.id}>
+                <a href={source.url} target="_blank" rel="noreferrer">
+                  {source.title}
+                </a>{" "}
+                · {source.level} · {source.jurisdiction} · Checked{" "}
+                {new Date(source.checked_at).toLocaleString()}
+              </p>
+            ))}
+          </details>
+          {content.search_entry_point ? (
+            <iframe
+              title="Google Search source suggestions"
+              sandbox="allow-popups"
+              srcDoc={content.search_entry_point}
+              className={styles.searchSuggestions}
+            />
+          ) : null}
+          <Button
+            variant="primary"
+            disabled={
+              busy || !!error || !checklist.current || checklist.acknowledged
+            }
+            onClick={() => void acknowledge()}
+          >
+            {checklist.acknowledged
+              ? "Receipt recorded"
+              : "Acknowledge this checklist"}
+          </Button>
+          <p className={styles.muted}>
+            Records receipt of this version, not training or work completion.
+          </p>
+        </section>
       ) : null}
       <div className={styles.actions}>
         <Button variant="quiet" onClick={() => void refresh()}>
           Refresh checklist
         </Button>
-        <span className={styles.muted}>
-          Research, generation and updates run automatically.
-        </span>
+        <span className={styles.muted}>Updates automatically.</span>
       </div>
     </div>
+  );
+}
+function Instruction({
+  item,
+  sources,
+}: {
+  item: ChecklistContent["items"][number];
+  sources: ChecklistContent["sources"];
+}) {
+  return (
+    <li>
+      <div className={styles.item}>
+        <strong>{item.title}</strong>
+        <details className={styles.evidence}>
+          <summary>
+            Scope &amp; sources ·{" "}
+            {item.kind === "regulation"
+              ? "Regulatory excerpt"
+              : "Safety guidance"}
+          </summary>
+          <p>{item.conditions}</p>
+          {item.citations.map((citation, i) => {
+            const source = sources.find((s) => s.id === citation.source_id);
+            return (
+              <div key={i}>
+                <blockquote>{citation.quote}</blockquote>
+                {source ? (
+                  <a href={source.url} target="_blank" rel="noreferrer">
+                    {source.title}
+                  </a>
+                ) : null}
+              </div>
+            );
+          })}
+        </details>
+      </div>
+    </li>
   );
 }

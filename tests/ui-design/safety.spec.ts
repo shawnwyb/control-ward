@@ -19,9 +19,12 @@ test("a checklist appears automatically for supervisor and worker, with no plann
   await expect(
     panel.getByText("Heat index (F): 92", { exact: true }),
   ).toBeVisible();
+  await expect(panel.getByRole("blockquote")).not.toBeVisible();
+  await panel.getByText(/Research details ·/).click();
   await expect(
     panel.getByText(/Gainesville city, Alachua County, Florida/),
   ).toBeVisible();
+  await panel.getByText(/Research details ·/).click();
   await expect(panel.getByLabel("Planned task description")).toHaveCount(0);
   await expect(
     panel.getByRole("button", {
@@ -29,7 +32,7 @@ test("a checklist appears automatically for supervisor and worker, with no plann
     }),
   ).toHaveCount(0);
   await panel
-    .getByText("FICTIONAL DEMO safety guidance", { exact: true })
+    .getByText(/Scope & sources/)
     .first()
     .click();
   await expect(panel.getByRole("blockquote")).toContainText("FICTIONAL DEMO");
@@ -81,6 +84,7 @@ test("automatic retry preserves the previous checklist without requiring an admi
   await page.goto("/?safety=retry");
   await login(page, "supervisor@planit.local", false);
   const panel = page.locator("#safety-checklist");
+  await panel.getByText(/Research details ·/).click();
   await expect(
     panel.getByText(/Updating automatically: queued.*Attempt 2/),
   ).toBeVisible();
@@ -122,6 +126,8 @@ test("missing jurisdiction and condition data produce explicit gaps instead of f
   await expect(
     panel.getByRole("region", { name: "Automatic worker checklist" }),
   ).toBeVisible({ timeout: 12000 });
+  await panel.getByText(/Sources and conditions ·/).click();
+  await panel.getByText(/Coverage is limited/).click();
   await expect(
     panel.getByText("Jurisdiction: Lookup unavailable", { exact: true }),
   ).toBeVisible();
