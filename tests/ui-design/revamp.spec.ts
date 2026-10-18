@@ -54,9 +54,77 @@ test("shell: crew cannot open supervisor pages", async ({ page }) => {
     await expect(nav.getByRole("link", { name })).toBeVisible();
   await expect(nav.getByRole("link", { name: "Crew" })).toHaveCount(0);
   await page.evaluate(() => (location.hash = "#/crew"));
-  await expect(page.getByRole("heading", { name: "My site" })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "North Plant · Demo" }),
+  ).toBeVisible();
   await expect(page).toHaveURL(/#\/site$/);
   await expect(page.locator("#crew-roster")).toHaveCount(0);
+});
+
+test("crew: my site is the map with report button", async ({ page }) => {
+  await signIn(page, "crew@planit.local");
+  await expect(page).toHaveURL(/#\/site$/);
+  await expect(page.locator("#site-map")).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "North Plant · Demo" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Report hazard" }),
+  ).toBeVisible();
+  // No Sites table, and the location toggle floats on the map.
+  await expect(page.locator("#sites-title")).toHaveCount(0);
+  await expect(page.locator("#site-map")).toBeVisible();
+  const nav = page.getByRole("navigation", { name: "Pages" });
+  await expect(
+    nav.getByRole("link", { name: "Tomorrow's briefing" }),
+  ).toBeVisible();
+  const titles: [string, string][] = [
+    ["Alerts", "Alerts"],
+    ["Tomorrow's briefing", "Tomorrow's briefing"],
+    ["Reports", "Reports"],
+  ];
+  for (const [link, heading] of titles) {
+    await go(page, link);
+    await expect(
+      page.getByRole("heading", { level: 1, name: heading }),
+    ).toBeVisible();
+  }
+});
+
+test("supervisor: each page renders its title", async ({ page }) => {
+  await signIn(page, "supervisor@planit.local");
+  for (const name of ["Alerts", "Next-day briefing", "Crew", "Reports"]) {
+    await go(page, name);
+    await expect(page.getByRole("heading", { level: 1, name })).toBeVisible();
+  }
+});
+
+test("crew: stop-work banner shows on My site beside the map", async ({
+  page,
+}) => {
+  await signIn(page, "crew@planit.local", "?clear=600");
+  await expect(
+    page.getByRole("alert").filter({ hasText: "Stop work" }),
+  ).toBeVisible();
+});
+
+test("reports: Mine with nothing reported says so", async ({ page }) => {
+  await signIn(page, "crew@planit.local");
+  await go(page, "Reports");
+  await page.getByLabel("Mine").check();
+  await expect(
+    page.getByText("You haven't reported anything at this site yet."),
+  ).toBeVisible();
+});
+
+test("sites: hazard detail agrees with the table for another site", async ({
+  page,
+}) => {
+  await signIn(page, "supervisor@planit.local");
+  await page
+    .locator("#site")
+    .selectOption({ label: "Jacksonville Terminal · Demo" });
+  await expect(page.locator("#risk-now")).toContainText("4.1");
 });
 
 test("shell: signed-out visitors cannot open app pages", async ({ page }) => {

@@ -10,6 +10,8 @@ import {
   pushSupport,
 } from "../../lib/push";
 import styles from "../dashboard/Dashboard.module.css";
+import { Icon } from "../../components/ui";
+import pill from "./LocationPill.module.css";
 import { useLocationSharing } from "./useLocationSharing";
 
 const supportNote = {
@@ -44,16 +46,30 @@ export function CrewPlanCard({ siteId }: { siteId: string }) {
   );
 }
 
-/** Opt-ins for this device: push notifications and sharing location with the supervisor. */
-export function DeviceSettings({
-  siteId,
-  userId,
-}: {
-  siteId: string;
-  userId: string;
-}) {
+/** Floating pill on the My site map: share this device's location with the supervisor. */
+export function LocationPill({ siteId }: { siteId: string }) {
   const { announce } = useNotice();
   const location = useLocationSharing(siteId, (m) => announce(m, true));
+  if (!location.supported) return null;
+  return (
+    <label className={pill.pill}>
+      <Icon name="locate" size={14} />
+      <span>Share my location</span>
+      <input
+        type="checkbox"
+        role="switch"
+        className={pill.switch}
+        aria-label="Share my location with my supervisor"
+        checked={location.enabled}
+        onChange={(event) => location.setEnabled(event.target.checked)}
+      />
+    </label>
+  );
+}
+
+/** Opt-in for this device: push notifications. */
+export function DeviceSettings({ userId }: { userId: string }) {
+  const { announce } = useNotice();
   const support = pushSupport();
   const [pushOn, setPushOn] = useState(false);
 
@@ -83,33 +99,29 @@ export function DeviceSettings({
 
   return (
     <div
-      className={styles.tools}
+      className={styles.group}
       id="crew-tools"
       role="group"
       aria-label="This device"
     >
-      <label className={styles.toggle}>
+      <label className={styles.setting}>
+        <span className={styles.settingText}>
+          <b>Notify me about alerts and plans</b>
+          <small>
+            {support !== "ready"
+              ? supportNote[support]
+              : "Push notifications on this device."}
+          </small>
+        </span>
         <input
           type="checkbox"
+          role="switch"
+          className={styles.switch}
           checked={pushOn}
           disabled={support !== "ready"}
           onChange={(event) => void togglePush(event.target.checked)}
         />
-        Notify me about alerts and plans
       </label>
-      {location.supported ? (
-        <label className={styles.toggle}>
-          <input
-            type="checkbox"
-            checked={location.enabled}
-            onChange={(event) => location.setEnabled(event.target.checked)}
-          />
-          Share my location with my supervisor
-        </label>
-      ) : null}
-      {support !== "ready" ? (
-        <span className={styles.muted}>{supportNote[support]}</span>
-      ) : null}
     </div>
   );
 }

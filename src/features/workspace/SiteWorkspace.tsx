@@ -29,13 +29,8 @@ import {
 } from "../report/ReportDrawer";
 import type { ReportDraft } from "../report/types";
 import { useReportSubmit } from "../report/useReportSubmit";
-import {
-  AlertsPage,
-  BriefingPage,
-  CrewPage,
-  MySitePage,
-  ReportsPage,
-} from "./pages";
+import { MySitePage } from "../site/MySitePage";
+import { AlertsPage, BriefingPage, CrewPage, ReportsPage } from "./pages";
 import styles from "./SiteWorkspace.module.css";
 
 const noLightning: LightningView = {
@@ -103,10 +98,11 @@ export function SiteWorkspace({
     onError,
   );
   const alertCount = alerts.data.length;
+  // Report only a loaded count: the sidebar keeps the last one while a new site's loads.
+  const alertsLoaded = alerts.loaded;
   useEffect(() => {
-    onAlertCount(alertCount);
-  }, [alertCount, onAlertCount]);
-  useEffect(() => () => onAlertCount(0), [onAlertCount]);
+    if (alertsLoaded) onAlertCount(alertCount);
+  }, [alertCount, alertsLoaded, onAlertCount]);
 
   const roster = useCrewRoster(site.id, supervisor, onError);
   const [selectedCrew, setSelectedCrew] = useState<Set<string>>(new Set());
@@ -129,7 +125,6 @@ export function SiteWorkspace({
   const reportButton = useRef<HTMLButtonElement>(null);
   // Bumped whenever a pending location answer should be ignored (closed, pin moved, site changed).
   const locateToken = useRef(0);
-  const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [focusRequest, setFocusRequest] = useState<{
     id: string;
     nonce: number;
@@ -144,7 +139,6 @@ export function SiteWorkspace({
     setAccuracyFt(undefined);
     setSelectedCrew(new Set());
     setCrewFocus(undefined);
-    setHoveredId(null);
     setFocusRequest(undefined);
   }
   useEffect(() => {
@@ -252,7 +246,8 @@ export function SiteWorkspace({
     </>
   );
 
-  const siteMap = (overview?: { sites: SiteSummary[] }) => (
+  /** The full-height map; supervisors also get a pin per site. */
+  const siteMap = (sites?: SiteSummary[]) => (
     <ErrorBoundary
       fallback={
         <Panel>
@@ -275,23 +270,15 @@ export function SiteWorkspace({
         }}
         pinActive={reportOpen}
         disabled={busy}
-        highlightId={hoveredId}
         focusRequest={focusRequest}
-        sites={overview?.sites}
-        onSelectSite={overview ? onSiteChange : undefined}
+        sites={sites}
+        onSelectSite={sites ? onSiteChange : undefined}
         stopWork={lightning.data.status === "stop_work"}
-        fitStopWork={overview !== undefined}
-        variant={overview ? "fill" : "card"}
+        fitStopWork
+        variant="fill"
         onPin={placePin}
       />
     </ErrorBoundary>
-  );
-
-  const mapWithReport = () => (
-    <div className={styles.mapWrap}>
-      {siteMap()}
-      {reportLayer}
-    </div>
   );
 
   const base = { site, role, userId };
@@ -309,12 +296,17 @@ export function SiteWorkspace({
             crewTerm={feed.metrics.crewRisk}
             lightning={lightning.data}
             onSelectSite={onSiteChange}
-            renderMap={(sites) => siteMap({ sites })}
+            renderMap={siteMap}
             mapOverlay={reportLayer}
           />
         ) : null}
         {page === "site" ? (
-          <MySitePage {...base}>{mapWithReport()}</MySitePage>
+          <MySitePage
+            site={site}
+            lightning={lightning.data}
+            map={siteMap()}
+            overlay={reportLayer}
+          />
         ) : null}
         {page === "alerts" ? (
           <AlertsPage {...base} alerts={alerts} lightning={lightning} />

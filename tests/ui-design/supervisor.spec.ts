@@ -8,7 +8,8 @@ test("supervisor sees risk, one alerts section and a role-aware heading", async 
 }) => {
   await signIn(page, "supervisor@planit.local");
   await expect(page.getByRole("heading", { name: "Sites" })).toBeVisible();
-  await expect(page.locator("#risk-now")).toContainText("5.2");
+  // Signs in on Jacksonville; the detail agrees with its row in the sites table.
+  await expect(page.locator("#risk-now")).toContainText("4.1");
   await go(page, "Alerts");
   // Alerts appear once for supervisors, not again in the crew tools.
   await expect(page.getByText("Warning · raised")).toHaveCount(1);
@@ -40,7 +41,9 @@ test("send explains why it is disabled, then enables", async ({ page }) => {
 
 test("crew does not get the dashboard or section nav", async ({ page }) => {
   await signIn(page, "crew@planit.local");
-  await expect(page.getByRole("heading", { name: "My site" })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "North Plant · Demo" }),
+  ).toBeVisible();
   await expect(page.locator("#supervisor-dashboard")).toHaveCount(0);
   await expect(page.getByRole("button", { name: "Send alert" })).toHaveCount(0);
 });

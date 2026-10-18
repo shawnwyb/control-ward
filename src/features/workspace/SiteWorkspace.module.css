@@ -3,12 +3,6 @@
   gap: var(--space-5);
 }
 
-/* The map with the report button and drawer floating over it. */
-.mapWrap {
-  position: relative;
-  min-width: 0;
-}
-
 /* A quick fade and rise each time the page changes. */
 .pageIn {
   animation: page-in 160ms var(--ease-out);

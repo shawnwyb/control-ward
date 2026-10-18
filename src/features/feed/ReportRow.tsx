@@ -20,18 +20,11 @@ type Props = {
   report: Report;
   busy: boolean;
   onCheckin: (reportId: string, stillThere: boolean) => void;
-  /** Mouse hover and click link a row to its marker on the map. */
-  onHover: (reportId: string | null) => void;
+  /** A mouse click on a row shows its marker on the map. */
   onSelect: (reportId: string) => void;
 };
 
-export function ReportRow({
-  report,
-  busy,
-  onCheckin,
-  onHover,
-  onSelect,
-}: Props) {
+export function ReportRow({ report, busy, onCheckin, onSelect }: Props) {
   const [historyOpen, setHistoryOpen] = useState(false);
   const severity = report.severity as Severity;
   const count = report.confirmations;
@@ -52,12 +45,6 @@ export function ReportRow({
       data-report-id={report.id}
       data-active={report.is_active}
       data-severity={severity}
-      onPointerEnter={(event) =>
-        linked && event.pointerType === "mouse" && onHover(report.id)
-      }
-      onPointerLeave={(event) =>
-        linked && event.pointerType === "mouse" && onHover(null)
-      }
       onClick={select}
     >
       <IconTile name={report.type} />

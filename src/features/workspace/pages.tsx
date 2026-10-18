@@ -1,10 +1,11 @@
-import { useState, type ReactNode } from "react";
+import { useState } from "react";
 import {
   type AlertRow,
   type CrewMember,
   type LightningView,
   type Role,
 } from "../../lib/monitoring";
+import { Icon, type IconName } from "../../components/ui";
 import type { Report, Site } from "../../lib/types";
 import { CrewPlanCard, DeviceSettings } from "../crewtools/CrewTools";
 import { AlertsSection } from "../dashboard/AlertsSection";
@@ -25,28 +26,23 @@ type Live<T> = {
 
 type Base = { site: Site; role: Role; userId: string };
 
-function PageTitle({ title, hint }: { title: string; hint?: string }) {
+function PageTitle({
+  title,
+  icon,
+  hint,
+}: {
+  title: string;
+  icon: IconName;
+  hint?: string;
+}) {
   return (
     <header className={styles.head}>
-      <h1 className={styles.title}>{title}</h1>
+      <h1 className={styles.title}>
+        <Icon name={icon} size={20} />
+        {title}
+      </h1>
       {hint ? <p className={styles.hint}>{hint}</p> : null}
     </header>
-  );
-}
-
-/** Crew home: the site's map and report form, plus this device's opt-ins. */
-export function MySitePage({
-  site,
-  userId,
-  children,
-}: Base & { children: ReactNode }) {
-  return (
-    <div className={dashboard.stack}>
-      <PageTitle title="My site" hint={site.name} />
-      {/* Keyed: this page stays mounted across site switches (for the map). */}
-      <DeviceSettings key={site.id} siteId={site.id} userId={userId} />
-      {children}
-    </div>
   );
 }
 
@@ -60,7 +56,7 @@ export function AlertsPage({
   const supervisor = role === "supervisor";
   return (
     <div className={dashboard.stack}>
-      <PageTitle title="Alerts" hint={site.name} />
+      <PageTitle title="Alerts" icon="bell" hint={site.name} />
       <AlertsSection
         alerts={alerts}
         lightning={lightning}
@@ -68,7 +64,7 @@ export function AlertsPage({
         compact={!supervisor}
         canClear={supervisor}
       />
-      {supervisor ? <DeviceSettings siteId={site.id} userId={userId} /> : null}
+      <DeviceSettings userId={userId} />
     </div>
   );
 }
@@ -79,6 +75,7 @@ export function BriefingPage({ site, role }: Base) {
     <div className={dashboard.stack}>
       <PageTitle
         title={supervisor ? "Next-day briefing" : "Tomorrow's briefing"}
+        icon="brief"
         hint={site.name}
       />
       {supervisor ? <BriefingPanel siteId={site.id} /> : null}
@@ -121,7 +118,7 @@ export function CrewPage({
     );
   return (
     <div className={dashboard.stack}>
-      <PageTitle title="Crew" hint={site.name} />
+      <PageTitle title="Crew" icon="paw" hint={site.name} />
       <div className={dashboard.columns}>
         <CrewPanel
           crew={crew}
@@ -161,7 +158,7 @@ export function ReportsPage({
     : reports;
   return (
     <div className={dashboard.stack}>
-      <PageTitle title="Reports" hint={site.name} />
+      <PageTitle title="Reports" icon="camera" hint={site.name} />
       <label className={styles.mine}>
         <input
           type="checkbox"
@@ -174,8 +171,8 @@ export function ReportsPage({
         reports={shown}
         reminderCount={reminderCount}
         busy={busy}
+        mine={mine}
         onCheckin={onCheckin}
-        onHover={() => undefined}
         onSelect={onSelect}
       />
     </div>

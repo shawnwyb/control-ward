@@ -29,12 +29,12 @@
 }
 
 .title {
-  font-size: var(--text-xl);
+  font-size: var(--text-lg);
   font-weight: 600;
 }
 
 .description {
-  color: var(--ink-muted);
+  color: var(--ink-2);
   font-size: var(--text-sm);
 }
 

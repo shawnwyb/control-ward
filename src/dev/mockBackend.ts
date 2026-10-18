@@ -925,8 +925,8 @@ async function handle(
         role: supervisors.has(email) ? "supervisor" : "crew",
       })),
     );
-  if (path === "/rest/v1/site_overview" && !siteParam) {
-    // No site filter: one row per member site, with distinct values (north matches the single-site row).
+  const overviewRow = (site: (typeof sites)[number]) => {
+    // Distinct values per site (north matches the old single-site row).
     const scores: Record<string, number | null> = {
       "site-north": 5.2,
       "site-south": 8.6,
@@ -935,75 +935,58 @@ async function handle(
       "site-manatee": 2.3,
       "site-everglades": null,
     };
+    const override = flags().scores[site.id];
+    const risk = override !== undefined ? override : (scores[site.id] ?? null);
+    const struck = alerts.find(
+      (a) =>
+        a.site_id === site.id &&
+        a.kind === "lightning" &&
+        a.status === "active",
+    );
+    return {
+      site_id: site.id,
+      name: site.name,
+      lat: site.latitude,
+      lon: site.longitude,
+      risk_now: risk,
+      risk_tomorrow: risk === null ? null : Math.min(10, risk + 1.3),
+      top_driver: risk === null ? null : "heat subscore 5",
+      active_alert_count: alerts.filter(
+        (a) => a.site_id === site.id && a.status === "active",
+      ).length,
+      subscores:
+        risk === null
+          ? {}
+          : {
+              heat: Math.min(10, Math.round(risk)),
+              weather: 3,
+              lightning: struck ? 6 : 0,
+              flood: 1.5,
+              wildfire: 0,
+              soil: 2,
+              wildlife: 2,
+            },
+      lightning: {
+        status: struck ? "stop_work" : "clear",
+        last_strike_at: struck
+          ? new Date(
+              Date.now() + lightningClearIn * 1000 - 30 * 60 * 1000,
+            ).toISOString()
+          : null,
+      },
+    };
+  };
+  if (path === "/rest/v1/site_overview" && !siteParam) {
     return respond(
       sites
         .filter((site) => accounts[email].includes(site.id))
-        .map((site) => {
-          const override = flags().scores[site.id];
-          const risk =
-            override !== undefined ? override : (scores[site.id] ?? null);
-          const struck = alerts.find(
-            (a) =>
-              a.site_id === site.id &&
-              a.kind === "lightning" &&
-              a.status === "active",
-          );
-          return {
-            site_id: site.id,
-            name: site.name,
-            lat: site.latitude,
-            lon: site.longitude,
-            risk_now: risk,
-            risk_tomorrow: risk === null ? null : Math.min(10, risk + 1.3),
-            top_driver: risk === null ? null : "heat subscore 5",
-            active_alert_count: alerts.filter(
-              (a) => a.site_id === site.id && a.status === "active",
-            ).length,
-            subscores:
-              risk === null
-                ? {}
-                : {
-                    heat: Math.min(10, Math.round(risk)),
-                    weather: 3,
-                    lightning: struck ? 6 : 0,
-                    flood: 1.5,
-                    wildfire: 0,
-                    soil: 2,
-                    wildlife: 2,
-                  },
-            lightning: {
-              status: struck ? "stop_work" : "clear",
-              last_strike_at: struck
-                ? new Date(
-                    Date.now() + lightningClearIn * 1000 - 30 * 60 * 1000,
-                  ).toISOString()
-                : null,
-            },
-          };
-        }),
+        .map(overviewRow),
     );
   }
   if (path === "/rest/v1/site_overview")
     return respond(
       memberOf
-        ? [
-            {
-              site_id: siteParam,
-              risk_now: 5.2,
-              risk_tomorrow: 6.5,
-              top_driver: "heat subscore 5",
-              active_alert_count: 1,
-              subscores: {
-                heat: 5,
-                weather: 3,
-                lightning: 0,
-                flood: 1.5,
-                wildfire: 0,
-                soil: 2,
-                wildlife: 2,
-              },
-            },
-          ]
+        ? sites.filter((site) => site.id === siteParam).map(overviewRow)
         : [],
     );
   if (path === "/rest/v1/alerts") {

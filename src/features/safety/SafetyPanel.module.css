@@ -18,7 +18,8 @@
   gap: 0.6rem;
 }
 .box {
-  border: 1px solid var(--rule);
+  border-radius: 10px;
+  background: var(--fill);
   padding: 1rem;
   display: grid;
   gap: 0.75rem;
@@ -29,13 +30,14 @@
   margin: 0;
 }
 .muted {
-  color: var(--ink-muted);
+  color: var(--ink-2);
   font-size: var(--text-sm);
 }
 .warning {
-  border-left: 4px solid var(--sev-2);
-  padding: 0.7rem;
-  background: var(--sev-2-bg);
+  border-radius: 8px;
+  padding: 0.7rem 0.85rem;
+  background: var(--tag-orange-bg);
+  color: var(--tag-orange-fg);
 }
 .error {
   color: var(--danger);
@@ -52,18 +54,19 @@
 }
 .label {
   text-transform: capitalize;
+  font-weight: 500;
   font-size: var(--text-xs);
-  color: var(--ink-muted);
+  color: var(--ink-2);
 }
 .textarea {
   width: 100%;
   padding: 0.6rem;
   min-height: 5rem;
-  border: 1px solid var(--rule-strong);
-  border-radius: 3px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
   font: inherit;
   color: var(--ink);
-  background: var(--surface);
+  background: var(--bg);
 }
 .evidence {
   font-size: var(--text-sm);
@@ -71,7 +74,7 @@
 }
 .evidence summary {
   cursor: pointer;
-  color: var(--brand);
+  color: var(--accent);
 }
 .evidence p {
   margin: 0.4rem 0;
