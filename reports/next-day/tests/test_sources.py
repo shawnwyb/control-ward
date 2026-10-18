@@ -10,6 +10,7 @@ import numpy as np
 from hazidx.sites import Site
 from nextday import air, forecast, hazard_index, levees, mud, river, tide
 from nextday.fetch import Fetcher, SourceUnavailable
+from tests.helpers import StubFetcher
 
 UTC = timezone.utc
 SITE = Site("Test Plant", 25.0, -80.0, "America/New_York", "999", None, None, None, None, None, None)
@@ -128,6 +129,10 @@ class TideTest(unittest.TestCase):
         self.assertAlmostEqual(tide.to_navd88(0.565, datums), 0.029, places=3)     # station 8723423 values
         self.assertAlmostEqual(tide.to_navd88(0.0, datums), -0.536, places=3)
         self.assertIsNone(tide.to_navd88(0.5, {"MLLW": 0.5}))
+
+    def test_station_without_published_datums_gives_no_datums(self):
+        f = StubFetcher({"coops_datums_8727386": {"units": "meters", "datums": None}})
+        self.assertEqual(tide.fetch_datums(f, "8727386"), {})
 
     def test_windows_are_clipped_to_the_day(self):
         w = tide.windows(self.HILO, "2026-10-19")

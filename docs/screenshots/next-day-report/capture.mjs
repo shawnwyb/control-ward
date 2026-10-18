@@ -53,7 +53,7 @@ const routes = desktop.locator("#routes");
 await routes
   .getByRole("button", { name: "Pick start and end on the map" })
   .click();
-const map = routes.getByRole("img", { name: /Map of flagged routes/ });
+const map = routes.getByRole("region", { name: /Map of flagged routes/ });
 await map.scrollIntoViewIfNeeded();
 await desktop.waitForTimeout(500);
 const box = await map.boundingBox();

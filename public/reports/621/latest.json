@@ -12,120 +12,936 @@
   },
   "for_date": "2026-10-19",
   "kind": "evening",
-  "generated_at": "2026-10-18T06:44:43Z",
-  "snapshot": "20261018T064443Z",
+  "generated_at": "2026-10-18T08:14:07Z",
+  "snapshot": "20261018T081407Z",
   "sources": {
    "nifc_fires": {
     "url": "https://services3.arcgis.com/T4QMspbfLg3qTGWY/arcgis/rest/services/WFIGS_Incident_Locations_Current/FeatureServer/0/query?where=IncidentTypeCategory%3D%27WF%27+AND+%28PercentContained+IS+NULL+OR+PercentContained%3C100%29&outFields=IncidentName%2CIncidentSize%2CPercentContained&outSR=4326&f=json&resultRecordCount=2000",
-    "fetched_at": "2026-10-18T06:44:43Z"
+    "fetched_at": "2026-10-18T08:14:07Z"
    },
-   "openmeteo_hourly_621": {
-    "url": "https://api.open-meteo.com/v1/forecast?latitude=25.4356%2C25.4356%2C25.5912%2C25.5912%2C25.4356%2C25.2800%2C25.2800&longitude=-80.3308%2C-80.1319%2C-80.2313%2C-80.4303%2C-80.5297%2C-80.4303%2C-80.2313&hourly=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cwind_speed_10m%2Cwind_gusts_10m%2Cshortwave_radiation%2Cprecipitation%2Cprecipitation_probability%2Ccape%2Cuv_index&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=mm&timezone=UTC&past_days=1&forecast_days=4",
-    "fetched_at": "2026-10-18T06:44:44Z"
+   "openmeteo_hourly_6163": {
+    "url": "https://api.open-meteo.com/v1/forecast?latitude=47.9575%2C47.9575%2C48.1131%2C48.1131%2C47.9575%2C47.8019%2C47.8019&longitude=-118.9773%2C-118.7090%2C-118.8432%2C-119.1114%2C-119.2456%2C-119.1114%2C-118.8432&hourly=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cwind_speed_10m%2Cwind_gusts_10m%2Cshortwave_radiation%2Cprecipitation%2Cprecipitation_probability%2Ccape%2Cuv_index&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=mm&timezone=UTC&past_days=1&forecast_days=4",
+    "fetched_at": "2026-10-18T08:14:08Z"
    },
-   "openmeteo_sun_621": {
-    "url": "https://api.open-meteo.com/v1/forecast?latitude=25.4356&longitude=-80.3308&daily=sunrise%2Csunset&timezone=America%2FNew_York&forecast_days=4",
-    "fetched_at": "2026-10-18T06:44:44Z"
+   "openmeteo_sun_6163": {
+    "url": "https://api.open-meteo.com/v1/forecast?latitude=47.9575&longitude=-118.9773&daily=sunrise%2Csunset&timezone=America%2FLos_Angeles&forecast_days=4",
+    "fetched_at": "2026-10-18T08:14:08Z"
    },
-   "nws_alerts_621": {
-    "url": "https://api.weather.gov/alerts/active?point=25.4356%2C-80.3308",
-    "fetched_at": "2026-10-18T06:44:44Z"
+   "nws_alerts_6163": {
+    "url": "https://api.weather.gov/alerts/active?point=47.9575%2C-118.9773",
+    "fetched_at": "2026-10-18T08:14:08Z"
    },
-   "nws_point_621": {
-    "url": "https://api.weather.gov/points/25.4356,-80.3308",
-    "fetched_at": "2026-10-18T06:44:44Z"
+   "nws_point_6163": {
+    "url": "https://api.weather.gov/points/47.9575,-118.9773",
+    "fetched_at": "2026-10-18T08:14:08Z"
    },
-   "nws_forecast_621": {
-    "url": "https://api.weather.gov/gridpoints/MFL/106,35/forecast",
-    "fetched_at": "2026-10-18T06:44:44Z"
+   "nws_forecast_6163": {
+    "url": "https://api.weather.gov/gridpoints/OTX/94,112/forecast",
+    "fetched_at": "2026-10-18T08:14:08Z"
    },
-   "openmeteo_air_621": {
-    "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=25.4356&longitude=-80.3308&hourly=us_aqi%2Cpm2_5%2Cpm10&timezone=UTC&forecast_days=4&past_days=1",
-    "fetched_at": "2026-10-18T06:44:45Z"
+   "openmeteo_air_6163": {
+    "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=47.9575&longitude=-118.9773&hourly=us_aqi%2Cpm2_5%2Cpm10&timezone=UTC&forecast_days=4&past_days=1",
+    "fetched_at": "2026-10-18T08:14:09Z"
    },
-   "coops_hilo_8723423": {
-    "url": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=predictions&application=controlward_next_day_report&station=8723423&datum=MLLW&time_zone=lst_ldt&units=metric&interval=hilo&format=json&begin_date=20261018&end_date=20261020",
-    "fetched_at": "2026-10-18T06:44:45Z"
-   },
-   "coops_datums_8723423": {
-    "url": "https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations/8723423/datums.json?units=metric",
-    "fetched_at": "2026-10-18T06:44:45Z"
-   },
-   "nld_621_leveed_areas": {
+   "nld_6163_leveed_areas": {
     "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (leveed_areas)",
-    "fetched_at": "2026-10-18T06:44:46Z"
+    "fetched_at": "2026-10-18T08:14:09Z"
    },
-   "nld_621_alignment_lines": {
+   "nld_6163_alignment_lines": {
     "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (alignment_lines)",
-    "fetched_at": "2026-10-18T06:44:46Z"
+    "fetched_at": "2026-10-18T08:14:09Z"
    },
-   "nld_621_floodwalls": {
+   "nld_6163_floodwalls": {
     "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (floodwalls)",
-    "fetched_at": "2026-10-18T06:44:47Z"
+    "fetched_at": "2026-10-18T08:14:10Z"
    },
-   "nld_621_closure_structures": {
+   "nld_6163_closure_structures": {
     "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (closure_structures)",
-    "fetched_at": "2026-10-18T06:44:47Z"
+    "fetched_at": "2026-10-18T08:14:10Z"
    },
-   "nld_621_pump_stations": {
+   "nld_6163_pump_stations": {
     "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (pump_stations)",
-    "fetched_at": "2026-10-18T06:44:47Z"
+    "fetched_at": "2026-10-18T08:14:10Z"
    },
    "nld2_inspection_rating": {
     "url": "https://levees.sec.usace.army.mil/api-local/system-categories/inspection-rating",
-    "fetched_at": "2026-10-18T06:47:18Z"
+    "fetched_at": "2026-10-18T08:23:56Z"
    },
-   "overpass_roads_621": {
-    "url": "https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A60%5D%3Bway%28around%3A2500%2C25.43560%2C-80.33080%29%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%7Cunclassified%7Cresidential%7Cservice%7Ctrack%7Croad%7Cliving_street%7Cmotorway_link%7Ctrunk_link%7Cprimary_link%7Csecondary_link%7Ctertiary_link%29%24%22%5D%5B%22access%22%21~%22%5E%28no%29%24%22%5D%3Bout+geom%3B",
-    "fetched_at": "2026-10-18T06:45:11Z"
+   "overpass_roads_6163": {
+    "url": "https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A60%5D%3Bway%28around%3A2500%2C47.95751%2C-118.97730%29%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%7Cunclassified%7Cresidential%7Cservice%7Ctrack%7Croad%7Cliving_street%7Cmotorway_link%7Ctrunk_link%7Cprimary_link%7Csecondary_link%7Ctertiary_link%29%24%22%5D%5B%22access%22%21~%22%5E%28no%29%24%22%5D%3Bout+geom%3B",
+    "fetched_at": "2026-10-18T08:14:48Z"
    },
    "inat_taxon_Alligator mississippiensis": {
     "url": "https://api.inaturalist.org/v1/taxa?q=Alligator+mississippiensis&per_page=5&is_active=true",
-    "fetched_at": "2026-10-18T06:48:03Z"
+    "fetched_at": "2026-10-18T08:24:50Z"
    },
    "inat_taxon_Crocodylus acutus": {
     "url": "https://api.inaturalist.org/v1/taxa?q=Crocodylus+acutus&per_page=5&is_active=true",
-    "fetched_at": "2026-10-18T06:48:03Z"
+    "fetched_at": "2026-10-18T08:24:50Z"
    },
    "inat_taxon_Crotalus": {
     "url": "https://api.inaturalist.org/v1/taxa?q=Crotalus&per_page=5&is_active=true",
-    "fetched_at": "2026-10-18T06:48:03Z"
+    "fetched_at": "2026-10-18T08:24:50Z"
    },
    "inat_taxon_Agkistrodon": {
     "url": "https://api.inaturalist.org/v1/taxa?q=Agkistrodon&per_page=5&is_active=true",
-    "fetched_at": "2026-10-18T06:48:03Z"
+    "fetched_at": "2026-10-18T08:24:50Z"
    },
    "inat_taxon_Micrurus": {
     "url": "https://api.inaturalist.org/v1/taxa?q=Micrurus&per_page=5&is_active=true",
-    "fetched_at": "2026-10-18T06:48:03Z"
+    "fetched_at": "2026-10-18T08:24:50Z"
    },
    "inat_taxon_Sistrurus": {
     "url": "https://api.inaturalist.org/v1/taxa?q=Sistrurus&per_page=5&is_active=true",
-    "fetched_at": "2026-10-18T06:48:03Z"
+    "fetched_at": "2026-10-18T08:24:50Z"
    },
    "inat_taxon_Ursus americanus": {
     "url": "https://api.inaturalist.org/v1/taxa?q=Ursus+americanus&per_page=5&is_active=true",
-    "fetched_at": "2026-10-18T06:48:03Z"
+    "fetched_at": "2026-10-18T08:24:50Z"
+   },
+   "inat_recent_6163": {
+    "url": "https://api.inaturalist.org/v1/observations?lat=47.957511&lng=-118.9773&radius=10&taxon_id=26159%2C26085%2C30692%2C30668%2C30493%2C30979%2C41638&quality_grade=research&d1=2026-09-18&per_page=200&order_by=observed_on&order=desc",
+    "fetched_at": "2026-10-18T08:14:49Z"
+   },
+   "inat_season_6163_alligator": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=47.957511&lng=-118.9773&radius=25&taxon_id=26159&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T08:14:50Z"
+   },
+   "inat_season_6163_crocodile": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=47.957511&lng=-118.9773&radius=25&taxon_id=26085&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T08:14:50Z"
+   },
+   "inat_season_6163_snakes": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=47.957511&lng=-118.9773&radius=25&taxon_id=30692%2C30668%2C30493%2C30979&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T08:14:51Z"
+   },
+   "inat_season_6163_bear": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=47.957511&lng=-118.9773&radius=25&taxon_id=41638&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T08:14:52Z"
+   },
+   "openmeteo_hourly_649": {
+    "url": "https://api.open-meteo.com/v1/forecast?latitude=33.1427%2C33.1427%2C33.2983%2C33.2983%2C33.1427%2C32.9871%2C32.9871&longitude=-81.7625%2C-81.5479%2C-81.6552%2C-81.8698%2C-81.9771%2C-81.8698%2C-81.6552&hourly=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cwind_speed_10m%2Cwind_gusts_10m%2Cshortwave_radiation%2Cprecipitation%2Cprecipitation_probability%2Ccape%2Cuv_index&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=mm&timezone=UTC&past_days=1&forecast_days=4",
+    "fetched_at": "2026-10-18T08:14:52Z"
+   },
+   "openmeteo_sun_649": {
+    "url": "https://api.open-meteo.com/v1/forecast?latitude=33.1427&longitude=-81.7625&daily=sunrise%2Csunset&timezone=America%2FNew_York&forecast_days=4",
+    "fetched_at": "2026-10-18T08:14:52Z"
+   },
+   "nws_alerts_649": {
+    "url": "https://api.weather.gov/alerts/active?point=33.1427%2C-81.7625",
+    "fetched_at": "2026-10-18T08:14:52Z"
+   },
+   "nws_point_649": {
+    "url": "https://api.weather.gov/points/33.1427,-81.7625",
+    "fetched_at": "2026-10-18T08:14:52Z"
+   },
+   "nws_forecast_649": {
+    "url": "https://api.weather.gov/gridpoints/CAE/42,21/forecast",
+    "fetched_at": "2026-10-18T08:14:52Z"
+   },
+   "openmeteo_air_649": {
+    "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=33.1427&longitude=-81.7625&hourly=us_aqi%2Cpm2_5%2Cpm10&timezone=UTC&forecast_days=4&past_days=1",
+    "fetched_at": "2026-10-18T08:14:53Z"
+   },
+   "nld_649_leveed_areas": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (leveed_areas)",
+    "fetched_at": "2026-10-18T08:14:53Z"
+   },
+   "nld_649_alignment_lines": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (alignment_lines)",
+    "fetched_at": "2026-10-18T08:14:53Z"
+   },
+   "nld_649_floodwalls": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (floodwalls)",
+    "fetched_at": "2026-10-18T08:14:54Z"
+   },
+   "nld_649_closure_structures": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (closure_structures)",
+    "fetched_at": "2026-10-18T08:14:54Z"
+   },
+   "nld_649_pump_stations": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (pump_stations)",
+    "fetched_at": "2026-10-18T08:14:54Z"
+   },
+   "overpass_roads_649": {
+    "url": "https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A60%5D%3Bway%28around%3A2500%2C33.14270%2C-81.76250%29%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%7Cunclassified%7Cresidential%7Cservice%7Ctrack%7Croad%7Cliving_street%7Cmotorway_link%7Ctrunk_link%7Cprimary_link%7Csecondary_link%7Ctertiary_link%29%24%22%5D%5B%22access%22%21~%22%5E%28no%29%24%22%5D%3Bout+geom%3B",
+    "fetched_at": "2026-10-18T08:15:38Z"
+   },
+   "inat_recent_649": {
+    "url": "https://api.inaturalist.org/v1/observations?lat=33.1427&lng=-81.7625&radius=10&taxon_id=26159%2C26085%2C30692%2C30668%2C30493%2C30979%2C41638&quality_grade=research&d1=2026-09-18&per_page=200&order_by=observed_on&order=desc",
+    "fetched_at": "2026-10-18T08:15:39Z"
+   },
+   "inat_season_649_alligator": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=33.1427&lng=-81.7625&radius=25&taxon_id=26159&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T08:15:40Z"
+   },
+   "inat_season_649_crocodile": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=33.1427&lng=-81.7625&radius=25&taxon_id=26085&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T08:15:41Z"
+   },
+   "inat_season_649_snakes": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=33.1427&lng=-81.7625&radius=25&taxon_id=30692%2C30668%2C30493%2C30979&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T08:15:41Z"
+   },
+   "inat_season_649_bear": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=33.1427&lng=-81.7625&radius=25&taxon_id=41638&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T08:15:42Z"
+   },
+   "openmeteo_hourly_56407": {
+    "url": "https://api.open-meteo.com/v1/forecast?latitude=26.6986%2C26.6986%2C26.8542%2C26.8542%2C26.6986%2C26.5430%2C26.5430&longitude=-80.3747%2C-80.1736%2C-80.2741%2C-80.4753%2C-80.5758%2C-80.4753%2C-80.2741&hourly=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cwind_speed_10m%2Cwind_gusts_10m%2Cshortwave_radiation%2Cprecipitation%2Cprecipitation_probability%2Ccape%2Cuv_index&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=mm&timezone=UTC&past_days=1&forecast_days=4",
+    "fetched_at": "2026-10-18T08:15:42Z"
+   },
+   "openmeteo_sun_56407": {
+    "url": "https://api.open-meteo.com/v1/forecast?latitude=26.6986&longitude=-80.3747&daily=sunrise%2Csunset&timezone=America%2FNew_York&forecast_days=4",
+    "fetched_at": "2026-10-18T08:15:42Z"
+   },
+   "nws_alerts_56407": {
+    "url": "https://api.weather.gov/alerts/active?point=26.6986%2C-80.3747",
+    "fetched_at": "2026-10-18T08:15:43Z"
+   },
+   "nws_point_56407": {
+    "url": "https://api.weather.gov/points/26.6986,-80.3747",
+    "fetched_at": "2026-10-18T08:15:43Z"
+   },
+   "nws_forecast_56407": {
+    "url": "https://api.weather.gov/gridpoints/MFL/98,90/forecast",
+    "fetched_at": "2026-10-18T08:15:43Z"
+   },
+   "openmeteo_air_56407": {
+    "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=26.6986&longitude=-80.3747&hourly=us_aqi%2Cpm2_5%2Cpm10&timezone=UTC&forecast_days=4&past_days=1",
+    "fetched_at": "2026-10-18T08:15:43Z"
+   },
+   "nld_56407_leveed_areas": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (leveed_areas)",
+    "fetched_at": "2026-10-18T08:15:44Z"
+   },
+   "nld_56407_alignment_lines": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (alignment_lines)",
+    "fetched_at": "2026-10-18T08:15:45Z"
+   },
+   "nld_56407_floodwalls": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (floodwalls)",
+    "fetched_at": "2026-10-18T08:15:45Z"
+   },
+   "nld_56407_closure_structures": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (closure_structures)",
+    "fetched_at": "2026-10-18T08:15:45Z"
+   },
+   "nld_56407_pump_stations": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (pump_stations)",
+    "fetched_at": "2026-10-18T08:15:45Z"
+   },
+   "overpass_roads_56407": {
+    "url": "https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A60%5D%3Bway%28around%3A2500%2C26.69860%2C-80.37470%29%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%7Cunclassified%7Cresidential%7Cservice%7Ctrack%7Croad%7Cliving_street%7Cmotorway_link%7Ctrunk_link%7Cprimary_link%7Csecondary_link%7Ctertiary_link%29%24%22%5D%5B%22access%22%21~%22%5E%28no%29%24%22%5D%3Bout+geom%3B",
+    "fetched_at": "2026-10-18T08:16:25Z"
+   },
+   "inat_recent_56407": {
+    "url": "https://api.inaturalist.org/v1/observations?lat=26.6986&lng=-80.3747&radius=10&taxon_id=26159%2C26085%2C30692%2C30668%2C30493%2C30979%2C41638&quality_grade=research&d1=2026-09-18&per_page=200&order_by=observed_on&order=desc",
+    "fetched_at": "2026-10-18T08:16:27Z"
+   },
+   "inat_season_56407_alligator": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=26.6986&lng=-80.3747&radius=25&taxon_id=26159&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T08:16:27Z"
+   },
+   "inat_season_56407_crocodile": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=26.6986&lng=-80.3747&radius=25&taxon_id=26085&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T08:16:28Z"
+   },
+   "inat_season_56407_snakes": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=26.6986&lng=-80.3747&radius=25&taxon_id=30692%2C30668%2C30493%2C30979&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T08:16:29Z"
+   },
+   "inat_season_56407_bear": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=26.6986&lng=-80.3747&radius=25&taxon_id=41638&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T08:16:30Z"
+   },
+   "openmeteo_hourly_6008": {
+    "url": "https://api.open-meteo.com/v1/forecast?latitude=33.3881%2C33.3881%2C33.5437%2C33.5437%2C33.3881%2C33.2325%2C33.2325&longitude=-112.8617%2C-112.6465%2C-112.7541%2C-112.9693%2C-113.0769%2C-112.9693%2C-112.7541&hourly=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cwind_speed_10m%2Cwind_gusts_10m%2Cshortwave_radiation%2Cprecipitation%2Cprecipitation_probability%2Ccape%2Cuv_index&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=mm&timezone=UTC&past_days=1&forecast_days=4",
+    "fetched_at": "2026-10-18T08:16:30Z"
+   },
+   "openmeteo_sun_6008": {
+    "url": "https://api.open-meteo.com/v1/forecast?latitude=33.3881&longitude=-112.8617&daily=sunrise%2Csunset&timezone=America%2FPhoenix&forecast_days=4",
+    "fetched_at": "2026-10-18T08:16:30Z"
+   },
+   "nws_alerts_6008": {
+    "url": "https://api.weather.gov/alerts/active?point=33.3881%2C-112.8617",
+    "fetched_at": "2026-10-18T08:16:30Z"
+   },
+   "nws_point_6008": {
+    "url": "https://api.weather.gov/points/33.3881,-112.8617",
+    "fetched_at": "2026-10-18T08:16:30Z"
+   },
+   "nws_forecast_6008": {
+    "url": "https://api.weather.gov/gridpoints/PSR/130,59/forecast",
+    "fetched_at": "2026-10-18T08:16:30Z"
+   },
+   "openmeteo_air_6008": {
+    "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=33.3881&longitude=-112.8617&hourly=us_aqi%2Cpm2_5%2Cpm10&timezone=UTC&forecast_days=4&past_days=1",
+    "fetched_at": "2026-10-18T08:16:31Z"
+   },
+   "nld_6008_leveed_areas": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (leveed_areas)",
+    "fetched_at": "2026-10-18T08:16:31Z"
+   },
+   "nld_6008_alignment_lines": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (alignment_lines)",
+    "fetched_at": "2026-10-18T08:16:31Z"
+   },
+   "nld_6008_floodwalls": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (floodwalls)",
+    "fetched_at": "2026-10-18T08:16:31Z"
+   },
+   "nld_6008_closure_structures": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (closure_structures)",
+    "fetched_at": "2026-10-18T08:16:31Z"
+   },
+   "nld_6008_pump_stations": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (pump_stations)",
+    "fetched_at": "2026-10-18T08:16:31Z"
+   },
+   "overpass_roads_6008": {
+    "url": "https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A60%5D%3Bway%28around%3A2500%2C33.38810%2C-112.86170%29%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%7Cunclassified%7Cresidential%7Cservice%7Ctrack%7Croad%7Cliving_street%7Cmotorway_link%7Ctrunk_link%7Cprimary_link%7Csecondary_link%7Ctertiary_link%29%24%22%5D%5B%22access%22%21~%22%5E%28no%29%24%22%5D%3Bout+geom%3B",
+    "fetched_at": "2026-10-18T08:18:32Z"
+   },
+   "inat_recent_6008": {
+    "url": "https://api.inaturalist.org/v1/observations?lat=33.3881&lng=-112.8617&radius=10&taxon_id=26159%2C26085%2C30692%2C30668%2C30493%2C30979%2C41638&quality_grade=research&d1=2026-09-18&per_page=200&order_by=observed_on&order=desc",
+    "fetched_at": "2026-10-18T08:18:34Z"
+   },
+   "inat_season_6008_alligator": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=33.3881&lng=-112.8617&radius=25&taxon_id=26159&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T08:18:34Z"
+   },
+   "inat_season_6008_crocodile": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=33.3881&lng=-112.8617&radius=25&taxon_id=26085&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T08:18:35Z"
+   },
+   "inat_season_6008_snakes": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=33.3881&lng=-112.8617&radius=25&taxon_id=30692%2C30668%2C30493%2C30979&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T08:18:36Z"
+   },
+   "inat_season_6008_bear": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=33.3881&lng=-112.8617&radius=25&taxon_id=41638&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T08:18:37Z"
+   },
+   "openmeteo_hourly_3470": {
+    "url": "https://api.open-meteo.com/v1/forecast?latitude=29.4828%2C29.4828%2C29.6384%2C29.6384%2C29.4828%2C29.3272%2C29.3272&longitude=-95.6311%2C-95.4247%2C-95.5279%2C-95.7343%2C-95.8375%2C-95.7343%2C-95.5279&hourly=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cwind_speed_10m%2Cwind_gusts_10m%2Cshortwave_radiation%2Cprecipitation%2Cprecipitation_probability%2Ccape%2Cuv_index&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=mm&timezone=UTC&past_days=1&forecast_days=4",
+    "fetched_at": "2026-10-18T08:18:37Z"
+   },
+   "openmeteo_sun_3470": {
+    "url": "https://api.open-meteo.com/v1/forecast?latitude=29.4828&longitude=-95.6311&daily=sunrise%2Csunset&timezone=America%2FChicago&forecast_days=4",
+    "fetched_at": "2026-10-18T08:18:37Z"
+   },
+   "nws_alerts_3470": {
+    "url": "https://api.weather.gov/alerts/active?point=29.4828%2C-95.6311",
+    "fetched_at": "2026-10-18T08:18:37Z"
+   },
+   "nws_point_3470": {
+    "url": "https://api.weather.gov/points/29.4828,-95.6311",
+    "fetched_at": "2026-10-18T08:18:37Z"
+   },
+   "nws_forecast_3470": {
+    "url": "https://api.weather.gov/gridpoints/HGX/53,82/forecast",
+    "fetched_at": "2026-10-18T08:18:37Z"
+   },
+   "openmeteo_air_3470": {
+    "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=29.4828&longitude=-95.6311&hourly=us_aqi%2Cpm2_5%2Cpm10&timezone=UTC&forecast_days=4&past_days=1",
+    "fetched_at": "2026-10-18T08:18:38Z"
+   },
+   "nld_3470_leveed_areas": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (leveed_areas)",
+    "fetched_at": "2026-10-18T08:18:39Z"
+   },
+   "nld_3470_alignment_lines": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (alignment_lines)",
+    "fetched_at": "2026-10-18T08:18:39Z"
+   },
+   "nld_3470_floodwalls": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (floodwalls)",
+    "fetched_at": "2026-10-18T08:18:39Z"
+   },
+   "nld_3470_closure_structures": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (closure_structures)",
+    "fetched_at": "2026-10-18T08:18:39Z"
+   },
+   "nld_3470_pump_stations": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (pump_stations)",
+    "fetched_at": "2026-10-18T08:18:39Z"
+   },
+   "nwps_gauge_SLNT2": {
+    "url": "https://api.water.noaa.gov/nwps/v1/gauges/SLNT2",
+    "fetched_at": "2026-10-18T08:18:40Z"
+   },
+   "nwps_stageflow_SLNT2": {
+    "url": "https://api.water.noaa.gov/nwps/v1/gauges/SLNT2/stageflow",
+    "fetched_at": "2026-10-18T08:18:40Z"
+   },
+   "inat_recent_3470": {
+    "url": "https://api.inaturalist.org/v1/observations?lat=29.4828&lng=-95.6311&radius=10&taxon_id=26159%2C26085%2C30692%2C30668%2C30493%2C30979%2C41638&quality_grade=research&d1=2026-09-18&per_page=200&order_by=observed_on&order=desc",
+    "fetched_at": "2026-10-18T08:18:45Z"
+   },
+   "inat_season_3470_alligator": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=29.4828&lng=-95.6311&radius=25&taxon_id=26159&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T08:18:46Z"
+   },
+   "inat_season_3470_crocodile": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=29.4828&lng=-95.6311&radius=25&taxon_id=26085&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T08:18:46Z"
+   },
+   "inat_season_3470_snakes": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=29.4828&lng=-95.6311&radius=25&taxon_id=30692%2C30668%2C30493%2C30979&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T08:18:47Z"
+   },
+   "inat_season_3470_bear": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=29.4828&lng=-95.6311&radius=25&taxon_id=41638&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T08:18:48Z"
+   },
+   "openmeteo_hourly_46": {
+    "url": "https://api.open-meteo.com/v1/forecast?latitude=34.7042%2C34.7042%2C34.8598%2C34.8598%2C34.7042%2C34.5486%2C34.5486&longitude=-87.1189%2C-86.9004%2C-87.0096%2C-87.2282%2C-87.3374%2C-87.2282%2C-87.0096&hourly=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cwind_speed_10m%2Cwind_gusts_10m%2Cshortwave_radiation%2Cprecipitation%2Cprecipitation_probability%2Ccape%2Cuv_index&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=mm&timezone=UTC&past_days=1&forecast_days=4",
+    "fetched_at": "2026-10-18T08:18:48Z"
+   },
+   "openmeteo_sun_46": {
+    "url": "https://api.open-meteo.com/v1/forecast?latitude=34.7042&longitude=-87.1189&daily=sunrise%2Csunset&timezone=America%2FChicago&forecast_days=4",
+    "fetched_at": "2026-10-18T08:18:48Z"
+   },
+   "nws_alerts_46": {
+    "url": "https://api.weather.gov/alerts/active?point=34.7042%2C-87.1189",
+    "fetched_at": "2026-10-18T08:18:48Z"
+   },
+   "nws_point_46": {
+    "url": "https://api.weather.gov/points/34.7042,-87.1189",
+    "fetched_at": "2026-10-18T08:18:49Z"
+   },
+   "nws_forecast_46": {
+    "url": "https://api.weather.gov/gridpoints/HUN/44,40/forecast",
+    "fetched_at": "2026-10-18T08:18:49Z"
+   },
+   "openmeteo_air_46": {
+    "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=34.7042&longitude=-87.1189&hourly=us_aqi%2Cpm2_5%2Cpm10&timezone=UTC&forecast_days=4&past_days=1",
+    "fetched_at": "2026-10-18T08:18:49Z"
+   },
+   "nld_46_leveed_areas": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (leveed_areas)",
+    "fetched_at": "2026-10-18T08:18:49Z"
+   },
+   "nld_46_alignment_lines": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (alignment_lines)",
+    "fetched_at": "2026-10-18T08:18:50Z"
+   },
+   "nld_46_floodwalls": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (floodwalls)",
+    "fetched_at": "2026-10-18T08:18:50Z"
+   },
+   "nld_46_closure_structures": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (closure_structures)",
+    "fetched_at": "2026-10-18T08:18:50Z"
+   },
+   "nld_46_pump_stations": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (pump_stations)",
+    "fetched_at": "2026-10-18T08:18:50Z"
+   },
+   "nwps_gauge_BNAA1": {
+    "url": "https://api.water.noaa.gov/nwps/v1/gauges/BNAA1",
+    "fetched_at": "2026-10-18T08:18:51Z"
+   },
+   "nwps_stageflow_BNAA1": {
+    "url": "https://api.water.noaa.gov/nwps/v1/gauges/BNAA1/stageflow",
+    "fetched_at": "2026-10-18T08:18:51Z"
+   },
+   "overpass_roads_46": {
+    "url": "https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A60%5D%3Bway%28around%3A2500%2C34.70420%2C-87.11890%29%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%7Cunclassified%7Cresidential%7Cservice%7Ctrack%7Croad%7Cliving_street%7Cmotorway_link%7Ctrunk_link%7Cprimary_link%7Csecondary_link%7Ctertiary_link%29%24%22%5D%5B%22access%22%21~%22%5E%28no%29%24%22%5D%3Bout+geom%3B",
+    "fetched_at": "2026-10-18T08:19:42Z"
+   },
+   "inat_recent_46": {
+    "url": "https://api.inaturalist.org/v1/observations?lat=34.7042&lng=-87.1189&radius=10&taxon_id=26159%2C26085%2C30692%2C30668%2C30493%2C30979%2C41638&quality_grade=research&d1=2026-09-18&per_page=200&order_by=observed_on&order=desc",
+    "fetched_at": "2026-10-18T08:19:43Z"
+   },
+   "inat_season_46_alligator": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=34.7042&lng=-87.1189&radius=25&taxon_id=26159&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T08:19:44Z"
+   },
+   "inat_season_46_crocodile": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=34.7042&lng=-87.1189&radius=25&taxon_id=26085&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T08:19:44Z"
+   },
+   "inat_season_46_snakes": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=34.7042&lng=-87.1189&radius=25&taxon_id=30692%2C30668%2C30493%2C30979&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T08:19:45Z"
+   },
+   "inat_season_46_bear": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=34.7042&lng=-87.1189&radius=25&taxon_id=41638&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T08:19:46Z"
+   },
+   "openmeteo_hourly_703": {
+    "url": "https://api.open-meteo.com/v1/forecast?latitude=34.1256%2C34.1256%2C34.2812%2C34.2812%2C34.1256%2C33.9700%2C33.9700&longitude=-84.9222%2C-84.7052%2C-84.8137%2C-85.0307%2C-85.1392%2C-85.0307%2C-84.8137&hourly=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cwind_speed_10m%2Cwind_gusts_10m%2Cshortwave_radiation%2Cprecipitation%2Cprecipitation_probability%2Ccape%2Cuv_index&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=mm&timezone=UTC&past_days=1&forecast_days=4",
+    "fetched_at": "2026-10-18T08:19:46Z"
+   },
+   "openmeteo_sun_703": {
+    "url": "https://api.open-meteo.com/v1/forecast?latitude=34.1256&longitude=-84.9222&daily=sunrise%2Csunset&timezone=America%2FNew_York&forecast_days=4",
+    "fetched_at": "2026-10-18T08:19:46Z"
+   },
+   "nws_alerts_703": {
+    "url": "https://api.weather.gov/alerts/active?point=34.1256%2C-84.9222",
+    "fetched_at": "2026-10-18T08:19:46Z"
+   },
+   "nws_point_703": {
+    "url": "https://api.weather.gov/points/34.1256,-84.9222",
+    "fetched_at": "2026-10-18T08:19:46Z"
+   },
+   "nws_forecast_703": {
+    "url": "https://api.weather.gov/gridpoints/FFC/30,102/forecast",
+    "fetched_at": "2026-10-18T08:19:46Z"
+   },
+   "openmeteo_air_703": {
+    "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=34.1256&longitude=-84.9222&hourly=us_aqi%2Cpm2_5%2Cpm10&timezone=UTC&forecast_days=4&past_days=1",
+    "fetched_at": "2026-10-18T08:19:47Z"
+   },
+   "nld_703_leveed_areas": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (leveed_areas)",
+    "fetched_at": "2026-10-18T08:19:47Z"
+   },
+   "nld_703_alignment_lines": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (alignment_lines)",
+    "fetched_at": "2026-10-18T08:19:47Z"
+   },
+   "nld_703_floodwalls": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (floodwalls)",
+    "fetched_at": "2026-10-18T08:19:48Z"
+   },
+   "nld_703_closure_structures": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (closure_structures)",
+    "fetched_at": "2026-10-18T08:19:48Z"
+   },
+   "nld_703_pump_stations": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (pump_stations)",
+    "fetched_at": "2026-10-18T08:19:48Z"
+   },
+   "nwps_gauge_CTVG1": {
+    "url": "https://api.water.noaa.gov/nwps/v1/gauges/CTVG1",
+    "fetched_at": "2026-10-18T08:19:48Z"
+   },
+   "nwps_stageflow_CTVG1": {
+    "url": "https://api.water.noaa.gov/nwps/v1/gauges/CTVG1/stageflow",
+    "fetched_at": "2026-10-18T08:19:49Z"
+   },
+   "overpass_roads_703": {
+    "url": "https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A60%5D%3Bway%28around%3A2500%2C34.12560%2C-84.92220%29%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%7Cunclassified%7Cresidential%7Cservice%7Ctrack%7Croad%7Cliving_street%7Cmotorway_link%7Ctrunk_link%7Cprimary_link%7Csecondary_link%7Ctertiary_link%29%24%22%5D%5B%22access%22%21~%22%5E%28no%29%24%22%5D%3Bout+geom%3B",
+    "fetched_at": "2026-10-18T08:20:29Z"
+   },
+   "inat_recent_703": {
+    "url": "https://api.inaturalist.org/v1/observations?lat=34.1256&lng=-84.9222&radius=10&taxon_id=26159%2C26085%2C30692%2C30668%2C30493%2C30979%2C41638&quality_grade=research&d1=2026-09-18&per_page=200&order_by=observed_on&order=desc",
+    "fetched_at": "2026-10-18T08:20:31Z"
+   },
+   "inat_season_703_alligator": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=34.1256&lng=-84.9222&radius=25&taxon_id=26159&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T08:20:31Z"
+   },
+   "inat_season_703_crocodile": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=34.1256&lng=-84.9222&radius=25&taxon_id=26085&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T08:20:32Z"
+   },
+   "inat_season_703_snakes": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=34.1256&lng=-84.9222&radius=25&taxon_id=30692%2C30668%2C30493%2C30979&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T08:20:33Z"
+   },
+   "inat_season_703_bear": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=34.1256&lng=-84.9222&radius=25&taxon_id=41638&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T08:20:34Z"
+   },
+   "openmeteo_hourly_628": {
+    "url": "https://api.open-meteo.com/v1/forecast?latitude=28.9656%2C28.9656%2C29.1212%2C29.1212%2C28.9656%2C28.8100%2C28.8100&longitude=-82.6977%2C-82.4924%2C-82.5950%2C-82.8004%2C-82.9030%2C-82.8004%2C-82.5950&hourly=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cwind_speed_10m%2Cwind_gusts_10m%2Cshortwave_radiation%2Cprecipitation%2Cprecipitation_probability%2Ccape%2Cuv_index&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=mm&timezone=UTC&past_days=1&forecast_days=4",
+    "fetched_at": "2026-10-18T08:20:34Z"
+   },
+   "openmeteo_sun_628": {
+    "url": "https://api.open-meteo.com/v1/forecast?latitude=28.9656&longitude=-82.6977&daily=sunrise%2Csunset&timezone=America%2FNew_York&forecast_days=4",
+    "fetched_at": "2026-10-18T08:20:34Z"
+   },
+   "nws_alerts_628": {
+    "url": "https://api.weather.gov/alerts/active?point=28.9656%2C-82.6977",
+    "fetched_at": "2026-10-18T08:20:34Z"
+   },
+   "nws_point_628": {
+    "url": "https://api.weather.gov/points/28.9656,-82.6977",
+    "fetched_at": "2026-10-18T08:20:34Z"
+   },
+   "nws_forecast_628": {
+    "url": "https://api.weather.gov/gridpoints/TBW/58,141/forecast",
+    "fetched_at": "2026-10-18T08:20:34Z"
+   },
+   "openmeteo_air_628": {
+    "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=28.9656&longitude=-82.6977&hourly=us_aqi%2Cpm2_5%2Cpm10&timezone=UTC&forecast_days=4&past_days=1",
+    "fetched_at": "2026-10-18T08:20:35Z"
+   },
+   "coops_hilo_8727386": {
+    "url": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=predictions&application=controlward_next_day_report&station=8727386&datum=MLLW&time_zone=lst_ldt&units=metric&interval=hilo&format=json&begin_date=20261018&end_date=20261020",
+    "fetched_at": "2026-10-18T08:20:35Z"
+   },
+   "coops_datums_8727386": {
+    "url": "https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations/8727386/datums.json?units=metric",
+    "fetched_at": "2026-10-18T08:20:36Z"
+   },
+   "nld_628_leveed_areas": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (leveed_areas)",
+    "fetched_at": "2026-10-18T08:20:36Z"
+   },
+   "nld_628_alignment_lines": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (alignment_lines)",
+    "fetched_at": "2026-10-18T08:20:36Z"
+   },
+   "nld_628_floodwalls": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (floodwalls)",
+    "fetched_at": "2026-10-18T08:20:36Z"
+   },
+   "nld_628_closure_structures": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (closure_structures)",
+    "fetched_at": "2026-10-18T08:20:36Z"
+   },
+   "nld_628_pump_stations": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (pump_stations)",
+    "fetched_at": "2026-10-18T08:20:36Z"
+   },
+   "nwps_gauge_DNLF1": {
+    "url": "https://api.water.noaa.gov/nwps/v1/gauges/DNLF1",
+    "fetched_at": "2026-10-18T08:20:37Z"
+   },
+   "nwps_stageflow_DNLF1": {
+    "url": "https://api.water.noaa.gov/nwps/v1/gauges/DNLF1/stageflow",
+    "fetched_at": "2026-10-18T08:20:37Z"
+   },
+   "overpass_roads_628": {
+    "url": "https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A60%5D%3Bway%28around%3A2500%2C28.96560%2C-82.69770%29%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%7Cunclassified%7Cresidential%7Cservice%7Ctrack%7Croad%7Cliving_street%7Cmotorway_link%7Ctrunk_link%7Cprimary_link%7Csecondary_link%7Ctertiary_link%29%24%22%5D%5B%22access%22%21~%22%5E%28no%29%24%22%5D%3Bout+geom%3B",
+    "fetched_at": "2026-10-18T08:21:21Z"
+   },
+   "inat_recent_628": {
+    "url": "https://api.inaturalist.org/v1/observations?lat=28.9656&lng=-82.6977&radius=10&taxon_id=26159%2C26085%2C30692%2C30668%2C30493%2C30979%2C41638&quality_grade=research&d1=2026-09-18&per_page=200&order_by=observed_on&order=desc",
+    "fetched_at": "2026-10-18T08:21:22Z"
+   },
+   "inat_season_628_alligator": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=28.9656&lng=-82.6977&radius=25&taxon_id=26159&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T08:21:23Z"
+   },
+   "inat_season_628_crocodile": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=28.9656&lng=-82.6977&radius=25&taxon_id=26085&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T08:21:23Z"
+   },
+   "inat_season_628_snakes": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=28.9656&lng=-82.6977&radius=25&taxon_id=30692%2C30668%2C30493%2C30979&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T08:21:24Z"
+   },
+   "inat_season_628_bear": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=28.9656&lng=-82.6977&radius=25&taxon_id=41638&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T08:21:25Z"
+   },
+   "openmeteo_hourly_3": {
+    "url": "https://api.open-meteo.com/v1/forecast?latitude=31.0069%2C31.0069%2C31.1625%2C31.1625%2C31.0069%2C30.8513%2C30.8513&longitude=-88.0103%2C-87.8007%2C-87.9055%2C-88.1151%2C-88.2199%2C-88.1151%2C-87.9055&hourly=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cwind_speed_10m%2Cwind_gusts_10m%2Cshortwave_radiation%2Cprecipitation%2Cprecipitation_probability%2Ccape%2Cuv_index&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=mm&timezone=UTC&past_days=1&forecast_days=4",
+    "fetched_at": "2026-10-18T08:21:25Z"
+   },
+   "openmeteo_sun_3": {
+    "url": "https://api.open-meteo.com/v1/forecast?latitude=31.0069&longitude=-88.0103&daily=sunrise%2Csunset&timezone=America%2FChicago&forecast_days=4",
+    "fetched_at": "2026-10-18T08:21:25Z"
+   },
+   "nws_alerts_3": {
+    "url": "https://api.weather.gov/alerts/active?point=31.0069%2C-88.0103",
+    "fetched_at": "2026-10-18T08:21:25Z"
+   },
+   "nws_point_3": {
+    "url": "https://api.weather.gov/points/31.0069,-88.0103",
+    "fetched_at": "2026-10-18T08:21:25Z"
+   },
+   "nws_forecast_3": {
+    "url": "https://api.weather.gov/gridpoints/MOB/53,81/forecast",
+    "fetched_at": "2026-10-18T08:21:25Z"
+   },
+   "openmeteo_air_3": {
+    "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=31.0069&longitude=-88.0103&hourly=us_aqi%2Cpm2_5%2Cpm10&timezone=UTC&forecast_days=4&past_days=1",
+    "fetched_at": "2026-10-18T08:21:26Z"
+   },
+   "coops_hilo_8737373": {
+    "url": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=predictions&application=controlward_next_day_report&station=8737373&datum=MLLW&time_zone=lst_ldt&units=metric&interval=hilo&format=json&begin_date=20261018&end_date=20261020",
+    "fetched_at": "2026-10-18T08:21:26Z"
+   },
+   "coops_datums_8737373": {
+    "url": "https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations/8737373/datums.json?units=metric",
+    "fetched_at": "2026-10-18T08:21:26Z"
+   },
+   "nld_3_leveed_areas": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (leveed_areas)",
+    "fetched_at": "2026-10-18T08:21:26Z"
+   },
+   "nld_3_alignment_lines": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (alignment_lines)",
+    "fetched_at": "2026-10-18T08:21:27Z"
+   },
+   "nld_3_floodwalls": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (floodwalls)",
+    "fetched_at": "2026-10-18T08:21:27Z"
+   },
+   "nld_3_closure_structures": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (closure_structures)",
+    "fetched_at": "2026-10-18T08:21:27Z"
+   },
+   "nld_3_pump_stations": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (pump_stations)",
+    "fetched_at": "2026-10-18T08:21:27Z"
+   },
+   "nwps_gauge_BCKA1": {
+    "url": "https://api.water.noaa.gov/nwps/v1/gauges/BCKA1",
+    "fetched_at": "2026-10-18T08:21:27Z"
+   },
+   "nwps_stageflow_BCKA1": {
+    "url": "https://api.water.noaa.gov/nwps/v1/gauges/BCKA1/stageflow",
+    "fetched_at": "2026-10-18T08:21:28Z"
+   },
+   "overpass_roads_3": {
+    "url": "https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A60%5D%3Bway%28around%3A2500%2C31.00690%2C-88.01030%29%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%7Cunclassified%7Cresidential%7Cservice%7Ctrack%7Croad%7Cliving_street%7Cmotorway_link%7Ctrunk_link%7Cprimary_link%7Csecondary_link%7Ctertiary_link%29%24%22%5D%5B%22access%22%21~%22%5E%28no%29%24%22%5D%3Bout+geom%3B",
+    "fetched_at": "2026-10-18T08:22:03Z"
+   },
+   "inat_recent_3": {
+    "url": "https://api.inaturalist.org/v1/observations?lat=31.0069&lng=-88.0103&radius=10&taxon_id=26159%2C26085%2C30692%2C30668%2C30493%2C30979%2C41638&quality_grade=research&d1=2026-09-18&per_page=200&order_by=observed_on&order=desc",
+    "fetched_at": "2026-10-18T08:22:04Z"
+   },
+   "inat_season_3_alligator": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=31.0069&lng=-88.0103&radius=25&taxon_id=26159&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T08:22:05Z"
+   },
+   "inat_season_3_crocodile": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=31.0069&lng=-88.0103&radius=25&taxon_id=26085&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T08:22:06Z"
+   },
+   "inat_season_3_snakes": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=31.0069&lng=-88.0103&radius=25&taxon_id=30692%2C30668%2C30493%2C30979&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T08:22:06Z"
+   },
+   "inat_season_3_bear": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=31.0069&lng=-88.0103&radius=25&taxon_id=41638&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T08:22:07Z"
+   },
+   "openmeteo_hourly_6113": {
+    "url": "https://api.open-meteo.com/v1/forecast?latitude=38.3722%2C38.3722%2C38.5278%2C38.5278%2C38.3722%2C38.2166%2C38.2166&longitude=-87.7658%2C-87.5367%2C-87.6512%2C-87.8804%2C-87.9950%2C-87.8804%2C-87.6512&hourly=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cwind_speed_10m%2Cwind_gusts_10m%2Cshortwave_radiation%2Cprecipitation%2Cprecipitation_probability%2Ccape%2Cuv_index&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=mm&timezone=UTC&past_days=1&forecast_days=4",
+    "fetched_at": "2026-10-18T08:22:07Z"
+   },
+   "openmeteo_sun_6113": {
+    "url": "https://api.open-meteo.com/v1/forecast?latitude=38.3722&longitude=-87.7658&daily=sunrise%2Csunset&timezone=America%2FChicago&forecast_days=4",
+    "fetched_at": "2026-10-18T08:22:07Z"
+   },
+   "nws_alerts_6113": {
+    "url": "https://api.weather.gov/alerts/active?point=38.3722%2C-87.7658",
+    "fetched_at": "2026-10-18T08:22:08Z"
+   },
+   "nws_point_6113": {
+    "url": "https://api.weather.gov/points/38.3722,-87.7658",
+    "fetched_at": "2026-10-18T08:22:08Z"
+   },
+   "nws_forecast_6113": {
+    "url": "https://api.weather.gov/gridpoints/PAH/158,115/forecast",
+    "fetched_at": "2026-10-18T08:22:08Z"
+   },
+   "openmeteo_air_6113": {
+    "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=38.3722&longitude=-87.7658&hourly=us_aqi%2Cpm2_5%2Cpm10&timezone=UTC&forecast_days=4&past_days=1",
+    "fetched_at": "2026-10-18T08:22:08Z"
+   },
+   "nld_6113_leveed_areas": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (leveed_areas)",
+    "fetched_at": "2026-10-18T08:22:09Z"
+   },
+   "nld_6113_alignment_lines": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (alignment_lines)",
+    "fetched_at": "2026-10-18T08:22:09Z"
+   },
+   "nld_6113_floodwalls": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (floodwalls)",
+    "fetched_at": "2026-10-18T08:22:09Z"
+   },
+   "nld_6113_closure_structures": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (closure_structures)",
+    "fetched_at": "2026-10-18T08:22:09Z"
+   },
+   "nld_6113_pump_stations": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (pump_stations)",
+    "fetched_at": "2026-10-18T08:22:10Z"
+   },
+   "nwps_gauge_MCRI2": {
+    "url": "https://api.water.noaa.gov/nwps/v1/gauges/MCRI2",
+    "fetched_at": "2026-10-18T08:22:10Z"
+   },
+   "nwps_stageflow_MCRI2": {
+    "url": "https://api.water.noaa.gov/nwps/v1/gauges/MCRI2/stageflow",
+    "fetched_at": "2026-10-18T08:22:10Z"
+   },
+   "overpass_roads_6113": {
+    "url": "https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A60%5D%3Bway%28around%3A2500%2C38.37222%2C-87.76583%29%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%7Cunclassified%7Cresidential%7Cservice%7Ctrack%7Croad%7Cliving_street%7Cmotorway_link%7Ctrunk_link%7Cprimary_link%7Csecondary_link%7Ctertiary_link%29%24%22%5D%5B%22access%22%21~%22%5E%28no%29%24%22%5D%3Bout+geom%3B",
+    "fetched_at": "2026-10-18T08:22:56Z"
+   },
+   "inat_recent_6113": {
+    "url": "https://api.inaturalist.org/v1/observations?lat=38.372222&lng=-87.76583&radius=10&taxon_id=26159%2C26085%2C30692%2C30668%2C30493%2C30979%2C41638&quality_grade=research&d1=2026-09-18&per_page=200&order_by=observed_on&order=desc",
+    "fetched_at": "2026-10-18T08:22:57Z"
+   },
+   "inat_season_6113_alligator": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=38.372222&lng=-87.76583&radius=25&taxon_id=26159&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T08:22:57Z"
+   },
+   "inat_season_6113_crocodile": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=38.372222&lng=-87.76583&radius=25&taxon_id=26085&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T08:22:58Z"
+   },
+   "inat_season_6113_snakes": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=38.372222&lng=-87.76583&radius=25&taxon_id=30692%2C30668%2C30493%2C30979&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T08:22:59Z"
+   },
+   "inat_season_6113_bear": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=38.372222&lng=-87.76583&radius=25&taxon_id=41638&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T08:23:00Z"
+   },
+   "openmeteo_hourly_1733": {
+    "url": "https://api.open-meteo.com/v1/forecast?latitude=41.8906%2C41.8906%2C42.0462%2C42.0462%2C41.8906%2C41.7350%2C41.7350&longitude=-83.3464%2C-83.1051%2C-83.2257%2C-83.4671%2C-83.5877%2C-83.4671%2C-83.2257&hourly=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cwind_speed_10m%2Cwind_gusts_10m%2Cshortwave_radiation%2Cprecipitation%2Cprecipitation_probability%2Ccape%2Cuv_index&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=mm&timezone=UTC&past_days=1&forecast_days=4",
+    "fetched_at": "2026-10-18T08:23:00Z"
+   },
+   "openmeteo_sun_1733": {
+    "url": "https://api.open-meteo.com/v1/forecast?latitude=41.8906&longitude=-83.3464&daily=sunrise%2Csunset&timezone=America%2FDetroit&forecast_days=4",
+    "fetched_at": "2026-10-18T08:23:00Z"
+   },
+   "nws_alerts_1733": {
+    "url": "https://api.weather.gov/alerts/active?point=41.8906%2C-83.3464",
+    "fetched_at": "2026-10-18T08:23:00Z"
+   },
+   "nws_point_1733": {
+    "url": "https://api.weather.gov/points/41.8906,-83.3464",
+    "fetched_at": "2026-10-18T08:23:00Z"
+   },
+   "nws_forecast_1733": {
+    "url": "https://api.weather.gov/gridpoints/DTX/57,13/forecast",
+    "fetched_at": "2026-10-18T08:23:00Z"
+   },
+   "openmeteo_air_1733": {
+    "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=41.8906&longitude=-83.3464&hourly=us_aqi%2Cpm2_5%2Cpm10&timezone=UTC&forecast_days=4&past_days=1",
+    "fetched_at": "2026-10-18T08:23:01Z"
+   },
+   "nld_1733_leveed_areas": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (leveed_areas)",
+    "fetched_at": "2026-10-18T08:23:01Z"
+   },
+   "nld_1733_alignment_lines": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (alignment_lines)",
+    "fetched_at": "2026-10-18T08:23:01Z"
+   },
+   "nld_1733_floodwalls": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (floodwalls)",
+    "fetched_at": "2026-10-18T08:23:01Z"
+   },
+   "nld_1733_closure_structures": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (closure_structures)",
+    "fetched_at": "2026-10-18T08:23:02Z"
+   },
+   "nld_1733_pump_stations": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (pump_stations)",
+    "fetched_at": "2026-10-18T08:23:02Z"
+   },
+   "nwps_gauge_MONM4": {
+    "url": "https://api.water.noaa.gov/nwps/v1/gauges/MONM4",
+    "fetched_at": "2026-10-18T08:23:02Z"
+   },
+   "nwps_stageflow_MONM4": {
+    "url": "https://api.water.noaa.gov/nwps/v1/gauges/MONM4/stageflow",
+    "fetched_at": "2026-10-18T08:23:03Z"
+   },
+   "overpass_roads_1733": {
+    "url": "https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A60%5D%3Bway%28around%3A2500%2C41.89060%2C-83.34640%29%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%7Cunclassified%7Cresidential%7Cservice%7Ctrack%7Croad%7Cliving_street%7Cmotorway_link%7Ctrunk_link%7Cprimary_link%7Csecondary_link%7Ctertiary_link%29%24%22%5D%5B%22access%22%21~%22%5E%28no%29%24%22%5D%3Bout+geom%3B",
+    "fetched_at": "2026-10-18T08:23:48Z"
+   },
+   "inat_recent_1733": {
+    "url": "https://api.inaturalist.org/v1/observations?lat=41.8906&lng=-83.3464&radius=10&taxon_id=26159%2C26085%2C30692%2C30668%2C30493%2C30979%2C41638&quality_grade=research&d1=2026-09-18&per_page=200&order_by=observed_on&order=desc",
+    "fetched_at": "2026-10-18T08:23:49Z"
+   },
+   "inat_season_1733_alligator": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=41.8906&lng=-83.3464&radius=25&taxon_id=26159&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T08:23:50Z"
+   },
+   "inat_season_1733_crocodile": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=41.8906&lng=-83.3464&radius=25&taxon_id=26085&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T08:23:51Z"
+   },
+   "inat_season_1733_snakes": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=41.8906&lng=-83.3464&radius=25&taxon_id=30692%2C30668%2C30493%2C30979&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T08:23:51Z"
+   },
+   "inat_season_1733_bear": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=41.8906&lng=-83.3464&radius=25&taxon_id=41638&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T08:23:52Z"
+   },
+   "openmeteo_hourly_621": {
+    "url": "https://api.open-meteo.com/v1/forecast?latitude=25.4356%2C25.4356%2C25.5912%2C25.5912%2C25.4356%2C25.2800%2C25.2800&longitude=-80.3308%2C-80.1319%2C-80.2313%2C-80.4303%2C-80.5297%2C-80.4303%2C-80.2313&hourly=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cwind_speed_10m%2Cwind_gusts_10m%2Cshortwave_radiation%2Cprecipitation%2Cprecipitation_probability%2Ccape%2Cuv_index&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=mm&timezone=UTC&past_days=1&forecast_days=4",
+    "fetched_at": "2026-10-18T08:23:52Z"
+   },
+   "openmeteo_sun_621": {
+    "url": "https://api.open-meteo.com/v1/forecast?latitude=25.4356&longitude=-80.3308&daily=sunrise%2Csunset&timezone=America%2FNew_York&forecast_days=4",
+    "fetched_at": "2026-10-18T08:23:52Z"
+   },
+   "nws_alerts_621": {
+    "url": "https://api.weather.gov/alerts/active?point=25.4356%2C-80.3308",
+    "fetched_at": "2026-10-18T08:23:53Z"
+   },
+   "nws_point_621": {
+    "url": "https://api.weather.gov/points/25.4356,-80.3308",
+    "fetched_at": "2026-10-18T08:23:53Z"
+   },
+   "nws_forecast_621": {
+    "url": "https://api.weather.gov/gridpoints/MFL/106,35/forecast",
+    "fetched_at": "2026-10-18T08:23:53Z"
+   },
+   "openmeteo_air_621": {
+    "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=25.4356&longitude=-80.3308&hourly=us_aqi%2Cpm2_5%2Cpm10&timezone=UTC&forecast_days=4&past_days=1",
+    "fetched_at": "2026-10-18T08:23:53Z"
+   },
+   "coops_hilo_8723423": {
+    "url": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=predictions&application=controlward_next_day_report&station=8723423&datum=MLLW&time_zone=lst_ldt&units=metric&interval=hilo&format=json&begin_date=20261018&end_date=20261020",
+    "fetched_at": "2026-10-18T08:23:54Z"
+   },
+   "coops_datums_8723423": {
+    "url": "https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations/8723423/datums.json?units=metric",
+    "fetched_at": "2026-10-18T08:23:54Z"
+   },
+   "nld_621_leveed_areas": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (leveed_areas)",
+    "fetched_at": "2026-10-18T08:23:55Z"
+   },
+   "nld_621_alignment_lines": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (alignment_lines)",
+    "fetched_at": "2026-10-18T08:23:55Z"
+   },
+   "nld_621_floodwalls": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (floodwalls)",
+    "fetched_at": "2026-10-18T08:23:55Z"
+   },
+   "nld_621_closure_structures": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (closure_structures)",
+    "fetched_at": "2026-10-18T08:23:55Z"
+   },
+   "nld_621_pump_stations": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (pump_stations)",
+    "fetched_at": "2026-10-18T08:23:55Z"
+   },
+   "overpass_roads_621": {
+    "url": "https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A60%5D%3Bway%28around%3A2500%2C25.43560%2C-80.33080%29%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%7Cunclassified%7Cresidential%7Cservice%7Ctrack%7Croad%7Cliving_street%7Cmotorway_link%7Ctrunk_link%7Cprimary_link%7Csecondary_link%7Ctertiary_link%29%24%22%5D%5B%22access%22%21~%22%5E%28no%29%24%22%5D%3Bout+geom%3B",
+    "fetched_at": "2026-10-18T08:24:49Z"
    },
    "inat_recent_621": {
     "url": "https://api.inaturalist.org/v1/observations?lat=25.4356&lng=-80.3308&radius=10&taxon_id=26159%2C26085%2C30692%2C30668%2C30493%2C30979%2C41638&quality_grade=research&d1=2026-09-18&per_page=200&order_by=observed_on&order=desc",
-    "fetched_at": "2026-10-18T06:45:12Z"
+    "fetched_at": "2026-10-18T08:24:50Z"
    },
    "inat_season_621_alligator": {
     "url": "https://api.inaturalist.org/v1/observations/histogram?lat=25.4356&lng=-80.3308&radius=25&taxon_id=26159&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T06:45:13Z"
+    "fetched_at": "2026-10-18T08:24:51Z"
    },
    "inat_season_621_crocodile": {
     "url": "https://api.inaturalist.org/v1/observations/histogram?lat=25.4356&lng=-80.3308&radius=25&taxon_id=26085&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T06:45:14Z"
+    "fetched_at": "2026-10-18T08:24:52Z"
    },
    "inat_season_621_snakes": {
     "url": "https://api.inaturalist.org/v1/observations/histogram?lat=25.4356&lng=-80.3308&radius=25&taxon_id=30692%2C30668%2C30493%2C30979&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T06:45:15Z"
+    "fetched_at": "2026-10-18T08:24:52Z"
    },
    "inat_season_621_bear": {
     "url": "https://api.inaturalist.org/v1/observations/histogram?lat=25.4356&lng=-80.3308&radius=25&taxon_id=41638&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T06:45:15Z"
+    "fetched_at": "2026-10-18T08:24:53Z"
    }
   },
   "label": "Decision support from forecasts and models. It does not clear any task, route or crossing as safe."
@@ -136,169 +952,169 @@
    {
     "hour": 0,
     "pop": 31,
-    "cape": 1300,
-    "gust": 27,
+    "cape": 400,
+    "gust": 29,
     "mm": 0.0
    },
    {
     "hour": 1,
     "pop": 30,
-    "cape": 980,
-    "gust": 28,
-    "mm": 2.5
+    "cape": 580,
+    "gust": 30,
+    "mm": 0.0
    },
    {
     "hour": 2,
     "pop": 21,
-    "cape": 750,
-    "gust": 28,
+    "cape": 270,
+    "gust": 30,
     "mm": 0.0
    },
    {
     "hour": 3,
     "pop": 21,
-    "cape": 790,
-    "gust": 28,
+    "cape": 370,
+    "gust": 29,
     "mm": 0.0
    },
    {
     "hour": 4,
     "pop": 21,
-    "cape": 830,
-    "gust": 30,
+    "cape": 290,
+    "gust": 27,
     "mm": 0.0
    },
    {
     "hour": 5,
     "pop": 15,
-    "cape": 530,
-    "gust": 29,
+    "cape": 460,
+    "gust": 27,
     "mm": 0.0
    },
    {
     "hour": 6,
-    "pop": 15,
-    "cape": 600,
-    "gust": 30,
+    "pop": 14,
+    "cape": 610,
+    "gust": 26,
     "mm": 0.0
    },
    {
     "hour": 7,
     "pop": 13,
-    "cape": 540,
-    "gust": 29,
+    "cape": 720,
+    "gust": 27,
     "mm": 0.0
    },
    {
     "hour": 8,
-    "pop": 13,
-    "cape": 410,
-    "gust": 29,
+    "pop": 12,
+    "cape": 760,
+    "gust": 28,
     "mm": 0.0
    },
    {
     "hour": 9,
-    "pop": 10,
-    "cape": 560,
-    "gust": 29,
+    "pop": 9,
+    "cape": 1200,
+    "gust": 28,
     "mm": 0.0
    },
    {
     "hour": 10,
     "pop": 3,
-    "cape": 530,
-    "gust": 28,
+    "cape": 1220,
+    "gust": 31,
     "mm": 0.0
    },
    {
     "hour": 11,
     "pop": 6,
-    "cape": 430,
-    "gust": 27,
+    "cape": 1060,
+    "gust": 28,
     "mm": 0.0
    },
    {
     "hour": 12,
     "pop": 2,
-    "cape": 780,
-    "gust": 26,
+    "cape": 910,
+    "gust": 27,
     "mm": 0.0
    },
    {
     "hour": 13,
     "pop": 2,
-    "cape": 950,
-    "gust": 26,
+    "cape": 760,
+    "gust": 27,
     "mm": 0.0
    },
    {
     "hour": 14,
-    "pop": 18,
-    "cape": 830,
-    "gust": 24,
+    "pop": 1,
+    "cape": 800,
+    "gust": 28,
     "mm": 0.0
    },
    {
     "hour": 15,
     "pop": 24,
-    "cape": 1120,
-    "gust": 24,
+    "cape": 860,
+    "gust": 27,
     "mm": 0.0
    },
    {
     "hour": 16,
     "pop": 24,
-    "cape": 740,
-    "gust": 23,
+    "cape": 830,
+    "gust": 28,
     "mm": 0.0
    },
    {
     "hour": 17,
     "pop": 24,
-    "cape": 780,
-    "gust": 24,
+    "cape": 760,
+    "gust": 29,
     "mm": 0.0
    },
    {
     "hour": 18,
     "pop": 24,
-    "cape": 973,
-    "gust": 23,
-    "mm": 8.1
+    "cape": 830,
+    "gust": 29,
+    "mm": 0.0
    },
    {
     "hour": 19,
     "pop": 24,
-    "cape": 525,
-    "gust": 24,
-    "mm": 5.6
+    "cape": 480,
+    "gust": 30,
+    "mm": 0.0
    },
    {
     "hour": 20,
     "pop": 24,
-    "cape": 248,
-    "gust": 23,
+    "cape": 410,
+    "gust": 31,
     "mm": 0.0
    },
    {
     "hour": 21,
     "pop": 25,
-    "cape": 0,
-    "gust": 23,
+    "cape": 270,
+    "gust": 30,
     "mm": 0.0
    },
    {
     "hour": 22,
     "pop": 25,
-    "cape": 10,
-    "gust": 24,
+    "cape": 150,
+    "gust": 29,
     "mm": 0.0
    },
    {
     "hour": 23,
     "pop": 25,
-    "cape": 70,
-    "gust": 23,
+    "cape": 200,
+    "gust": 28,
     "mm": 0.0
    }
   ],
@@ -310,17 +1126,9 @@
   },
   "work_window": {
    "start": "06:00",
-   "end": "18:00"
+   "end": "19:00"
   },
-  "blocked_runs": [
-   {
-    "start": "18:00",
-    "end": "19:00",
-    "reasons": [
-     "rain"
-    ]
-   }
-  ],
+  "blocked_runs": [],
   "alerts": [
    {
     "event": "Rip Current Statement",
@@ -340,24 +1148,24 @@
     "daytime": false,
     "starts": "2026-10-18T18:00:00-04:00",
     "temperature_f": 74,
-    "short": "Chance Showers And Thunderstorms",
-    "detail": "A chance of showers and thunderstorms before 8pm, then showers and thunderstorms likely between 8pm and 9pm, then a chance of showers and thunderstorms between 9pm and 11pm, then a chance of showers and thunderstorms between 11pm and 5am, then a slight chance of showers and thunderstorms. Mostly cloudy, with a low around 74. Northeast wind 15 to 22 mph, with gusts as high as 32 mph. Chance of precipitation is 60%. New rainfall amounts between a half and three quarters of an inch possible."
+    "short": "Showers And Thunderstorms Likely",
+    "detail": "Showers and thunderstorms likely before 9pm, then a chance of showers and thunderstorms between 9pm and 11pm, then a chance of showers and thunderstorms between 11pm and 1am, then a slight chance of showers and thunderstorms between 1am and 5am. Mostly cloudy, with a low around 74. Northeast wind 16 to 22 mph, with gusts as high as 32 mph. Chance of precipitation is 60%. New rainfall amounts between a half and three quarters of an inch possible."
    },
    {
     "name": "Monday",
     "daytime": true,
     "starts": "2026-10-19T06:00:00-04:00",
     "temperature_f": 85,
-    "short": "Slight Chance Showers And Thunderstorms",
-    "detail": "A slight chance of showers and thunderstorms before 2pm, then a chance of showers and thunderstorms. Mostly sunny, with a high near 85. Northeast wind 17 to 21 mph, with gusts as high as 29 mph. Chance of precipitation is 30%."
+    "short": "Mostly Sunny",
+    "detail": "Mostly sunny, with a high near 85. Northeast wind around 21 mph, with gusts as high as 30 mph."
    },
    {
     "name": "Monday Night",
     "daytime": false,
     "starts": "2026-10-19T18:00:00-04:00",
     "temperature_f": 73,
-    "short": "Chance Showers And Thunderstorms",
-    "detail": "A chance of showers and thunderstorms before 8pm, then a chance of showers and thunderstorms. Partly cloudy, with a low around 73. Northeast wind 13 to 20 mph, with gusts as high as 29 mph. Chance of precipitation is 30%."
+    "short": "Slight Chance Rain Showers",
+    "detail": "A slight chance of rain showers before 2am. Partly cloudy, with a low around 73. Northeast wind 13 to 20 mph, with gusts as high as 28 mph. Chance of precipitation is 20%."
    }
   ],
   "text_reason": null,
@@ -446,94 +1254,10 @@
   "hours": [
    {
     "hour": 0,
-    "hi": 87.5,
-    "feels": 82.8,
-    "temp": 82.5,
-    "rh": 91,
-    "wbgt": 77.5,
-    "band": "caution",
-    "band_full_sun_max": "danger",
-    "hi_full_sun_max": 103,
-    "wbgt_tier": "below caution"
-   },
-   {
-    "hour": 1,
-    "hi": 87.0,
-    "feels": 81.8,
-    "temp": 82.2,
-    "rh": 91,
-    "wbgt": 77.0,
-    "band": "caution",
-    "band_full_sun_max": "extreme_caution",
-    "hi_full_sun_max": 102,
-    "wbgt_tier": "below caution"
-   },
-   {
-    "hour": 2,
-    "hi": 86.6,
-    "feels": 80.4,
-    "temp": 82.2,
-    "rh": 91,
-    "wbgt": 76.6,
-    "band": "caution",
-    "band_full_sun_max": "extreme_caution",
-    "hi_full_sun_max": 102,
-    "wbgt_tier": "below caution"
-   },
-   {
-    "hour": 3,
-    "hi": 86.2,
-    "feels": 81.1,
-    "temp": 82.1,
-    "rh": 90,
-    "wbgt": 76.5,
-    "band": "caution",
-    "band_full_sun_max": "extreme_caution",
-    "hi_full_sun_max": 101,
-    "wbgt_tier": "below caution"
-   },
-   {
-    "hour": 4,
-    "hi": 86.4,
-    "feels": 80.1,
-    "temp": 82.0,
-    "rh": 89,
-    "wbgt": 76.6,
-    "band": "caution",
-    "band_full_sun_max": "extreme_caution",
-    "hi_full_sun_max": 101,
-    "wbgt_tier": "below caution"
-   },
-   {
-    "hour": 5,
-    "hi": 85.5,
-    "feels": 79.4,
-    "temp": 81.9,
-    "rh": 89,
-    "wbgt": 75.9,
-    "band": "caution",
-    "band_full_sun_max": "extreme_caution",
-    "hi_full_sun_max": 101,
-    "wbgt_tier": "below caution"
-   },
-   {
-    "hour": 6,
-    "hi": 85.2,
-    "feels": 78.7,
-    "temp": 82.2,
-    "rh": 87,
-    "wbgt": 75.5,
-    "band": "caution",
-    "band_full_sun_max": "extreme_caution",
-    "hi_full_sun_max": 100,
-    "wbgt_tier": "below caution"
-   },
-   {
-    "hour": 7,
     "hi": 85.6,
-    "feels": 78.5,
-    "temp": 81.9,
-    "rh": 85,
+    "feels": 78.7,
+    "temp": 82.1,
+    "rh": 82,
     "wbgt": 76.0,
     "band": "caution",
     "band_full_sun_max": "extreme_caution",
@@ -541,131 +1265,35 @@
     "wbgt_tier": "below caution"
    },
    {
-    "hour": 8,
-    "hi": 84.9,
-    "feels": 78.5,
-    "temp": 82.3,
-    "rh": 84,
-    "wbgt": 75.5,
-    "band": "caution",
-    "band_full_sun_max": "extreme_caution",
-    "hi_full_sun_max": 100,
-    "wbgt_tier": "below caution"
-   },
-   {
-    "hour": 9,
-    "hi": 85.8,
-    "feels": 80.9,
-    "temp": 82.3,
-    "rh": 79,
-    "wbgt": 76.8,
+    "hour": 1,
+    "hi": 85.7,
+    "feels": 79.9,
+    "temp": 82.0,
+    "rh": 81,
+    "wbgt": 76.2,
     "band": "caution",
     "band_full_sun_max": "extreme_caution",
     "hi_full_sun_max": 101,
     "wbgt_tier": "below caution"
    },
    {
-    "hour": 10,
-    "hi": 84.8,
-    "feels": 83.0,
-    "temp": 82.4,
-    "rh": 71,
-    "wbgt": 76.7,
+    "hour": 2,
+    "hi": 85.2,
+    "feels": 78.0,
+    "temp": 82.1,
+    "rh": 83,
+    "wbgt": 75.6,
     "band": "caution",
     "band_full_sun_max": "extreme_caution",
     "hi_full_sun_max": 100,
     "wbgt_tier": "below caution"
    },
    {
-    "hour": 11,
-    "hi": 87.1,
-    "feels": 83.9,
-    "temp": 83.9,
-    "rh": 63,
-    "wbgt": 78.5,
-    "band": "caution",
-    "band_full_sun_max": "extreme_caution",
-    "hi_full_sun_max": 102,
-    "wbgt_tier": "below caution"
-   },
-   {
-    "hour": 12,
-    "hi": 87.0,
-    "feels": 87.4,
-    "temp": 85.4,
-    "rh": 69,
-    "wbgt": 79.6,
-    "band": "caution",
-    "band_full_sun_max": "extreme_caution",
-    "hi_full_sun_max": 102,
-    "wbgt_tier": "below caution"
-   },
-   {
-    "hour": 13,
-    "hi": 89.3,
-    "feels": 87.0,
-    "temp": 85.0,
-    "rh": 68,
-    "wbgt": 79.8,
-    "band": "caution",
-    "band_full_sun_max": "danger",
-    "hi_full_sun_max": 104,
-    "wbgt_tier": "below caution"
-   },
-   {
-    "hour": 14,
-    "hi": 89.4,
-    "feels": 87.4,
-    "temp": 85.8,
-    "rh": 73,
-    "wbgt": 80.5,
-    "band": "caution",
-    "band_full_sun_max": "danger",
-    "hi_full_sun_max": 104,
-    "wbgt_tier": "below caution"
-   },
-   {
-    "hour": 15,
-    "hi": 89.2,
-    "feels": 88.9,
-    "temp": 85.5,
-    "rh": 70,
-    "wbgt": 80.4,
-    "band": "caution",
-    "band_full_sun_max": "danger",
-    "hi_full_sun_max": 104,
-    "wbgt_tier": "below caution"
-   },
-   {
-    "hour": 16,
-    "hi": 87.1,
-    "feels": 85.8,
-    "temp": 85.1,
-    "rh": 68,
-    "wbgt": 78.6,
-    "band": "caution",
-    "band_full_sun_max": "extreme_caution",
-    "hi_full_sun_max": 102,
-    "wbgt_tier": "below caution"
-   },
-   {
-    "hour": 17,
-    "hi": 86.4,
-    "feels": 83.3,
-    "temp": 83.9,
-    "rh": 87,
-    "wbgt": 77.5,
-    "band": "caution",
-    "band_full_sun_max": "extreme_caution",
-    "hi_full_sun_max": 101,
-    "wbgt_tier": "below caution"
-   },
-   {
-    "hour": 18,
-    "hi": 84.8,
-    "feels": 81.4,
-    "temp": 81.6,
-    "rh": 87,
+    "hour": 3,
+    "hi": 85.4,
+    "feels": 78.9,
+    "temp": 81.9,
+    "rh": 82,
     "wbgt": 75.8,
     "band": "caution",
     "band_full_sun_max": "extreme_caution",
@@ -673,76 +1301,256 @@
     "wbgt_tier": "below caution"
    },
    {
+    "hour": 4,
+    "hi": 84.9,
+    "feels": 78.5,
+    "temp": 81.8,
+    "rh": 83,
+    "wbgt": 75.3,
+    "band": "caution",
+    "band_full_sun_max": "extreme_caution",
+    "hi_full_sun_max": 100,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 5,
+    "hi": 85.3,
+    "feels": 79.2,
+    "temp": 81.8,
+    "rh": 83,
+    "wbgt": 75.7,
+    "band": "caution",
+    "band_full_sun_max": "extreme_caution",
+    "hi_full_sun_max": 100,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 6,
+    "hi": 85.8,
+    "feels": 80.9,
+    "temp": 81.9,
+    "rh": 86,
+    "wbgt": 76.2,
+    "band": "caution",
+    "band_full_sun_max": "extreme_caution",
+    "hi_full_sun_max": 101,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 7,
+    "hi": 85.8,
+    "feels": 80.5,
+    "temp": 82.1,
+    "rh": 86,
+    "wbgt": 76.2,
+    "band": "caution",
+    "band_full_sun_max": "extreme_caution",
+    "hi_full_sun_max": 101,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 8,
+    "hi": 86.1,
+    "feels": 79.7,
+    "temp": 82.3,
+    "rh": 86,
+    "wbgt": 76.2,
+    "band": "caution",
+    "band_full_sun_max": "extreme_caution",
+    "hi_full_sun_max": 101,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 9,
+    "hi": 87.2,
+    "feels": 82.5,
+    "temp": 82.3,
+    "rh": 85,
+    "wbgt": 77.5,
+    "band": "caution",
+    "band_full_sun_max": "extreme_caution",
+    "hi_full_sun_max": 102,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 10,
+    "hi": 87.1,
+    "feels": 81.0,
+    "temp": 82.6,
+    "rh": 82,
+    "wbgt": 77.3,
+    "band": "caution",
+    "band_full_sun_max": "extreme_caution",
+    "hi_full_sun_max": 102,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 11,
+    "hi": 86.1,
+    "feels": 83.9,
+    "temp": 82.4,
+    "rh": 79,
+    "wbgt": 77.8,
+    "band": "caution",
+    "band_full_sun_max": "extreme_caution",
+    "hi_full_sun_max": 101,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 12,
+    "hi": 85.9,
+    "feels": 84.4,
+    "temp": 82.6,
+    "rh": 70,
+    "wbgt": 78.6,
+    "band": "caution",
+    "band_full_sun_max": "extreme_caution",
+    "hi_full_sun_max": 101,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 13,
+    "hi": 85.2,
+    "feels": 81.7,
+    "temp": 82.7,
+    "rh": 69,
+    "wbgt": 77.3,
+    "band": "caution",
+    "band_full_sun_max": "extreme_caution",
+    "hi_full_sun_max": 100,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 14,
+    "hi": 85.9,
+    "feels": 83.8,
+    "temp": 82.3,
+    "rh": 72,
+    "wbgt": 78.0,
+    "band": "caution",
+    "band_full_sun_max": "extreme_caution",
+    "hi_full_sun_max": 101,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 15,
+    "hi": 85.4,
+    "feels": 86.1,
+    "temp": 82.1,
+    "rh": 70,
+    "wbgt": 78.9,
+    "band": "caution",
+    "band_full_sun_max": "extreme_caution",
+    "hi_full_sun_max": 100,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 16,
+    "hi": 85.1,
+    "feels": 83.2,
+    "temp": 82.2,
+    "rh": 72,
+    "wbgt": 77.9,
+    "band": "caution",
+    "band_full_sun_max": "extreme_caution",
+    "hi_full_sun_max": 100,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 17,
+    "hi": 85.5,
+    "feels": 81.2,
+    "temp": 82.2,
+    "rh": 73,
+    "wbgt": 77.1,
+    "band": "caution",
+    "band_full_sun_max": "extreme_caution",
+    "hi_full_sun_max": 101,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 18,
+    "hi": 86.0,
+    "feels": 79.5,
+    "temp": 82.0,
+    "rh": 78,
+    "wbgt": 76.7,
+    "band": "caution",
+    "band_full_sun_max": "extreme_caution",
+    "hi_full_sun_max": 101,
+    "wbgt_tier": "below caution"
+   },
+   {
     "hour": 19,
-    "hi": 83.2,
-    "feels": 78.9,
-    "temp": 80.6,
-    "rh": 77,
-    "wbgt": 74.5,
+    "hi": 85.2,
+    "feels": 78.0,
+    "temp": 82.0,
+    "rh": 85,
+    "wbgt": 75.5,
+    "band": "caution",
+    "band_full_sun_max": "extreme_caution",
+    "hi_full_sun_max": 100,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 20,
+    "hi": 85.1,
+    "feels": 77.5,
+    "temp": 81.7,
+    "rh": 80,
+    "wbgt": 75.6,
+    "band": "caution",
+    "band_full_sun_max": "extreme_caution",
+    "hi_full_sun_max": 100,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 21,
+    "hi": 84.0,
+    "feels": 76.4,
+    "temp": 81.2,
+    "rh": 80,
+    "wbgt": 74.7,
+    "band": "caution",
+    "band_full_sun_max": "extreme_caution",
+    "hi_full_sun_max": 99,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 22,
+    "hi": 83.4,
+    "feels": 76.6,
+    "temp": 80.9,
+    "rh": 84,
+    "wbgt": 74.3,
     "band": "caution",
     "band_full_sun_max": "extreme_caution",
     "hi_full_sun_max": 98,
     "wbgt_tier": "below caution"
    },
    {
-    "hour": 20,
-    "hi": 79.7,
-    "feels": 77.4,
-    "temp": 79.4,
-    "rh": 69,
-    "wbgt": 73.1,
+    "hour": 23,
+    "hi": 83.2,
+    "feels": 78.3,
+    "temp": 80.8,
+    "rh": 86,
+    "wbgt": 74.2,
     "band": "caution",
     "band_full_sun_max": "extreme_caution",
-    "hi_full_sun_max": 95,
-    "wbgt_tier": "below caution"
-   },
-   {
-    "hour": 21,
-    "hi": 78.7,
-    "feels": 76.3,
-    "temp": 78.4,
-    "rh": 65,
-    "wbgt": 72.1,
-    "band": "low",
-    "band_full_sun_max": "extreme_caution",
-    "hi_full_sun_max": 94,
-    "wbgt_tier": "below caution"
-   },
-   {
-    "hour": 22,
-    "hi": 78.7,
-    "feels": 77.8,
-    "temp": 78.4,
-    "rh": 69,
-    "wbgt": 72.7,
-    "band": "low",
-    "band_full_sun_max": "extreme_caution",
-    "hi_full_sun_max": 94,
-    "wbgt_tier": "below caution"
-   },
-   {
-    "hour": 23,
-    "hi": 78.6,
-    "feels": 78.6,
-    "temp": 78.2,
-    "rh": 74,
-    "wbgt": 73.0,
-    "band": "low",
-    "band_full_sun_max": "extreme_caution",
-    "hi_full_sun_max": 94,
+    "hi_full_sun_max": 98,
     "wbgt_tier": "below caution"
    }
   ],
   "peak": {
-   "hour": 14,
-   "hi": 89.4,
+   "hour": 9,
+   "hi": 87.2,
    "band": "caution",
-   "wbgt": 80.5,
-   "hi_full_sun_max": 104
+   "wbgt": 77.5,
+   "hi_full_sun_max": 102
   },
   "hottest_window": {
-   "start": "11:00",
-   "end": "18:00"
+   "start": "00:00",
+   "end": "21:00"
   },
   "workday_hours_by_band": {
    "caution": 13
@@ -1476,11 +2284,6 @@
   "reasons": [
    {
     "level": "limits",
-    "code": "blocked_hours",
-    "text": "Some workday hours are blocked by rain."
-   },
-   {
-    "level": "limits",
     "code": "nws_alert",
     "text": "Rip Current Statement (Moderate) overlaps the day."
    },
@@ -1498,7 +2301,7 @@
   "disclaimer": "This verdict is decision support built from forecasts and models. It does not clear any task, route or crossing as safe. The site safety lead decides.",
   "work_window": {
    "start": "06:00",
-   "end": "18:00"
+   "end": "19:00"
   }
  },
  "hourly": [
@@ -1506,16 +2309,16 @@
    "hour": 0,
    "safe": true,
    "blocked_by": [],
-   "hi": 87.5,
-   "wbgt": 77.5,
-   "gust": 27,
+   "hi": 85.6,
+   "wbgt": 76.0,
+   "gust": 29,
    "pop": 31,
    "mm": 0.0,
-   "cape": 1300,
+   "cape": 400,
    "uv": 0.0,
-   "temp": 82.5,
-   "feels": 82.8,
-   "rh": 91,
+   "temp": 82.1,
+   "feels": 78.7,
+   "rh": 82,
    "have_data": true,
    "band": "caution",
    "aqi": 40,
@@ -1523,20 +2326,18 @@
   },
   {
    "hour": 1,
-   "safe": false,
-   "blocked_by": [
-    "rain"
-   ],
-   "hi": 87.0,
-   "wbgt": 77.0,
-   "gust": 28,
+   "safe": true,
+   "blocked_by": [],
+   "hi": 85.7,
+   "wbgt": 76.2,
+   "gust": 30,
    "pop": 30,
-   "mm": 2.5,
-   "cape": 980,
+   "mm": 0.0,
+   "cape": 580,
    "uv": 0.0,
-   "temp": 82.2,
-   "feels": 81.8,
-   "rh": 91,
+   "temp": 82.0,
+   "feels": 79.9,
+   "rh": 81,
    "have_data": true,
    "band": "caution",
    "aqi": 40,
@@ -1546,16 +2347,16 @@
    "hour": 2,
    "safe": true,
    "blocked_by": [],
-   "hi": 86.6,
-   "wbgt": 76.6,
-   "gust": 28,
+   "hi": 85.2,
+   "wbgt": 75.6,
+   "gust": 30,
    "pop": 21,
    "mm": 0.0,
-   "cape": 750,
+   "cape": 270,
    "uv": 0.0,
-   "temp": 82.2,
-   "feels": 80.4,
-   "rh": 91,
+   "temp": 82.1,
+   "feels": 78.0,
+   "rh": 83,
    "have_data": true,
    "band": "caution",
    "aqi": 40,
@@ -1565,16 +2366,16 @@
    "hour": 3,
    "safe": true,
    "blocked_by": [],
-   "hi": 86.2,
-   "wbgt": 76.5,
-   "gust": 28,
+   "hi": 85.4,
+   "wbgt": 75.8,
+   "gust": 29,
    "pop": 21,
    "mm": 0.0,
-   "cape": 790,
+   "cape": 370,
    "uv": 0.0,
-   "temp": 82.1,
-   "feels": 81.1,
-   "rh": 90,
+   "temp": 81.9,
+   "feels": 78.9,
+   "rh": 82,
    "have_data": true,
    "band": "caution",
    "aqi": 41,
@@ -1584,16 +2385,16 @@
    "hour": 4,
    "safe": true,
    "blocked_by": [],
-   "hi": 86.4,
-   "wbgt": 76.6,
-   "gust": 30,
+   "hi": 84.9,
+   "wbgt": 75.3,
+   "gust": 27,
    "pop": 21,
    "mm": 0.0,
-   "cape": 830,
+   "cape": 290,
    "uv": 0.0,
-   "temp": 82.0,
-   "feels": 80.1,
-   "rh": 89,
+   "temp": 81.8,
+   "feels": 78.5,
+   "rh": 83,
    "have_data": true,
    "band": "caution",
    "aqi": 41,
@@ -1603,16 +2404,16 @@
    "hour": 5,
    "safe": true,
    "blocked_by": [],
-   "hi": 85.5,
-   "wbgt": 75.9,
-   "gust": 29,
+   "hi": 85.3,
+   "wbgt": 75.7,
+   "gust": 27,
    "pop": 15,
    "mm": 0.0,
-   "cape": 530,
+   "cape": 460,
    "uv": 0.0,
-   "temp": 81.9,
-   "feels": 79.4,
-   "rh": 89,
+   "temp": 81.8,
+   "feels": 79.2,
+   "rh": 83,
    "have_data": true,
    "band": "caution",
    "aqi": 41,
@@ -1622,16 +2423,16 @@
    "hour": 6,
    "safe": true,
    "blocked_by": [],
-   "hi": 85.2,
-   "wbgt": 75.5,
-   "gust": 30,
-   "pop": 15,
+   "hi": 85.8,
+   "wbgt": 76.2,
+   "gust": 26,
+   "pop": 14,
    "mm": 0.0,
-   "cape": 600,
+   "cape": 610,
    "uv": 0.0,
-   "temp": 82.2,
-   "feels": 78.7,
-   "rh": 87,
+   "temp": 81.9,
+   "feels": 80.9,
+   "rh": 86,
    "have_data": true,
    "band": "caution",
    "aqi": 41,
@@ -1641,16 +2442,16 @@
    "hour": 7,
    "safe": true,
    "blocked_by": [],
-   "hi": 85.6,
-   "wbgt": 76.0,
-   "gust": 29,
+   "hi": 85.8,
+   "wbgt": 76.2,
+   "gust": 27,
    "pop": 13,
    "mm": 0.0,
-   "cape": 540,
+   "cape": 720,
    "uv": 0.0,
-   "temp": 81.9,
-   "feels": 78.5,
-   "rh": 85,
+   "temp": 82.1,
+   "feels": 80.5,
+   "rh": 86,
    "have_data": true,
    "band": "caution",
    "aqi": 41,
@@ -1660,16 +2461,16 @@
    "hour": 8,
    "safe": true,
    "blocked_by": [],
-   "hi": 84.9,
-   "wbgt": 75.5,
-   "gust": 29,
-   "pop": 13,
+   "hi": 86.1,
+   "wbgt": 76.2,
+   "gust": 28,
+   "pop": 12,
    "mm": 0.0,
-   "cape": 410,
+   "cape": 760,
    "uv": 0.1,
    "temp": 82.3,
-   "feels": 78.5,
-   "rh": 84,
+   "feels": 79.7,
+   "rh": 86,
    "have_data": true,
    "band": "caution",
    "aqi": 41,
@@ -1679,16 +2480,16 @@
    "hour": 9,
    "safe": true,
    "blocked_by": [],
-   "hi": 85.8,
-   "wbgt": 76.8,
-   "gust": 29,
-   "pop": 10,
+   "hi": 87.2,
+   "wbgt": 77.5,
+   "gust": 28,
+   "pop": 9,
    "mm": 0.0,
-   "cape": 560,
+   "cape": 1200,
    "uv": 1.0,
    "temp": 82.3,
-   "feels": 80.9,
-   "rh": 79,
+   "feels": 82.5,
+   "rh": 85,
    "have_data": true,
    "band": "caution",
    "aqi": 41,
@@ -1698,16 +2499,16 @@
    "hour": 10,
    "safe": true,
    "blocked_by": [],
-   "hi": 84.8,
-   "wbgt": 76.7,
-   "gust": 28,
+   "hi": 87.1,
+   "wbgt": 77.3,
+   "gust": 31,
    "pop": 3,
    "mm": 0.0,
-   "cape": 530,
+   "cape": 1220,
    "uv": 2.5,
-   "temp": 82.4,
-   "feels": 83.0,
-   "rh": 71,
+   "temp": 82.6,
+   "feels": 81.0,
+   "rh": 82,
    "have_data": true,
    "band": "caution",
    "aqi": 41,
@@ -1717,16 +2518,16 @@
    "hour": 11,
    "safe": true,
    "blocked_by": [],
-   "hi": 87.1,
-   "wbgt": 78.5,
-   "gust": 27,
+   "hi": 86.1,
+   "wbgt": 77.8,
+   "gust": 28,
    "pop": 6,
    "mm": 0.0,
-   "cape": 430,
+   "cape": 1060,
    "uv": 4.5,
-   "temp": 83.9,
+   "temp": 82.4,
    "feels": 83.9,
-   "rh": 63,
+   "rh": 79,
    "have_data": true,
    "band": "caution",
    "aqi": 41,
@@ -1736,16 +2537,16 @@
    "hour": 12,
    "safe": true,
    "blocked_by": [],
-   "hi": 87.0,
-   "wbgt": 79.6,
-   "gust": 26,
+   "hi": 85.9,
+   "wbgt": 78.6,
+   "gust": 27,
    "pop": 2,
    "mm": 0.0,
-   "cape": 780,
+   "cape": 910,
    "uv": 5.8,
-   "temp": 85.4,
-   "feels": 87.4,
-   "rh": 69,
+   "temp": 82.6,
+   "feels": 84.4,
+   "rh": 70,
    "have_data": true,
    "band": "caution",
    "aqi": 41,
@@ -1755,16 +2556,16 @@
    "hour": 13,
    "safe": true,
    "blocked_by": [],
-   "hi": 89.3,
-   "wbgt": 79.8,
-   "gust": 26,
+   "hi": 85.2,
+   "wbgt": 77.3,
+   "gust": 27,
    "pop": 2,
    "mm": 0.0,
-   "cape": 950,
+   "cape": 760,
    "uv": 6.4,
-   "temp": 85.0,
-   "feels": 87.0,
-   "rh": 68,
+   "temp": 82.7,
+   "feels": 81.7,
+   "rh": 69,
    "have_data": true,
    "band": "caution",
    "aqi": 42,
@@ -1774,16 +2575,16 @@
    "hour": 14,
    "safe": true,
    "blocked_by": [],
-   "hi": 89.4,
-   "wbgt": 80.5,
-   "gust": 24,
-   "pop": 18,
+   "hi": 85.9,
+   "wbgt": 78.0,
+   "gust": 28,
+   "pop": 1,
    "mm": 0.0,
-   "cape": 830,
+   "cape": 800,
    "uv": 6.3,
-   "temp": 85.8,
-   "feels": 87.4,
-   "rh": 73,
+   "temp": 82.3,
+   "feels": 83.8,
+   "rh": 72,
    "have_data": true,
    "band": "caution",
    "aqi": 42,
@@ -1793,15 +2594,15 @@
    "hour": 15,
    "safe": true,
    "blocked_by": [],
-   "hi": 89.2,
-   "wbgt": 80.4,
-   "gust": 24,
+   "hi": 85.4,
+   "wbgt": 78.9,
+   "gust": 27,
    "pop": 24,
    "mm": 0.0,
-   "cape": 1120,
+   "cape": 860,
    "uv": 4.7,
-   "temp": 85.5,
-   "feels": 88.9,
+   "temp": 82.1,
+   "feels": 86.1,
    "rh": 70,
    "have_data": true,
    "band": "caution",
@@ -1812,16 +2613,16 @@
    "hour": 16,
    "safe": true,
    "blocked_by": [],
-   "hi": 87.1,
-   "wbgt": 78.6,
-   "gust": 23,
+   "hi": 85.1,
+   "wbgt": 77.9,
+   "gust": 28,
    "pop": 24,
    "mm": 0.0,
-   "cape": 740,
+   "cape": 830,
    "uv": 3.3,
-   "temp": 85.1,
-   "feels": 85.8,
-   "rh": 68,
+   "temp": 82.2,
+   "feels": 83.2,
+   "rh": 72,
    "have_data": true,
    "band": "caution",
    "aqi": 44,
@@ -1831,16 +2632,16 @@
    "hour": 17,
    "safe": true,
    "blocked_by": [],
-   "hi": 86.4,
-   "wbgt": 77.5,
-   "gust": 24,
+   "hi": 85.5,
+   "wbgt": 77.1,
+   "gust": 29,
    "pop": 24,
    "mm": 0.0,
-   "cape": 780,
+   "cape": 760,
    "uv": 1.8,
-   "temp": 83.9,
-   "feels": 83.3,
-   "rh": 87,
+   "temp": 82.2,
+   "feels": 81.2,
+   "rh": 73,
    "have_data": true,
    "band": "caution",
    "aqi": 45,
@@ -1848,20 +2649,18 @@
   },
   {
    "hour": 18,
-   "safe": false,
-   "blocked_by": [
-    "rain"
-   ],
-   "hi": 84.8,
-   "wbgt": 75.8,
-   "gust": 23,
+   "safe": true,
+   "blocked_by": [],
+   "hi": 86.0,
+   "wbgt": 76.7,
+   "gust": 29,
    "pop": 24,
-   "mm": 8.1,
-   "cape": 973,
+   "mm": 0.0,
+   "cape": 830,
    "uv": 0.7,
-   "temp": 81.6,
-   "feels": 81.4,
-   "rh": 87,
+   "temp": 82.0,
+   "feels": 79.5,
+   "rh": 78,
    "have_data": true,
    "band": "caution",
    "aqi": 46,
@@ -1869,20 +2668,18 @@
   },
   {
    "hour": 19,
-   "safe": false,
-   "blocked_by": [
-    "rain"
-   ],
-   "hi": 83.2,
-   "wbgt": 74.5,
-   "gust": 24,
+   "safe": true,
+   "blocked_by": [],
+   "hi": 85.2,
+   "wbgt": 75.5,
+   "gust": 30,
    "pop": 24,
-   "mm": 5.6,
-   "cape": 525,
+   "mm": 0.0,
+   "cape": 480,
    "uv": 0.1,
-   "temp": 80.6,
-   "feels": 78.9,
-   "rh": 77,
+   "temp": 82.0,
+   "feels": 78.0,
+   "rh": 85,
    "have_data": true,
    "band": "caution",
    "aqi": 46,
@@ -1892,16 +2689,16 @@
    "hour": 20,
    "safe": true,
    "blocked_by": [],
-   "hi": 79.7,
-   "wbgt": 73.1,
-   "gust": 23,
+   "hi": 85.1,
+   "wbgt": 75.6,
+   "gust": 31,
    "pop": 24,
    "mm": 0.0,
-   "cape": 248,
+   "cape": 410,
    "uv": 0.0,
-   "temp": 79.4,
-   "feels": 77.4,
-   "rh": 69,
+   "temp": 81.7,
+   "feels": 77.5,
+   "rh": 80,
    "have_data": true,
    "band": "caution",
    "aqi": 46,
@@ -1911,18 +2708,18 @@
    "hour": 21,
    "safe": true,
    "blocked_by": [],
-   "hi": 78.7,
-   "wbgt": 72.1,
-   "gust": 23,
+   "hi": 84.0,
+   "wbgt": 74.7,
+   "gust": 30,
    "pop": 25,
    "mm": 0.0,
-   "cape": 0,
+   "cape": 270,
    "uv": 0.0,
-   "temp": 78.4,
-   "feels": 76.3,
-   "rh": 65,
+   "temp": 81.2,
+   "feels": 76.4,
+   "rh": 80,
    "have_data": true,
-   "band": "low",
+   "band": "caution",
    "aqi": 45,
    "tide_near_high": false
   },
@@ -1930,18 +2727,18 @@
    "hour": 22,
    "safe": true,
    "blocked_by": [],
-   "hi": 78.7,
-   "wbgt": 72.7,
-   "gust": 24,
+   "hi": 83.4,
+   "wbgt": 74.3,
+   "gust": 29,
    "pop": 25,
    "mm": 0.0,
-   "cape": 10,
+   "cape": 150,
    "uv": 0.0,
-   "temp": 78.4,
-   "feels": 77.8,
-   "rh": 69,
+   "temp": 80.9,
+   "feels": 76.6,
+   "rh": 84,
    "have_data": true,
-   "band": "low",
+   "band": "caution",
    "aqi": 44,
    "tide_near_high": false
   },
@@ -1949,18 +2746,18 @@
    "hour": 23,
    "safe": true,
    "blocked_by": [],
-   "hi": 78.6,
-   "wbgt": 73.0,
-   "gust": 23,
+   "hi": 83.2,
+   "wbgt": 74.2,
+   "gust": 28,
    "pop": 25,
    "mm": 0.0,
-   "cape": 70,
+   "cape": 200,
    "uv": 0.0,
-   "temp": 78.2,
-   "feels": 78.6,
-   "rh": 74,
+   "temp": 80.8,
+   "feels": 78.3,
+   "rh": 86,
    "have_data": true,
-   "band": "low",
+   "band": "caution",
    "aqi": 44,
    "tide_near_high": false
   }
@@ -2206,9 +3003,15 @@
   "A forecast can change. Check the report again in the morning."
  ],
  "changes": {
-  "status": "not_applicable",
-  "reason": "The earlier report was built at the same time.",
-  "items": []
+  "status": "ok",
+  "since": "2026-10-18T07:44:28Z",
+  "since_kind": "evening",
+  "items": [
+   {
+    "section": "weather",
+    "text": "The best work window moved from 6 AM to 6 PM to 6 AM to 7 PM."
+   }
+  ]
  },
  "gaps": [
   {

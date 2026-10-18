@@ -113,12 +113,14 @@ export function AlertsPanel({
               </span>
             </span>
           )}
-          {ack(alert.id)}
-          {onClear && alert.kind === "supervisor" ? (
-            <Button variant="quiet" onClick={() => onClear(alert.id)}>
-              Clear
-            </Button>
-          ) : null}
+          <span className={styles.alertActions}>
+            {ack(alert.id)}
+            {onClear && alert.kind === "supervisor" ? (
+              <Button variant="quiet" onClick={() => onClear(alert.id)}>
+                Clear
+              </Button>
+            ) : null}
+          </span>
         </div>
       ))}
     </>

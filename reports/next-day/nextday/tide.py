@@ -48,7 +48,8 @@ def fetch_hilo(f: Fetcher, station: str, for_date: str) -> list[dict]:
 
 def fetch_datums(f: Fetcher, station: str) -> dict[str, float]:
     data = f.get_json(f"coops_datums_{station}", f"{MDAPI}/{station}/datums.json", {"units": "metric"})
-    return {d["name"]: float(d["value"]) for d in data.get("datums", []) if d.get("value") is not None}
+    # MDAPI answers "datums": null for a station that publishes none (e.g. 8727386), so .get's default is not enough
+    return {d["name"]: float(d["value"]) for d in data.get("datums") or [] if d.get("value") is not None}
 
 
 def to_navd88(v_mllw: float, datums: dict[str, float]) -> float | None:
