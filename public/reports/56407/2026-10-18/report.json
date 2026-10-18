@@ -1,0 +1,2105 @@
+{
+ "schema_version": 1,
+ "meta": {
+  "site": {
+   "eia": "56407",
+   "name": "West County Energy Center",
+   "latitude": 26.6986,
+   "longitude": -80.3747,
+   "timezone": "America/New_York",
+   "utility": "Florida Power & Light Co",
+   "plant_type": "Natural Gas Fired Combined Cycle"
+  },
+  "for_date": "2026-10-18",
+  "kind": "morning",
+  "generated_at": "2026-10-18T07:38:21Z",
+  "snapshot": "20261018T073821Z",
+  "sources": {
+   "nifc_fires": {
+    "url": "https://services3.arcgis.com/T4QMspbfLg3qTGWY/arcgis/rest/services/WFIGS_Incident_Locations_Current/FeatureServer/0/query?where=IncidentTypeCategory%3D%27WF%27+AND+%28PercentContained+IS+NULL+OR+PercentContained%3C100%29&outFields=IncidentName%2CIncidentSize%2CPercentContained&outSR=4326&f=json&resultRecordCount=2000",
+    "fetched_at": "2026-10-18T07:38:21Z"
+   },
+   "openmeteo_hourly_56407": {
+    "url": "https://api.open-meteo.com/v1/forecast?latitude=26.6986%2C26.6986%2C26.8542%2C26.8542%2C26.6986%2C26.5430%2C26.5430&longitude=-80.3747%2C-80.1736%2C-80.2741%2C-80.4753%2C-80.5758%2C-80.4753%2C-80.2741&hourly=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cwind_speed_10m%2Cwind_gusts_10m%2Cshortwave_radiation%2Cprecipitation%2Cprecipitation_probability%2Ccape%2Cuv_index&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=mm&timezone=UTC&past_days=1&forecast_days=4",
+    "fetched_at": "2026-10-18T07:38:22Z"
+   },
+   "openmeteo_sun_56407": {
+    "url": "https://api.open-meteo.com/v1/forecast?latitude=26.6986&longitude=-80.3747&daily=sunrise%2Csunset&timezone=America%2FNew_York&forecast_days=4",
+    "fetched_at": "2026-10-18T07:38:22Z"
+   },
+   "nws_alerts_56407": {
+    "url": "https://api.weather.gov/alerts/active?point=26.6986%2C-80.3747",
+    "fetched_at": "2026-10-18T07:38:22Z"
+   },
+   "nws_point_56407": {
+    "url": "https://api.weather.gov/points/26.6986,-80.3747",
+    "fetched_at": "2026-10-18T07:38:23Z"
+   },
+   "nws_forecast_56407": {
+    "url": "https://api.weather.gov/gridpoints/MFL/98,90/forecast",
+    "fetched_at": "2026-10-18T07:38:23Z"
+   },
+   "openmeteo_air_56407": {
+    "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=26.6986&longitude=-80.3747&hourly=us_aqi%2Cpm2_5%2Cpm10&timezone=UTC&forecast_days=4&past_days=1",
+    "fetched_at": "2026-10-18T07:38:23Z"
+   },
+   "nld_56407_leveed_areas": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (leveed_areas)",
+    "fetched_at": "2026-10-18T07:38:24Z"
+   },
+   "nld_56407_alignment_lines": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (alignment_lines)",
+    "fetched_at": "2026-10-18T07:38:25Z"
+   },
+   "nld_56407_floodwalls": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (floodwalls)",
+    "fetched_at": "2026-10-18T07:38:25Z"
+   },
+   "nld_56407_closure_structures": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (closure_structures)",
+    "fetched_at": "2026-10-18T07:38:25Z"
+   },
+   "nld_56407_pump_stations": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (pump_stations)",
+    "fetched_at": "2026-10-18T07:38:25Z"
+   },
+   "nld2_inspection_rating": {
+    "url": "https://levees.sec.usace.army.mil/api-local/system-categories/inspection-rating",
+    "fetched_at": "2026-10-18T07:38:26Z"
+   },
+   "overpass_roads_56407": {
+    "url": "https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A60%5D%3Bway%28around%3A2500%2C26.69860%2C-80.37470%29%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%7Cunclassified%7Cresidential%7Cservice%7Ctrack%7Croad%7Cliving_street%7Cmotorway_link%7Ctrunk_link%7Cprimary_link%7Csecondary_link%7Ctertiary_link%29%24%22%5D%5B%22access%22%21~%22%5E%28no%29%24%22%5D%3Bout+geom%3B",
+    "fetched_at": "2026-10-18T07:39:54Z"
+   },
+   "inat_taxon_Alligator mississippiensis": {
+    "url": "https://api.inaturalist.org/v1/taxa?q=Alligator+mississippiensis&per_page=5&is_active=true",
+    "fetched_at": "2026-10-18T07:39:55Z"
+   },
+   "inat_taxon_Crocodylus acutus": {
+    "url": "https://api.inaturalist.org/v1/taxa?q=Crocodylus+acutus&per_page=5&is_active=true",
+    "fetched_at": "2026-10-18T07:39:55Z"
+   },
+   "inat_taxon_Crotalus": {
+    "url": "https://api.inaturalist.org/v1/taxa?q=Crotalus&per_page=5&is_active=true",
+    "fetched_at": "2026-10-18T07:39:55Z"
+   },
+   "inat_taxon_Agkistrodon": {
+    "url": "https://api.inaturalist.org/v1/taxa?q=Agkistrodon&per_page=5&is_active=true",
+    "fetched_at": "2026-10-18T07:39:55Z"
+   },
+   "inat_taxon_Micrurus": {
+    "url": "https://api.inaturalist.org/v1/taxa?q=Micrurus&per_page=5&is_active=true",
+    "fetched_at": "2026-10-18T07:39:56Z"
+   },
+   "inat_taxon_Sistrurus": {
+    "url": "https://api.inaturalist.org/v1/taxa?q=Sistrurus&per_page=5&is_active=true",
+    "fetched_at": "2026-10-18T07:39:56Z"
+   },
+   "inat_taxon_Ursus americanus": {
+    "url": "https://api.inaturalist.org/v1/taxa?q=Ursus+americanus&per_page=5&is_active=true",
+    "fetched_at": "2026-10-18T07:39:56Z"
+   },
+   "inat_recent_56407": {
+    "url": "https://api.inaturalist.org/v1/observations?lat=26.6986&lng=-80.3747&radius=10&taxon_id=26159%2C26085%2C30692%2C30668%2C30493%2C30979%2C41638&quality_grade=research&d1=2026-09-18&per_page=200&order_by=observed_on&order=desc",
+    "fetched_at": "2026-10-18T07:39:56Z"
+   },
+   "inat_season_56407_alligator": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=26.6986&lng=-80.3747&radius=25&taxon_id=26159&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T07:39:57Z"
+   },
+   "inat_season_56407_crocodile": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=26.6986&lng=-80.3747&radius=25&taxon_id=26085&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T07:39:58Z"
+   },
+   "inat_season_56407_snakes": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=26.6986&lng=-80.3747&radius=25&taxon_id=30692%2C30668%2C30493%2C30979&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T07:39:58Z"
+   },
+   "inat_season_56407_bear": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=26.6986&lng=-80.3747&radius=25&taxon_id=41638&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T07:39:59Z"
+   }
+  },
+  "label": "Decision support from forecasts and models. It does not clear any task, route or crossing as safe."
+ },
+ "weather": {
+  "status": "ok",
+  "hours": [
+   {
+    "hour": 0,
+    "pop": 35,
+    "cape": 60,
+    "gust": 31,
+    "mm": 0.0
+   },
+   {
+    "hour": 1,
+    "pop": 33,
+    "cape": 220,
+    "gust": 32,
+    "mm": 0.4
+   },
+   {
+    "hour": 2,
+    "pop": 31,
+    "cape": 660,
+    "gust": 31,
+    "mm": 0.4
+   },
+   {
+    "hour": 3,
+    "pop": 33,
+    "cape": 530,
+    "gust": 32,
+    "mm": 1.8
+   },
+   {
+    "hour": 4,
+    "pop": 35,
+    "cape": 480,
+    "gust": 33,
+    "mm": 5.4
+   },
+   {
+    "hour": 5,
+    "pop": 26,
+    "cape": 250,
+    "gust": 28,
+    "mm": 0.0
+   },
+   {
+    "hour": 6,
+    "pop": 27,
+    "cape": 280,
+    "gust": 29,
+    "mm": 0.0
+   },
+   {
+    "hour": 7,
+    "pop": 24,
+    "cape": 80,
+    "gust": 30,
+    "mm": 0.0
+   },
+   {
+    "hour": 8,
+    "pop": 18,
+    "cape": 40,
+    "gust": 29,
+    "mm": 0.0
+   },
+   {
+    "hour": 9,
+    "pop": 17,
+    "cape": 170,
+    "gust": 30,
+    "mm": 0.0
+   },
+   {
+    "hour": 10,
+    "pop": 16,
+    "cape": 240,
+    "gust": 29,
+    "mm": 0.0
+   },
+   {
+    "hour": 11,
+    "pop": 19,
+    "cape": 240,
+    "gust": 26,
+    "mm": 0.0
+   },
+   {
+    "hour": 12,
+    "pop": 19,
+    "cape": 280,
+    "gust": 24,
+    "mm": 0.0
+   },
+   {
+    "hour": 13,
+    "pop": 19,
+    "cape": 100,
+    "gust": 23,
+    "mm": 0.0
+   },
+   {
+    "hour": 14,
+    "pop": 16,
+    "cape": 20,
+    "gust": 24,
+    "mm": 0.0
+   },
+   {
+    "hour": 15,
+    "pop": 16,
+    "cape": 50,
+    "gust": 24,
+    "mm": 0.0
+   },
+   {
+    "hour": 16,
+    "pop": 12,
+    "cape": 350,
+    "gust": 26,
+    "mm": 0.0
+   },
+   {
+    "hour": 17,
+    "pop": 9,
+    "cape": 350,
+    "gust": 26,
+    "mm": 0.0
+   },
+   {
+    "hour": 18,
+    "pop": 13,
+    "cape": 450,
+    "gust": 28,
+    "mm": 0.0
+   },
+   {
+    "hour": 19,
+    "pop": 14,
+    "cape": 90,
+    "gust": 29,
+    "mm": 0.0
+   },
+   {
+    "hour": 20,
+    "pop": 12,
+    "cape": 300,
+    "gust": 26,
+    "mm": 0.0
+   },
+   {
+    "hour": 21,
+    "pop": 11,
+    "cape": 500,
+    "gust": 23,
+    "mm": 0.0
+   },
+   {
+    "hour": 22,
+    "pop": 15,
+    "cape": 620,
+    "gust": 24,
+    "mm": 0.0
+   },
+   {
+    "hour": 23,
+    "pop": 4,
+    "cape": 500,
+    "gust": 25,
+    "mm": 0.0
+   }
+  ],
+  "limits": {
+   "wbgt": 88,
+   "gust": 40,
+   "pop": 60,
+   "mm": 1
+  },
+  "work_window": {
+   "start": "06:00",
+   "end": "19:00"
+  },
+  "blocked_runs": [],
+  "alerts": [],
+  "alerts_status": "ok",
+  "alerts_reason": null,
+  "text": [
+   {
+    "name": "Overnight",
+    "daytime": false,
+    "starts": "2026-10-18T03:00:00-04:00",
+    "temperature_f": 72,
+    "short": "Slight Chance Showers And Thunderstorms",
+    "detail": "A slight chance of showers and thunderstorms before 4am. Mostly cloudy, with a low around 72. North wind around 15 mph, with gusts as high as 28 mph. Chance of precipitation is 20%. New rainfall amounts less than a tenth of an inch possible."
+   },
+   {
+    "name": "Sunday",
+    "daytime": true,
+    "starts": "2026-10-18T06:00:00-04:00",
+    "temperature_f": 82,
+    "short": "Slight Chance Showers And Thunderstorms",
+    "detail": "A slight chance of showers and thunderstorms between 8am and 4pm. Partly sunny, with a high near 82. Northeast wind 15 to 22 mph, with gusts as high as 33 mph. Chance of precipitation is 20%. New rainfall amounts less than a tenth of an inch possible."
+   },
+   {
+    "name": "Sunday Night",
+    "daytime": false,
+    "starts": "2026-10-18T18:00:00-04:00",
+    "temperature_f": 72,
+    "short": "Slight Chance Showers And Thunderstorms then Partly Cloudy",
+    "detail": "A slight chance of showers and thunderstorms between 7pm and 8pm. Partly cloudy, with a low around 72. Northeast wind 12 to 20 mph, with gusts as high as 31 mph. Chance of precipitation is 20%. New rainfall amounts less than a tenth of an inch possible."
+   }
+  ],
+  "text_reason": null,
+  "sun": {
+   "sunrise": "07:22",
+   "sunset": "18:50"
+  }
+ },
+ "heat": {
+  "status": "ok",
+  "source": {
+   "table": "National Weather Service heat index categories",
+   "url": "https://www.weather.gov/safety/heat-index",
+   "retrieved": "2026-10-18",
+   "verified": "Chart read by hand: the chart is an image and could not be machine-read. Confirm the boundaries and wording against the NWS chart before relying on them.",
+   "osha": [
+    "https://www.osha.gov/heat-exposure/hazards",
+    "https://www.osha.gov/emergency-preparedness/guides/heat-stress"
+   ]
+  },
+  "bands": [
+   {
+    "id": "low",
+    "name": "Below caution",
+    "min": null,
+    "water_every_min": null,
+    "rest": null,
+    "effects": null,
+    "action": "Below the heat index of 80 F where OSHA's extra heat precautions start. Drink water as usual."
+   },
+   {
+    "id": "caution",
+    "name": "Caution",
+    "min": 80,
+    "water_every_min": 15,
+    "rest": "Rest breaks in the shade.",
+    "effects": "Fatigue is possible with long exposure or activity.",
+    "action": "Extra heat precautions apply from 80 F (OSHA). Drink water about every 15 minutes. Take rest breaks in the shade."
+   },
+   {
+    "id": "extreme_caution",
+    "name": "Extreme caution",
+    "min": 91,
+    "water_every_min": 15,
+    "rest": "Frequent rest breaks in the shade.",
+    "effects": "Heat cramps, heat exhaustion or heat stroke are possible with long exposure or activity.",
+    "action": "Drink water about every 15 minutes. Take frequent rest breaks in the shade. Watch the crew for heat illness signs."
+   },
+   {
+    "id": "danger",
+    "name": "Danger",
+    "min": 103,
+    "water_every_min": 15,
+    "rest": "Frequent rest breaks in the shade.",
+    "effects": "Heat cramps and heat exhaustion are likely. Heat stroke is probable with continued activity.",
+    "action": "Drink water about every 15 minutes. Take frequent rest breaks in the shade. Do the heaviest work in the cooler hours."
+   },
+   {
+    "id": "extreme_danger",
+    "name": "Extreme danger",
+    "min": 125,
+    "water_every_min": 15,
+    "rest": "Frequent rest breaks in the shade.",
+    "effects": "Heat stroke is highly likely.",
+    "action": "Move work out of these hours where you can. Where you cannot, drink water about every 15 minutes and take frequent rest breaks in the shade."
+   }
+  ],
+  "wbgt_tiers": [
+   {
+    "min": 90,
+    "name": "stop heavy work"
+   },
+   {
+    "min": 88,
+    "name": "danger, limit heavy work"
+   },
+   {
+    "min": 85,
+    "name": "scheduled rest breaks"
+   },
+   {
+    "min": 82,
+    "name": "caution"
+   }
+  ],
+  "hours": [
+   {
+    "hour": 0,
+    "hi": 73.7,
+    "feels": 76.8,
+    "temp": 73.1,
+    "rh": 91,
+    "wbgt": 71.7,
+    "band": "low",
+    "band_full_sun_max": "caution",
+    "hi_full_sun_max": 89,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 1,
+    "hi": 74.5,
+    "feels": 77.3,
+    "temp": 73.8,
+    "rh": 94,
+    "wbgt": 72.7,
+    "band": "low",
+    "band_full_sun_max": "caution",
+    "hi_full_sun_max": 90,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 2,
+    "hi": 75.2,
+    "feels": 79.3,
+    "temp": 74.5,
+    "rh": 95,
+    "wbgt": 73.4,
+    "band": "low",
+    "band_full_sun_max": "caution",
+    "hi_full_sun_max": 90,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 3,
+    "hi": 75.0,
+    "feels": 78.0,
+    "temp": 74.3,
+    "rh": 97,
+    "wbgt": 73.0,
+    "band": "low",
+    "band_full_sun_max": "caution",
+    "hi_full_sun_max": 90,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 4,
+    "hi": 74.9,
+    "feels": 78.9,
+    "temp": 74.2,
+    "rh": 93,
+    "wbgt": 73.1,
+    "band": "low",
+    "band_full_sun_max": "caution",
+    "hi_full_sun_max": 90,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 5,
+    "hi": 74.7,
+    "feels": 79.4,
+    "temp": 74.1,
+    "rh": 90,
+    "wbgt": 72.4,
+    "band": "low",
+    "band_full_sun_max": "caution",
+    "hi_full_sun_max": 90,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 6,
+    "hi": 74.5,
+    "feels": 78.8,
+    "temp": 73.9,
+    "rh": 87,
+    "wbgt": 71.8,
+    "band": "low",
+    "band_full_sun_max": "caution",
+    "hi_full_sun_max": 90,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 7,
+    "hi": 74.4,
+    "feels": 76.8,
+    "temp": 73.9,
+    "rh": 85,
+    "wbgt": 71.1,
+    "band": "low",
+    "band_full_sun_max": "caution",
+    "hi_full_sun_max": 89,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 8,
+    "hi": 74.0,
+    "feels": 76.1,
+    "temp": 73.5,
+    "rh": 84,
+    "wbgt": 71.0,
+    "band": "low",
+    "band_full_sun_max": "caution",
+    "hi_full_sun_max": 89,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 9,
+    "hi": 76.2,
+    "feels": 78.5,
+    "temp": 75.6,
+    "rh": 82,
+    "wbgt": 73.5,
+    "band": "low",
+    "band_full_sun_max": "extreme_caution",
+    "hi_full_sun_max": 91,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 10,
+    "hi": 78.1,
+    "feels": 79.4,
+    "temp": 77.7,
+    "rh": 78,
+    "wbgt": 75.2,
+    "band": "low",
+    "band_full_sun_max": "extreme_caution",
+    "hi_full_sun_max": 93,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 11,
+    "hi": 79.5,
+    "feels": 81.0,
+    "temp": 79.2,
+    "rh": 74,
+    "wbgt": 76.6,
+    "band": "caution",
+    "band_full_sun_max": "extreme_caution",
+    "hi_full_sun_max": 95,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 12,
+    "hi": 82.3,
+    "feels": 82.8,
+    "temp": 79.9,
+    "rh": 72,
+    "wbgt": 77.5,
+    "band": "caution",
+    "band_full_sun_max": "extreme_caution",
+    "hi_full_sun_max": 97,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 13,
+    "hi": 82.5,
+    "feels": 83.2,
+    "temp": 81.0,
+    "rh": 68,
+    "wbgt": 77.4,
+    "band": "caution",
+    "band_full_sun_max": "extreme_caution",
+    "hi_full_sun_max": 98,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 14,
+    "hi": 83.9,
+    "feels": 83.5,
+    "temp": 81.9,
+    "rh": 64,
+    "wbgt": 77.4,
+    "band": "caution",
+    "band_full_sun_max": "extreme_caution",
+    "hi_full_sun_max": 99,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 15,
+    "hi": 83.5,
+    "feels": 82.6,
+    "temp": 81.7,
+    "rh": 64,
+    "wbgt": 76.8,
+    "band": "caution",
+    "band_full_sun_max": "extreme_caution",
+    "hi_full_sun_max": 99,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 16,
+    "hi": 83.2,
+    "feels": 81.7,
+    "temp": 81.2,
+    "rh": 71,
+    "wbgt": 76.4,
+    "band": "caution",
+    "band_full_sun_max": "extreme_caution",
+    "hi_full_sun_max": 98,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 17,
+    "hi": 82.2,
+    "feels": 80.6,
+    "temp": 79.9,
+    "rh": 71,
+    "wbgt": 75.5,
+    "band": "caution",
+    "band_full_sun_max": "extreme_caution",
+    "hi_full_sun_max": 97,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 18,
+    "hi": 77.7,
+    "feels": 80.0,
+    "temp": 77.3,
+    "rh": 76,
+    "wbgt": 73.6,
+    "band": "low",
+    "band_full_sun_max": "extreme_caution",
+    "hi_full_sun_max": 93,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 19,
+    "hi": 75.0,
+    "feels": 75.6,
+    "temp": 74.8,
+    "rh": 77,
+    "wbgt": 70.0,
+    "band": "low",
+    "band_full_sun_max": "caution",
+    "hi_full_sun_max": 90,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 20,
+    "hi": 74.8,
+    "feels": 77.4,
+    "temp": 74.5,
+    "rh": 84,
+    "wbgt": 70.2,
+    "band": "low",
+    "band_full_sun_max": "caution",
+    "hi_full_sun_max": 90,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 21,
+    "hi": 74.6,
+    "feels": 77.8,
+    "temp": 74.2,
+    "rh": 88,
+    "wbgt": 71.0,
+    "band": "low",
+    "band_full_sun_max": "caution",
+    "hi_full_sun_max": 90,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 22,
+    "hi": 74.6,
+    "feels": 80.5,
+    "temp": 74.2,
+    "rh": 92,
+    "wbgt": 72.2,
+    "band": "low",
+    "band_full_sun_max": "caution",
+    "hi_full_sun_max": 90,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 23,
+    "hi": 74.2,
+    "feels": 79.1,
+    "temp": 73.6,
+    "rh": 88,
+    "wbgt": 71.6,
+    "band": "low",
+    "band_full_sun_max": "caution",
+    "hi_full_sun_max": 89,
+    "wbgt_tier": "below caution"
+   }
+  ],
+  "peak": {
+   "hour": 14,
+   "hi": 83.9,
+   "band": "caution",
+   "wbgt": 77.4,
+   "hi_full_sun_max": 99
+  },
+  "hottest_window": {
+   "start": "12:00",
+   "end": "18:00"
+  },
+  "workday_hours_by_band": {
+   "low": 6,
+   "caution": 7
+  },
+  "water_plan": [
+   {
+    "start": "06:00",
+    "end": "11:00",
+    "band": "low",
+    "name": "Below caution",
+    "water_every_min": null,
+    "rest": null,
+    "action": "Below the heat index of 80 F where OSHA's extra heat precautions start. Drink water as usual."
+   },
+   {
+    "start": "11:00",
+    "end": "18:00",
+    "band": "caution",
+    "name": "Caution",
+    "water_every_min": 15,
+    "rest": "Rest breaks in the shade.",
+    "action": "Extra heat precautions apply from 80 F (OSHA). Drink water about every 15 minutes. Take rest breaks in the shade."
+   },
+   {
+    "start": "18:00",
+    "end": "19:00",
+    "band": "low",
+    "name": "Below caution",
+    "water_every_min": null,
+    "rest": null,
+    "action": "Below the heat index of 80 F where OSHA's extra heat precautions start. Drink water as usual."
+   }
+  ],
+  "acclimatization": {
+   "source": {
+    "urls": [
+     "https://www.cdc.gov/niosh/heat-stress/recommendations/acclimatization.html",
+     "https://www.osha.gov/heat-exposure/protecting-new-workers",
+     "https://www.osha.gov/heat-exposure/hazards"
+    ],
+    "retrieved": "2026-10-18",
+    "verified": "Taken from NIOSH and OSHA pages as summarised by a search tool on 2026-10-18. Confirm against the pages before relying on it."
+   },
+   "who": "OSHA treats workers as unacclimatized when they have been on the job less than 1 to 2 weeks. NIOSH treats workers back after an absence of more than a week as new.",
+   "new": {
+    "label": "New workers",
+    "unit": "percent of the usual time in the heat",
+    "schedule": [
+     {
+      "day": 1,
+      "max_percent": 20
+     },
+     {
+      "day": 2,
+      "max_percent": 40
+     },
+     {
+      "day": 3,
+      "max_percent": 60
+     },
+     {
+      "day": 4,
+      "max_percent": 80
+     },
+     {
+      "day": 5,
+      "max_percent": 100
+     }
+    ]
+   },
+   "experienced": {
+    "label": "Experienced workers, first days back",
+    "unit": "percent of the usual time in the heat",
+    "schedule": [
+     {
+      "day": 1,
+      "max_percent": 50
+     },
+     {
+      "day": 2,
+      "max_percent": 60
+     },
+     {
+      "day": 3,
+      "max_percent": 80
+     },
+     {
+      "day": 4,
+      "max_percent": 100
+     }
+    ]
+   },
+   "notes": [
+    "New workers start at no more than 20% of the usual time in the heat on day 1 and add no more than 20% each day.",
+    "Supervise new workers closely for the first 14 days or until they are fully acclimatized.",
+    "In a sudden heat wave, even experienced workers start the first hot day at 50% of the usual time.",
+    "For intense work, take frequent rest breaks and do the work in the cooler part of the day (OSHA)."
+   ]
+  },
+  "notes": [
+   "The heat index assumes shade. In full sun it can be up to 15 F higher (NWS), so the sun column shows the upper case.",
+   "Hourly values are the highest of seven forecast points within 20 km of the site.",
+   "WBGT is an approximation and its tiers are not verified against TB MED 507.",
+   "OSHA treats workers as unacclimatized when they have been on the job less than 1 to 2 weeks. Use the acclimatization switch."
+  ]
+ },
+ "hazard_index": {
+  "status": "ok",
+  "score": 0.1,
+  "tier": "low",
+  "top_driver": "flood",
+  "top_driver_text": "flash flood, flood or heavy rain",
+  "probabilities": {
+   "heat": 0.0002,
+   "storm": 0.0005,
+   "flood": 0.0021,
+   "fire": 0.0
+  },
+  "risk_preview": 2.6,
+  "rule_max_forecast": 2.6,
+  "drift_flags": [],
+  "inputs": {
+   "wbgt_max_f": 76.7,
+   "heat_index_max_f": 83.6,
+   "gust_max_mph": 29.8,
+   "rain_24h_mm": 0.0,
+   "rain_prev_7d_mm": 14.7
+  },
+  "model_version": "hazidx-0.1.0+2018-2022.23ed6848",
+  "forecast_model": "best_match",
+  "run_at_utc": "2026-10-18T04:24:29Z",
+  "horizon": "now",
+  "source_file": "ml_scores_20261018T042429Z.csv",
+  "caveats": [
+   "The score is the chance that NOAA records a severe event of that kind near the plant, weighted by how often OSHA injuries follow. It is not a count of injuries.",
+   "The model was trained on 60 power plants and on reanalysis weather, then scored on live forecasts.",
+   "In tests the fire model did not beat a simple seasonal average. Do not act on a fire driver alone."
+  ]
+ },
+ "mud": {
+  "status": "ok",
+  "label": "STRAM-inspired, uncalibrated. Prioritizes inspection; does not certify a crossing is safe.",
+  "model_version": "stram-inspired-nrcs-0.1",
+  "generated_at": "2026-10-18T03:27:22+00:00",
+  "horizon": {
+   "key": "d1",
+   "date": "2026-10-18",
+   "label": "Tomorrow Sun Oct 18",
+   "rain_in": 0.867,
+   "soil_moisture": 0.224
+  },
+  "passes": 1,
+  "default_equipment": "road_truck",
+  "thresholds_in": {
+   "inspect": 4.0,
+   "hold": 8.0
+  },
+  "equipment": [
+   {
+    "key": "road_truck",
+    "label": "Road trucks: bucket/line, dump, lowboy",
+    "score": 6.5,
+    "score_p90": 6.5,
+    "worst_flag": "hold",
+    "worst_segment": "11189272-0",
+    "flagged_route_ft": 177019,
+    "route_ft": 179975,
+    "inspect_acres": 62.2,
+    "hold_acres": 791.8
+   },
+   {
+    "key": "excavator",
+    "label": "Tracked excavator (30 t)",
+    "score": 6.5,
+    "score_p90": 6.5,
+    "worst_flag": "hold",
+    "worst_segment": "11189272-0",
+    "flagged_route_ft": 179975,
+    "route_ft": 179975,
+    "inspect_acres": 711.9,
+    "hold_acres": 145.7
+   },
+   {
+    "key": "crawler_crane",
+    "label": "Crawler crane (100 t)",
+    "score": 6.5,
+    "score_p90": 6.5,
+    "worst_flag": "hold",
+    "worst_segment": "11189272-0",
+    "flagged_route_ft": 179975,
+    "route_ft": 179975,
+    "inspect_acres": 711.9,
+    "hold_acres": 145.7
+   }
+  ],
+  "segment_counts": {
+   "ok": 12,
+   "inspect": 41,
+   "hold": 556
+  },
+  "locally_validated": false,
+  "routes_file": "2026-10-18/mud_routes.geojson",
+  "caveats": [
+   "STRAM-inspired, uncalibrated. Prioritizes inspection; does not certify a crossing is safe.",
+   "1 pass is below the study's observed range (2-80 passes): mild extrapolation of Eq 5 (Z = a/NCI_adj).",
+   "Only unpaved ways in OpenStreetMap are rated. Paved roads and private haul roads are not."
+  ]
+ },
+ "air": {
+  "status": "ok",
+  "hours": [
+   {
+    "hour": 0,
+    "us_aqi": 25,
+    "pm2_5": 3.9,
+    "pm10": 4.9
+   },
+   {
+    "hour": 1,
+    "us_aqi": 25,
+    "pm2_5": 3.6,
+    "pm10": 4.8
+   },
+   {
+    "hour": 2,
+    "us_aqi": 26,
+    "pm2_5": 3.4,
+    "pm10": 4.7
+   },
+   {
+    "hour": 3,
+    "us_aqi": 28,
+    "pm2_5": 3.3,
+    "pm10": 4.6
+   },
+   {
+    "hour": 4,
+    "us_aqi": 29,
+    "pm2_5": 3.3,
+    "pm10": 4.8
+   },
+   {
+    "hour": 5,
+    "us_aqi": 29,
+    "pm2_5": 3.1,
+    "pm10": 4.5
+   },
+   {
+    "hour": 6,
+    "us_aqi": 30,
+    "pm2_5": 2.8,
+    "pm10": 4.2
+   },
+   {
+    "hour": 7,
+    "us_aqi": 30,
+    "pm2_5": 2.9,
+    "pm10": 4.2
+   },
+   {
+    "hour": 8,
+    "us_aqi": 30,
+    "pm2_5": 3.0,
+    "pm10": 4.5
+   },
+   {
+    "hour": 9,
+    "us_aqi": 30,
+    "pm2_5": 3.1,
+    "pm10": 4.6
+   },
+   {
+    "hour": 10,
+    "us_aqi": 30,
+    "pm2_5": 3.4,
+    "pm10": 5.2
+   },
+   {
+    "hour": 11,
+    "us_aqi": 30,
+    "pm2_5": 5.3,
+    "pm10": 8.4
+   },
+   {
+    "hour": 12,
+    "us_aqi": 30,
+    "pm2_5": 6.2,
+    "pm10": 10.0
+   },
+   {
+    "hour": 13,
+    "us_aqi": 31,
+    "pm2_5": 6.6,
+    "pm10": 10.6
+   },
+   {
+    "hour": 14,
+    "us_aqi": 33,
+    "pm2_5": 7.1,
+    "pm10": 11.4
+   },
+   {
+    "hour": 15,
+    "us_aqi": 34,
+    "pm2_5": 7.5,
+    "pm10": 12.1
+   },
+   {
+    "hour": 16,
+    "us_aqi": 35,
+    "pm2_5": 8.4,
+    "pm10": 13.7
+   },
+   {
+    "hour": 17,
+    "us_aqi": 36,
+    "pm2_5": 8.8,
+    "pm10": 14.4
+   },
+   {
+    "hour": 18,
+    "us_aqi": 38,
+    "pm2_5": 9.1,
+    "pm10": 14.7
+   },
+   {
+    "hour": 19,
+    "us_aqi": 39,
+    "pm2_5": 8.6,
+    "pm10": 13.9
+   },
+   {
+    "hour": 20,
+    "us_aqi": 39,
+    "pm2_5": 8.8,
+    "pm10": 14.3
+   },
+   {
+    "hour": 21,
+    "us_aqi": 40,
+    "pm2_5": 9.1,
+    "pm10": 14.8
+   },
+   {
+    "hour": 22,
+    "us_aqi": 40,
+    "pm2_5": 9.4,
+    "pm10": 15.3
+   },
+   {
+    "hour": 23,
+    "us_aqi": 40,
+    "pm2_5": 9.5,
+    "pm10": 15.5
+   }
+  ],
+  "peak": {
+   "hour": 18,
+   "us_aqi": 38,
+   "pm2_5": 9.1,
+   "band": {
+    "min": 0,
+    "name": "Good",
+    "meaning": "Air quality is satisfactory."
+   }
+  },
+  "bands": [
+   {
+    "min": 0,
+    "name": "Good",
+    "meaning": "Air quality is satisfactory."
+   },
+   {
+    "min": 51,
+    "name": "Moderate",
+    "meaning": "Air quality is acceptable. Some people who are unusually sensitive may be affected."
+   },
+   {
+    "min": 101,
+    "name": "Unhealthy for sensitive groups",
+    "meaning": "People with lung or heart disease, older adults and children are the most at risk."
+   },
+   {
+    "min": 151,
+    "name": "Unhealthy",
+    "meaning": "Everyone may begin to have health effects. Sensitive groups may have more serious effects."
+   },
+   {
+    "min": 201,
+    "name": "Very unhealthy",
+    "meaning": "Everyone may have health effects. Sensitive groups may have serious effects."
+   },
+   {
+    "min": 301,
+    "name": "Hazardous",
+    "meaning": "Everyone may have serious health effects."
+   }
+  ],
+  "alerts": [],
+  "wildfire": {
+   "nearest_mi": 361.1,
+   "nearest_name": "IAO",
+   "within_25_mi": 0
+  },
+  "hazard_index_fire_probability": 0.0,
+  "notes": [
+   "Air quality is a model forecast, not a sensor reading."
+  ],
+  "source": {
+   "name": "Open-Meteo air quality (CAMS) and the AirNow AQI scale",
+   "url": "https://open-meteo.com/en/docs/air-quality-api"
+  }
+ },
+ "routing": {
+  "status": "ok",
+  "graph_file": "2026-10-18/road_graph.json",
+  "edges": 2739,
+  "rated_edges": 824,
+  "radius_m": 2500,
+  "tide_wet_edges": 0,
+  "caveats": [
+   "Roads come from OpenStreetMap. Private haul roads, gates, closures, weight limits and truck heights are often missing.",
+   "Only unpaved ways are rated by the mud model. A detour can use paved roads that are not rated.",
+   "A detour is a suggestion from map data. Check it on the ground."
+  ],
+  "source": {
+   "name": "OpenStreetMap contributors",
+   "url": "https://www.openstreetmap.org/copyright"
+  }
+ },
+ "wildlife": {
+  "status": "ok",
+  "radius_km": 10,
+  "days": 30,
+  "season_radius_km": 25,
+  "recent_total": 0,
+  "recent_shown": 0,
+  "obscured_not_drawn": 0,
+  "groups": [
+   {
+    "id": "alligator",
+    "label": "American alligator",
+    "recent": 0,
+    "season": {
+     "label": "few reports",
+     "month": 10,
+     "this_month": 21,
+     "year_total": 622,
+     "months": [
+      95,
+      81,
+      111,
+      92,
+      39,
+      32,
+      31,
+      13,
+      21,
+      21,
+      37,
+      49
+     ]
+    }
+   },
+   {
+    "id": "crocodile",
+    "label": "American crocodile",
+    "recent": 0,
+    "season": {
+     "label": "too few records",
+     "month": 10,
+     "this_month": 0,
+     "year_total": 1,
+     "months": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   {
+    "id": "snakes",
+    "label": "Venomous snakes",
+    "recent": 0,
+    "season": {
+     "label": "many reports",
+     "month": 10,
+     "this_month": 9,
+     "year_total": 63,
+     "months": [
+      3,
+      6,
+      5,
+      3,
+      4,
+      6,
+      3,
+      4,
+      12,
+      9,
+      6,
+      2
+     ]
+    }
+   },
+   {
+    "id": "bear",
+    "label": "American black bear",
+    "recent": 0,
+    "season": {
+     "label": "too few records",
+     "month": 10,
+     "this_month": 1,
+     "year_total": 2,
+     "months": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      1
+     ]
+    }
+   }
+  ],
+  "caveats": [
+   "Sightings are reported by volunteers and are denser near towns and trails. A month with few sightings can mean few observers.",
+   "No sightings does not mean no animals. Plan for wildlife on every wet or vegetated site.",
+   "The species list is a starter list and needs confirming for the region."
+  ],
+  "source": {
+   "name": "iNaturalist community observations",
+   "url": "https://www.inaturalist.org/",
+   "note": "Research-grade records with public coordinates. No photos are used."
+  }
+ },
+ "flood": {
+  "status": "ok",
+  "river": {
+   "status": "not_applicable",
+   "reason": "No NWS river forecast point within 25 km of the site."
+  },
+  "levees": {
+   "status": "ok",
+   "inside_leveed_area": true,
+   "nearest_levee_km": 0.17,
+   "systems": [
+    {
+     "id": "3405000038",
+     "name": "L-8 West, L-10 and L-12",
+     "inside": true,
+     "nearest_km": 0.0,
+     "fema_accreditation": "Non-Accredited Levee System",
+     "flood_sources": "Drain surplus water from agricultural area.  Everglades Agricultural Area, Overflow flood waters northeast of the levee. Everglades Agricultural Area",
+     "leveed_area_sq_mi": 104.67819813,
+     "rehab_program_status": "Inactive",
+     "inspection_rating": "Unacceptable"
+    },
+    {
+     "id": "1405200093",
+     "name": "L8RES",
+     "inside": false,
+     "nearest_km": 0.17,
+     "fema_accreditation": "Non-Accredited Levee System",
+     "flood_sources": "L-8 Canal",
+     "leveed_area_sq_mi": 1.8989192,
+     "rehab_program_status": "Not Enrolled",
+     "inspection_rating": "Not Rated"
+    },
+    {
+     "id": "3405000044",
+     "name": "L-8 East",
+     "inside": false,
+     "nearest_km": 1.13,
+     "fema_accreditation": "Non-Accredited Levee System",
+     "flood_sources": "Overflow flood waters northeast of the levee. Everglades Agricultural Area",
+     "leveed_area_sq_mi": 9.25335149,
+     "rehab_program_status": "Inactive",
+     "inspection_rating": "Unacceptable"
+    },
+    {
+     "id": "3405000039",
+     "name": "EAA Ocean-Hilsboro ",
+     "inside": false,
+     "nearest_km": 1.55,
+     "fema_accreditation": "Non-Accredited Levee System",
+     "flood_sources": "Drain surplus water from agricultural area., Drain surplus water from agricultural area. , Lake Okeechobee and Conservation Area 1. Everglades Agricultural Area, Surplus water from agricultural area.  Everglades Agricultural Area",
+     "leveed_area_sq_mi": 77.72719696,
+     "rehab_program_status": "Inactive",
+     "inspection_rating": "Unacceptable"
+    },
+    {
+     "id": "3405000014",
+     "name": "East Coast Protective Levees, L-40, L-85, STA-1E",
+     "inside": false,
+     "nearest_km": 1.87,
+     "fema_accreditation": "Non-Accredited Levee System",
+     "flood_sources": "Loxahatchee National Wildlife Refuge, Protect coastal area of Florida against floods. Water Conservation Area 1",
+     "leveed_area_sq_mi": 292.78593231,
+     "rehab_program_status": "Inactive",
+     "inspection_rating": "Not Rated"
+    },
+    {
+     "id": "3405000041",
+     "name": "L-14",
+     "inside": false,
+     "nearest_km": 2.19,
+     "fema_accreditation": "Non-Accredited Levee System",
+     "flood_sources": "Canals, Lake Okeechobee, Surplus water from agricultural area.  Everglades Agricultural Area",
+     "leveed_area_sq_mi": 144.44916207,
+     "rehab_program_status": "Inactive",
+     "inspection_rating": "Not Applicable"
+    }
+   ],
+   "closure_structures": 2,
+   "pump_stations": 7,
+   "inspection_rating_known": true,
+   "map_file": "2026-10-18/levees.geojson",
+   "caveats": [
+    "The National Levee Database maps levees. It does not say whether a levee will hold on the report day.",
+    "Local or non-USACE levees can be missing from the database.",
+    "'Not rated' means USACE has no inspection rating for the system. It does not mean the levee is sound.",
+    "Tide and flood shading in this report ignores levees on purpose. Treat a leveed area as able to flood."
+   ],
+   "source": {
+    "name": "USACE National Levee Database",
+    "url": "https://levees.sec.usace.army.mil/"
+   }
+  },
+  "tide": {
+   "status": "not_applicable",
+   "reason": "Not a tidal site. The nearest NOAA tide station is 32.8 km away (Palm Beach, Highway 704 bridge)."
+  }
+ },
+ "verdict": {
+  "level": "limits",
+  "label": "Go with limits",
+  "reasons": [
+   {
+    "level": "limits",
+    "code": "mud",
+    "text": "556 rated route segments are at 'hold' for road trucks. See the routes to avoid."
+   }
+  ],
+  "disclaimer": "This verdict is decision support built from forecasts and models. It does not clear any task, route or crossing as safe. The site safety lead decides.",
+  "work_window": {
+   "start": "06:00",
+   "end": "19:00"
+  }
+ },
+ "hourly": [
+  {
+   "hour": 0,
+   "safe": true,
+   "blocked_by": [],
+   "hi": 73.7,
+   "wbgt": 71.7,
+   "gust": 31,
+   "pop": 35,
+   "mm": 0.0,
+   "cape": 60,
+   "uv": 0.0,
+   "temp": 73.1,
+   "feels": 76.8,
+   "rh": 91,
+   "have_data": true,
+   "band": "low",
+   "aqi": 25,
+   "tide_near_high": false
+  },
+  {
+   "hour": 1,
+   "safe": true,
+   "blocked_by": [],
+   "hi": 74.5,
+   "wbgt": 72.7,
+   "gust": 32,
+   "pop": 33,
+   "mm": 0.4,
+   "cape": 220,
+   "uv": 0.0,
+   "temp": 73.8,
+   "feels": 77.3,
+   "rh": 94,
+   "have_data": true,
+   "band": "low",
+   "aqi": 25,
+   "tide_near_high": false
+  },
+  {
+   "hour": 2,
+   "safe": true,
+   "blocked_by": [],
+   "hi": 75.2,
+   "wbgt": 73.4,
+   "gust": 31,
+   "pop": 31,
+   "mm": 0.4,
+   "cape": 660,
+   "uv": 0.0,
+   "temp": 74.5,
+   "feels": 79.3,
+   "rh": 95,
+   "have_data": true,
+   "band": "low",
+   "aqi": 26,
+   "tide_near_high": false
+  },
+  {
+   "hour": 3,
+   "safe": false,
+   "blocked_by": [
+    "rain"
+   ],
+   "hi": 75.0,
+   "wbgt": 73.0,
+   "gust": 32,
+   "pop": 33,
+   "mm": 1.8,
+   "cape": 530,
+   "uv": 0.0,
+   "temp": 74.3,
+   "feels": 78.0,
+   "rh": 97,
+   "have_data": true,
+   "band": "low",
+   "aqi": 28,
+   "tide_near_high": false
+  },
+  {
+   "hour": 4,
+   "safe": false,
+   "blocked_by": [
+    "rain"
+   ],
+   "hi": 74.9,
+   "wbgt": 73.1,
+   "gust": 33,
+   "pop": 35,
+   "mm": 5.4,
+   "cape": 480,
+   "uv": 0.0,
+   "temp": 74.2,
+   "feels": 78.9,
+   "rh": 93,
+   "have_data": true,
+   "band": "low",
+   "aqi": 29,
+   "tide_near_high": false
+  },
+  {
+   "hour": 5,
+   "safe": true,
+   "blocked_by": [],
+   "hi": 74.7,
+   "wbgt": 72.4,
+   "gust": 28,
+   "pop": 26,
+   "mm": 0.0,
+   "cape": 250,
+   "uv": 0.0,
+   "temp": 74.1,
+   "feels": 79.4,
+   "rh": 90,
+   "have_data": true,
+   "band": "low",
+   "aqi": 29,
+   "tide_near_high": false
+  },
+  {
+   "hour": 6,
+   "safe": true,
+   "blocked_by": [],
+   "hi": 74.5,
+   "wbgt": 71.8,
+   "gust": 29,
+   "pop": 27,
+   "mm": 0.0,
+   "cape": 280,
+   "uv": 0.0,
+   "temp": 73.9,
+   "feels": 78.8,
+   "rh": 87,
+   "have_data": true,
+   "band": "low",
+   "aqi": 30,
+   "tide_near_high": false
+  },
+  {
+   "hour": 7,
+   "safe": true,
+   "blocked_by": [],
+   "hi": 74.4,
+   "wbgt": 71.1,
+   "gust": 30,
+   "pop": 24,
+   "mm": 0.0,
+   "cape": 80,
+   "uv": 0.0,
+   "temp": 73.9,
+   "feels": 76.8,
+   "rh": 85,
+   "have_data": true,
+   "band": "low",
+   "aqi": 30,
+   "tide_near_high": false
+  },
+  {
+   "hour": 8,
+   "safe": true,
+   "blocked_by": [],
+   "hi": 74.0,
+   "wbgt": 71.0,
+   "gust": 29,
+   "pop": 18,
+   "mm": 0.0,
+   "cape": 40,
+   "uv": 0.1,
+   "temp": 73.5,
+   "feels": 76.1,
+   "rh": 84,
+   "have_data": true,
+   "band": "low",
+   "aqi": 30,
+   "tide_near_high": false
+  },
+  {
+   "hour": 9,
+   "safe": true,
+   "blocked_by": [],
+   "hi": 76.2,
+   "wbgt": 73.5,
+   "gust": 30,
+   "pop": 17,
+   "mm": 0.0,
+   "cape": 170,
+   "uv": 0.3,
+   "temp": 75.6,
+   "feels": 78.5,
+   "rh": 82,
+   "have_data": true,
+   "band": "low",
+   "aqi": 30,
+   "tide_near_high": false
+  },
+  {
+   "hour": 10,
+   "safe": true,
+   "blocked_by": [],
+   "hi": 78.1,
+   "wbgt": 75.2,
+   "gust": 29,
+   "pop": 16,
+   "mm": 0.0,
+   "cape": 240,
+   "uv": 1.1,
+   "temp": 77.7,
+   "feels": 79.4,
+   "rh": 78,
+   "have_data": true,
+   "band": "low",
+   "aqi": 30,
+   "tide_near_high": false
+  },
+  {
+   "hour": 11,
+   "safe": true,
+   "blocked_by": [],
+   "hi": 79.5,
+   "wbgt": 76.6,
+   "gust": 26,
+   "pop": 19,
+   "mm": 0.0,
+   "cape": 240,
+   "uv": 2.2,
+   "temp": 79.2,
+   "feels": 81.0,
+   "rh": 74,
+   "have_data": true,
+   "band": "caution",
+   "aqi": 30,
+   "tide_near_high": false
+  },
+  {
+   "hour": 12,
+   "safe": true,
+   "blocked_by": [],
+   "hi": 82.3,
+   "wbgt": 77.5,
+   "gust": 24,
+   "pop": 19,
+   "mm": 0.0,
+   "cape": 280,
+   "uv": 4.7,
+   "temp": 79.9,
+   "feels": 82.8,
+   "rh": 72,
+   "have_data": true,
+   "band": "caution",
+   "aqi": 30,
+   "tide_near_high": false
+  },
+  {
+   "hour": 13,
+   "safe": true,
+   "blocked_by": [],
+   "hi": 82.5,
+   "wbgt": 77.4,
+   "gust": 23,
+   "pop": 19,
+   "mm": 0.0,
+   "cape": 100,
+   "uv": 4.3,
+   "temp": 81.0,
+   "feels": 83.2,
+   "rh": 68,
+   "have_data": true,
+   "band": "caution",
+   "aqi": 31,
+   "tide_near_high": false
+  },
+  {
+   "hour": 14,
+   "safe": true,
+   "blocked_by": [],
+   "hi": 83.9,
+   "wbgt": 77.4,
+   "gust": 24,
+   "pop": 16,
+   "mm": 0.0,
+   "cape": 20,
+   "uv": 5.8,
+   "temp": 81.9,
+   "feels": 83.5,
+   "rh": 64,
+   "have_data": true,
+   "band": "caution",
+   "aqi": 33,
+   "tide_near_high": false
+  },
+  {
+   "hour": 15,
+   "safe": true,
+   "blocked_by": [],
+   "hi": 83.5,
+   "wbgt": 76.8,
+   "gust": 24,
+   "pop": 16,
+   "mm": 0.0,
+   "cape": 50,
+   "uv": 4.8,
+   "temp": 81.7,
+   "feels": 82.6,
+   "rh": 64,
+   "have_data": true,
+   "band": "caution",
+   "aqi": 34,
+   "tide_near_high": false
+  },
+  {
+   "hour": 16,
+   "safe": true,
+   "blocked_by": [],
+   "hi": 83.2,
+   "wbgt": 76.4,
+   "gust": 26,
+   "pop": 12,
+   "mm": 0.0,
+   "cape": 350,
+   "uv": 3.8,
+   "temp": 81.2,
+   "feels": 81.7,
+   "rh": 71,
+   "have_data": true,
+   "band": "caution",
+   "aqi": 35,
+   "tide_near_high": false
+  },
+  {
+   "hour": 17,
+   "safe": true,
+   "blocked_by": [],
+   "hi": 82.2,
+   "wbgt": 75.5,
+   "gust": 26,
+   "pop": 9,
+   "mm": 0.0,
+   "cape": 350,
+   "uv": 1.9,
+   "temp": 79.9,
+   "feels": 80.6,
+   "rh": 71,
+   "have_data": true,
+   "band": "caution",
+   "aqi": 36,
+   "tide_near_high": false
+  },
+  {
+   "hour": 18,
+   "safe": true,
+   "blocked_by": [],
+   "hi": 77.7,
+   "wbgt": 73.6,
+   "gust": 28,
+   "pop": 13,
+   "mm": 0.0,
+   "cape": 450,
+   "uv": 1.2,
+   "temp": 77.3,
+   "feels": 80.0,
+   "rh": 76,
+   "have_data": true,
+   "band": "low",
+   "aqi": 38,
+   "tide_near_high": false
+  },
+  {
+   "hour": 19,
+   "safe": true,
+   "blocked_by": [],
+   "hi": 75.0,
+   "wbgt": 70.0,
+   "gust": 29,
+   "pop": 14,
+   "mm": 0.0,
+   "cape": 90,
+   "uv": 0.2,
+   "temp": 74.8,
+   "feels": 75.6,
+   "rh": 77,
+   "have_data": true,
+   "band": "low",
+   "aqi": 39,
+   "tide_near_high": false
+  },
+  {
+   "hour": 20,
+   "safe": true,
+   "blocked_by": [],
+   "hi": 74.8,
+   "wbgt": 70.2,
+   "gust": 26,
+   "pop": 12,
+   "mm": 0.0,
+   "cape": 300,
+   "uv": 0.0,
+   "temp": 74.5,
+   "feels": 77.4,
+   "rh": 84,
+   "have_data": true,
+   "band": "low",
+   "aqi": 39,
+   "tide_near_high": false
+  },
+  {
+   "hour": 21,
+   "safe": true,
+   "blocked_by": [],
+   "hi": 74.6,
+   "wbgt": 71.0,
+   "gust": 23,
+   "pop": 11,
+   "mm": 0.0,
+   "cape": 500,
+   "uv": 0.0,
+   "temp": 74.2,
+   "feels": 77.8,
+   "rh": 88,
+   "have_data": true,
+   "band": "low",
+   "aqi": 40,
+   "tide_near_high": false
+  },
+  {
+   "hour": 22,
+   "safe": true,
+   "blocked_by": [],
+   "hi": 74.6,
+   "wbgt": 72.2,
+   "gust": 24,
+   "pop": 15,
+   "mm": 0.0,
+   "cape": 620,
+   "uv": 0.0,
+   "temp": 74.2,
+   "feels": 80.5,
+   "rh": 92,
+   "have_data": true,
+   "band": "low",
+   "aqi": 40,
+   "tide_near_high": false
+  },
+  {
+   "hour": 23,
+   "safe": true,
+   "blocked_by": [],
+   "hi": 74.2,
+   "wbgt": 71.6,
+   "gust": 25,
+   "pop": 4,
+   "mm": 0.0,
+   "cape": 500,
+   "uv": 0.0,
+   "temp": 73.6,
+   "feels": 79.1,
+   "rh": 88,
+   "have_data": true,
+   "band": "low",
+   "aqi": 40,
+   "tide_near_high": false
+  }
+ ],
+ "tasks": {
+  "status": "ok",
+  "profiles": [
+   {
+    "id": "heavy_equipment",
+    "label": "Heavy equipment moves",
+    "description": "Trucks, excavators and cranes moving on site roads.",
+    "blockers": [
+     {
+      "id": "wbgt",
+      "kind": "hour",
+      "factor": "wbgt",
+      "limit": 88,
+      "label": "Heat (WBGT)",
+      "unit": "F",
+      "source": "Alert rules (briefing.ts)",
+      "needs_confirmation": false
+     },
+     {
+      "id": "gust",
+      "kind": "hour",
+      "factor": "gust",
+      "limit": 40,
+      "label": "Wind gusts",
+      "unit": "mph",
+      "source": "Alert rules (briefing.ts)",
+      "needs_confirmation": false
+     },
+     {
+      "id": "pop",
+      "kind": "hour",
+      "factor": "pop",
+      "limit": 60,
+      "label": "Storm chance",
+      "unit": "%",
+      "source": "Alert rules (briefing.ts)",
+      "needs_confirmation": false
+     },
+     {
+      "id": "mm",
+      "kind": "hour",
+      "factor": "mm",
+      "limit": 1,
+      "label": "Rain",
+      "unit": "mm per hour",
+      "source": "Alert rules (briefing.ts)",
+      "needs_confirmation": false
+     },
+     {
+      "id": "mud",
+      "kind": "site",
+      "flag": "mud",
+      "values": [
+       "hold"
+      ],
+      "label": "Routes at hold (mud)",
+      "source": "Mud model, uncalibrated",
+      "needs_confirmation": true
+     }
+    ]
+   },
+   {
+    "id": "aerial_line",
+    "label": "Aerial or line work",
+    "description": "Bucket trucks, lifts and work at height.",
+    "blockers": [
+     {
+      "id": "wbgt",
+      "kind": "hour",
+      "factor": "wbgt",
+      "limit": 88,
+      "label": "Heat (WBGT)",
+      "unit": "F",
+      "source": "Alert rules (briefing.ts)",
+      "needs_confirmation": false
+     },
+     {
+      "id": "gust",
+      "kind": "hour",
+      "factor": "gust",
+      "limit": 40,
+      "label": "Wind gusts",
+      "unit": "mph",
+      "source": "Default from the alert rules. Lift and crane manuals often set a lower limit. Use your equipment manual.",
+      "needs_confirmation": true
+     },
+     {
+      "id": "pop",
+      "kind": "hour",
+      "factor": "pop",
+      "limit": 60,
+      "label": "Storm chance",
+      "unit": "%",
+      "source": "Alert rules (briefing.ts)",
+      "needs_confirmation": false
+     },
+     {
+      "id": "mm",
+      "kind": "hour",
+      "factor": "mm",
+      "limit": 1,
+      "label": "Rain",
+      "unit": "mm per hour",
+      "source": "Alert rules (briefing.ts)",
+      "needs_confirmation": false
+     }
+    ]
+   },
+   {
+    "id": "trenching",
+    "label": "Trenching and excavation",
+    "description": "Open trenches and pits.",
+    "blockers": [
+     {
+      "id": "wbgt",
+      "kind": "hour",
+      "factor": "wbgt",
+      "limit": 88,
+      "label": "Heat (WBGT)",
+      "unit": "F",
+      "source": "Alert rules (briefing.ts)",
+      "needs_confirmation": false
+     },
+     {
+      "id": "pop",
+      "kind": "hour",
+      "factor": "pop",
+      "limit": 60,
+      "label": "Storm chance",
+      "unit": "%",
+      "source": "Alert rules (briefing.ts)",
+      "needs_confirmation": false
+     },
+     {
+      "id": "mm",
+      "kind": "hour",
+      "factor": "mm",
+      "limit": 1,
+      "label": "Rain",
+      "unit": "mm per hour",
+      "source": "Alert rules (briefing.ts)",
+      "needs_confirmation": false
+     },
+     {
+      "id": "tide",
+      "kind": "hour",
+      "factor": "tide_near_high",
+      "limit": 1,
+      "label": "Within one hour of high tide (low ground)",
+      "unit": "",
+      "source": "Tide predictions",
+      "needs_confirmation": true,
+      "only_if": "tide_shading"
+     },
+     {
+      "id": "river",
+      "kind": "site",
+      "flag": "river",
+      "values": [
+       "minor",
+       "moderate",
+       "major"
+      ],
+      "label": "River forecast at flood stage",
+      "source": "NWS river forecast",
+      "needs_confirmation": true
+     }
+    ]
+   },
+   {
+    "id": "brush_swamp",
+    "label": "Brush clearing and swamp work on foot",
+    "description": "Work on foot in vegetation, wet ground or near water.",
+    "blockers": [
+     {
+      "id": "wbgt",
+      "kind": "hour",
+      "factor": "wbgt",
+      "limit": 88,
+      "label": "Heat (WBGT)",
+      "unit": "F",
+      "source": "Alert rules (briefing.ts)",
+      "needs_confirmation": false
+     },
+     {
+      "id": "hi",
+      "kind": "hour",
+      "factor": "hi",
+      "limit": 103,
+      "label": "Heat index (Danger band)",
+      "unit": "F",
+      "source": "NWS heat index categories",
+      "needs_confirmation": true
+     },
+     {
+      "id": "pop",
+      "kind": "hour",
+      "factor": "pop",
+      "limit": 60,
+      "label": "Storm chance",
+      "unit": "%",
+      "source": "Alert rules (briefing.ts)",
+      "needs_confirmation": false
+     },
+     {
+      "id": "aqi",
+      "kind": "hour",
+      "factor": "aqi",
+      "limit": 151,
+      "label": "Air quality index (Unhealthy)",
+      "unit": "AQI",
+      "source": "AirNow AQI categories",
+      "needs_confirmation": true
+     },
+     {
+      "id": "tide",
+      "kind": "hour",
+      "factor": "tide_near_high",
+      "limit": 1,
+      "label": "Within one hour of high tide (low ground)",
+      "unit": "",
+      "source": "Tide predictions",
+      "needs_confirmation": true,
+      "only_if": "tide_shading"
+     }
+    ]
+   }
+  ],
+  "site_flags": {
+   "mud": "hold",
+   "river": null,
+   "tide_shading": false
+  },
+  "note": "Limits marked 'confirm' are defaults. Replace them with the limit in your equipment manual or site safety plan."
+ },
+ "limits": [
+  "Storm chance is the forecast chance of rain. There is no lightning forecast. Live lightning stops work through the site alerts.",
+  "Hourly values are the highest of seven forecast points within 20 km of the site.",
+  "A forecast can change. Check the report again in the morning."
+ ],
+ "changes": {
+  "status": "not_applicable",
+  "reason": "No earlier report exists for this date, so there is nothing to compare.",
+  "items": []
+ },
+ "gaps": [
+  {
+   "section": "flood.river",
+   "status": "not_applicable",
+   "reason": "No NWS river forecast point within 25 km of the site."
+  },
+  {
+   "section": "flood.tide",
+   "status": "not_applicable",
+   "reason": "Not a tidal site. The nearest NOAA tide station is 32.8 km away (Palm Beach, Highway 704 bridge)."
+  }
+ ]
+}
