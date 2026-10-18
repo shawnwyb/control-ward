@@ -319,6 +319,12 @@ test("Gemini performs grounded discovery and ignores thought text while retainin
       return Response.json({
         steps: [
           {
+            type: "model_output",
+            content: [
+              { type: "text", text: "Searching official sources first." },
+            ],
+          },
+          {
             type: "thought",
             summary: [{ type: "text", text: "private thought" }],
           },

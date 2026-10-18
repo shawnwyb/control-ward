@@ -187,7 +187,7 @@ export function geminiResearch(
           },
         );
         if (!response.ok) throw await providerFailure(response, key);
-        const body = JSON.parse(await readBounded(response, 150000));
+        const body = JSON.parse(await readBounded(response, 1500000));
         const steps: {
           type?: string;
           is_error?: boolean;
@@ -199,10 +199,9 @@ export function geminiResearch(
           }[];
           result?: { search_suggestions?: string }[];
         }[] = body.steps ?? [];
-        const parts = steps
-          .filter((s) => s.type === "model_output")
-          .flatMap((s) => s.content ?? [])
-          .filter((p) => p.type === "text");
+        const parts = (
+          steps.filter((s) => s.type === "model_output").at(-1)?.content ?? []
+        ).filter((p) => p.type === "text");
         const answer = parts.map((p) => p.text ?? "").join("");
         const tokens = body.usage?.total_tokens;
         if (!Number.isFinite(tokens) || tokens < 0)
@@ -210,7 +209,10 @@ export function geminiResearch(
         let value: unknown;
         try {
           value = JSON.parse(
-            answer.replace(/^```(?:json)?\s*/, "").replace(/\s*```$/, ""),
+            answer
+              .trim()
+              .replace(/^```(?:json)?\s*/, "")
+              .replace(/\s*```$/, ""),
           );
         } catch {
           throw new Error("invalid_model_json");
@@ -276,7 +278,7 @@ export function geminiResearch(
         throw new Error(
           response.status === 429 ? "provider_rate_limited" : "provider_failed",
         );
-      const body = JSON.parse(await readBounded(response, 150000));
+      const body = JSON.parse(await readBounded(response, 1500000));
       const candidate = body.candidates?.[0];
       const answer =
         candidate?.content?.parts
@@ -289,7 +291,10 @@ export function geminiResearch(
       let value;
       try {
         value = JSON.parse(
-          answer.replace(/^```(?:json)?\s*/, "").replace(/\s*```$/, ""),
+          answer
+            .trim()
+            .replace(/^```(?:json)?\s*/, "")
+            .replace(/\s*```$/, ""),
         );
       } catch {
         throw new Error("invalid_model_json");

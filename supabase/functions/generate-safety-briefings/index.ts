@@ -51,6 +51,8 @@ serve("generate-safety-briefings", async () => {
         "resource_limit",
         "invalid_usage",
         "invalid_model_json",
+        "source_too_large",
+        "source_unavailable",
         "invalid_checklist",
         "invalid_item",
         "invalid_citation",
@@ -73,6 +75,10 @@ serve("generate-safety-briefings", async () => {
         error: category,
         provider: providerFailureInfo(error),
         failure_type: error instanceof Error ? error.name : "Unknown",
+        failure_code:
+          error instanceof Error && /^[a-z_]{1,60}$/.test(error.message)
+            ? error.message
+            : undefined,
       });
     }
   }
