@@ -1,6 +1,7 @@
 import { rpc, serve } from "../_shared/runtime.ts";
 import {
   automaticFailureDiagnostics,
+  providerFailureInfo,
   geminiResearch,
   runAutomaticSafety,
 } from "../_shared/automatic-safety/agent.ts";
@@ -67,7 +68,11 @@ serve("generate-safety-briefings", async () => {
         p_error: category,
         p_diagnostics: automaticFailureDiagnostics(error),
       });
-      results.push({ run_id: run.id, error: category });
+      results.push({
+        run_id: run.id,
+        error: category,
+        provider: providerFailureInfo(error),
+      });
     }
   }
   return { results };

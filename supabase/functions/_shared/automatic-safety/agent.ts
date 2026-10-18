@@ -20,6 +20,45 @@ const object = (value: unknown): value is Record<string, unknown> =>
 const text = (value: unknown, max: number) =>
   typeof value === "string" && value.length <= max ? value : null;
 const failureDiagnostics = new WeakMap<object, Record<string, unknown>>();
+const providerFailures = new WeakMap<
+  object,
+  { http_status: number; code: string; detail: string }
+>();
+export const providerFailureInfo = (error: unknown) =>
+  error instanceof Error ? providerFailures.get(error) : undefined;
+async function providerFailure(
+  response: Response,
+  key: string,
+): Promise<Error> {
+  const error = new Error(
+    response.status === 429 ? "provider_rate_limited" : "provider_failed",
+  );
+  let body: { error?: { status?: string; message?: string } } = {};
+  try {
+    body = JSON.parse(
+      await readBounded(new Response(response.body, { status: 200 }), 10000),
+    );
+  } catch {
+    /* Never retain a raw response. */
+  }
+  providerFailures.set(error, {
+    http_status: response.status,
+    code:
+      typeof body.error?.status === "string" &&
+      /^[A-Z_]{1,60}$/.test(body.error.status)
+        ? body.error.status
+        : "UNKNOWN",
+    detail:
+      typeof body.error?.message === "string"
+        ? body.error.message
+            .split(key)
+            .join("[redacted]")
+            .replace(/AIza[A-Za-z0-9_-]+/g, "[redacted]")
+            .slice(0, 300)
+        : "Provider request failed",
+  });
+  return error;
+}
 export const automaticFailureDiagnostics = (error: unknown) =>
   error instanceof Error ? (failureDiagnostics.get(error) ?? {}) : {};
 
@@ -142,17 +181,12 @@ export function geminiResearch(
                 temperature: 0.1,
                 thinking_level: "low",
                 thinking_summaries: "none",
-                tool_choice: "any",
+                tool_choice: "auto",
               },
             }),
           },
         );
-        if (!response.ok)
-          throw new Error(
-            response.status === 429
-              ? "provider_rate_limited"
-              : "provider_failed",
-          );
+        if (!response.ok) throw await providerFailure(response, key);
         const body = JSON.parse(await readBounded(response, 150000));
         const steps: {
           type?: string;

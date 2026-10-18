@@ -2,6 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   automaticFailureDiagnostics,
+  providerFailureInfo,
   runAutomaticSafety,
   validateItems,
   geminiResearch,
@@ -355,7 +356,7 @@ test("Gemini performs grounded discovery and ignores thought text while retainin
   );
   assert.deepEqual(request.tools, [{ type: "google_search" }]);
   assert.equal(request.store, false);
-  assert.equal(request.generation_config.tool_choice, "any");
+  assert.equal(request.generation_config.tool_choice, "auto");
   assert.equal(request.generation_config.thinking_summaries, "none");
   assert.deepEqual(result.value, discovery);
   assert.equal(result.grounded, true);
@@ -485,4 +486,32 @@ test("instruction extraction remains a bounded non-search model call", async () 
   assert.equal(request.tools, undefined);
   assert.equal(request.generationConfig.maxOutputTokens, 4096);
   assert.equal(request.generationConfig.thinkingConfig.includeThoughts, false);
+});
+
+test("provider failures expose bounded status information and redact credentials", async () => {
+  const adapter = geminiResearch(
+    "fixture-secret",
+    "gemini-3.8-flash",
+    async () =>
+      Response.json(
+        {
+          error: {
+            status: "INVALID_ARGUMENT",
+            message: "Invalid configuration fixture-secret",
+          },
+        },
+        { status: 400 },
+      ),
+  );
+  await assert.rejects(
+    adapter.ask("Find sources", true, AbortSignal.timeout(1000)),
+    (error) => {
+      assert.equal(error.message, "provider_failed");
+      const info = providerFailureInfo(error);
+      assert.equal(info.http_status, 400);
+      assert.equal(info.code, "INVALID_ARGUMENT");
+      assert.ok(!info.detail.includes("fixture-secret"));
+      return true;
+    },
+  );
 });
