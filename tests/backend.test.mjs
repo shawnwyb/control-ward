@@ -6,7 +6,18 @@ import { createClient } from "@supabase/supabase-js";
 import pg from "pg";
 
 const config = JSON.parse(
-  execFileSync("supabase", ["status", "-o", "json"], { encoding: "utf8" }),
+  execFileSync(
+    "supabase",
+    [
+      "status",
+      "-o",
+      "json",
+      ...(process.env.SUPABASE_WORKDIR
+        ? ["--workdir", process.env.SUPABASE_WORKDIR]
+        : []),
+    ],
+    { encoding: "utf8" },
+  ),
 );
 for (const value of [config.API_URL, config.DB_URL]) {
   if (!["127.0.0.1", "localhost"].includes(new URL(value).hostname))

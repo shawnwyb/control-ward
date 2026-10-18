@@ -21,6 +21,7 @@ const bodies = {
   "arrow-right": '<path d="M4 12h16M14 6l6 6-6 6"/>',
   chevron: '<path d="M6 9l6 6 6-6"/>',
   close: '<path d="M6 6l12 12M18 6L6 18"/>',
+  alert: '<path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18v.5"/>',
   play: '<path d="M8 5l11 7-11 7z"/>',
   pause: '<path d="M8 5v14M16 5v14"/>',
 } as const;

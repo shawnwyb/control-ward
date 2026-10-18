@@ -31,12 +31,12 @@ function authorized(req: Request): boolean {
 
 export function serve(
   name: string,
-  run: () => Promise<Record<string, unknown>>,
+  run: (req: Request) => Promise<Record<string, unknown>>,
 ): void {
   Deno.serve(async (req) => {
     if (!authorized(req)) return json({ error: "unauthorized" }, 401);
     try {
-      return json({ ok: true, function: name, ...(await run()) });
+      return json({ ok: true, function: name, ...(await run(req)) });
     } catch (error) {
       console.error(name, error);
       return json({ ok: false, function: name, error: String(error) }, 500);
@@ -81,7 +81,9 @@ async function rest<T>(path: string, init: RequestInit): Promise<T> {
   });
   if (!res.ok)
     throw new Error(`${path} failed: ${res.status} ${await res.text()}`);
-  return (await res.json()) as T;
+  // RPCs that return void send an empty body.
+  const text = await res.text();
+  return (text ? JSON.parse(text) : null) as T;
 }
 
 export const rpc = <T = unknown>(name: string, args: Record<string, unknown>) =>

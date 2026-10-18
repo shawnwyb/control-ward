@@ -9,6 +9,7 @@ The SwampHacks brief (`docs/PlanIT_Control_SwampHacks_Brief.docx`) requires a "H
 The hosted backend already has a place for this score: the table `ml_scores(site_id, horizon, score, model_version)` (`horizon` is `now` or `tomorrow`, `score` is `numeric(3,1)` from 0 to 10), the service-role RPC `upsert_ml_scores`, and the risk formula `risk = min(10, max(ML score, highest subscore) + crew term)` in `compute_site_risk`. Nothing writes `ml_scores` today, so the ML score counts as 0.
 
 Intended outcome: an offline prototype that
+
 1. trains one model per hazard family to predict the probability that NOAA Storm Events records an event of that family near a plant on a local day;
 2. multiplies each probability by an OSHA severity weight and keeps the largest product, `R = max_h(s_h × p_h)`;
 3. maps `R` to a 0–10 score on the same scale as the rule subscores (about 3 watch, 7.5 warning, 10 stop work);
@@ -22,12 +23,14 @@ Intended outcome: an offline prototype that
 ## Scope
 
 In scope:
+
 - Hazard families: heat; storm (Thunderstorm Wind, Hail, Lightning, Tornado); flood (Flash Flood, Flood, Heavy Rain); fire (Wildfire, Dense Smoke).
 - The 60 plants in `supabase/seed-sites.sql`, years 2015–2025.
 - Mud is covered only by input features (soil moisture, rain in the previous 3 and 7 days).
 - Scripts, unit tests, a results notebook, a dry-run CSV and payload file.
 
 Out of scope:
+
 - Migrations, Edge Functions, database writes, and any change in `supabase/` or `src/`.
 - A mud label or mud model (the STRAM trafficability model is separate work).
 - Converting forecast-zone events to counties with the NWS zone–county correlation file.

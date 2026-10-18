@@ -1,0 +1,105 @@
+.body {
+  display: grid;
+  gap: 1rem;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+  gap: 1rem;
+}
+.stack {
+  display: grid;
+  gap: 0.75rem;
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+}
+.box {
+  border: 1px solid var(--rule);
+  padding: 1rem;
+  display: grid;
+  gap: 0.75rem;
+  min-width: 0;
+}
+.box h3,
+.box p {
+  margin: 0;
+}
+.muted {
+  color: var(--ink-muted);
+  font-size: var(--text-sm);
+}
+.warning {
+  border-left: 4px solid var(--sev-2);
+  padding: 0.7rem;
+  background: var(--sev-2-bg);
+}
+.error {
+  color: var(--danger);
+}
+.list {
+  display: grid;
+  gap: 0.75rem;
+  padding-left: 1.3rem;
+  margin: 0;
+}
+.item {
+  display: grid;
+  gap: 0.3rem;
+}
+.label {
+  text-transform: capitalize;
+  font-size: var(--text-xs);
+  color: var(--ink-muted);
+}
+.textarea {
+  width: 100%;
+  padding: 0.6rem;
+  min-height: 5rem;
+  border: 1px solid var(--rule-strong);
+  border-radius: 3px;
+  font: inherit;
+  color: var(--ink);
+  background: var(--surface);
+}
+.evidence {
+  font-size: var(--text-sm);
+  overflow-wrap: anywhere;
+}
+.evidence summary {
+  cursor: pointer;
+  color: var(--brand);
+}
+.evidence p {
+  margin: 0.4rem 0;
+}
+.evidence blockquote {
+  margin: 0.5rem 0;
+  padding-left: 0.75rem;
+  border-left: 2px solid var(--rule);
+  overflow-wrap: anywhere;
+}
+.searchSuggestions {
+  width: 100%;
+  min-width: 0;
+  height: 150px;
+  border: 0;
+}
+.check {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+.check input {
+  margin-top: 0.3rem;
+}
+
+@media (max-width: 40rem) {
+  .panel > header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

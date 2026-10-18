@@ -234,3 +234,13 @@ Request and response shapes are in [the monitoring contract](docs/api-contract.m
 - Read the terms of use of each data provider. None have been reviewed.
 - `river_distance_m` is the distance to the nearest stream gauge. It is a rough measure of how close a plant is to a river.
 - For larger deployments, measure the locking strategy, paginate long feeds, and define limits on confirmation abuse and data retention.
+
+## Automatic worker safety checklists
+
+The agent uses each assigned registry worksite's coordinates to resolve its state, county and city, research official safety regulations/guidance, and generate a cited worker checklist from local conditions such as heat. It refreshes and publishes automatically. Supervisors do not enter job plans, approve sources or publish checklists. Both roles read the checklist and acknowledge its exact version.
+
+Missing sources, unknown applicability and stale conditions are shown as gaps. Existing weather briefings, risk, live alerts and stop-work rules remain independent. Generation defaults off until the server model, credentials and schedules are configured.
+
+Use `npm run dev:design` for the fictional automatic demo. `npm run safety:local:start` creates an isolated local stack; `npm run test:safety:db` checks publication, access, citations and receipts, and `npm run test:safety:ui` checks both roles' browser flow. A local frontend can use the real database after backend deployment.
+
+See the [safety API](docs/safety-api.md), [safety contract](docs/safety-contract.md) and [setup and operations](docs/safety-operations.md).

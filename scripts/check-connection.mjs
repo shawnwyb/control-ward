@@ -103,6 +103,63 @@ if (env.CHECK_EMAIL && env.CHECK_PASSWORD) {
         p_site_id: first.id,
       });
       check("Crew metrics RPC", !metrics.error, metrics.error?.message);
+      // Monitoring reads behind the alerts, risk and briefing on the crew screen.
+      for (const [name, query] of [
+        [
+          "site_overview",
+          supabase
+            .from("site_overview")
+            .select("site_id,risk_now")
+            .eq("site_id", first.id)
+            .limit(1),
+        ],
+        [
+          "alerts",
+          supabase
+            .from("alerts")
+            .select("id")
+            .eq("site_id", first.id)
+            .eq("status", "active")
+            .limit(1),
+        ],
+        [
+          "briefings",
+          supabase
+            .from("briefings")
+            .select("id")
+            .eq("site_id", first.id)
+            .limit(1),
+        ],
+      ]) {
+        const result = await query;
+        check(`Read ${name}`, !result.error, result.error?.message);
+      }
+
+      // Role at each site, and (for supervisors) the crew list that needs the
+      // crew-assignment migration. A missing function is the usual cause of failure.
+      const roles = await supabase
+        .from("site_memberships")
+        .select("site_id,role")
+        .eq("user_id", signedIn.data.user.id);
+      check(
+        "Read your role per site",
+        !roles.error,
+        roles.error?.message ??
+          `${roles.data.filter((r) => r.role === "supervisor").length} supervisor, ${roles.data.filter((r) => r.role === "crew").length} crew`,
+      );
+      const supervised = roles.data?.find((r) => r.role === "supervisor");
+      if (supervised) {
+        const crew = await supabase.rpc("list_site_crew", {
+          p_site_id: supervised.site_id,
+        });
+        check(
+          "Crew list for supervisors",
+          !crew.error,
+          crew.error?.code === "PGRST202"
+            ? "list_site_crew is missing: apply supabase/migrations/20261017001400_crew_assignment.sql"
+            : (crew.error?.message ?? `${crew.data.length} member(s)`),
+        );
+      }
     }
     await supabase.auth.signOut();
   }

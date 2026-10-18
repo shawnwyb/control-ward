@@ -429,3 +429,16 @@ verify_jwt = false
 
 [functions.ingest-lightning]
 verify_jwt = false
+
+[functions.send-push]
+verify_jwt = false
+
+[functions.generate-briefing-draft]
+verify_jwt = false
+
+# Safety workers authenticate X-Cron-Secret themselves; browser access uses authenticated SQL RPCs.
+[functions.generate-safety-briefings]
+verify_jwt = false
+
+[functions.refresh-safety-sources]
+verify_jwt = false

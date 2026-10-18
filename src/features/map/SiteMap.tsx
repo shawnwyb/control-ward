@@ -9,6 +9,7 @@ import {
   TimeSlider,
 } from "../../components/ui";
 import { SITE_RADIUS_M } from "../../lib/geo";
+import type { CrewMember } from "../../lib/monitoring";
 import type { Report, Severity, Site } from "../../lib/types";
 import { renderFieldFrames } from "./weather/field";
 import {
@@ -45,6 +46,8 @@ type RainSource = "radar" | "forecast";
 type Props = {
   site: Site;
   reports: Report[];
+  crew?: CrewMember[];
+  crewFocus?: { id: string; nonce: number };
   pin: { latitude: number; longitude: number };
   disabled: boolean;
   className?: string;
@@ -102,6 +105,8 @@ function keyFor(overlay: Overlay, source: RainSource): Key | null {
 export function SiteMap({
   site,
   reports,
+  crew,
+  crewFocus,
   pin,
   disabled,
   className,
@@ -173,7 +178,7 @@ export function SiteMap({
   const key = keyFor(overlay, rainSource);
 
   return (
-    <Panel className={className} aria-labelledby="map-title">
+    <Panel id="site-map" className={className} aria-labelledby="map-title">
       <PanelHeader
         title={site.name}
         titleId="map-title"
@@ -227,6 +232,8 @@ export function SiteMap({
             key={site.id}
             site={site}
             reports={reports}
+            crew={crew}
+            crewFocus={crewFocus}
             pin={pin}
             disabled={disabled}
             highlightId={highlightId}
@@ -296,6 +303,12 @@ export function SiteMap({
           <span className={styles.pinSample} aria-hidden="true" />
           Your pin
         </li>
+        {crew ? (
+          <li>
+            <span className={styles.crewSample} aria-hidden="true" />
+            Worker (last known)
+          </li>
+        ) : null}
         {([1, 2, 3] as Severity[]).map((severity) => (
           <li key={severity}>
             <SeverityMark severity={severity} size={14} />
