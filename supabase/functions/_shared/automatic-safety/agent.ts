@@ -384,24 +384,33 @@ export async function runAutomaticSafety(
         "Search grounding was unavailable; no unverified search suggestions were used as evidence.",
       );
     const candidates = [...discovery.sources];
-    // These are fallbacks, not the whole corpus: state/county/city sources are discovered at runtime.
+    // Reserve one independently fetched heat source even when discovery fills
+    // the source budget. Keep a source at every discovered jurisdiction level.
+    const heatUrl =
+      "https://www.cdc.gov/niosh/heat-stress/recommendations/index.html";
+    if (candidates.length >= 8 && !candidates.some((c) => c.url === heatUrl)) {
+      const duplicate = candidates.findLastIndex(
+        (c) => candidates.filter((x) => x.level === c.level).length > 1,
+      );
+      candidates.splice(duplicate, 1);
+    }
     for (const [url, title] of [
+      [heatUrl, "CDC NIOSH workplace heat recommendations"],
       ["https://www.osha.gov/heat-exposure", "OSHA heat exposure guidance"],
       ["https://www.osha.gov/stateplans", "OSHA state plan coverage"],
-      [
-        "https://www.cdc.gov/niosh/heat-stress/recommendations/index.html",
-        "CDC NIOSH workplace heat recommendations",
-      ],
     ]) {
-      if (candidates.length < 8 && !candidates.some((c) => c.url === url))
+      if (candidates.length < 8 && !candidates.some((c) => c.url === url)) {
+        let number = 1;
+        while (candidates.some((c) => c.id === `source-${number}`)) number++;
         candidates.push({
-          id: `source-${candidates.length + 1}`,
+          id: `source-${number}`,
           title,
           url,
           level: "federal",
           jurisdiction: "United States",
           checked_at: new Date().toISOString(),
         });
+      }
     }
     const results = await Promise.allSettled(
       candidates.map((source) =>

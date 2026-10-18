@@ -72,6 +72,7 @@ serve("generate-safety-briefings", async () => {
         run_id: run.id,
         error: category,
         provider: providerFailureInfo(error),
+        failure_type: error instanceof Error ? error.name : "Unknown",
       });
     }
   }

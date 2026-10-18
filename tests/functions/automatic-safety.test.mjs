@@ -515,3 +515,26 @@ test("provider failures expose bounded status information and redact credentials
     },
   );
 });
+
+test("full discovery cannot crowd out the verified heat fallback or duplicate source IDs", async () => {
+  const full = {
+    sources: Array.from({ length: 8 }, (_, i) => ({
+      ...discovery.sources[i % 3],
+      url: discovery.sources[i % 3].url + `/${i}`,
+    })),
+  };
+  const output = await runAutomaticSafety(
+    snapshot,
+    fixtureModel((v, search) => (search ? full : v)),
+    { fetcher, reservedUsdPerTurn: 0.1 },
+  );
+  assert.equal(output.content.sources.length, 8);
+  assert.ok(
+    output.content.sources.some((s) =>
+      s.url.startsWith("https://www.cdc.gov/niosh/"),
+    ),
+  );
+  assert.equal(new Set(output.content.sources.map((s) => s.id)).size, 8);
+  for (const level of ["state", "county", "city"])
+    assert.ok(output.content.sources.some((s) => s.level === level));
+});
