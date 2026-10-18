@@ -5,8 +5,8 @@
    "eia": "8055",
    "name": "Arkansas Nuclear One",
    "for_date": "2026-10-19",
-   "generated_at": "2026-10-18T07:44:28Z",
-   "verdict": "go"
+   "generated_at": "2026-10-18T08:14:07Z",
+   "verdict": "limits"
   },
   {
    "eia": "3",
@@ -26,8 +26,8 @@
    "eia": "8042",
    "name": "Belews Creek",
    "for_date": "2026-10-19",
-   "generated_at": "2026-10-18T07:44:28Z",
-   "verdict": "go"
+   "generated_at": "2026-10-18T09:04:50Z",
+   "verdict": "limits"
   },
   {
    "eia": "703",
@@ -40,15 +40,15 @@
    "eia": "6022",
    "name": "Braidwood Generation Station",
    "for_date": "2026-10-19",
-   "generated_at": "2026-10-18T07:44:28Z",
-   "verdict": "go"
+   "generated_at": "2026-10-18T08:14:07Z",
+   "verdict": "limits"
   },
   {
    "eia": "6190",
    "name": "Brame Energy Center",
    "for_date": "2026-10-19",
-   "generated_at": "2026-10-18T07:44:28Z",
-   "verdict": "go"
+   "generated_at": "2026-10-18T09:04:50Z",
+   "verdict": "limits"
   },
   {
    "eia": "46",
@@ -61,35 +61,35 @@
    "eia": "6023",
    "name": "Byron Generating Station",
    "for_date": "2026-10-19",
-   "generated_at": "2026-10-18T07:44:28Z",
-   "verdict": "go"
+   "generated_at": "2026-10-18T08:14:07Z",
+   "verdict": "limits"
   },
   {
    "eia": "6011",
    "name": "Calvert Cliffs Nuclear Power Plant",
    "for_date": "2026-10-19",
-   "generated_at": "2026-10-18T07:44:28Z",
-   "verdict": "go"
+   "generated_at": "2026-10-18T08:14:07Z",
+   "verdict": "limits"
   },
   {
    "eia": "6076",
    "name": "Colstrip",
    "for_date": "2026-10-19",
-   "generated_at": "2026-10-18T07:44:28Z",
-   "verdict": "go"
+   "generated_at": "2026-10-18T09:14:37Z",
+   "verdict": "limits"
   },
   {
    "eia": "6145",
    "name": "Comanche Peak",
    "for_date": "2026-10-19",
-   "generated_at": "2026-10-18T07:44:28Z",
-   "verdict": "go"
+   "generated_at": "2026-10-18T08:14:07Z",
+   "verdict": "limits"
   },
   {
    "eia": "130",
    "name": "Cross",
    "for_date": "2026-10-19",
-   "generated_at": "2026-10-18T07:44:28Z",
+   "generated_at": "2026-10-18T08:14:07Z",
    "verdict": "limits"
   },
   {
@@ -103,50 +103,50 @@
    "eia": "3399",
    "name": "Cumberland (TN)",
    "for_date": "2026-10-19",
-   "generated_at": "2026-10-18T07:44:28Z",
+   "generated_at": "2026-10-18T08:14:07Z",
    "verdict": "limits"
   },
   {
    "eia": "6099",
    "name": "Diablo Canyon",
    "for_date": "2026-10-19",
-   "generated_at": "2026-10-18T07:44:28Z",
+   "generated_at": "2026-10-18T08:14:07Z",
    "verdict": "limits"
   },
   {
    "eia": "6000",
    "name": "Donald C Cook",
    "for_date": "2026-10-19",
-   "generated_at": "2026-10-18T07:44:28Z",
-   "verdict": "go"
+   "generated_at": "2026-10-18T08:14:07Z",
+   "verdict": "limits"
   },
   {
    "eia": "260",
    "name": "Dynegy Moss Landing Power Plant Hybrid",
    "for_date": "2026-10-19",
-   "generated_at": "2026-10-18T07:44:28Z",
-   "verdict": "go"
+   "generated_at": "2026-10-18T08:14:07Z",
+   "verdict": "limits"
   },
   {
    "eia": "612",
    "name": "Fort Myers",
    "for_date": "2026-10-19",
-   "generated_at": "2026-10-18T07:44:28Z",
+   "generated_at": "2026-10-18T08:14:07Z",
    "verdict": "limits"
   },
   {
    "eia": "8102",
    "name": "Gavin Power, LLC",
    "for_date": "2026-10-19",
-   "generated_at": "2026-10-18T07:44:28Z",
+   "generated_at": "2026-10-18T08:14:07Z",
    "verdict": "limits"
   },
   {
    "eia": "1356",
    "name": "Ghent",
    "for_date": "2026-10-19",
-   "generated_at": "2026-10-18T07:44:28Z",
-   "verdict": "go"
+   "generated_at": "2026-10-18T08:14:07Z",
+   "verdict": "limits"
   },
   {
    "eia": "6113",
@@ -166,49 +166,49 @@
    "eia": "62949",
    "name": "Guernsey Power Station",
    "for_date": "2026-10-19",
-   "generated_at": "2026-10-18T07:44:28Z",
-   "verdict": "go"
+   "generated_at": "2026-10-18T09:04:50Z",
+   "verdict": "limits"
   },
   {
    "eia": "400",
    "name": "Haynes",
    "for_date": "2026-10-19",
-   "generated_at": "2026-10-18T07:44:28Z",
+   "generated_at": "2026-10-18T09:04:50Z",
    "verdict": "limits"
   },
   {
    "eia": "6165",
    "name": "Hunter",
    "for_date": "2026-10-19",
-   "generated_at": "2026-10-18T07:44:28Z",
-   "verdict": "go"
+   "generated_at": "2026-10-18T08:14:07Z",
+   "verdict": "limits"
   },
   {
    "eia": "6065",
    "name": "Iatan",
    "for_date": "2026-10-19",
-   "generated_at": "2026-10-18T07:44:28Z",
+   "generated_at": "2026-10-18T08:14:07Z",
    "verdict": "go"
   },
   {
    "eia": "6068",
    "name": "Jeffrey Energy Center",
    "for_date": "2026-10-19",
-   "generated_at": "2026-10-18T07:44:28Z",
+   "generated_at": "2026-10-18T08:14:07Z",
    "verdict": "go"
   },
   {
    "eia": "8066",
    "name": "Jim Bridger",
    "for_date": "2026-10-19",
-   "generated_at": "2026-10-18T07:44:28Z",
+   "generated_at": "2026-10-18T08:14:07Z",
    "verdict": "go"
   },
   {
    "eia": "3082",
    "name": "John Day",
    "for_date": "2026-10-19",
-   "generated_at": "2026-10-18T07:44:28Z",
+   "generated_at": "2026-10-18T08:14:07Z",
    "verdict": "limits"
   },
   {
@@ -222,15 +222,15 @@
    "eia": "6026",
    "name": "LaSalle Generating Station",
    "for_date": "2026-10-19",
-   "generated_at": "2026-10-18T07:44:28Z",
+   "generated_at": "2026-10-18T08:14:07Z",
    "verdict": "go"
   },
   {
    "eia": "2103",
    "name": "Labadie",
    "for_date": "2026-10-19",
-   "generated_at": "2026-10-18T07:44:28Z",
-   "verdict": "go"
+   "generated_at": "2026-10-18T08:14:07Z",
+   "verdict": "limits"
   },
   {
    "eia": "6042",
@@ -243,7 +243,7 @@
    "eia": "6146",
    "name": "Martin Lake",
    "for_date": "2026-10-19",
-   "generated_at": "2026-10-18T07:44:28Z",
+   "generated_at": "2026-10-18T08:14:07Z",
    "verdict": "go"
   },
   {
@@ -257,28 +257,28 @@
    "eia": "2952",
    "name": "Muskogee",
    "for_date": "2026-10-19",
-   "generated_at": "2026-10-18T07:44:28Z",
-   "verdict": "go"
+   "generated_at": "2026-10-18T08:14:07Z",
+   "verdict": "limits"
   },
   {
    "eia": "1403",
    "name": "Nine Mile Point",
    "for_date": "2026-10-19",
-   "generated_at": "2026-10-18T07:44:28Z",
+   "generated_at": "2026-10-18T08:14:07Z",
    "verdict": "limits"
   },
   {
    "eia": "3265",
    "name": "Oconee",
    "for_date": "2026-10-19",
-   "generated_at": "2026-10-18T07:44:28Z",
+   "generated_at": "2026-10-18T08:14:07Z",
    "verdict": "limits"
   },
   {
    "eia": "2410",
    "name": "PSEG Salem Generating Station",
    "for_date": "2026-10-19",
-   "generated_at": "2026-10-18T07:44:28Z",
+   "generated_at": "2026-10-18T08:14:07Z",
    "verdict": "go"
   },
   {
@@ -299,70 +299,70 @@
    "eia": "2500",
    "name": "Ravenswood",
    "for_date": "2026-10-19",
-   "generated_at": "2026-10-18T07:44:28Z",
+   "generated_at": "2026-10-18T08:14:07Z",
    "verdict": "limits"
   },
   {
    "eia": "2693",
    "name": "Robert Moses Niagara",
    "for_date": "2026-10-19",
-   "generated_at": "2026-10-18T07:44:28Z",
+   "generated_at": "2026-10-18T08:14:07Z",
    "verdict": "go"
   },
   {
    "eia": "6166",
    "name": "Rockport",
    "for_date": "2026-10-19",
-   "generated_at": "2026-10-18T07:44:28Z",
+   "generated_at": "2026-10-18T09:04:50Z",
    "verdict": "limits"
   },
   {
    "eia": "2712",
    "name": "Roxboro",
    "for_date": "2026-10-19",
-   "generated_at": "2026-10-18T07:44:28Z",
+   "generated_at": "2026-10-18T08:14:07Z",
    "verdict": "limits"
   },
   {
    "eia": "6090",
    "name": "Sherburne County",
    "for_date": "2026-10-19",
-   "generated_at": "2026-10-18T07:44:28Z",
-   "verdict": "go"
+   "generated_at": "2026-10-18T09:04:50Z",
+   "verdict": "limits"
   },
   {
    "eia": "6251",
    "name": "South Texas Project",
    "for_date": "2026-10-19",
-   "generated_at": "2026-10-18T07:44:28Z",
+   "generated_at": "2026-10-18T08:14:07Z",
    "verdict": "go"
   },
   {
    "eia": "8223",
    "name": "Springerville",
    "for_date": "2026-10-19",
-   "generated_at": "2026-10-18T07:44:28Z",
+   "generated_at": "2026-10-18T08:14:07Z",
    "verdict": "limits"
   },
   {
    "eia": "66923",
    "name": "SunZia Wind South",
    "for_date": "2026-10-19",
-   "generated_at": "2026-10-18T07:44:28Z",
+   "generated_at": "2026-10-18T08:14:07Z",
    "verdict": "limits"
   },
   {
    "eia": "6103",
    "name": "TalenEnergy Susquehanna",
    "for_date": "2026-10-19",
-   "generated_at": "2026-10-18T07:44:28Z",
-   "verdict": "go"
+   "generated_at": "2026-10-18T08:14:07Z",
+   "verdict": "limits"
   },
   {
    "eia": "6071",
    "name": "Trimble County",
    "for_date": "2026-10-19",
-   "generated_at": "2026-10-18T07:44:28Z",
+   "generated_at": "2026-10-18T08:14:07Z",
    "verdict": "limits"
   },
   {
@@ -376,14 +376,14 @@
    "eia": "55380",
    "name": "Union Power Station",
    "for_date": "2026-10-19",
-   "generated_at": "2026-10-18T07:44:28Z",
+   "generated_at": "2026-10-18T08:14:07Z",
    "verdict": "limits"
   },
   {
    "eia": "6073",
    "name": "Victor J Daniel Jr",
    "for_date": "2026-10-19",
-   "generated_at": "2026-10-18T07:44:28Z",
+   "generated_at": "2026-10-18T08:14:07Z",
    "verdict": "limits"
   },
   {
@@ -397,21 +397,21 @@
    "eia": "3470",
    "name": "W A Parish",
    "for_date": "2026-10-19",
-   "generated_at": "2026-10-18T08:14:07Z",
+   "generated_at": "2026-10-18T09:04:50Z",
    "verdict": "go"
   },
   {
    "eia": "1082",
    "name": "Walter Scott Jr Energy Center",
    "for_date": "2026-10-19",
-   "generated_at": "2026-10-18T07:44:28Z",
+   "generated_at": "2026-10-18T09:04:50Z",
    "verdict": "go"
   },
   {
    "eia": "7722",
    "name": "Watts Bar Nuclear Plant",
    "for_date": "2026-10-19",
-   "generated_at": "2026-10-18T07:44:28Z",
+   "generated_at": "2026-10-18T09:04:50Z",
    "verdict": "limits"
   },
   {

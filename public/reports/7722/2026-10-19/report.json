@@ -12,1972 +12,688 @@
   },
   "for_date": "2026-10-19",
   "kind": "evening",
-  "generated_at": "2026-10-18T07:44:28Z",
-  "snapshot": "20261018T074428Z",
+  "generated_at": "2026-10-18T09:04:50Z",
+  "snapshot": "20261018T090450Z",
   "sources": {
    "nifc_fires": {
     "url": "https://services3.arcgis.com/T4QMspbfLg3qTGWY/arcgis/rest/services/WFIGS_Incident_Locations_Current/FeatureServer/0/query?where=IncidentTypeCategory%3D%27WF%27+AND+%28PercentContained+IS+NULL+OR+PercentContained%3C100%29&outFields=IncidentName%2CIncidentSize%2CPercentContained&outSR=4326&f=json&resultRecordCount=2000",
-    "fetched_at": "2026-10-18T07:44:28Z"
+    "fetched_at": "2026-10-18T09:04:51Z"
    },
-   "openmeteo_hourly_6163": {
-    "url": "https://api.open-meteo.com/v1/forecast?latitude=47.9575%2C47.9575%2C48.1131%2C48.1131%2C47.9575%2C47.8019%2C47.8019&longitude=-118.9773%2C-118.7090%2C-118.8432%2C-119.1114%2C-119.2456%2C-119.1114%2C-118.8432&hourly=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cwind_speed_10m%2Cwind_gusts_10m%2Cshortwave_radiation%2Cprecipitation%2Cprecipitation_probability%2Ccape%2Cuv_index&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=mm&timezone=UTC&past_days=1&forecast_days=4",
-    "fetched_at": "2026-10-18T07:44:29Z"
+   "openmeteo_sun_6076": {
+    "url": "https://api.open-meteo.com/v1/forecast?latitude=45.8831&longitude=-106.6140&daily=sunrise%2Csunset&timezone=America%2FDenver&forecast_days=4",
+    "fetched_at": "2026-10-18T09:07:23Z"
    },
-   "openmeteo_sun_6163": {
-    "url": "https://api.open-meteo.com/v1/forecast?latitude=47.9575&longitude=-118.9773&daily=sunrise%2Csunset&timezone=America%2FLos_Angeles&forecast_days=4",
-    "fetched_at": "2026-10-18T07:44:29Z"
+   "nws_alerts_6076": {
+    "url": "https://api.weather.gov/alerts/active?point=45.8831%2C-106.6140",
+    "fetched_at": "2026-10-18T09:07:23Z"
    },
-   "nws_alerts_6163": {
-    "url": "https://api.weather.gov/alerts/active?point=47.9575%2C-118.9773",
-    "fetched_at": "2026-10-18T07:44:29Z"
+   "nws_point_6076": {
+    "url": "https://api.weather.gov/points/45.8831,-106.6140",
+    "fetched_at": "2026-10-18T09:07:23Z"
    },
-   "nws_point_6163": {
-    "url": "https://api.weather.gov/points/47.9575,-118.9773",
-    "fetched_at": "2026-10-18T07:44:29Z"
+   "nws_forecast_6076": {
+    "url": "https://api.weather.gov/gridpoints/BYZ/165,90/forecast",
+    "fetched_at": "2026-10-18T09:07:23Z"
    },
-   "nws_forecast_6163": {
-    "url": "https://api.weather.gov/gridpoints/OTX/94,112/forecast",
-    "fetched_at": "2026-10-18T07:44:29Z"
+   "openmeteo_air_6076": {
+    "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=45.8831&longitude=-106.6140&hourly=us_aqi%2Cpm2_5%2Cpm10&timezone=UTC&forecast_days=4&past_days=1",
+    "fetched_at": "2026-10-18T09:07:24Z"
    },
-   "openmeteo_air_6163": {
-    "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=47.9575&longitude=-118.9773&hourly=us_aqi%2Cpm2_5%2Cpm10&timezone=UTC&forecast_days=4&past_days=1",
-    "fetched_at": "2026-10-18T07:44:30Z"
-   },
-   "nld_6163_leveed_areas": {
+   "nld_6076_leveed_areas": {
     "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (leveed_areas)",
-    "fetched_at": "2026-10-18T07:44:30Z"
+    "fetched_at": "2026-10-18T09:07:25Z"
    },
-   "nld_6163_alignment_lines": {
+   "nld_6076_alignment_lines": {
     "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (alignment_lines)",
-    "fetched_at": "2026-10-18T07:44:30Z"
+    "fetched_at": "2026-10-18T09:07:25Z"
    },
-   "nld_6163_floodwalls": {
+   "nld_6076_floodwalls": {
     "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (floodwalls)",
-    "fetched_at": "2026-10-18T07:44:31Z"
+    "fetched_at": "2026-10-18T09:07:25Z"
    },
-   "nld_6163_closure_structures": {
+   "nld_6076_closure_structures": {
     "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (closure_structures)",
-    "fetched_at": "2026-10-18T07:44:31Z"
+    "fetched_at": "2026-10-18T09:07:25Z"
    },
-   "nld_6163_pump_stations": {
+   "nld_6076_pump_stations": {
     "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (pump_stations)",
-    "fetched_at": "2026-10-18T07:44:31Z"
+    "fetched_at": "2026-10-18T09:07:25Z"
    },
    "nld2_inspection_rating": {
     "url": "https://levees.sec.usace.army.mil/api-local/system-categories/inspection-rating",
-    "fetched_at": "2026-10-18T08:06:21Z"
+    "fetched_at": "2026-10-18T09:12:56Z"
    },
-   "overpass_roads_6163": {
-    "url": "https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A60%5D%3Bway%28around%3A2500%2C47.95751%2C-118.97730%29%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%7Cunclassified%7Cresidential%7Cservice%7Ctrack%7Croad%7Cliving_street%7Cmotorway_link%7Ctrunk_link%7Cprimary_link%7Csecondary_link%7Ctertiary_link%29%24%22%5D%5B%22access%22%21~%22%5E%28no%29%24%22%5D%3Bout+geom%3B",
-    "fetched_at": "2026-10-18T07:45:19Z"
+   "overpass_roads_6076": {
+    "url": "https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A60%5D%3Bway%28around%3A2500%2C45.88310%2C-106.61400%29%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%7Cunclassified%7Cresidential%7Cservice%7Ctrack%7Croad%7Cliving_street%7Cmotorway_link%7Ctrunk_link%7Cprimary_link%7Csecondary_link%7Ctertiary_link%29%24%22%5D%5B%22access%22%21~%22%5E%28no%29%24%22%5D%3Bout+geom%3B",
+    "fetched_at": "2026-10-18T09:08:03Z"
    },
    "inat_taxon_Alligator mississippiensis": {
     "url": "https://api.inaturalist.org/v1/taxa?q=Alligator+mississippiensis&per_page=5&is_active=true",
-    "fetched_at": "2026-10-18T08:07:09Z"
+    "fetched_at": "2026-10-18T09:13:37Z"
    },
    "inat_taxon_Crocodylus acutus": {
     "url": "https://api.inaturalist.org/v1/taxa?q=Crocodylus+acutus&per_page=5&is_active=true",
-    "fetched_at": "2026-10-18T08:07:09Z"
+    "fetched_at": "2026-10-18T09:13:37Z"
    },
    "inat_taxon_Crotalus": {
     "url": "https://api.inaturalist.org/v1/taxa?q=Crotalus&per_page=5&is_active=true",
-    "fetched_at": "2026-10-18T08:07:09Z"
+    "fetched_at": "2026-10-18T09:13:38Z"
    },
    "inat_taxon_Agkistrodon": {
     "url": "https://api.inaturalist.org/v1/taxa?q=Agkistrodon&per_page=5&is_active=true",
-    "fetched_at": "2026-10-18T08:07:09Z"
+    "fetched_at": "2026-10-18T09:13:38Z"
    },
    "inat_taxon_Micrurus": {
     "url": "https://api.inaturalist.org/v1/taxa?q=Micrurus&per_page=5&is_active=true",
-    "fetched_at": "2026-10-18T08:07:09Z"
+    "fetched_at": "2026-10-18T09:13:38Z"
    },
    "inat_taxon_Sistrurus": {
     "url": "https://api.inaturalist.org/v1/taxa?q=Sistrurus&per_page=5&is_active=true",
-    "fetched_at": "2026-10-18T08:07:09Z"
+    "fetched_at": "2026-10-18T09:13:38Z"
    },
    "inat_taxon_Ursus americanus": {
     "url": "https://api.inaturalist.org/v1/taxa?q=Ursus+americanus&per_page=5&is_active=true",
-    "fetched_at": "2026-10-18T08:07:09Z"
+    "fetched_at": "2026-10-18T09:13:38Z"
    },
-   "inat_recent_6163": {
-    "url": "https://api.inaturalist.org/v1/observations?lat=47.957511&lng=-118.9773&radius=10&taxon_id=26159%2C26085%2C30692%2C30668%2C30493%2C30979%2C41638&quality_grade=research&d1=2026-09-18&per_page=200&order_by=observed_on&order=desc",
-    "fetched_at": "2026-10-18T07:45:20Z"
+   "inat_recent_6076": {
+    "url": "https://api.inaturalist.org/v1/observations?lat=45.8831&lng=-106.614&radius=10&taxon_id=26159%2C26085%2C30692%2C30668%2C30493%2C30979%2C41638&quality_grade=research&d1=2026-09-18&per_page=200&order_by=observed_on&order=desc",
+    "fetched_at": "2026-10-18T09:08:04Z"
    },
-   "inat_season_6163_alligator": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=47.957511&lng=-118.9773&radius=25&taxon_id=26159&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:45:21Z"
+   "inat_season_6076_alligator": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=45.8831&lng=-106.614&radius=25&taxon_id=26159&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T09:08:05Z"
    },
-   "inat_season_6163_crocodile": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=47.957511&lng=-118.9773&radius=25&taxon_id=26085&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:45:22Z"
+   "inat_season_6076_crocodile": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=45.8831&lng=-106.614&radius=25&taxon_id=26085&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T09:08:06Z"
    },
-   "inat_season_6163_snakes": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=47.957511&lng=-118.9773&radius=25&taxon_id=30692%2C30668%2C30493%2C30979&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:45:23Z"
+   "inat_season_6076_snakes": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=45.8831&lng=-106.614&radius=25&taxon_id=30692%2C30668%2C30493%2C30979&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T09:08:07Z"
    },
-   "inat_season_6163_bear": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=47.957511&lng=-118.9773&radius=25&taxon_id=41638&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:45:23Z"
+   "inat_season_6076_bear": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=45.8831&lng=-106.614&radius=25&taxon_id=41638&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T09:08:07Z"
    },
-   "openmeteo_hourly_649": {
-    "url": "https://api.open-meteo.com/v1/forecast?latitude=33.1427%2C33.1427%2C33.2983%2C33.2983%2C33.1427%2C32.9871%2C32.9871&longitude=-81.7625%2C-81.5479%2C-81.6552%2C-81.8698%2C-81.9771%2C-81.8698%2C-81.6552&hourly=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cwind_speed_10m%2Cwind_gusts_10m%2Cshortwave_radiation%2Cprecipitation%2Cprecipitation_probability%2Ccape%2Cuv_index&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=mm&timezone=UTC&past_days=1&forecast_days=4",
-    "fetched_at": "2026-10-18T07:45:24Z"
+   "openmeteo_hourly_6190": {
+    "url": "https://api.open-meteo.com/v1/forecast?latitude=31.3950%2C31.3950%2C31.5506%2C31.5506%2C31.3950%2C31.2394%2C31.2394&longitude=-92.7167%2C-92.5062%2C-92.6114%2C-92.8219%2C-92.9271%2C-92.8219%2C-92.6114&hourly=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cwind_speed_10m%2Cwind_gusts_10m%2Cshortwave_radiation%2Cprecipitation%2Cprecipitation_probability%2Ccape%2Cuv_index&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=mm&timezone=UTC&past_days=1&forecast_days=4",
+    "fetched_at": "2026-10-18T09:08:08Z"
    },
-   "openmeteo_sun_649": {
-    "url": "https://api.open-meteo.com/v1/forecast?latitude=33.1427&longitude=-81.7625&daily=sunrise%2Csunset&timezone=America%2FNew_York&forecast_days=4",
-    "fetched_at": "2026-10-18T07:45:24Z"
+   "openmeteo_sun_6190": {
+    "url": "https://api.open-meteo.com/v1/forecast?latitude=31.3950&longitude=-92.7167&daily=sunrise%2Csunset&timezone=America%2FChicago&forecast_days=4",
+    "fetched_at": "2026-10-18T09:08:08Z"
    },
-   "nws_alerts_649": {
-    "url": "https://api.weather.gov/alerts/active?point=33.1427%2C-81.7625",
-    "fetched_at": "2026-10-18T07:45:24Z"
+   "nws_alerts_6190": {
+    "url": "https://api.weather.gov/alerts/active?point=31.3950%2C-92.7167",
+    "fetched_at": "2026-10-18T09:08:08Z"
    },
-   "nws_point_649": {
-    "url": "https://api.weather.gov/points/33.1427,-81.7625",
-    "fetched_at": "2026-10-18T07:45:24Z"
+   "nws_point_6190": {
+    "url": "https://api.weather.gov/points/31.3950,-92.7167",
+    "fetched_at": "2026-10-18T09:08:08Z"
    },
-   "nws_forecast_649": {
-    "url": "https://api.weather.gov/gridpoints/CAE/42,21/forecast",
-    "fetched_at": "2026-10-18T07:45:24Z"
+   "nws_forecast_6190": {
+    "url": "https://api.weather.gov/gridpoints/LCH/78,146/forecast",
+    "fetched_at": "2026-10-18T09:08:08Z"
    },
-   "openmeteo_air_649": {
-    "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=33.1427&longitude=-81.7625&hourly=us_aqi%2Cpm2_5%2Cpm10&timezone=UTC&forecast_days=4&past_days=1",
-    "fetched_at": "2026-10-18T07:45:25Z"
+   "openmeteo_air_6190": {
+    "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=31.3950&longitude=-92.7167&hourly=us_aqi%2Cpm2_5%2Cpm10&timezone=UTC&forecast_days=4&past_days=1",
+    "fetched_at": "2026-10-18T09:08:08Z"
    },
-   "nld_649_leveed_areas": {
+   "nld_6190_leveed_areas": {
     "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (leveed_areas)",
-    "fetched_at": "2026-10-18T07:45:25Z"
+    "fetched_at": "2026-10-18T09:08:10Z"
    },
-   "nld_649_alignment_lines": {
+   "nld_6190_alignment_lines": {
     "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (alignment_lines)",
-    "fetched_at": "2026-10-18T07:45:25Z"
+    "fetched_at": "2026-10-18T09:08:10Z"
    },
-   "nld_649_floodwalls": {
+   "nld_6190_floodwalls": {
     "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (floodwalls)",
-    "fetched_at": "2026-10-18T07:45:26Z"
+    "fetched_at": "2026-10-18T09:08:10Z"
    },
-   "nld_649_closure_structures": {
+   "nld_6190_closure_structures": {
     "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (closure_structures)",
-    "fetched_at": "2026-10-18T07:45:26Z"
+    "fetched_at": "2026-10-18T09:08:11Z"
    },
-   "nld_649_pump_stations": {
+   "nld_6190_pump_stations": {
     "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (pump_stations)",
-    "fetched_at": "2026-10-18T07:45:26Z"
+    "fetched_at": "2026-10-18T09:08:11Z"
    },
-   "overpass_roads_649": {
-    "url": "https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A60%5D%3Bway%28around%3A2500%2C33.14270%2C-81.76250%29%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%7Cunclassified%7Cresidential%7Cservice%7Ctrack%7Croad%7Cliving_street%7Cmotorway_link%7Ctrunk_link%7Cprimary_link%7Csecondary_link%7Ctertiary_link%29%24%22%5D%5B%22access%22%21~%22%5E%28no%29%24%22%5D%3Bout+geom%3B",
-    "fetched_at": "2026-10-18T07:46:10Z"
+   "inat_recent_6190": {
+    "url": "https://api.inaturalist.org/v1/observations?lat=31.395&lng=-92.71667&radius=10&taxon_id=26159%2C26085%2C30692%2C30668%2C30493%2C30979%2C41638&quality_grade=research&d1=2026-09-18&per_page=200&order_by=observed_on&order=desc",
+    "fetched_at": "2026-10-18T09:08:16Z"
    },
-   "inat_recent_649": {
-    "url": "https://api.inaturalist.org/v1/observations?lat=33.1427&lng=-81.7625&radius=10&taxon_id=26159%2C26085%2C30692%2C30668%2C30493%2C30979%2C41638&quality_grade=research&d1=2026-09-18&per_page=200&order_by=observed_on&order=desc",
-    "fetched_at": "2026-10-18T07:46:11Z"
+   "inat_season_6190_alligator": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=31.395&lng=-92.71667&radius=25&taxon_id=26159&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T09:08:16Z"
    },
-   "inat_season_649_alligator": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=33.1427&lng=-81.7625&radius=25&taxon_id=26159&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:46:12Z"
+   "inat_season_6190_crocodile": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=31.395&lng=-92.71667&radius=25&taxon_id=26085&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T09:08:17Z"
    },
-   "inat_season_649_crocodile": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=33.1427&lng=-81.7625&radius=25&taxon_id=26085&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:46:12Z"
+   "inat_season_6190_snakes": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=31.395&lng=-92.71667&radius=25&taxon_id=30692%2C30668%2C30493%2C30979&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T09:08:18Z"
    },
-   "inat_season_649_snakes": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=33.1427&lng=-81.7625&radius=25&taxon_id=30692%2C30668%2C30493%2C30979&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:46:13Z"
+   "inat_season_6190_bear": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=31.395&lng=-92.71667&radius=25&taxon_id=41638&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T09:08:19Z"
    },
-   "inat_season_649_bear": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=33.1427&lng=-81.7625&radius=25&taxon_id=41638&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:46:14Z"
+   "openmeteo_hourly_1082": {
+    "url": "https://api.open-meteo.com/v1/forecast?latitude=41.1800%2C41.1800%2C41.3356%2C41.3356%2C41.1800%2C41.0244%2C41.0244&longitude=-95.8408%2C-95.6021%2C-95.7214%2C-95.9602%2C-96.0795%2C-95.9602%2C-95.7214&hourly=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cwind_speed_10m%2Cwind_gusts_10m%2Cshortwave_radiation%2Cprecipitation%2Cprecipitation_probability%2Ccape%2Cuv_index&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=mm&timezone=UTC&past_days=1&forecast_days=4",
+    "fetched_at": "2026-10-18T09:08:19Z"
    },
-   "openmeteo_hourly_56407": {
-    "url": "https://api.open-meteo.com/v1/forecast?latitude=26.6986%2C26.6986%2C26.8542%2C26.8542%2C26.6986%2C26.5430%2C26.5430&longitude=-80.3747%2C-80.1736%2C-80.2741%2C-80.4753%2C-80.5758%2C-80.4753%2C-80.2741&hourly=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cwind_speed_10m%2Cwind_gusts_10m%2Cshortwave_radiation%2Cprecipitation%2Cprecipitation_probability%2Ccape%2Cuv_index&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=mm&timezone=UTC&past_days=1&forecast_days=4",
-    "fetched_at": "2026-10-18T07:46:14Z"
+   "openmeteo_sun_1082": {
+    "url": "https://api.open-meteo.com/v1/forecast?latitude=41.1800&longitude=-95.8408&daily=sunrise%2Csunset&timezone=America%2FChicago&forecast_days=4",
+    "fetched_at": "2026-10-18T09:08:19Z"
    },
-   "openmeteo_sun_56407": {
-    "url": "https://api.open-meteo.com/v1/forecast?latitude=26.6986&longitude=-80.3747&daily=sunrise%2Csunset&timezone=America%2FNew_York&forecast_days=4",
-    "fetched_at": "2026-10-18T07:46:14Z"
+   "nws_alerts_1082": {
+    "url": "https://api.weather.gov/alerts/active?point=41.1800%2C-95.8408",
+    "fetched_at": "2026-10-18T09:08:19Z"
    },
-   "nws_alerts_56407": {
-    "url": "https://api.weather.gov/alerts/active?point=26.6986%2C-80.3747",
-    "fetched_at": "2026-10-18T07:46:15Z"
+   "nws_point_1082": {
+    "url": "https://api.weather.gov/points/41.1800,-95.8408",
+    "fetched_at": "2026-10-18T09:08:19Z"
    },
-   "nws_point_56407": {
-    "url": "https://api.weather.gov/points/26.6986,-80.3747",
-    "fetched_at": "2026-10-18T07:46:15Z"
+   "nws_forecast_1082": {
+    "url": "https://api.weather.gov/gridpoints/OAX/86,56/forecast",
+    "fetched_at": "2026-10-18T09:08:19Z"
    },
-   "nws_forecast_56407": {
-    "url": "https://api.weather.gov/gridpoints/MFL/98,90/forecast",
-    "fetched_at": "2026-10-18T07:46:15Z"
+   "openmeteo_air_1082": {
+    "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=41.1800&longitude=-95.8408&hourly=us_aqi%2Cpm2_5%2Cpm10&timezone=UTC&forecast_days=4&past_days=1",
+    "fetched_at": "2026-10-18T09:08:20Z"
    },
-   "openmeteo_air_56407": {
-    "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=26.6986&longitude=-80.3747&hourly=us_aqi%2Cpm2_5%2Cpm10&timezone=UTC&forecast_days=4&past_days=1",
-    "fetched_at": "2026-10-18T07:46:15Z"
-   },
-   "nld_56407_leveed_areas": {
+   "nld_1082_leveed_areas": {
     "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (leveed_areas)",
-    "fetched_at": "2026-10-18T07:46:16Z"
+    "fetched_at": "2026-10-18T09:08:21Z"
    },
-   "nld_56407_alignment_lines": {
+   "nld_1082_alignment_lines": {
     "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (alignment_lines)",
-    "fetched_at": "2026-10-18T07:46:16Z"
+    "fetched_at": "2026-10-18T09:08:21Z"
    },
-   "nld_56407_floodwalls": {
+   "nld_1082_floodwalls": {
     "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (floodwalls)",
-    "fetched_at": "2026-10-18T07:46:17Z"
+    "fetched_at": "2026-10-18T09:08:21Z"
    },
-   "nld_56407_closure_structures": {
+   "nld_1082_closure_structures": {
     "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (closure_structures)",
-    "fetched_at": "2026-10-18T07:46:17Z"
+    "fetched_at": "2026-10-18T09:08:22Z"
    },
-   "nld_56407_pump_stations": {
+   "nld_1082_pump_stations": {
     "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (pump_stations)",
-    "fetched_at": "2026-10-18T07:46:17Z"
+    "fetched_at": "2026-10-18T09:08:22Z"
    },
-   "overpass_roads_56407": {
-    "url": "https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A60%5D%3Bway%28around%3A2500%2C26.69860%2C-80.37470%29%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%7Cunclassified%7Cresidential%7Cservice%7Ctrack%7Croad%7Cliving_street%7Cmotorway_link%7Ctrunk_link%7Cprimary_link%7Csecondary_link%7Ctertiary_link%29%24%22%5D%5B%22access%22%21~%22%5E%28no%29%24%22%5D%3Bout+geom%3B",
-    "fetched_at": "2026-10-18T07:47:01Z"
+   "nwps_gauge_OMHN1": {
+    "url": "https://api.water.noaa.gov/nwps/v1/gauges/OMHN1",
+    "fetched_at": "2026-10-18T09:08:22Z"
    },
-   "inat_recent_56407": {
-    "url": "https://api.inaturalist.org/v1/observations?lat=26.6986&lng=-80.3747&radius=10&taxon_id=26159%2C26085%2C30692%2C30668%2C30493%2C30979%2C41638&quality_grade=research&d1=2026-09-18&per_page=200&order_by=observed_on&order=desc",
-    "fetched_at": "2026-10-18T07:47:02Z"
+   "nwps_stageflow_OMHN1": {
+    "url": "https://api.water.noaa.gov/nwps/v1/gauges/OMHN1/stageflow",
+    "fetched_at": "2026-10-18T09:08:23Z"
    },
-   "inat_season_56407_alligator": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=26.6986&lng=-80.3747&radius=25&taxon_id=26159&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:47:03Z"
+   "overpass_roads_1082": {
+    "url": "https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A60%5D%3Bway%28around%3A2500%2C41.18000%2C-95.84080%29%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%7Cunclassified%7Cresidential%7Cservice%7Ctrack%7Croad%7Cliving_street%7Cmotorway_link%7Ctrunk_link%7Cprimary_link%7Csecondary_link%7Ctertiary_link%29%24%22%5D%5B%22access%22%21~%22%5E%28no%29%24%22%5D%3Bout+geom%3B",
+    "fetched_at": "2026-10-18T09:08:56Z"
    },
-   "inat_season_56407_crocodile": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=26.6986&lng=-80.3747&radius=25&taxon_id=26085&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:47:04Z"
+   "inat_recent_1082": {
+    "url": "https://api.inaturalist.org/v1/observations?lat=41.18&lng=-95.8408&radius=10&taxon_id=26159%2C26085%2C30692%2C30668%2C30493%2C30979%2C41638&quality_grade=research&d1=2026-09-18&per_page=200&order_by=observed_on&order=desc",
+    "fetched_at": "2026-10-18T09:08:58Z"
    },
-   "inat_season_56407_snakes": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=26.6986&lng=-80.3747&radius=25&taxon_id=30692%2C30668%2C30493%2C30979&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:47:04Z"
+   "inat_season_1082_alligator": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=41.18&lng=-95.8408&radius=25&taxon_id=26159&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T09:08:58Z"
    },
-   "inat_season_56407_bear": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=26.6986&lng=-80.3747&radius=25&taxon_id=41638&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:47:05Z"
+   "inat_season_1082_crocodile": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=41.18&lng=-95.8408&radius=25&taxon_id=26085&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T09:08:59Z"
    },
-   "openmeteo_hourly_6008": {
-    "url": "https://api.open-meteo.com/v1/forecast?latitude=33.3881%2C33.3881%2C33.5437%2C33.5437%2C33.3881%2C33.2325%2C33.2325&longitude=-112.8617%2C-112.6465%2C-112.7541%2C-112.9693%2C-113.0769%2C-112.9693%2C-112.7541&hourly=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cwind_speed_10m%2Cwind_gusts_10m%2Cshortwave_radiation%2Cprecipitation%2Cprecipitation_probability%2Ccape%2Cuv_index&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=mm&timezone=UTC&past_days=1&forecast_days=4",
-    "fetched_at": "2026-10-18T07:47:06Z"
+   "inat_season_1082_snakes": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=41.18&lng=-95.8408&radius=25&taxon_id=30692%2C30668%2C30493%2C30979&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T09:09:00Z"
    },
-   "openmeteo_sun_6008": {
-    "url": "https://api.open-meteo.com/v1/forecast?latitude=33.3881&longitude=-112.8617&daily=sunrise%2Csunset&timezone=America%2FPhoenix&forecast_days=4",
-    "fetched_at": "2026-10-18T07:47:06Z"
-   },
-   "nws_alerts_6008": {
-    "url": "https://api.weather.gov/alerts/active?point=33.3881%2C-112.8617",
-    "fetched_at": "2026-10-18T07:47:06Z"
-   },
-   "nws_point_6008": {
-    "url": "https://api.weather.gov/points/33.3881,-112.8617",
-    "fetched_at": "2026-10-18T07:47:06Z"
-   },
-   "nws_forecast_6008": {
-    "url": "https://api.weather.gov/gridpoints/PSR/130,59/forecast",
-    "fetched_at": "2026-10-18T07:47:06Z"
-   },
-   "openmeteo_air_6008": {
-    "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=33.3881&longitude=-112.8617&hourly=us_aqi%2Cpm2_5%2Cpm10&timezone=UTC&forecast_days=4&past_days=1",
-    "fetched_at": "2026-10-18T07:47:07Z"
-   },
-   "nld_6008_leveed_areas": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (leveed_areas)",
-    "fetched_at": "2026-10-18T07:47:07Z"
-   },
-   "nld_6008_alignment_lines": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (alignment_lines)",
-    "fetched_at": "2026-10-18T07:47:07Z"
-   },
-   "nld_6008_floodwalls": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (floodwalls)",
-    "fetched_at": "2026-10-18T07:47:07Z"
-   },
-   "nld_6008_closure_structures": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (closure_structures)",
-    "fetched_at": "2026-10-18T07:47:07Z"
-   },
-   "nld_6008_pump_stations": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (pump_stations)",
-    "fetched_at": "2026-10-18T07:47:07Z"
-   },
-   "overpass_roads_6008": {
-    "url": "https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A60%5D%3Bway%28around%3A2500%2C33.38810%2C-112.86170%29%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%7Cunclassified%7Cresidential%7Cservice%7Ctrack%7Croad%7Cliving_street%7Cmotorway_link%7Ctrunk_link%7Cprimary_link%7Csecondary_link%7Ctertiary_link%29%24%22%5D%5B%22access%22%21~%22%5E%28no%29%24%22%5D%3Bout+geom%3B",
-    "fetched_at": "2026-10-18T07:47:36Z"
-   },
-   "inat_recent_6008": {
-    "url": "https://api.inaturalist.org/v1/observations?lat=33.3881&lng=-112.8617&radius=10&taxon_id=26159%2C26085%2C30692%2C30668%2C30493%2C30979%2C41638&quality_grade=research&d1=2026-09-18&per_page=200&order_by=observed_on&order=desc",
-    "fetched_at": "2026-10-18T07:47:37Z"
-   },
-   "inat_season_6008_alligator": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=33.3881&lng=-112.8617&radius=25&taxon_id=26159&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:47:38Z"
-   },
-   "inat_season_6008_crocodile": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=33.3881&lng=-112.8617&radius=25&taxon_id=26085&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:47:39Z"
-   },
-   "inat_season_6008_snakes": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=33.3881&lng=-112.8617&radius=25&taxon_id=30692%2C30668%2C30493%2C30979&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:47:39Z"
-   },
-   "inat_season_6008_bear": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=33.3881&lng=-112.8617&radius=25&taxon_id=41638&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:47:40Z"
+   "inat_season_1082_bear": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=41.18&lng=-95.8408&radius=25&taxon_id=41638&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T09:09:01Z"
    },
    "openmeteo_hourly_3470": {
     "url": "https://api.open-meteo.com/v1/forecast?latitude=29.4828%2C29.4828%2C29.6384%2C29.6384%2C29.4828%2C29.3272%2C29.3272&longitude=-95.6311%2C-95.4247%2C-95.5279%2C-95.7343%2C-95.8375%2C-95.7343%2C-95.5279&hourly=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cwind_speed_10m%2Cwind_gusts_10m%2Cshortwave_radiation%2Cprecipitation%2Cprecipitation_probability%2Ccape%2Cuv_index&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=mm&timezone=UTC&past_days=1&forecast_days=4",
-    "fetched_at": "2026-10-18T07:47:41Z"
+    "fetched_at": "2026-10-18T09:09:01Z"
    },
    "openmeteo_sun_3470": {
     "url": "https://api.open-meteo.com/v1/forecast?latitude=29.4828&longitude=-95.6311&daily=sunrise%2Csunset&timezone=America%2FChicago&forecast_days=4",
-    "fetched_at": "2026-10-18T07:47:41Z"
+    "fetched_at": "2026-10-18T09:09:01Z"
    },
    "nws_alerts_3470": {
     "url": "https://api.weather.gov/alerts/active?point=29.4828%2C-95.6311",
-    "fetched_at": "2026-10-18T07:47:41Z"
+    "fetched_at": "2026-10-18T09:09:01Z"
    },
    "nws_point_3470": {
     "url": "https://api.weather.gov/points/29.4828,-95.6311",
-    "fetched_at": "2026-10-18T07:47:41Z"
+    "fetched_at": "2026-10-18T09:09:01Z"
    },
    "nws_forecast_3470": {
     "url": "https://api.weather.gov/gridpoints/HGX/53,82/forecast",
-    "fetched_at": "2026-10-18T07:47:41Z"
+    "fetched_at": "2026-10-18T09:09:01Z"
    },
    "openmeteo_air_3470": {
     "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=29.4828&longitude=-95.6311&hourly=us_aqi%2Cpm2_5%2Cpm10&timezone=UTC&forecast_days=4&past_days=1",
-    "fetched_at": "2026-10-18T07:47:42Z"
+    "fetched_at": "2026-10-18T09:09:02Z"
    },
    "nld_3470_leveed_areas": {
     "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (leveed_areas)",
-    "fetched_at": "2026-10-18T07:47:43Z"
+    "fetched_at": "2026-10-18T09:09:03Z"
    },
    "nld_3470_alignment_lines": {
     "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (alignment_lines)",
-    "fetched_at": "2026-10-18T07:47:43Z"
+    "fetched_at": "2026-10-18T09:09:03Z"
    },
    "nld_3470_floodwalls": {
     "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (floodwalls)",
-    "fetched_at": "2026-10-18T07:47:43Z"
+    "fetched_at": "2026-10-18T09:09:03Z"
    },
    "nld_3470_closure_structures": {
     "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (closure_structures)",
-    "fetched_at": "2026-10-18T07:47:43Z"
+    "fetched_at": "2026-10-18T09:09:03Z"
    },
    "nld_3470_pump_stations": {
     "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (pump_stations)",
-    "fetched_at": "2026-10-18T07:47:43Z"
+    "fetched_at": "2026-10-18T09:09:03Z"
    },
    "nwps_gauge_SLNT2": {
     "url": "https://api.water.noaa.gov/nwps/v1/gauges/SLNT2",
-    "fetched_at": "2026-10-18T07:47:44Z"
+    "fetched_at": "2026-10-18T09:09:04Z"
    },
    "nwps_stageflow_SLNT2": {
     "url": "https://api.water.noaa.gov/nwps/v1/gauges/SLNT2/stageflow",
-    "fetched_at": "2026-10-18T07:47:44Z"
+    "fetched_at": "2026-10-18T09:09:04Z"
    },
    "overpass_roads_3470": {
     "url": "https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A60%5D%3Bway%28around%3A2500%2C29.48280%2C-95.63110%29%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%7Cunclassified%7Cresidential%7Cservice%7Ctrack%7Croad%7Cliving_street%7Cmotorway_link%7Ctrunk_link%7Cprimary_link%7Csecondary_link%7Ctertiary_link%29%24%22%5D%5B%22access%22%21~%22%5E%28no%29%24%22%5D%3Bout+geom%3B",
-    "fetched_at": "2026-10-18T07:48:21Z"
+    "fetched_at": "2026-10-18T09:09:45Z"
    },
    "inat_recent_3470": {
     "url": "https://api.inaturalist.org/v1/observations?lat=29.4828&lng=-95.6311&radius=10&taxon_id=26159%2C26085%2C30692%2C30668%2C30493%2C30979%2C41638&quality_grade=research&d1=2026-09-18&per_page=200&order_by=observed_on&order=desc",
-    "fetched_at": "2026-10-18T07:48:22Z"
+    "fetched_at": "2026-10-18T09:09:46Z"
    },
    "inat_season_3470_alligator": {
     "url": "https://api.inaturalist.org/v1/observations/histogram?lat=29.4828&lng=-95.6311&radius=25&taxon_id=26159&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:48:22Z"
+    "fetched_at": "2026-10-18T09:09:46Z"
    },
    "inat_season_3470_crocodile": {
     "url": "https://api.inaturalist.org/v1/observations/histogram?lat=29.4828&lng=-95.6311&radius=25&taxon_id=26085&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:48:23Z"
+    "fetched_at": "2026-10-18T09:09:47Z"
    },
    "inat_season_3470_snakes": {
     "url": "https://api.inaturalist.org/v1/observations/histogram?lat=29.4828&lng=-95.6311&radius=25&taxon_id=30692%2C30668%2C30493%2C30979&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:48:24Z"
+    "fetched_at": "2026-10-18T09:09:48Z"
    },
    "inat_season_3470_bear": {
     "url": "https://api.inaturalist.org/v1/observations/histogram?lat=29.4828&lng=-95.6311&radius=25&taxon_id=41638&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:48:25Z"
+    "fetched_at": "2026-10-18T09:09:49Z"
    },
-   "openmeteo_hourly_46": {
-    "url": "https://api.open-meteo.com/v1/forecast?latitude=34.7042%2C34.7042%2C34.8598%2C34.8598%2C34.7042%2C34.5486%2C34.5486&longitude=-87.1189%2C-86.9004%2C-87.0096%2C-87.2282%2C-87.3374%2C-87.2282%2C-87.0096&hourly=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cwind_speed_10m%2Cwind_gusts_10m%2Cshortwave_radiation%2Cprecipitation%2Cprecipitation_probability%2Ccape%2Cuv_index&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=mm&timezone=UTC&past_days=1&forecast_days=4",
-    "fetched_at": "2026-10-18T07:48:25Z"
+   "openmeteo_hourly_400": {
+    "url": "https://api.open-meteo.com/v1/forecast?latitude=33.7647%2C33.7647%2C33.9203%2C33.9203%2C33.7647%2C33.6091%2C33.6091&longitude=-118.0991%2C-117.8830%2C-117.9910%2C-118.2072%2C-118.3152%2C-118.2072%2C-117.9910&hourly=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cwind_speed_10m%2Cwind_gusts_10m%2Cshortwave_radiation%2Cprecipitation%2Cprecipitation_probability%2Ccape%2Cuv_index&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=mm&timezone=UTC&past_days=1&forecast_days=4",
+    "fetched_at": "2026-10-18T09:09:49Z"
    },
-   "openmeteo_sun_46": {
-    "url": "https://api.open-meteo.com/v1/forecast?latitude=34.7042&longitude=-87.1189&daily=sunrise%2Csunset&timezone=America%2FChicago&forecast_days=4",
-    "fetched_at": "2026-10-18T07:48:25Z"
+   "openmeteo_sun_400": {
+    "url": "https://api.open-meteo.com/v1/forecast?latitude=33.7647&longitude=-118.0991&daily=sunrise%2Csunset&timezone=America%2FLos_Angeles&forecast_days=4",
+    "fetched_at": "2026-10-18T09:09:49Z"
    },
-   "nws_alerts_46": {
-    "url": "https://api.weather.gov/alerts/active?point=34.7042%2C-87.1189",
-    "fetched_at": "2026-10-18T07:48:26Z"
+   "nws_alerts_400": {
+    "url": "https://api.weather.gov/alerts/active?point=33.7647%2C-118.0991",
+    "fetched_at": "2026-10-18T09:09:49Z"
    },
-   "nws_point_46": {
-    "url": "https://api.weather.gov/points/34.7042,-87.1189",
-    "fetched_at": "2026-10-18T07:48:26Z"
+   "nws_point_400": {
+    "url": "https://api.weather.gov/points/33.7647,-118.0991",
+    "fetched_at": "2026-10-18T09:09:49Z"
    },
-   "nws_forecast_46": {
-    "url": "https://api.weather.gov/gridpoints/HUN/44,40/forecast",
-    "fetched_at": "2026-10-18T07:48:26Z"
+   "nws_forecast_400": {
+    "url": "https://api.weather.gov/gridpoints/LOX/158,31/forecast",
+    "fetched_at": "2026-10-18T09:09:49Z"
    },
-   "openmeteo_air_46": {
-    "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=34.7042&longitude=-87.1189&hourly=us_aqi%2Cpm2_5%2Cpm10&timezone=UTC&forecast_days=4&past_days=1",
-    "fetched_at": "2026-10-18T07:48:26Z"
+   "openmeteo_air_400": {
+    "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=33.7647&longitude=-118.0991&hourly=us_aqi%2Cpm2_5%2Cpm10&timezone=UTC&forecast_days=4&past_days=1",
+    "fetched_at": "2026-10-18T09:09:50Z"
    },
-   "nld_46_leveed_areas": {
+   "coops_hilo_9410686": {
+    "url": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=predictions&application=controlward_next_day_report&station=9410686&datum=MLLW&time_zone=lst_ldt&units=metric&interval=hilo&format=json&begin_date=20261018&end_date=20261020",
+    "fetched_at": "2026-10-18T09:09:50Z"
+   },
+   "coops_datums_9410686": {
+    "url": "https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations/9410686/datums.json?units=metric",
+    "fetched_at": "2026-10-18T09:09:50Z"
+   },
+   "nld_400_leveed_areas": {
     "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (leveed_areas)",
-    "fetched_at": "2026-10-18T07:48:27Z"
+    "fetched_at": "2026-10-18T09:09:51Z"
    },
-   "nld_46_alignment_lines": {
+   "nld_400_alignment_lines": {
     "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (alignment_lines)",
-    "fetched_at": "2026-10-18T07:48:27Z"
+    "fetched_at": "2026-10-18T09:09:51Z"
    },
-   "nld_46_floodwalls": {
+   "nld_400_floodwalls": {
     "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (floodwalls)",
-    "fetched_at": "2026-10-18T07:48:27Z"
+    "fetched_at": "2026-10-18T09:09:52Z"
    },
-   "nld_46_closure_structures": {
+   "nld_400_closure_structures": {
     "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (closure_structures)",
-    "fetched_at": "2026-10-18T07:48:27Z"
+    "fetched_at": "2026-10-18T09:09:52Z"
    },
-   "nld_46_pump_stations": {
+   "nld_400_pump_stations": {
     "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (pump_stations)",
-    "fetched_at": "2026-10-18T07:48:27Z"
+    "fetched_at": "2026-10-18T09:09:52Z"
    },
-   "nwps_gauge_BNAA1": {
-    "url": "https://api.water.noaa.gov/nwps/v1/gauges/BNAA1",
-    "fetched_at": "2026-10-18T07:48:28Z"
+   "overpass_roads_400": {
+    "url": "https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A60%5D%3Bway%28around%3A2500%2C33.76474%2C-118.09910%29%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%7Cunclassified%7Cresidential%7Cservice%7Ctrack%7Croad%7Cliving_street%7Cmotorway_link%7Ctrunk_link%7Cprimary_link%7Csecondary_link%7Ctertiary_link%29%24%22%5D%5B%22access%22%21~%22%5E%28no%29%24%22%5D%3Bout+geom%3B",
+    "fetched_at": "2026-10-18T09:10:37Z"
    },
-   "nwps_stageflow_BNAA1": {
-    "url": "https://api.water.noaa.gov/nwps/v1/gauges/BNAA1/stageflow",
-    "fetched_at": "2026-10-18T07:48:28Z"
+   "inat_recent_400": {
+    "url": "https://api.inaturalist.org/v1/observations?lat=33.764741&lng=-118.0991&radius=10&taxon_id=26159%2C26085%2C30692%2C30668%2C30493%2C30979%2C41638&quality_grade=research&d1=2026-09-18&per_page=200&order_by=observed_on&order=desc",
+    "fetched_at": "2026-10-18T09:10:38Z"
    },
-   "overpass_roads_46": {
-    "url": "https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A60%5D%3Bway%28around%3A2500%2C34.70420%2C-87.11890%29%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%7Cunclassified%7Cresidential%7Cservice%7Ctrack%7Croad%7Cliving_street%7Cmotorway_link%7Ctrunk_link%7Cprimary_link%7Csecondary_link%7Ctertiary_link%29%24%22%5D%5B%22access%22%21~%22%5E%28no%29%24%22%5D%3Bout+geom%3B",
-    "fetched_at": "2026-10-18T07:49:06Z"
+   "inat_season_400_alligator": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=33.764741&lng=-118.0991&radius=25&taxon_id=26159&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T09:10:39Z"
    },
-   "inat_recent_46": {
-    "url": "https://api.inaturalist.org/v1/observations?lat=34.7042&lng=-87.1189&radius=10&taxon_id=26159%2C26085%2C30692%2C30668%2C30493%2C30979%2C41638&quality_grade=research&d1=2026-09-18&per_page=200&order_by=observed_on&order=desc",
-    "fetched_at": "2026-10-18T07:49:07Z"
+   "inat_season_400_crocodile": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=33.764741&lng=-118.0991&radius=25&taxon_id=26085&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T09:10:40Z"
    },
-   "inat_season_46_alligator": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=34.7042&lng=-87.1189&radius=25&taxon_id=26159&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:49:08Z"
+   "inat_season_400_snakes": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=33.764741&lng=-118.0991&radius=25&taxon_id=30692%2C30668%2C30493%2C30979&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T09:10:40Z"
    },
-   "inat_season_46_crocodile": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=34.7042&lng=-87.1189&radius=25&taxon_id=26085&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:49:09Z"
+   "inat_season_400_bear": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=33.764741&lng=-118.0991&radius=25&taxon_id=41638&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T09:10:41Z"
    },
-   "inat_season_46_snakes": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=34.7042&lng=-87.1189&radius=25&taxon_id=30692%2C30668%2C30493%2C30979&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:49:09Z"
+   "openmeteo_hourly_6090": {
+    "url": "https://api.open-meteo.com/v1/forecast?latitude=45.3808%2C45.3808%2C45.5364%2C45.5364%2C45.3808%2C45.2252%2C45.2252&longitude=-93.8931%2C-93.6373%2C-93.7652%2C-94.0210%2C-94.1489%2C-94.0210%2C-93.7652&hourly=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cwind_speed_10m%2Cwind_gusts_10m%2Cshortwave_radiation%2Cprecipitation%2Cprecipitation_probability%2Ccape%2Cuv_index&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=mm&timezone=UTC&past_days=1&forecast_days=4",
+    "fetched_at": "2026-10-18T09:10:41Z"
    },
-   "inat_season_46_bear": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=34.7042&lng=-87.1189&radius=25&taxon_id=41638&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:49:10Z"
+   "openmeteo_sun_6090": {
+    "url": "https://api.open-meteo.com/v1/forecast?latitude=45.3808&longitude=-93.8931&daily=sunrise%2Csunset&timezone=America%2FChicago&forecast_days=4",
+    "fetched_at": "2026-10-18T09:10:41Z"
    },
-   "openmeteo_hourly_703": {
-    "url": "https://api.open-meteo.com/v1/forecast?latitude=34.1256%2C34.1256%2C34.2812%2C34.2812%2C34.1256%2C33.9700%2C33.9700&longitude=-84.9222%2C-84.7052%2C-84.8137%2C-85.0307%2C-85.1392%2C-85.0307%2C-84.8137&hourly=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cwind_speed_10m%2Cwind_gusts_10m%2Cshortwave_radiation%2Cprecipitation%2Cprecipitation_probability%2Ccape%2Cuv_index&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=mm&timezone=UTC&past_days=1&forecast_days=4",
-    "fetched_at": "2026-10-18T07:49:11Z"
+   "nws_alerts_6090": {
+    "url": "https://api.weather.gov/alerts/active?point=45.3808%2C-93.8931",
+    "fetched_at": "2026-10-18T09:10:42Z"
    },
-   "openmeteo_sun_703": {
-    "url": "https://api.open-meteo.com/v1/forecast?latitude=34.1256&longitude=-84.9222&daily=sunrise%2Csunset&timezone=America%2FNew_York&forecast_days=4",
-    "fetched_at": "2026-10-18T07:49:11Z"
+   "nws_point_6090": {
+    "url": "https://api.weather.gov/points/45.3808,-93.8931",
+    "fetched_at": "2026-10-18T09:10:42Z"
    },
-   "nws_alerts_703": {
-    "url": "https://api.weather.gov/alerts/active?point=34.1256%2C-84.9222",
-    "fetched_at": "2026-10-18T07:49:11Z"
+   "nws_forecast_6090": {
+    "url": "https://api.weather.gov/gridpoints/MPX/87,91/forecast",
+    "fetched_at": "2026-10-18T09:10:42Z"
    },
-   "nws_point_703": {
-    "url": "https://api.weather.gov/points/34.1256,-84.9222",
-    "fetched_at": "2026-10-18T07:49:11Z"
+   "openmeteo_air_6090": {
+    "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=45.3808&longitude=-93.8931&hourly=us_aqi%2Cpm2_5%2Cpm10&timezone=UTC&forecast_days=4&past_days=1",
+    "fetched_at": "2026-10-18T09:10:42Z"
    },
-   "nws_forecast_703": {
-    "url": "https://api.weather.gov/gridpoints/FFC/30,102/forecast",
-    "fetched_at": "2026-10-18T07:49:11Z"
-   },
-   "openmeteo_air_703": {
-    "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=34.1256&longitude=-84.9222&hourly=us_aqi%2Cpm2_5%2Cpm10&timezone=UTC&forecast_days=4&past_days=1",
-    "fetched_at": "2026-10-18T07:49:12Z"
-   },
-   "nld_703_leveed_areas": {
+   "nld_6090_leveed_areas": {
     "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (leveed_areas)",
-    "fetched_at": "2026-10-18T07:49:12Z"
+    "fetched_at": "2026-10-18T09:10:43Z"
    },
-   "nld_703_alignment_lines": {
+   "nld_6090_alignment_lines": {
     "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (alignment_lines)",
-    "fetched_at": "2026-10-18T07:49:12Z"
+    "fetched_at": "2026-10-18T09:10:43Z"
    },
-   "nld_703_floodwalls": {
+   "nld_6090_floodwalls": {
     "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (floodwalls)",
-    "fetched_at": "2026-10-18T07:49:12Z"
+    "fetched_at": "2026-10-18T09:10:43Z"
    },
-   "nld_703_closure_structures": {
+   "nld_6090_closure_structures": {
     "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (closure_structures)",
-    "fetched_at": "2026-10-18T07:49:12Z"
+    "fetched_at": "2026-10-18T09:10:43Z"
    },
-   "nld_703_pump_stations": {
+   "nld_6090_pump_stations": {
     "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (pump_stations)",
-    "fetched_at": "2026-10-18T07:49:12Z"
-   },
-   "nwps_gauge_CTVG1": {
-    "url": "https://api.water.noaa.gov/nwps/v1/gauges/CTVG1",
-    "fetched_at": "2026-10-18T07:49:13Z"
-   },
-   "nwps_stageflow_CTVG1": {
-    "url": "https://api.water.noaa.gov/nwps/v1/gauges/CTVG1/stageflow",
-    "fetched_at": "2026-10-18T07:49:13Z"
-   },
-   "overpass_roads_703": {
-    "url": "https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A60%5D%3Bway%28around%3A2500%2C34.12560%2C-84.92220%29%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%7Cunclassified%7Cresidential%7Cservice%7Ctrack%7Croad%7Cliving_street%7Cmotorway_link%7Ctrunk_link%7Cprimary_link%7Csecondary_link%7Ctertiary_link%29%24%22%5D%5B%22access%22%21~%22%5E%28no%29%24%22%5D%3Bout+geom%3B",
-    "fetched_at": "2026-10-18T07:49:56Z"
-   },
-   "inat_recent_703": {
-    "url": "https://api.inaturalist.org/v1/observations?lat=34.1256&lng=-84.9222&radius=10&taxon_id=26159%2C26085%2C30692%2C30668%2C30493%2C30979%2C41638&quality_grade=research&d1=2026-09-18&per_page=200&order_by=observed_on&order=desc",
-    "fetched_at": "2026-10-18T07:49:57Z"
-   },
-   "inat_season_703_alligator": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=34.1256&lng=-84.9222&radius=25&taxon_id=26159&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:49:58Z"
-   },
-   "inat_season_703_crocodile": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=34.1256&lng=-84.9222&radius=25&taxon_id=26085&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:49:58Z"
-   },
-   "inat_season_703_snakes": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=34.1256&lng=-84.9222&radius=25&taxon_id=30692%2C30668%2C30493%2C30979&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:49:59Z"
-   },
-   "inat_season_703_bear": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=34.1256&lng=-84.9222&radius=25&taxon_id=41638&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:50:00Z"
-   },
-   "openmeteo_hourly_628": {
-    "url": "https://api.open-meteo.com/v1/forecast?latitude=28.9656%2C28.9656%2C29.1212%2C29.1212%2C28.9656%2C28.8100%2C28.8100&longitude=-82.6977%2C-82.4924%2C-82.5950%2C-82.8004%2C-82.9030%2C-82.8004%2C-82.5950&hourly=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cwind_speed_10m%2Cwind_gusts_10m%2Cshortwave_radiation%2Cprecipitation%2Cprecipitation_probability%2Ccape%2Cuv_index&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=mm&timezone=UTC&past_days=1&forecast_days=4",
-    "fetched_at": "2026-10-18T07:50:01Z"
-   },
-   "openmeteo_sun_628": {
-    "url": "https://api.open-meteo.com/v1/forecast?latitude=28.9656&longitude=-82.6977&daily=sunrise%2Csunset&timezone=America%2FNew_York&forecast_days=4",
-    "fetched_at": "2026-10-18T07:50:01Z"
-   },
-   "nws_alerts_628": {
-    "url": "https://api.weather.gov/alerts/active?point=28.9656%2C-82.6977",
-    "fetched_at": "2026-10-18T07:50:02Z"
-   },
-   "nws_point_628": {
-    "url": "https://api.weather.gov/points/28.9656,-82.6977",
-    "fetched_at": "2026-10-18T07:50:02Z"
-   },
-   "nws_forecast_628": {
-    "url": "https://api.weather.gov/gridpoints/TBW/58,141/forecast",
-    "fetched_at": "2026-10-18T07:50:02Z"
-   },
-   "openmeteo_air_628": {
-    "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=28.9656&longitude=-82.6977&hourly=us_aqi%2Cpm2_5%2Cpm10&timezone=UTC&forecast_days=4&past_days=1",
-    "fetched_at": "2026-10-18T07:50:03Z"
-   },
-   "coops_hilo_8727386": {
-    "url": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=predictions&application=controlward_next_day_report&station=8727386&datum=MLLW&time_zone=lst_ldt&units=metric&interval=hilo&format=json&begin_date=20261018&end_date=20261020",
-    "fetched_at": "2026-10-18T07:50:03Z"
-   },
-   "coops_datums_8727386": {
-    "url": "https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations/8727386/datums.json?units=metric",
-    "fetched_at": "2026-10-18T07:50:03Z"
-   },
-   "nld_628_leveed_areas": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (leveed_areas)",
-    "fetched_at": "2026-10-18T07:50:03Z"
-   },
-   "nld_628_alignment_lines": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (alignment_lines)",
-    "fetched_at": "2026-10-18T07:50:03Z"
-   },
-   "nld_628_floodwalls": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (floodwalls)",
-    "fetched_at": "2026-10-18T07:50:03Z"
-   },
-   "nld_628_closure_structures": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (closure_structures)",
-    "fetched_at": "2026-10-18T07:50:04Z"
-   },
-   "nld_628_pump_stations": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (pump_stations)",
-    "fetched_at": "2026-10-18T07:50:04Z"
-   },
-   "nwps_gauge_DNLF1": {
-    "url": "https://api.water.noaa.gov/nwps/v1/gauges/DNLF1",
-    "fetched_at": "2026-10-18T07:50:04Z"
-   },
-   "nwps_stageflow_DNLF1": {
-    "url": "https://api.water.noaa.gov/nwps/v1/gauges/DNLF1/stageflow",
-    "fetched_at": "2026-10-18T07:50:05Z"
-   },
-   "overpass_roads_628": {
-    "url": "https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A60%5D%3Bway%28around%3A2500%2C28.96560%2C-82.69770%29%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%7Cunclassified%7Cresidential%7Cservice%7Ctrack%7Croad%7Cliving_street%7Cmotorway_link%7Ctrunk_link%7Cprimary_link%7Csecondary_link%7Ctertiary_link%29%24%22%5D%5B%22access%22%21~%22%5E%28no%29%24%22%5D%3Bout+geom%3B",
-    "fetched_at": "2026-10-18T07:50:47Z"
-   },
-   "inat_recent_628": {
-    "url": "https://api.inaturalist.org/v1/observations?lat=28.9656&lng=-82.6977&radius=10&taxon_id=26159%2C26085%2C30692%2C30668%2C30493%2C30979%2C41638&quality_grade=research&d1=2026-09-18&per_page=200&order_by=observed_on&order=desc",
-    "fetched_at": "2026-10-18T07:50:48Z"
-   },
-   "inat_season_628_alligator": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=28.9656&lng=-82.6977&radius=25&taxon_id=26159&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:50:49Z"
-   },
-   "inat_season_628_crocodile": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=28.9656&lng=-82.6977&radius=25&taxon_id=26085&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:50:49Z"
-   },
-   "inat_season_628_snakes": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=28.9656&lng=-82.6977&radius=25&taxon_id=30692%2C30668%2C30493%2C30979&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:50:50Z"
-   },
-   "inat_season_628_bear": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=28.9656&lng=-82.6977&radius=25&taxon_id=41638&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:50:51Z"
-   },
-   "openmeteo_hourly_3": {
-    "url": "https://api.open-meteo.com/v1/forecast?latitude=31.0069%2C31.0069%2C31.1625%2C31.1625%2C31.0069%2C30.8513%2C30.8513&longitude=-88.0103%2C-87.8007%2C-87.9055%2C-88.1151%2C-88.2199%2C-88.1151%2C-87.9055&hourly=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cwind_speed_10m%2Cwind_gusts_10m%2Cshortwave_radiation%2Cprecipitation%2Cprecipitation_probability%2Ccape%2Cuv_index&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=mm&timezone=UTC&past_days=1&forecast_days=4",
-    "fetched_at": "2026-10-18T07:50:51Z"
-   },
-   "openmeteo_sun_3": {
-    "url": "https://api.open-meteo.com/v1/forecast?latitude=31.0069&longitude=-88.0103&daily=sunrise%2Csunset&timezone=America%2FChicago&forecast_days=4",
-    "fetched_at": "2026-10-18T07:50:52Z"
-   },
-   "nws_alerts_3": {
-    "url": "https://api.weather.gov/alerts/active?point=31.0069%2C-88.0103",
-    "fetched_at": "2026-10-18T07:50:52Z"
-   },
-   "nws_point_3": {
-    "url": "https://api.weather.gov/points/31.0069,-88.0103",
-    "fetched_at": "2026-10-18T07:50:52Z"
-   },
-   "nws_forecast_3": {
-    "url": "https://api.weather.gov/gridpoints/MOB/53,81/forecast",
-    "fetched_at": "2026-10-18T07:50:52Z"
-   },
-   "openmeteo_air_3": {
-    "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=31.0069&longitude=-88.0103&hourly=us_aqi%2Cpm2_5%2Cpm10&timezone=UTC&forecast_days=4&past_days=1",
-    "fetched_at": "2026-10-18T07:50:53Z"
-   },
-   "coops_hilo_8737373": {
-    "url": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=predictions&application=controlward_next_day_report&station=8737373&datum=MLLW&time_zone=lst_ldt&units=metric&interval=hilo&format=json&begin_date=20261018&end_date=20261020",
-    "fetched_at": "2026-10-18T07:50:53Z"
-   },
-   "coops_datums_8737373": {
-    "url": "https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations/8737373/datums.json?units=metric",
-    "fetched_at": "2026-10-18T07:50:53Z"
-   },
-   "nld_3_leveed_areas": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (leveed_areas)",
-    "fetched_at": "2026-10-18T07:50:53Z"
-   },
-   "nld_3_alignment_lines": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (alignment_lines)",
-    "fetched_at": "2026-10-18T07:50:54Z"
-   },
-   "nld_3_floodwalls": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (floodwalls)",
-    "fetched_at": "2026-10-18T07:50:54Z"
-   },
-   "nld_3_closure_structures": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (closure_structures)",
-    "fetched_at": "2026-10-18T07:50:54Z"
-   },
-   "nld_3_pump_stations": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (pump_stations)",
-    "fetched_at": "2026-10-18T07:50:54Z"
-   },
-   "nwps_gauge_BCKA1": {
-    "url": "https://api.water.noaa.gov/nwps/v1/gauges/BCKA1",
-    "fetched_at": "2026-10-18T07:50:55Z"
-   },
-   "nwps_stageflow_BCKA1": {
-    "url": "https://api.water.noaa.gov/nwps/v1/gauges/BCKA1/stageflow",
-    "fetched_at": "2026-10-18T07:50:55Z"
-   },
-   "overpass_roads_3": {
-    "url": "https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A60%5D%3Bway%28around%3A2500%2C31.00690%2C-88.01030%29%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%7Cunclassified%7Cresidential%7Cservice%7Ctrack%7Croad%7Cliving_street%7Cmotorway_link%7Ctrunk_link%7Cprimary_link%7Csecondary_link%7Ctertiary_link%29%24%22%5D%5B%22access%22%21~%22%5E%28no%29%24%22%5D%3Bout+geom%3B",
-    "fetched_at": "2026-10-18T07:51:33Z"
-   },
-   "inat_recent_3": {
-    "url": "https://api.inaturalist.org/v1/observations?lat=31.0069&lng=-88.0103&radius=10&taxon_id=26159%2C26085%2C30692%2C30668%2C30493%2C30979%2C41638&quality_grade=research&d1=2026-09-18&per_page=200&order_by=observed_on&order=desc",
-    "fetched_at": "2026-10-18T07:51:34Z"
-   },
-   "inat_season_3_alligator": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=31.0069&lng=-88.0103&radius=25&taxon_id=26159&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:51:35Z"
-   },
-   "inat_season_3_crocodile": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=31.0069&lng=-88.0103&radius=25&taxon_id=26085&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:51:35Z"
-   },
-   "inat_season_3_snakes": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=31.0069&lng=-88.0103&radius=25&taxon_id=30692%2C30668%2C30493%2C30979&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:51:36Z"
-   },
-   "inat_season_3_bear": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=31.0069&lng=-88.0103&radius=25&taxon_id=41638&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:51:37Z"
-   },
-   "openmeteo_hourly_6113": {
-    "url": "https://api.open-meteo.com/v1/forecast?latitude=38.3722%2C38.3722%2C38.5278%2C38.5278%2C38.3722%2C38.2166%2C38.2166&longitude=-87.7658%2C-87.5367%2C-87.6512%2C-87.8804%2C-87.9950%2C-87.8804%2C-87.6512&hourly=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cwind_speed_10m%2Cwind_gusts_10m%2Cshortwave_radiation%2Cprecipitation%2Cprecipitation_probability%2Ccape%2Cuv_index&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=mm&timezone=UTC&past_days=1&forecast_days=4",
-    "fetched_at": "2026-10-18T07:51:39Z"
-   },
-   "openmeteo_sun_6113": {
-    "url": "https://api.open-meteo.com/v1/forecast?latitude=38.3722&longitude=-87.7658&daily=sunrise%2Csunset&timezone=America%2FChicago&forecast_days=4",
-    "fetched_at": "2026-10-18T07:51:39Z"
-   },
-   "nws_alerts_6113": {
-    "url": "https://api.weather.gov/alerts/active?point=38.3722%2C-87.7658",
-    "fetched_at": "2026-10-18T07:51:41Z"
-   },
-   "nws_point_6113": {
-    "url": "https://api.weather.gov/points/38.3722,-87.7658",
-    "fetched_at": "2026-10-18T07:51:41Z"
-   },
-   "nws_forecast_6113": {
-    "url": "https://api.weather.gov/gridpoints/PAH/158,115/forecast",
-    "fetched_at": "2026-10-18T07:51:42Z"
-   },
-   "openmeteo_air_6113": {
-    "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=38.3722&longitude=-87.7658&hourly=us_aqi%2Cpm2_5%2Cpm10&timezone=UTC&forecast_days=4&past_days=1",
-    "fetched_at": "2026-10-18T07:51:45Z"
-   },
-   "nld_6113_leveed_areas": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (leveed_areas)",
-    "fetched_at": "2026-10-18T07:51:49Z"
-   },
-   "nld_6113_alignment_lines": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (alignment_lines)",
-    "fetched_at": "2026-10-18T07:51:52Z"
-   },
-   "nld_6113_floodwalls": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (floodwalls)",
-    "fetched_at": "2026-10-18T07:51:53Z"
-   },
-   "nld_6113_closure_structures": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (closure_structures)",
-    "fetched_at": "2026-10-18T07:51:53Z"
-   },
-   "nld_6113_pump_stations": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (pump_stations)",
-    "fetched_at": "2026-10-18T07:51:53Z"
-   },
-   "nwps_gauge_MCRI2": {
-    "url": "https://api.water.noaa.gov/nwps/v1/gauges/MCRI2",
-    "fetched_at": "2026-10-18T07:51:59Z"
-   },
-   "nwps_stageflow_MCRI2": {
-    "url": "https://api.water.noaa.gov/nwps/v1/gauges/MCRI2/stageflow",
-    "fetched_at": "2026-10-18T07:52:11Z"
-   },
-   "overpass_roads_6113": {
-    "url": "https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A60%5D%3Bway%28around%3A2500%2C38.37222%2C-87.76583%29%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%7Cunclassified%7Cresidential%7Cservice%7Ctrack%7Croad%7Cliving_street%7Cmotorway_link%7Ctrunk_link%7Cprimary_link%7Csecondary_link%7Ctertiary_link%29%24%22%5D%5B%22access%22%21~%22%5E%28no%29%24%22%5D%3Bout+geom%3B",
-    "fetched_at": "2026-10-18T07:52:53Z"
-   },
-   "inat_recent_6113": {
-    "url": "https://api.inaturalist.org/v1/observations?lat=38.372222&lng=-87.76583&radius=10&taxon_id=26159%2C26085%2C30692%2C30668%2C30493%2C30979%2C41638&quality_grade=research&d1=2026-09-18&per_page=200&order_by=observed_on&order=desc",
-    "fetched_at": "2026-10-18T07:52:54Z"
-   },
-   "inat_season_6113_alligator": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=38.372222&lng=-87.76583&radius=25&taxon_id=26159&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:52:55Z"
-   },
-   "inat_season_6113_crocodile": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=38.372222&lng=-87.76583&radius=25&taxon_id=26085&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:52:56Z"
-   },
-   "inat_season_6113_snakes": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=38.372222&lng=-87.76583&radius=25&taxon_id=30692%2C30668%2C30493%2C30979&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:52:56Z"
-   },
-   "inat_season_6113_bear": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=38.372222&lng=-87.76583&radius=25&taxon_id=41638&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:52:57Z"
-   },
-   "openmeteo_hourly_1733": {
-    "url": "https://api.open-meteo.com/v1/forecast?latitude=41.8906%2C41.8906%2C42.0462%2C42.0462%2C41.8906%2C41.7350%2C41.7350&longitude=-83.3464%2C-83.1051%2C-83.2257%2C-83.4671%2C-83.5877%2C-83.4671%2C-83.2257&hourly=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cwind_speed_10m%2Cwind_gusts_10m%2Cshortwave_radiation%2Cprecipitation%2Cprecipitation_probability%2Ccape%2Cuv_index&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=mm&timezone=UTC&past_days=1&forecast_days=4",
-    "fetched_at": "2026-10-18T07:52:59Z"
-   },
-   "openmeteo_sun_1733": {
-    "url": "https://api.open-meteo.com/v1/forecast?latitude=41.8906&longitude=-83.3464&daily=sunrise%2Csunset&timezone=America%2FDetroit&forecast_days=4",
-    "fetched_at": "2026-10-18T07:52:59Z"
-   },
-   "nws_alerts_1733": {
-    "url": "https://api.weather.gov/alerts/active?point=41.8906%2C-83.3464",
-    "fetched_at": "2026-10-18T07:53:00Z"
-   },
-   "nws_point_1733": {
-    "url": "https://api.weather.gov/points/41.8906,-83.3464",
-    "fetched_at": "2026-10-18T07:53:00Z"
-   },
-   "nws_forecast_1733": {
-    "url": "https://api.weather.gov/gridpoints/DTX/57,13/forecast",
-    "fetched_at": "2026-10-18T07:53:00Z"
-   },
-   "openmeteo_air_1733": {
-    "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=41.8906&longitude=-83.3464&hourly=us_aqi%2Cpm2_5%2Cpm10&timezone=UTC&forecast_days=4&past_days=1",
-    "fetched_at": "2026-10-18T07:53:06Z"
-   },
-   "nld_1733_leveed_areas": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (leveed_areas)",
-    "fetched_at": "2026-10-18T07:53:07Z"
-   },
-   "nld_1733_alignment_lines": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (alignment_lines)",
-    "fetched_at": "2026-10-18T07:53:08Z"
-   },
-   "nld_1733_floodwalls": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (floodwalls)",
-    "fetched_at": "2026-10-18T07:53:08Z"
-   },
-   "nld_1733_closure_structures": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (closure_structures)",
-    "fetched_at": "2026-10-18T07:53:08Z"
-   },
-   "nld_1733_pump_stations": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (pump_stations)",
-    "fetched_at": "2026-10-18T07:53:08Z"
-   },
-   "nwps_gauge_MONM4": {
-    "url": "https://api.water.noaa.gov/nwps/v1/gauges/MONM4",
-    "fetched_at": "2026-10-18T07:53:11Z"
-   },
-   "nwps_stageflow_MONM4": {
-    "url": "https://api.water.noaa.gov/nwps/v1/gauges/MONM4/stageflow",
-    "fetched_at": "2026-10-18T07:53:11Z"
-   },
-   "overpass_roads_1733": {
-    "url": "https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A60%5D%3Bway%28around%3A2500%2C41.89060%2C-83.34640%29%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%7Cunclassified%7Cresidential%7Cservice%7Ctrack%7Croad%7Cliving_street%7Cmotorway_link%7Ctrunk_link%7Cprimary_link%7Csecondary_link%7Ctertiary_link%29%24%22%5D%5B%22access%22%21~%22%5E%28no%29%24%22%5D%3Bout+geom%3B",
-    "fetched_at": "2026-10-18T07:53:41Z"
-   },
-   "inat_recent_1733": {
-    "url": "https://api.inaturalist.org/v1/observations?lat=41.8906&lng=-83.3464&radius=10&taxon_id=26159%2C26085%2C30692%2C30668%2C30493%2C30979%2C41638&quality_grade=research&d1=2026-09-18&per_page=200&order_by=observed_on&order=desc",
-    "fetched_at": "2026-10-18T07:53:44Z"
-   },
-   "inat_season_1733_alligator": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=41.8906&lng=-83.3464&radius=25&taxon_id=26159&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:53:45Z"
-   },
-   "inat_season_1733_crocodile": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=41.8906&lng=-83.3464&radius=25&taxon_id=26085&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:53:46Z"
-   },
-   "inat_season_1733_snakes": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=41.8906&lng=-83.3464&radius=25&taxon_id=30692%2C30668%2C30493%2C30979&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:53:47Z"
-   },
-   "inat_season_1733_bear": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=41.8906&lng=-83.3464&radius=25&taxon_id=41638&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:53:47Z"
-   },
-   "openmeteo_hourly_621": {
-    "url": "https://api.open-meteo.com/v1/forecast?latitude=25.4356%2C25.4356%2C25.5912%2C25.5912%2C25.4356%2C25.2800%2C25.2800&longitude=-80.3308%2C-80.1319%2C-80.2313%2C-80.4303%2C-80.5297%2C-80.4303%2C-80.2313&hourly=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cwind_speed_10m%2Cwind_gusts_10m%2Cshortwave_radiation%2Cprecipitation%2Cprecipitation_probability%2Ccape%2Cuv_index&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=mm&timezone=UTC&past_days=1&forecast_days=4",
-    "fetched_at": "2026-10-18T07:53:50Z"
-   },
-   "openmeteo_sun_621": {
-    "url": "https://api.open-meteo.com/v1/forecast?latitude=25.4356&longitude=-80.3308&daily=sunrise%2Csunset&timezone=America%2FNew_York&forecast_days=4",
-    "fetched_at": "2026-10-18T07:53:50Z"
-   },
-   "nws_alerts_621": {
-    "url": "https://api.weather.gov/alerts/active?point=25.4356%2C-80.3308",
-    "fetched_at": "2026-10-18T07:53:50Z"
-   },
-   "nws_point_621": {
-    "url": "https://api.weather.gov/points/25.4356,-80.3308",
-    "fetched_at": "2026-10-18T07:53:51Z"
-   },
-   "nws_forecast_621": {
-    "url": "https://api.weather.gov/gridpoints/MFL/106,35/forecast",
-    "fetched_at": "2026-10-18T07:53:51Z"
-   },
-   "openmeteo_air_621": {
-    "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=25.4356&longitude=-80.3308&hourly=us_aqi%2Cpm2_5%2Cpm10&timezone=UTC&forecast_days=4&past_days=1",
-    "fetched_at": "2026-10-18T07:53:52Z"
-   },
-   "coops_hilo_8723423": {
-    "url": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=predictions&application=controlward_next_day_report&station=8723423&datum=MLLW&time_zone=lst_ldt&units=metric&interval=hilo&format=json&begin_date=20261018&end_date=20261020",
-    "fetched_at": "2026-10-18T07:53:52Z"
-   },
-   "coops_datums_8723423": {
-    "url": "https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations/8723423/datums.json?units=metric",
-    "fetched_at": "2026-10-18T07:53:52Z"
-   },
-   "nld_621_leveed_areas": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (leveed_areas)",
-    "fetched_at": "2026-10-18T07:53:55Z"
-   },
-   "nld_621_alignment_lines": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (alignment_lines)",
-    "fetched_at": "2026-10-18T07:53:56Z"
-   },
-   "nld_621_floodwalls": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (floodwalls)",
-    "fetched_at": "2026-10-18T07:53:56Z"
-   },
-   "nld_621_closure_structures": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (closure_structures)",
-    "fetched_at": "2026-10-18T07:53:56Z"
-   },
-   "nld_621_pump_stations": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (pump_stations)",
-    "fetched_at": "2026-10-18T07:53:57Z"
-   },
-   "overpass_roads_621": {
-    "url": "https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A60%5D%3Bway%28around%3A2500%2C25.43560%2C-80.33080%29%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%7Cunclassified%7Cresidential%7Cservice%7Ctrack%7Croad%7Cliving_street%7Cmotorway_link%7Ctrunk_link%7Cprimary_link%7Csecondary_link%7Ctertiary_link%29%24%22%5D%5B%22access%22%21~%22%5E%28no%29%24%22%5D%3Bout+geom%3B",
-    "fetched_at": "2026-10-18T07:54:33Z"
-   },
-   "inat_recent_621": {
-    "url": "https://api.inaturalist.org/v1/observations?lat=25.4356&lng=-80.3308&radius=10&taxon_id=26159%2C26085%2C30692%2C30668%2C30493%2C30979%2C41638&quality_grade=research&d1=2026-09-18&per_page=200&order_by=observed_on&order=desc",
-    "fetched_at": "2026-10-18T07:54:36Z"
-   },
-   "inat_season_621_alligator": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=25.4356&lng=-80.3308&radius=25&taxon_id=26159&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:54:37Z"
-   },
-   "inat_season_621_crocodile": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=25.4356&lng=-80.3308&radius=25&taxon_id=26085&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:54:38Z"
-   },
-   "inat_season_621_snakes": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=25.4356&lng=-80.3308&radius=25&taxon_id=30692%2C30668%2C30493%2C30979&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:54:39Z"
-   },
-   "inat_season_621_bear": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=25.4356&lng=-80.3308&radius=25&taxon_id=41638&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:54:40Z"
-   },
-   "openmeteo_hourly_6042": {
-    "url": "https://api.open-meteo.com/v1/forecast?latitude=27.6058%2C27.6058%2C27.7614%2C27.7614%2C27.6058%2C27.4502%2C27.4502&longitude=-82.3456%2C-82.1429%2C-82.2442%2C-82.4470%2C-82.5483%2C-82.4470%2C-82.2442&hourly=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cwind_speed_10m%2Cwind_gusts_10m%2Cshortwave_radiation%2Cprecipitation%2Cprecipitation_probability%2Ccape%2Cuv_index&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=mm&timezone=UTC&past_days=1&forecast_days=4",
-    "fetched_at": "2026-10-18T07:54:41Z"
-   },
-   "openmeteo_sun_6042": {
-    "url": "https://api.open-meteo.com/v1/forecast?latitude=27.6058&longitude=-82.3456&daily=sunrise%2Csunset&timezone=America%2FNew_York&forecast_days=4",
-    "fetched_at": "2026-10-18T07:54:41Z"
-   },
-   "nws_alerts_6042": {
-    "url": "https://api.weather.gov/alerts/active?point=27.6058%2C-82.3456",
-    "fetched_at": "2026-10-18T07:54:42Z"
-   },
-   "nws_point_6042": {
-    "url": "https://api.weather.gov/points/27.6058,-82.3456",
-    "fetched_at": "2026-10-18T07:54:42Z"
-   },
-   "nws_forecast_6042": {
-    "url": "https://api.weather.gov/gridpoints/TBW/77,83/forecast",
-    "fetched_at": "2026-10-18T07:54:42Z"
-   },
-   "openmeteo_air_6042": {
-    "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=27.6058&longitude=-82.3456&hourly=us_aqi%2Cpm2_5%2Cpm10&timezone=UTC&forecast_days=4&past_days=1",
-    "fetched_at": "2026-10-18T07:54:43Z"
-   },
-   "coops_hilo_8726436": {
-    "url": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=predictions&application=controlward_next_day_report&station=8726436&datum=MLLW&time_zone=lst_ldt&units=metric&interval=hilo&format=json&begin_date=20261018&end_date=20261020",
-    "fetched_at": "2026-10-18T07:54:44Z"
-   },
-   "coops_datums_8726436": {
-    "url": "https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations/8726436/datums.json?units=metric",
-    "fetched_at": "2026-10-18T07:54:44Z"
-   },
-   "nld_6042_leveed_areas": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (leveed_areas)",
-    "fetched_at": "2026-10-18T07:54:45Z"
-   },
-   "nld_6042_alignment_lines": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (alignment_lines)",
-    "fetched_at": "2026-10-18T07:54:45Z"
-   },
-   "nld_6042_floodwalls": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (floodwalls)",
-    "fetched_at": "2026-10-18T07:54:45Z"
-   },
-   "nld_6042_closure_structures": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (closure_structures)",
-    "fetched_at": "2026-10-18T07:54:45Z"
-   },
-   "nld_6042_pump_stations": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (pump_stations)",
-    "fetched_at": "2026-10-18T07:54:45Z"
-   },
-   "nwps_gauge_WIMF1": {
-    "url": "https://api.water.noaa.gov/nwps/v1/gauges/WIMF1",
-    "fetched_at": "2026-10-18T07:54:48Z"
-   },
-   "nwps_stageflow_WIMF1": {
-    "url": "https://api.water.noaa.gov/nwps/v1/gauges/WIMF1/stageflow",
-    "fetched_at": "2026-10-18T07:54:54Z"
-   },
-   "overpass_roads_6042": {
-    "url": "https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A60%5D%3Bway%28around%3A2500%2C27.60580%2C-82.34560%29%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%7Cunclassified%7Cresidential%7Cservice%7Ctrack%7Croad%7Cliving_street%7Cmotorway_link%7Ctrunk_link%7Cprimary_link%7Csecondary_link%7Ctertiary_link%29%24%22%5D%5B%22access%22%21~%22%5E%28no%29%24%22%5D%3Bout+geom%3B",
-    "fetched_at": "2026-10-18T07:55:35Z"
-   },
-   "inat_recent_6042": {
-    "url": "https://api.inaturalist.org/v1/observations?lat=27.6058&lng=-82.3456&radius=10&taxon_id=26159%2C26085%2C30692%2C30668%2C30493%2C30979%2C41638&quality_grade=research&d1=2026-09-18&per_page=200&order_by=observed_on&order=desc",
-    "fetched_at": "2026-10-18T07:55:37Z"
-   },
-   "inat_season_6042_alligator": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=27.6058&lng=-82.3456&radius=25&taxon_id=26159&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:55:37Z"
-   },
-   "inat_season_6042_crocodile": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=27.6058&lng=-82.3456&radius=25&taxon_id=26085&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:55:38Z"
-   },
-   "inat_season_6042_snakes": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=27.6058&lng=-82.3456&radius=25&taxon_id=30692%2C30668%2C30493%2C30979&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:55:39Z"
-   },
-   "inat_season_6042_bear": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=27.6058&lng=-82.3456&radius=25&taxon_id=41638&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:55:40Z"
-   },
-   "openmeteo_hourly_3935": {
-    "url": "https://api.open-meteo.com/v1/forecast?latitude=38.4731%2C38.4731%2C38.6287%2C38.6287%2C38.4731%2C38.3175%2C38.3175&longitude=-81.8233%2C-81.5938%2C-81.7086%2C-81.9380%2C-82.0528%2C-81.9380%2C-81.7086&hourly=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cwind_speed_10m%2Cwind_gusts_10m%2Cshortwave_radiation%2Cprecipitation%2Cprecipitation_probability%2Ccape%2Cuv_index&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=mm&timezone=UTC&past_days=1&forecast_days=4",
-    "fetched_at": "2026-10-18T07:55:42Z"
-   },
-   "openmeteo_sun_3935": {
-    "url": "https://api.open-meteo.com/v1/forecast?latitude=38.4731&longitude=-81.8233&daily=sunrise%2Csunset&timezone=America%2FNew_York&forecast_days=4",
-    "fetched_at": "2026-10-18T07:55:42Z"
-   },
-   "nws_alerts_3935": {
-    "url": "https://api.weather.gov/alerts/active?point=38.4731%2C-81.8233",
-    "fetched_at": "2026-10-18T07:55:42Z"
-   },
-   "nws_point_3935": {
-    "url": "https://api.weather.gov/points/38.4731,-81.8233",
-    "fetched_at": "2026-10-18T07:55:43Z"
-   },
-   "nws_forecast_3935": {
-    "url": "https://api.weather.gov/gridpoints/RLX/55,72/forecast",
-    "fetched_at": "2026-10-18T07:55:43Z"
-   },
-   "openmeteo_air_3935": {
-    "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=38.4731&longitude=-81.8233&hourly=us_aqi%2Cpm2_5%2Cpm10&timezone=UTC&forecast_days=4&past_days=1",
-    "fetched_at": "2026-10-18T07:55:44Z"
-   },
-   "nld_3935_leveed_areas": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (leveed_areas)",
-    "fetched_at": "2026-10-18T07:55:44Z"
-   },
-   "nld_3935_alignment_lines": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (alignment_lines)",
-    "fetched_at": "2026-10-18T07:55:44Z"
-   },
-   "nld_3935_floodwalls": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (floodwalls)",
-    "fetched_at": "2026-10-18T07:55:44Z"
-   },
-   "nld_3935_closure_structures": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (closure_structures)",
-    "fetched_at": "2026-10-18T07:55:44Z"
-   },
-   "nld_3935_pump_stations": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (pump_stations)",
-    "fetched_at": "2026-10-18T07:55:45Z"
-   },
-   "nwps_gauge_TORW2": {
-    "url": "https://api.water.noaa.gov/nwps/v1/gauges/TORW2",
-    "fetched_at": "2026-10-18T07:55:46Z"
-   },
-   "nwps_stageflow_TORW2": {
-    "url": "https://api.water.noaa.gov/nwps/v1/gauges/TORW2/stageflow",
-    "fetched_at": "2026-10-18T07:55:50Z"
-   },
-   "overpass_roads_3935": {
-    "url": "https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A60%5D%3Bway%28around%3A2500%2C38.47310%2C-81.82330%29%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%7Cunclassified%7Cresidential%7Cservice%7Ctrack%7Croad%7Cliving_street%7Cmotorway_link%7Ctrunk_link%7Cprimary_link%7Csecondary_link%7Ctertiary_link%29%24%22%5D%5B%22access%22%21~%22%5E%28no%29%24%22%5D%3Bout+geom%3B",
-    "fetched_at": "2026-10-18T07:56:31Z"
-   },
-   "inat_recent_3935": {
-    "url": "https://api.inaturalist.org/v1/observations?lat=38.4731&lng=-81.8233&radius=10&taxon_id=26159%2C26085%2C30692%2C30668%2C30493%2C30979%2C41638&quality_grade=research&d1=2026-09-18&per_page=200&order_by=observed_on&order=desc",
-    "fetched_at": "2026-10-18T07:56:33Z"
-   },
-   "inat_season_3935_alligator": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=38.4731&lng=-81.8233&radius=25&taxon_id=26159&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:56:33Z"
-   },
-   "inat_season_3935_crocodile": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=38.4731&lng=-81.8233&radius=25&taxon_id=26085&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:56:34Z"
-   },
-   "inat_season_3935_snakes": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=38.4731&lng=-81.8233&radius=25&taxon_id=30692%2C30668%2C30493%2C30979&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:56:35Z"
-   },
-   "inat_season_3935_bear": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=38.4731&lng=-81.8233&radius=25&taxon_id=41638&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:56:36Z"
-   },
-   "openmeteo_hourly_3166": {
-    "url": "https://api.open-meteo.com/v1/forecast?latitude=39.7589%2C39.7589%2C39.9145%2C39.9145%2C39.7589%2C39.6033%2C39.6033&longitude=-76.2687%2C-76.0350%2C-76.1519%2C-76.3856%2C-76.5024%2C-76.3856%2C-76.1519&hourly=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cwind_speed_10m%2Cwind_gusts_10m%2Cshortwave_radiation%2Cprecipitation%2Cprecipitation_probability%2Ccape%2Cuv_index&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=mm&timezone=UTC&past_days=1&forecast_days=4",
-    "fetched_at": "2026-10-18T07:56:36Z"
-   },
-   "openmeteo_sun_3166": {
-    "url": "https://api.open-meteo.com/v1/forecast?latitude=39.7589&longitude=-76.2687&daily=sunrise%2Csunset&timezone=America%2FNew_York&forecast_days=4",
-    "fetched_at": "2026-10-18T07:56:36Z"
-   },
-   "nws_alerts_3166": {
-    "url": "https://api.weather.gov/alerts/active?point=39.7589%2C-76.2687",
-    "fetched_at": "2026-10-18T07:56:37Z"
-   },
-   "nws_point_3166": {
-    "url": "https://api.weather.gov/points/39.7589,-76.2687",
-    "fetched_at": "2026-10-18T07:56:37Z"
-   },
-   "nws_forecast_3166": {
-    "url": "https://api.weather.gov/gridpoints/CTP/130,18/forecast",
-    "fetched_at": "2026-10-18T07:56:37Z"
-   },
-   "openmeteo_air_3166": {
-    "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=39.7589&longitude=-76.2687&hourly=us_aqi%2Cpm2_5%2Cpm10&timezone=UTC&forecast_days=4&past_days=1",
-    "fetched_at": "2026-10-18T07:56:38Z"
-   },
-   "nld_3166_leveed_areas": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (leveed_areas)",
-    "fetched_at": "2026-10-18T07:56:38Z"
-   },
-   "nld_3166_alignment_lines": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (alignment_lines)",
-    "fetched_at": "2026-10-18T07:56:38Z"
-   },
-   "nld_3166_floodwalls": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (floodwalls)",
-    "fetched_at": "2026-10-18T07:56:38Z"
-   },
-   "nld_3166_closure_structures": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (closure_structures)",
-    "fetched_at": "2026-10-18T07:56:39Z"
-   },
-   "nld_3166_pump_stations": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (pump_stations)",
-    "fetched_at": "2026-10-18T07:56:39Z"
-   },
-   "overpass_roads_3166": {
-    "url": "https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A60%5D%3Bway%28around%3A2500%2C39.75894%2C-76.26874%29%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%7Cunclassified%7Cresidential%7Cservice%7Ctrack%7Croad%7Cliving_street%7Cmotorway_link%7Ctrunk_link%7Cprimary_link%7Csecondary_link%7Ctertiary_link%29%24%22%5D%5B%22access%22%21~%22%5E%28no%29%24%22%5D%3Bout+geom%3B",
-    "fetched_at": "2026-10-18T07:57:19Z"
-   },
-   "inat_recent_3166": {
-    "url": "https://api.inaturalist.org/v1/observations?lat=39.758936&lng=-76.26874&radius=10&taxon_id=26159%2C26085%2C30692%2C30668%2C30493%2C30979%2C41638&quality_grade=research&d1=2026-09-18&per_page=200&order_by=observed_on&order=desc",
-    "fetched_at": "2026-10-18T07:57:20Z"
-   },
-   "inat_season_3166_alligator": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=39.758936&lng=-76.26874&radius=25&taxon_id=26159&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:57:20Z"
-   },
-   "inat_season_3166_crocodile": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=39.758936&lng=-76.26874&radius=25&taxon_id=26085&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:57:21Z"
-   },
-   "inat_season_3166_snakes": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=39.758936&lng=-76.26874&radius=25&taxon_id=30692%2C30668%2C30493%2C30979&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:57:22Z"
-   },
-   "inat_season_3166_bear": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=39.758936&lng=-76.26874&radius=25&taxon_id=41638&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:57:23Z"
-   },
-   "openmeteo_hourly_6167": {
-    "url": "https://api.open-meteo.com/v1/forecast?latitude=38.2089%2C38.2089%2C38.3645%2C38.3645%2C38.2089%2C38.0533%2C38.0533&longitude=-79.8000%2C-79.5714%2C-79.6857%2C-79.9143%2C-80.0286%2C-79.9143%2C-79.6857&hourly=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cwind_speed_10m%2Cwind_gusts_10m%2Cshortwave_radiation%2Cprecipitation%2Cprecipitation_probability%2Ccape%2Cuv_index&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=mm&timezone=UTC&past_days=1&forecast_days=4",
-    "fetched_at": "2026-10-18T07:57:23Z"
-   },
-   "openmeteo_sun_6167": {
-    "url": "https://api.open-meteo.com/v1/forecast?latitude=38.2089&longitude=-79.8000&daily=sunrise%2Csunset&timezone=America%2FNew_York&forecast_days=4",
-    "fetched_at": "2026-10-18T07:57:24Z"
-   },
-   "nws_alerts_6167": {
-    "url": "https://api.weather.gov/alerts/active?point=38.2089%2C-79.8000",
-    "fetched_at": "2026-10-18T07:57:24Z"
-   },
-   "nws_point_6167": {
-    "url": "https://api.weather.gov/points/38.2089,-79.8000",
-    "fetched_at": "2026-10-18T07:57:24Z"
-   },
-   "nws_forecast_6167": {
-    "url": "https://api.weather.gov/gridpoints/RNK/75,112/forecast",
-    "fetched_at": "2026-10-18T07:57:25Z"
-   },
-   "openmeteo_air_6167": {
-    "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=38.2089&longitude=-79.8000&hourly=us_aqi%2Cpm2_5%2Cpm10&timezone=UTC&forecast_days=4&past_days=1",
-    "fetched_at": "2026-10-18T07:57:25Z"
-   },
-   "nld_6167_leveed_areas": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (leveed_areas)",
-    "fetched_at": "2026-10-18T07:57:26Z"
-   },
-   "nld_6167_alignment_lines": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (alignment_lines)",
-    "fetched_at": "2026-10-18T07:57:26Z"
-   },
-   "nld_6167_floodwalls": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (floodwalls)",
-    "fetched_at": "2026-10-18T07:57:26Z"
-   },
-   "nld_6167_closure_structures": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (closure_structures)",
-    "fetched_at": "2026-10-18T07:57:26Z"
-   },
-   "nld_6167_pump_stations": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (pump_stations)",
-    "fetched_at": "2026-10-18T07:57:26Z"
-   },
-   "overpass_roads_6167": {
-    "url": "https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A60%5D%3Bway%28around%3A2500%2C38.20889%2C-79.80000%29%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%7Cunclassified%7Cresidential%7Cservice%7Ctrack%7Croad%7Cliving_street%7Cmotorway_link%7Ctrunk_link%7Cprimary_link%7Csecondary_link%7Ctertiary_link%29%24%22%5D%5B%22access%22%21~%22%5E%28no%29%24%22%5D%3Bout+geom%3B",
-    "fetched_at": "2026-10-18T07:58:03Z"
-   },
-   "inat_recent_6167": {
-    "url": "https://api.inaturalist.org/v1/observations?lat=38.20889&lng=-79.8&radius=10&taxon_id=26159%2C26085%2C30692%2C30668%2C30493%2C30979%2C41638&quality_grade=research&d1=2026-09-18&per_page=200&order_by=observed_on&order=desc",
-    "fetched_at": "2026-10-18T07:58:04Z"
-   },
-   "inat_season_6167_alligator": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=38.20889&lng=-79.8&radius=25&taxon_id=26159&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:58:05Z"
-   },
-   "inat_season_6167_crocodile": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=38.20889&lng=-79.8&radius=25&taxon_id=26085&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:58:06Z"
-   },
-   "inat_season_6167_snakes": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=38.20889&lng=-79.8&radius=25&taxon_id=30692%2C30668%2C30493%2C30979&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:58:07Z"
-   },
-   "inat_season_6167_bear": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=38.20889&lng=-79.8&radius=25&taxon_id=41638&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:58:07Z"
-   },
-   "openmeteo_hourly_6251": {
-    "url": "https://api.open-meteo.com/v1/forecast?latitude=28.7950%2C28.7950%2C28.9506%2C28.9506%2C28.7950%2C28.6394%2C28.6394&longitude=-96.0481%2C-95.8431%2C-95.9456%2C-96.1506%2C-96.2531%2C-96.1506%2C-95.9456&hourly=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cwind_speed_10m%2Cwind_gusts_10m%2Cshortwave_radiation%2Cprecipitation%2Cprecipitation_probability%2Ccape%2Cuv_index&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=mm&timezone=UTC&past_days=1&forecast_days=4",
-    "fetched_at": "2026-10-18T07:58:09Z"
-   },
-   "openmeteo_sun_6251": {
-    "url": "https://api.open-meteo.com/v1/forecast?latitude=28.7950&longitude=-96.0481&daily=sunrise%2Csunset&timezone=America%2FChicago&forecast_days=4",
-    "fetched_at": "2026-10-18T07:58:09Z"
-   },
-   "nws_alerts_6251": {
-    "url": "https://api.weather.gov/alerts/active?point=28.7950%2C-96.0481",
-    "fetched_at": "2026-10-18T07:58:10Z"
-   },
-   "nws_point_6251": {
-    "url": "https://api.weather.gov/points/28.7950,-96.0481",
-    "fetched_at": "2026-10-18T07:58:10Z"
-   },
-   "nws_forecast_6251": {
-    "url": "https://api.weather.gov/gridpoints/HGX/37,52/forecast",
-    "fetched_at": "2026-10-18T07:58:10Z"
-   },
-   "openmeteo_air_6251": {
-    "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=28.7950&longitude=-96.0481&hourly=us_aqi%2Cpm2_5%2Cpm10&timezone=UTC&forecast_days=4&past_days=1",
-    "fetched_at": "2026-10-18T07:58:11Z"
-   },
-   "coops_hilo_8773146": {
-    "url": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=predictions&application=controlward_next_day_report&station=8773146&datum=MLLW&time_zone=lst_ldt&units=metric&interval=hilo&format=json&begin_date=20261018&end_date=20261020",
-    "fetched_at": "2026-10-18T07:58:11Z"
-   },
-   "coops_datums_8773146": {
-    "url": "https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations/8773146/datums.json?units=metric",
-    "fetched_at": "2026-10-18T07:58:11Z"
-   },
-   "nld_6251_leveed_areas": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (leveed_areas)",
-    "fetched_at": "2026-10-18T07:58:12Z"
-   },
-   "nld_6251_alignment_lines": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (alignment_lines)",
-    "fetched_at": "2026-10-18T07:58:12Z"
-   },
-   "nld_6251_floodwalls": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (floodwalls)",
-    "fetched_at": "2026-10-18T07:58:12Z"
-   },
-   "nld_6251_closure_structures": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (closure_structures)",
-    "fetched_at": "2026-10-18T07:58:12Z"
-   },
-   "nld_6251_pump_stations": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (pump_stations)",
-    "fetched_at": "2026-10-18T07:58:12Z"
-   },
-   "nwps_gauge_MRCT2": {
-    "url": "https://api.water.noaa.gov/nwps/v1/gauges/MRCT2",
-    "fetched_at": "2026-10-18T07:58:13Z"
-   },
-   "nwps_stageflow_MRCT2": {
-    "url": "https://api.water.noaa.gov/nwps/v1/gauges/MRCT2/stageflow",
-    "fetched_at": "2026-10-18T07:58:13Z"
-   },
-   "overpass_roads_6251": {
-    "url": "https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A60%5D%3Bway%28around%3A2500%2C28.79500%2C-96.04810%29%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%7Cunclassified%7Cresidential%7Cservice%7Ctrack%7Croad%7Cliving_street%7Cmotorway_link%7Ctrunk_link%7Cprimary_link%7Csecondary_link%7Ctertiary_link%29%24%22%5D%5B%22access%22%21~%22%5E%28no%29%24%22%5D%3Bout+geom%3B",
-    "fetched_at": "2026-10-18T07:58:53Z"
-   },
-   "inat_recent_6251": {
-    "url": "https://api.inaturalist.org/v1/observations?lat=28.795&lng=-96.0481&radius=10&taxon_id=26159%2C26085%2C30692%2C30668%2C30493%2C30979%2C41638&quality_grade=research&d1=2026-09-18&per_page=200&order_by=observed_on&order=desc",
-    "fetched_at": "2026-10-18T07:58:54Z"
-   },
-   "inat_season_6251_alligator": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=28.795&lng=-96.0481&radius=25&taxon_id=26159&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:58:55Z"
-   },
-   "inat_season_6251_crocodile": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=28.795&lng=-96.0481&radius=25&taxon_id=26085&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:58:56Z"
-   },
-   "inat_season_6251_snakes": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=28.795&lng=-96.0481&radius=25&taxon_id=30692%2C30668%2C30493%2C30979&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:58:56Z"
-   },
-   "inat_season_6251_bear": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=28.795&lng=-96.0481&radius=25&taxon_id=41638&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:58:57Z"
-   },
-   "openmeteo_hourly_612": {
-    "url": "https://api.open-meteo.com/v1/forecast?latitude=26.6967%2C26.6967%2C26.8523%2C26.8523%2C26.6967%2C26.5411%2C26.5411&longitude=-81.7831%2C-81.5820%2C-81.6825%2C-81.8837%2C-81.9842%2C-81.8837%2C-81.6825&hourly=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cwind_speed_10m%2Cwind_gusts_10m%2Cshortwave_radiation%2Cprecipitation%2Cprecipitation_probability%2Ccape%2Cuv_index&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=mm&timezone=UTC&past_days=1&forecast_days=4",
-    "fetched_at": "2026-10-18T07:58:58Z"
-   },
-   "openmeteo_sun_612": {
-    "url": "https://api.open-meteo.com/v1/forecast?latitude=26.6967&longitude=-81.7831&daily=sunrise%2Csunset&timezone=America%2FNew_York&forecast_days=4",
-    "fetched_at": "2026-10-18T07:58:58Z"
-   },
-   "nws_alerts_612": {
-    "url": "https://api.weather.gov/alerts/active?point=26.6967%2C-81.7831",
-    "fetched_at": "2026-10-18T07:58:59Z"
-   },
-   "nws_point_612": {
-    "url": "https://api.weather.gov/points/26.6967,-81.7831",
-    "fetched_at": "2026-10-18T07:58:59Z"
-   },
-   "nws_forecast_612": {
-    "url": "https://api.weather.gov/gridpoints/TBW/102,45/forecast",
-    "fetched_at": "2026-10-18T07:58:59Z"
-   },
-   "openmeteo_air_612": {
-    "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=26.6967&longitude=-81.7831&hourly=us_aqi%2Cpm2_5%2Cpm10&timezone=UTC&forecast_days=4&past_days=1",
-    "fetched_at": "2026-10-18T07:59:00Z"
-   },
-   "coops_hilo_8725520": {
-    "url": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=predictions&application=controlward_next_day_report&station=8725520&datum=MLLW&time_zone=lst_ldt&units=metric&interval=hilo&format=json&begin_date=20261018&end_date=20261020",
-    "fetched_at": "2026-10-18T07:59:00Z"
-   },
-   "coops_datums_8725520": {
-    "url": "https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations/8725520/datums.json?units=metric",
-    "fetched_at": "2026-10-18T07:59:00Z"
-   },
-   "nld_612_leveed_areas": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (leveed_areas)",
-    "fetched_at": "2026-10-18T07:59:00Z"
-   },
-   "nld_612_alignment_lines": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (alignment_lines)",
-    "fetched_at": "2026-10-18T07:59:00Z"
-   },
-   "nld_612_floodwalls": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (floodwalls)",
-    "fetched_at": "2026-10-18T07:59:00Z"
-   },
-   "nld_612_closure_structures": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (closure_structures)",
-    "fetched_at": "2026-10-18T07:59:00Z"
-   },
-   "nld_612_pump_stations": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (pump_stations)",
-    "fetched_at": "2026-10-18T07:59:01Z"
-   },
-   "overpass_roads_612": {
-    "url": "https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A60%5D%3Bway%28around%3A2500%2C26.69670%2C-81.78310%29%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%7Cunclassified%7Cresidential%7Cservice%7Ctrack%7Croad%7Cliving_street%7Cmotorway_link%7Ctrunk_link%7Cprimary_link%7Csecondary_link%7Ctertiary_link%29%24%22%5D%5B%22access%22%21~%22%5E%28no%29%24%22%5D%3Bout+geom%3B",
-    "fetched_at": "2026-10-18T07:59:57Z"
-   },
-   "inat_recent_612": {
-    "url": "https://api.inaturalist.org/v1/observations?lat=26.6967&lng=-81.7831&radius=10&taxon_id=26159%2C26085%2C30692%2C30668%2C30493%2C30979%2C41638&quality_grade=research&d1=2026-09-18&per_page=200&order_by=observed_on&order=desc",
-    "fetched_at": "2026-10-18T07:59:59Z"
-   },
-   "inat_season_612_alligator": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=26.6967&lng=-81.7831&radius=25&taxon_id=26159&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T07:59:59Z"
-   },
-   "inat_season_612_crocodile": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=26.6967&lng=-81.7831&radius=25&taxon_id=26085&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T08:00:00Z"
-   },
-   "inat_season_612_snakes": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=26.6967&lng=-81.7831&radius=25&taxon_id=30692%2C30668%2C30493%2C30979&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T08:00:01Z"
-   },
-   "inat_season_612_bear": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=26.6967&lng=-81.7831&radius=25&taxon_id=41638&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T08:00:01Z"
-   },
-   "openmeteo_hourly_3265": {
-    "url": "https://api.open-meteo.com/v1/forecast?latitude=34.7939%2C34.7939%2C34.9495%2C34.9495%2C34.7939%2C34.6383%2C34.6383&longitude=-82.8986%2C-82.6798%2C-82.7892%2C-83.0080%2C-83.1174%2C-83.0080%2C-82.7892&hourly=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cwind_speed_10m%2Cwind_gusts_10m%2Cshortwave_radiation%2Cprecipitation%2Cprecipitation_probability%2Ccape%2Cuv_index&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=mm&timezone=UTC&past_days=1&forecast_days=4",
-    "fetched_at": "2026-10-18T08:00:14Z"
-   },
-   "openmeteo_sun_3265": {
-    "url": "https://api.open-meteo.com/v1/forecast?latitude=34.7939&longitude=-82.8986&daily=sunrise%2Csunset&timezone=America%2FNew_York&forecast_days=4",
-    "fetched_at": "2026-10-18T08:00:16Z"
-   },
-   "nws_alerts_3265": {
-    "url": "https://api.weather.gov/alerts/active?point=34.7939%2C-82.8986",
-    "fetched_at": "2026-10-18T08:00:17Z"
-   },
-   "nws_point_3265": {
-    "url": "https://api.weather.gov/points/34.7939,-82.8986",
-    "fetched_at": "2026-10-18T08:00:19Z"
-   },
-   "nws_forecast_3265": {
-    "url": "https://api.weather.gov/gridpoints/GSP/46,39/forecast",
-    "fetched_at": "2026-10-18T08:00:21Z"
-   },
-   "openmeteo_air_3265": {
-    "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=34.7939&longitude=-82.8986&hourly=us_aqi%2Cpm2_5%2Cpm10&timezone=UTC&forecast_days=4&past_days=1",
-    "fetched_at": "2026-10-18T08:00:21Z"
-   },
-   "nld_3265_leveed_areas": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (leveed_areas)",
-    "fetched_at": "2026-10-18T08:00:22Z"
-   },
-   "nld_3265_alignment_lines": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (alignment_lines)",
-    "fetched_at": "2026-10-18T08:00:22Z"
-   },
-   "nld_3265_floodwalls": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (floodwalls)",
-    "fetched_at": "2026-10-18T08:00:22Z"
-   },
-   "nld_3265_closure_structures": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (closure_structures)",
-    "fetched_at": "2026-10-18T08:00:22Z"
-   },
-   "nld_3265_pump_stations": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (pump_stations)",
-    "fetched_at": "2026-10-18T08:00:22Z"
-   },
-   "inat_recent_3265": {
-    "url": "https://api.inaturalist.org/v1/observations?lat=34.7939&lng=-82.8986&radius=10&taxon_id=26159%2C26085%2C30692%2C30668%2C30493%2C30979%2C41638&quality_grade=research&d1=2026-09-18&per_page=200&order_by=observed_on&order=desc",
-    "fetched_at": "2026-10-18T08:00:27Z"
-   },
-   "inat_season_3265_alligator": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=34.7939&lng=-82.8986&radius=25&taxon_id=26159&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T08:00:28Z"
-   },
-   "inat_season_3265_crocodile": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=34.7939&lng=-82.8986&radius=25&taxon_id=26085&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T08:00:29Z"
-   },
-   "inat_season_3265_snakes": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=34.7939&lng=-82.8986&radius=25&taxon_id=30692%2C30668%2C30493%2C30979&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T08:00:29Z"
-   },
-   "inat_season_3265_bear": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=34.7939&lng=-82.8986&radius=25&taxon_id=41638&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T08:00:30Z"
+    "fetched_at": "2026-10-18T09:10:43Z"
+   },
+   "overpass_roads_6090": {
+    "url": "https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A60%5D%3Bway%28around%3A2500%2C45.38080%2C-93.89310%29%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%7Cunclassified%7Cresidential%7Cservice%7Ctrack%7Croad%7Cliving_street%7Cmotorway_link%7Ctrunk_link%7Cprimary_link%7Csecondary_link%7Ctertiary_link%29%24%22%5D%5B%22access%22%21~%22%5E%28no%29%24%22%5D%3Bout+geom%3B",
+    "fetched_at": "2026-10-18T09:11:29Z"
+   },
+   "inat_recent_6090": {
+    "url": "https://api.inaturalist.org/v1/observations?lat=45.3808&lng=-93.8931&radius=10&taxon_id=26159%2C26085%2C30692%2C30668%2C30493%2C30979%2C41638&quality_grade=research&d1=2026-09-18&per_page=200&order_by=observed_on&order=desc",
+    "fetched_at": "2026-10-18T09:11:31Z"
+   },
+   "inat_season_6090_alligator": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=45.3808&lng=-93.8931&radius=25&taxon_id=26159&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T09:11:32Z"
+   },
+   "inat_season_6090_crocodile": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=45.3808&lng=-93.8931&radius=25&taxon_id=26085&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T09:11:33Z"
+   },
+   "inat_season_6090_snakes": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=45.3808&lng=-93.8931&radius=25&taxon_id=30692%2C30668%2C30493%2C30979&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T09:11:33Z"
+   },
+   "inat_season_6090_bear": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=45.3808&lng=-93.8931&radius=25&taxon_id=41638&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T09:11:34Z"
    },
    "openmeteo_hourly_6166": {
     "url": "https://api.open-meteo.com/v1/forecast?latitude=37.9256%2C37.9256%2C38.0812%2C38.0812%2C37.9256%2C37.7700%2C37.7700&longitude=-87.0372%2C-86.8094%2C-86.9233%2C-87.1511%2C-87.2650%2C-87.1511%2C-86.9233&hourly=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cwind_speed_10m%2Cwind_gusts_10m%2Cshortwave_radiation%2Cprecipitation%2Cprecipitation_probability%2Ccape%2Cuv_index&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=mm&timezone=UTC&past_days=1&forecast_days=4",
-    "fetched_at": "2026-10-18T08:00:48Z"
+    "fetched_at": "2026-10-18T09:11:34Z"
    },
    "openmeteo_sun_6166": {
     "url": "https://api.open-meteo.com/v1/forecast?latitude=37.9256&longitude=-87.0372&daily=sunrise%2Csunset&timezone=America%2FChicago&forecast_days=4",
-    "fetched_at": "2026-10-18T08:00:49Z"
+    "fetched_at": "2026-10-18T09:11:34Z"
    },
    "nws_alerts_6166": {
     "url": "https://api.weather.gov/alerts/active?point=37.9256%2C-87.0372",
-    "fetched_at": "2026-10-18T08:00:49Z"
+    "fetched_at": "2026-10-18T09:11:35Z"
    },
    "nws_point_6166": {
     "url": "https://api.weather.gov/points/37.9256,-87.0372",
-    "fetched_at": "2026-10-18T08:00:49Z"
+    "fetched_at": "2026-10-18T09:11:35Z"
    },
    "nws_forecast_6166": {
     "url": "https://api.weather.gov/gridpoints/PAH/185,96/forecast",
-    "fetched_at": "2026-10-18T08:00:50Z"
+    "fetched_at": "2026-10-18T09:11:35Z"
    },
    "openmeteo_air_6166": {
     "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=37.9256&longitude=-87.0372&hourly=us_aqi%2Cpm2_5%2Cpm10&timezone=UTC&forecast_days=4&past_days=1",
-    "fetched_at": "2026-10-18T08:00:50Z"
+    "fetched_at": "2026-10-18T09:11:35Z"
    },
    "nld_6166_leveed_areas": {
     "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (leveed_areas)",
-    "fetched_at": "2026-10-18T08:00:51Z"
+    "fetched_at": "2026-10-18T09:11:36Z"
    },
    "nld_6166_alignment_lines": {
     "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (alignment_lines)",
-    "fetched_at": "2026-10-18T08:00:51Z"
+    "fetched_at": "2026-10-18T09:11:36Z"
    },
    "nld_6166_floodwalls": {
     "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (floodwalls)",
-    "fetched_at": "2026-10-18T08:00:51Z"
+    "fetched_at": "2026-10-18T09:11:36Z"
    },
    "nld_6166_closure_structures": {
     "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (closure_structures)",
-    "fetched_at": "2026-10-18T08:00:51Z"
+    "fetched_at": "2026-10-18T09:11:36Z"
    },
    "nld_6166_pump_stations": {
     "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (pump_stations)",
-    "fetched_at": "2026-10-18T08:00:51Z"
+    "fetched_at": "2026-10-18T09:11:36Z"
    },
    "nwps_gauge_OWBK2": {
     "url": "https://api.water.noaa.gov/nwps/v1/gauges/OWBK2",
-    "fetched_at": "2026-10-18T08:00:54Z"
+    "fetched_at": "2026-10-18T09:11:37Z"
    },
    "nwps_stageflow_OWBK2": {
     "url": "https://api.water.noaa.gov/nwps/v1/gauges/OWBK2/stageflow",
-    "fetched_at": "2026-10-18T08:00:58Z"
+    "fetched_at": "2026-10-18T09:11:37Z"
+   },
+   "overpass_roads_6166": {
+    "url": "https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A60%5D%3Bway%28around%3A2500%2C37.92560%2C-87.03720%29%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%7Cunclassified%7Cresidential%7Cservice%7Ctrack%7Croad%7Cliving_street%7Cmotorway_link%7Ctrunk_link%7Cprimary_link%7Csecondary_link%7Ctertiary_link%29%24%22%5D%5B%22access%22%21~%22%5E%28no%29%24%22%5D%3Bout+geom%3B",
+    "fetched_at": "2026-10-18T09:12:08Z"
    },
    "inat_recent_6166": {
     "url": "https://api.inaturalist.org/v1/observations?lat=37.9256&lng=-87.0372&radius=10&taxon_id=26159%2C26085%2C30692%2C30668%2C30493%2C30979%2C41638&quality_grade=research&d1=2026-09-18&per_page=200&order_by=observed_on&order=desc",
-    "fetched_at": "2026-10-18T08:01:03Z"
+    "fetched_at": "2026-10-18T09:12:09Z"
    },
    "inat_season_6166_alligator": {
     "url": "https://api.inaturalist.org/v1/observations/histogram?lat=37.9256&lng=-87.0372&radius=25&taxon_id=26159&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T08:01:04Z"
+    "fetched_at": "2026-10-18T09:12:10Z"
    },
    "inat_season_6166_crocodile": {
     "url": "https://api.inaturalist.org/v1/observations/histogram?lat=37.9256&lng=-87.0372&radius=25&taxon_id=26085&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T08:01:05Z"
+    "fetched_at": "2026-10-18T09:12:11Z"
    },
    "inat_season_6166_snakes": {
     "url": "https://api.inaturalist.org/v1/observations/histogram?lat=37.9256&lng=-87.0372&radius=25&taxon_id=30692%2C30668%2C30493%2C30979&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T08:01:06Z"
+    "fetched_at": "2026-10-18T09:12:12Z"
    },
    "inat_season_6166_bear": {
     "url": "https://api.inaturalist.org/v1/observations/histogram?lat=37.9256&lng=-87.0372&radius=25&taxon_id=41638&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T08:01:07Z"
+    "fetched_at": "2026-10-18T09:12:13Z"
    },
-   "openmeteo_hourly_8102": {
-    "url": "https://api.open-meteo.com/v1/forecast?latitude=38.9347%2C38.9347%2C39.0903%2C39.0903%2C38.9347%2C38.7791%2C38.7791&longitude=-82.1158%2C-81.8848%2C-82.0003%2C-82.2313%2C-82.3468%2C-82.2313%2C-82.0003&hourly=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cwind_speed_10m%2Cwind_gusts_10m%2Cshortwave_radiation%2Cprecipitation%2Cprecipitation_probability%2Ccape%2Cuv_index&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=mm&timezone=UTC&past_days=1&forecast_days=4",
-    "fetched_at": "2026-10-18T08:01:25Z"
+   "openmeteo_hourly_62949": {
+    "url": "https://api.open-meteo.com/v1/forecast?latitude=39.9364%2C39.9364%2C40.0920%2C40.0920%2C39.9364%2C39.7808%2C39.7808&longitude=-81.5354%2C-81.3011%2C-81.4182%2C-81.6526%2C-81.7697%2C-81.6526%2C-81.4182&hourly=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cwind_speed_10m%2Cwind_gusts_10m%2Cshortwave_radiation%2Cprecipitation%2Cprecipitation_probability%2Ccape%2Cuv_index&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=mm&timezone=UTC&past_days=1&forecast_days=4",
+    "fetched_at": "2026-10-18T09:12:13Z"
    },
-   "openmeteo_sun_8102": {
-    "url": "https://api.open-meteo.com/v1/forecast?latitude=38.9347&longitude=-82.1158&daily=sunrise%2Csunset&timezone=America%2FNew_York&forecast_days=4",
-    "fetched_at": "2026-10-18T08:01:26Z"
+   "openmeteo_sun_62949": {
+    "url": "https://api.open-meteo.com/v1/forecast?latitude=39.9364&longitude=-81.5354&daily=sunrise%2Csunset&timezone=America%2FNew_York&forecast_days=4",
+    "fetched_at": "2026-10-18T09:12:13Z"
    },
-   "nws_alerts_8102": {
-    "url": "https://api.weather.gov/alerts/active?point=38.9347%2C-82.1158",
-    "fetched_at": "2026-10-18T08:01:27Z"
+   "nws_alerts_62949": {
+    "url": "https://api.weather.gov/alerts/active?point=39.9364%2C-81.5354",
+    "fetched_at": "2026-10-18T09:12:13Z"
    },
-   "nws_point_8102": {
-    "url": "https://api.weather.gov/points/38.9347,-82.1158",
-    "fetched_at": "2026-10-18T08:01:27Z"
+   "nws_point_62949": {
+    "url": "https://api.weather.gov/points/39.9364,-81.5354",
+    "fetched_at": "2026-10-18T09:12:13Z"
    },
-   "nws_forecast_8102": {
-    "url": "https://api.weather.gov/gridpoints/RLX/43,92/forecast",
-    "fetched_at": "2026-10-18T08:01:27Z"
+   "nws_forecast_62949": {
+    "url": "https://api.weather.gov/gridpoints/PBZ/27,38/forecast",
+    "fetched_at": "2026-10-18T09:12:13Z"
    },
-   "openmeteo_air_8102": {
-    "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=38.9347&longitude=-82.1158&hourly=us_aqi%2Cpm2_5%2Cpm10&timezone=UTC&forecast_days=4&past_days=1",
-    "fetched_at": "2026-10-18T08:01:28Z"
+   "openmeteo_air_62949": {
+    "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=39.9364&longitude=-81.5354&hourly=us_aqi%2Cpm2_5%2Cpm10&timezone=UTC&forecast_days=4&past_days=1",
+    "fetched_at": "2026-10-18T09:12:14Z"
    },
-   "nld_8102_leveed_areas": {
+   "nld_62949_leveed_areas": {
     "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (leveed_areas)",
-    "fetched_at": "2026-10-18T08:01:28Z"
+    "fetched_at": "2026-10-18T09:12:15Z"
    },
-   "nld_8102_alignment_lines": {
+   "nld_62949_alignment_lines": {
     "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (alignment_lines)",
-    "fetched_at": "2026-10-18T08:01:28Z"
+    "fetched_at": "2026-10-18T09:12:15Z"
    },
-   "nld_8102_floodwalls": {
+   "nld_62949_floodwalls": {
     "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (floodwalls)",
-    "fetched_at": "2026-10-18T08:01:28Z"
+    "fetched_at": "2026-10-18T09:12:15Z"
    },
-   "nld_8102_closure_structures": {
+   "nld_62949_closure_structures": {
     "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (closure_structures)",
-    "fetched_at": "2026-10-18T08:01:29Z"
+    "fetched_at": "2026-10-18T09:12:15Z"
    },
-   "nld_8102_pump_stations": {
+   "nld_62949_pump_stations": {
     "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (pump_stations)",
-    "fetched_at": "2026-10-18T08:01:29Z"
-   },
-   "nwps_gauge_POPW2": {
-    "url": "https://api.water.noaa.gov/nwps/v1/gauges/POPW2",
-    "fetched_at": "2026-10-18T08:01:29Z"
-   },
-   "nwps_stageflow_POPW2": {
-    "url": "https://api.water.noaa.gov/nwps/v1/gauges/POPW2/stageflow",
-    "fetched_at": "2026-10-18T08:01:30Z"
-   },
-   "overpass_roads_8102": {
-    "url": "https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A60%5D%3Bway%28around%3A2500%2C38.93470%2C-82.11580%29%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%7Cunclassified%7Cresidential%7Cservice%7Ctrack%7Croad%7Cliving_street%7Cmotorway_link%7Ctrunk_link%7Cprimary_link%7Csecondary_link%7Ctertiary_link%29%24%22%5D%5B%22access%22%21~%22%5E%28no%29%24%22%5D%3Bout+geom%3B",
-    "fetched_at": "2026-10-18T08:02:16Z"
-   },
-   "inat_recent_8102": {
-    "url": "https://api.inaturalist.org/v1/observations?lat=38.9347&lng=-82.1158&radius=10&taxon_id=26159%2C26085%2C30692%2C30668%2C30493%2C30979%2C41638&quality_grade=research&d1=2026-09-18&per_page=200&order_by=observed_on&order=desc",
-    "fetched_at": "2026-10-18T08:02:18Z"
-   },
-   "inat_season_8102_alligator": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=38.9347&lng=-82.1158&radius=25&taxon_id=26159&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T08:02:19Z"
-   },
-   "inat_season_8102_crocodile": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=38.9347&lng=-82.1158&radius=25&taxon_id=26085&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T08:02:19Z"
-   },
-   "inat_season_8102_snakes": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=38.9347&lng=-82.1158&radius=25&taxon_id=30692%2C30668%2C30493%2C30979&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T08:02:20Z"
-   },
-   "inat_season_8102_bear": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=38.9347&lng=-82.1158&radius=25&taxon_id=41638&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T08:02:21Z"
-   },
-   "openmeteo_hourly_3399": {
-    "url": "https://api.open-meteo.com/v1/forecast?latitude=36.3903%2C36.3903%2C36.5459%2C36.5459%2C36.3903%2C36.2347%2C36.2347&longitude=-87.6539%2C-87.4307%2C-87.5423%2C-87.7655%2C-87.8771%2C-87.7655%2C-87.5423&hourly=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cwind_speed_10m%2Cwind_gusts_10m%2Cshortwave_radiation%2Cprecipitation%2Cprecipitation_probability%2Ccape%2Cuv_index&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=mm&timezone=UTC&past_days=1&forecast_days=4",
-    "fetched_at": "2026-10-18T08:02:39Z"
-   },
-   "openmeteo_sun_3399": {
-    "url": "https://api.open-meteo.com/v1/forecast?latitude=36.3903&longitude=-87.6539&daily=sunrise%2Csunset&timezone=America%2FChicago&forecast_days=4",
-    "fetched_at": "2026-10-18T08:02:39Z"
-   },
-   "nws_alerts_3399": {
-    "url": "https://api.weather.gov/alerts/active?point=36.3903%2C-87.6539",
-    "fetched_at": "2026-10-18T08:02:40Z"
-   },
-   "nws_point_3399": {
-    "url": "https://api.weather.gov/points/36.3903,-87.6539",
-    "fetched_at": "2026-10-18T08:02:40Z"
-   },
-   "nws_forecast_3399": {
-    "url": "https://api.weather.gov/gridpoints/OHX/18,65/forecast",
-    "fetched_at": "2026-10-18T08:02:40Z"
-   },
-   "openmeteo_air_3399": {
-    "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=36.3903&longitude=-87.6539&hourly=us_aqi%2Cpm2_5%2Cpm10&timezone=UTC&forecast_days=4&past_days=1",
-    "fetched_at": "2026-10-18T08:02:41Z"
-   },
-   "nld_3399_leveed_areas": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (leveed_areas)",
-    "fetched_at": "2026-10-18T08:02:41Z"
-   },
-   "nld_3399_alignment_lines": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (alignment_lines)",
-    "fetched_at": "2026-10-18T08:02:41Z"
-   },
-   "nld_3399_floodwalls": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (floodwalls)",
-    "fetched_at": "2026-10-18T08:02:41Z"
-   },
-   "nld_3399_closure_structures": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (closure_structures)",
-    "fetched_at": "2026-10-18T08:02:41Z"
-   },
-   "nld_3399_pump_stations": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (pump_stations)",
-    "fetched_at": "2026-10-18T08:02:41Z"
-   },
-   "nwps_gauge_DOVT1": {
-    "url": "https://api.water.noaa.gov/nwps/v1/gauges/DOVT1",
-    "fetched_at": "2026-10-18T08:02:42Z"
-   },
-   "nwps_stageflow_DOVT1": {
-    "url": "https://api.water.noaa.gov/nwps/v1/gauges/DOVT1/stageflow",
-    "fetched_at": "2026-10-18T08:02:43Z"
-   },
-   "overpass_roads_3399": {
-    "url": "https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A60%5D%3Bway%28around%3A2500%2C36.39030%2C-87.65390%29%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%7Cunclassified%7Cresidential%7Cservice%7Ctrack%7Croad%7Cliving_street%7Cmotorway_link%7Ctrunk_link%7Cprimary_link%7Csecondary_link%7Ctertiary_link%29%24%22%5D%5B%22access%22%21~%22%5E%28no%29%24%22%5D%3Bout+geom%3B",
-    "fetched_at": "2026-10-18T08:03:25Z"
-   },
-   "inat_recent_3399": {
-    "url": "https://api.inaturalist.org/v1/observations?lat=36.3903&lng=-87.6539&radius=10&taxon_id=26159%2C26085%2C30692%2C30668%2C30493%2C30979%2C41638&quality_grade=research&d1=2026-09-18&per_page=200&order_by=observed_on&order=desc",
-    "fetched_at": "2026-10-18T08:03:26Z"
-   },
-   "inat_season_3399_alligator": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=36.3903&lng=-87.6539&radius=25&taxon_id=26159&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T08:03:27Z"
-   },
-   "inat_season_3399_crocodile": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=36.3903&lng=-87.6539&radius=25&taxon_id=26085&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T08:03:28Z"
-   },
-   "inat_season_3399_snakes": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=36.3903&lng=-87.6539&radius=25&taxon_id=30692%2C30668%2C30493%2C30979&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T08:03:29Z"
-   },
-   "inat_season_3399_bear": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=36.3903&lng=-87.6539&radius=25&taxon_id=41638&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T08:03:29Z"
-   },
-   "openmeteo_hourly_6071": {
-    "url": "https://api.open-meteo.com/v1/forecast?latitude=38.5847%2C38.5847%2C38.7403%2C38.7403%2C38.5847%2C38.4291%2C38.4291&longitude=-85.4117%2C-85.1819%2C-85.2968%2C-85.5266%2C-85.6415%2C-85.5266%2C-85.2968&hourly=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cwind_speed_10m%2Cwind_gusts_10m%2Cshortwave_radiation%2Cprecipitation%2Cprecipitation_probability%2Ccape%2Cuv_index&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=mm&timezone=UTC&past_days=1&forecast_days=4",
-    "fetched_at": "2026-10-18T08:03:44Z"
-   },
-   "openmeteo_sun_6071": {
-    "url": "https://api.open-meteo.com/v1/forecast?latitude=38.5847&longitude=-85.4117&daily=sunrise%2Csunset&timezone=America%2FIndiana%2FIndianapolis&forecast_days=4",
-    "fetched_at": "2026-10-18T08:03:45Z"
-   },
-   "nws_alerts_6071": {
-    "url": "https://api.weather.gov/alerts/active?point=38.5847%2C-85.4117",
-    "fetched_at": "2026-10-18T08:03:45Z"
-   },
-   "nws_point_6071": {
-    "url": "https://api.weather.gov/points/38.5847,-85.4117",
-    "fetched_at": "2026-10-18T08:03:46Z"
-   },
-   "nws_forecast_6071": {
-    "url": "https://api.weather.gov/gridpoints/LMK/61,93/forecast",
-    "fetched_at": "2026-10-18T08:03:46Z"
-   },
-   "openmeteo_air_6071": {
-    "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=38.5847&longitude=-85.4117&hourly=us_aqi%2Cpm2_5%2Cpm10&timezone=UTC&forecast_days=4&past_days=1",
-    "fetched_at": "2026-10-18T08:03:47Z"
-   },
-   "nld_6071_leveed_areas": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (leveed_areas)",
-    "fetched_at": "2026-10-18T08:03:47Z"
-   },
-   "nld_6071_alignment_lines": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (alignment_lines)",
-    "fetched_at": "2026-10-18T08:03:47Z"
-   },
-   "nld_6071_floodwalls": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (floodwalls)",
-    "fetched_at": "2026-10-18T08:03:47Z"
-   },
-   "nld_6071_closure_structures": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (closure_structures)",
-    "fetched_at": "2026-10-18T08:03:47Z"
-   },
-   "nld_6071_pump_stations": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (pump_stations)",
-    "fetched_at": "2026-10-18T08:03:48Z"
-   },
-   "nwps_gauge_CLFI3": {
-    "url": "https://api.water.noaa.gov/nwps/v1/gauges/CLFI3",
-    "fetched_at": "2026-10-18T08:03:48Z"
-   },
-   "nwps_stageflow_CLFI3": {
-    "url": "https://api.water.noaa.gov/nwps/v1/gauges/CLFI3/stageflow",
-    "fetched_at": "2026-10-18T08:03:49Z"
-   },
-   "overpass_roads_6071": {
-    "url": "https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A60%5D%3Bway%28around%3A2500%2C38.58470%2C-85.41170%29%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%7Cunclassified%7Cresidential%7Cservice%7Ctrack%7Croad%7Cliving_street%7Cmotorway_link%7Ctrunk_link%7Cprimary_link%7Csecondary_link%7Ctertiary_link%29%24%22%5D%5B%22access%22%21~%22%5E%28no%29%24%22%5D%3Bout+geom%3B",
-    "fetched_at": "2026-10-18T08:04:34Z"
-   },
-   "inat_recent_6071": {
-    "url": "https://api.inaturalist.org/v1/observations?lat=38.5847&lng=-85.4117&radius=10&taxon_id=26159%2C26085%2C30692%2C30668%2C30493%2C30979%2C41638&quality_grade=research&d1=2026-09-18&per_page=200&order_by=observed_on&order=desc",
-    "fetched_at": "2026-10-18T08:04:35Z"
-   },
-   "inat_season_6071_alligator": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=38.5847&lng=-85.4117&radius=25&taxon_id=26159&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T08:04:36Z"
-   },
-   "inat_season_6071_crocodile": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=38.5847&lng=-85.4117&radius=25&taxon_id=26085&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T08:04:37Z"
-   },
-   "inat_season_6071_snakes": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=38.5847&lng=-85.4117&radius=25&taxon_id=30692%2C30668%2C30493%2C30979&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T08:04:37Z"
-   },
-   "inat_season_6071_bear": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=38.5847&lng=-85.4117&radius=25&taxon_id=41638&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T08:04:38Z"
-   },
-   "openmeteo_hourly_66923": {
-    "url": "https://api.open-meteo.com/v1/forecast?latitude=34.3518%2C34.3518%2C34.5074%2C34.5074%2C34.3518%2C34.1962%2C34.1962&longitude=-105.5925%2C-105.3749%2C-105.4837%2C-105.7013%2C-105.8101%2C-105.7013%2C-105.4837&hourly=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cwind_speed_10m%2Cwind_gusts_10m%2Cshortwave_radiation%2Cprecipitation%2Cprecipitation_probability%2Ccape%2Cuv_index&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=mm&timezone=UTC&past_days=1&forecast_days=4",
-    "fetched_at": "2026-10-18T08:04:40Z"
-   },
-   "openmeteo_sun_66923": {
-    "url": "https://api.open-meteo.com/v1/forecast?latitude=34.3518&longitude=-105.5925&daily=sunrise%2Csunset&timezone=America%2FDenver&forecast_days=4",
-    "fetched_at": "2026-10-18T08:04:40Z"
-   },
-   "nws_alerts_66923": {
-    "url": "https://api.weather.gov/alerts/active?point=34.3518%2C-105.5925",
-    "fetched_at": "2026-10-18T08:04:40Z"
-   },
-   "nws_point_66923": {
-    "url": "https://api.weather.gov/points/34.3518,-105.5925",
-    "fetched_at": "2026-10-18T08:04:41Z"
-   },
-   "nws_forecast_66923": {
-    "url": "https://api.weather.gov/gridpoints/ABQ/134,85/forecast",
-    "fetched_at": "2026-10-18T08:04:41Z"
-   },
-   "openmeteo_air_66923": {
-    "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=34.3518&longitude=-105.5925&hourly=us_aqi%2Cpm2_5%2Cpm10&timezone=UTC&forecast_days=4&past_days=1",
-    "fetched_at": "2026-10-18T08:04:41Z"
-   },
-   "nld_66923_leveed_areas": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (leveed_areas)",
-    "fetched_at": "2026-10-18T08:04:42Z"
-   },
-   "nld_66923_alignment_lines": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (alignment_lines)",
-    "fetched_at": "2026-10-18T08:04:42Z"
-   },
-   "nld_66923_floodwalls": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (floodwalls)",
-    "fetched_at": "2026-10-18T08:04:42Z"
-   },
-   "nld_66923_closure_structures": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (closure_structures)",
-    "fetched_at": "2026-10-18T08:04:42Z"
-   },
-   "nld_66923_pump_stations": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (pump_stations)",
-    "fetched_at": "2026-10-18T08:04:42Z"
-   },
-   "overpass_roads_66923": {
-    "url": "https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A60%5D%3Bway%28around%3A2500%2C34.35178%2C-105.59250%29%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%7Cunclassified%7Cresidential%7Cservice%7Ctrack%7Croad%7Cliving_street%7Cmotorway_link%7Ctrunk_link%7Cprimary_link%7Csecondary_link%7Ctertiary_link%29%24%22%5D%5B%22access%22%21~%22%5E%28no%29%24%22%5D%3Bout+geom%3B",
-    "fetched_at": "2026-10-18T08:05:26Z"
-   },
-   "inat_recent_66923": {
-    "url": "https://api.inaturalist.org/v1/observations?lat=34.351782&lng=-105.5925&radius=10&taxon_id=26159%2C26085%2C30692%2C30668%2C30493%2C30979%2C41638&quality_grade=research&d1=2026-09-18&per_page=200&order_by=observed_on&order=desc",
-    "fetched_at": "2026-10-18T08:05:27Z"
-   },
-   "inat_season_66923_alligator": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=34.351782&lng=-105.5925&radius=25&taxon_id=26159&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T08:05:28Z"
-   },
-   "inat_season_66923_crocodile": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=34.351782&lng=-105.5925&radius=25&taxon_id=26085&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T08:05:29Z"
-   },
-   "inat_season_66923_snakes": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=34.351782&lng=-105.5925&radius=25&taxon_id=30692%2C30668%2C30493%2C30979&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T08:05:30Z"
-   },
-   "inat_season_66923_bear": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=34.351782&lng=-105.5925&radius=25&taxon_id=41638&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T08:05:30Z"
-   },
-   "openmeteo_hourly_2712": {
-    "url": "https://api.open-meteo.com/v1/forecast?latitude=36.4833%2C36.4833%2C36.6389%2C36.6389%2C36.4833%2C36.3277%2C36.3277&longitude=-79.0731%2C-78.8496%2C-78.9614%2C-79.1848%2C-79.2966%2C-79.1848%2C-78.9614&hourly=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cwind_speed_10m%2Cwind_gusts_10m%2Cshortwave_radiation%2Cprecipitation%2Cprecipitation_probability%2Ccape%2Cuv_index&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=mm&timezone=UTC&past_days=1&forecast_days=4",
-    "fetched_at": "2026-10-18T08:05:34Z"
-   },
-   "openmeteo_sun_2712": {
-    "url": "https://api.open-meteo.com/v1/forecast?latitude=36.4833&longitude=-79.0731&daily=sunrise%2Csunset&timezone=America%2FNew_York&forecast_days=4",
-    "fetched_at": "2026-10-18T08:05:35Z"
-   },
-   "nws_alerts_2712": {
-    "url": "https://api.weather.gov/alerts/active?point=36.4833%2C-79.0731",
-    "fetched_at": "2026-10-18T08:05:35Z"
-   },
-   "nws_point_2712": {
-    "url": "https://api.weather.gov/points/36.4833,-79.0731",
-    "fetched_at": "2026-10-18T08:05:35Z"
-   },
-   "nws_forecast_2712": {
-    "url": "https://api.weather.gov/gridpoints/RAH/55,87/forecast",
-    "fetched_at": "2026-10-18T08:05:35Z"
-   },
-   "openmeteo_air_2712": {
-    "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=36.4833&longitude=-79.0731&hourly=us_aqi%2Cpm2_5%2Cpm10&timezone=UTC&forecast_days=4&past_days=1",
-    "fetched_at": "2026-10-18T08:05:36Z"
-   },
-   "nld_2712_leveed_areas": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (leveed_areas)",
-    "fetched_at": "2026-10-18T08:05:36Z"
-   },
-   "nld_2712_alignment_lines": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (alignment_lines)",
-    "fetched_at": "2026-10-18T08:05:36Z"
-   },
-   "nld_2712_floodwalls": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (floodwalls)",
-    "fetched_at": "2026-10-18T08:05:36Z"
-   },
-   "nld_2712_closure_structures": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (closure_structures)",
-    "fetched_at": "2026-10-18T08:05:36Z"
-   },
-   "nld_2712_pump_stations": {
-    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (pump_stations)",
-    "fetched_at": "2026-10-18T08:05:36Z"
-   },
-   "nwps_gauge_PCEV2": {
-    "url": "https://api.water.noaa.gov/nwps/v1/gauges/PCEV2",
-    "fetched_at": "2026-10-18T08:05:37Z"
-   },
-   "nwps_stageflow_PCEV2": {
-    "url": "https://api.water.noaa.gov/nwps/v1/gauges/PCEV2/stageflow",
-    "fetched_at": "2026-10-18T08:05:38Z"
-   },
-   "overpass_roads_2712": {
-    "url": "https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A60%5D%3Bway%28around%3A2500%2C36.48330%2C-79.07310%29%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%7Cunclassified%7Cresidential%7Cservice%7Ctrack%7Croad%7Cliving_street%7Cmotorway_link%7Ctrunk_link%7Cprimary_link%7Csecondary_link%7Ctertiary_link%29%24%22%5D%5B%22access%22%21~%22%5E%28no%29%24%22%5D%3Bout+geom%3B",
-    "fetched_at": "2026-10-18T08:06:12Z"
-   },
-   "inat_recent_2712": {
-    "url": "https://api.inaturalist.org/v1/observations?lat=36.4833&lng=-79.0731&radius=10&taxon_id=26159%2C26085%2C30692%2C30668%2C30493%2C30979%2C41638&quality_grade=research&d1=2026-09-18&per_page=200&order_by=observed_on&order=desc",
-    "fetched_at": "2026-10-18T08:06:13Z"
-   },
-   "inat_season_2712_alligator": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=36.4833&lng=-79.0731&radius=25&taxon_id=26159&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T08:06:14Z"
-   },
-   "inat_season_2712_crocodile": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=36.4833&lng=-79.0731&radius=25&taxon_id=26085&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T08:06:15Z"
-   },
-   "inat_season_2712_snakes": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=36.4833&lng=-79.0731&radius=25&taxon_id=30692%2C30668%2C30493%2C30979&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T08:06:16Z"
-   },
-   "inat_season_2712_bear": {
-    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=36.4833&lng=-79.0731&radius=25&taxon_id=41638&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T08:06:16Z"
+    "fetched_at": "2026-10-18T09:12:15Z"
+   },
+   "nwps_gauge_CDIO1": {
+    "url": "https://api.water.noaa.gov/nwps/v1/gauges/CDIO1",
+    "fetched_at": "2026-10-18T09:12:16Z"
+   },
+   "nwps_stageflow_CDIO1": {
+    "url": "https://api.water.noaa.gov/nwps/v1/gauges/CDIO1/stageflow",
+    "fetched_at": "2026-10-18T09:12:16Z"
+   },
+   "overpass_roads_62949": {
+    "url": "https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A60%5D%3Bway%28around%3A2500%2C39.93640%2C-81.53540%29%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%7Cunclassified%7Cresidential%7Cservice%7Ctrack%7Croad%7Cliving_street%7Cmotorway_link%7Ctrunk_link%7Cprimary_link%7Csecondary_link%7Ctertiary_link%29%24%22%5D%5B%22access%22%21~%22%5E%28no%29%24%22%5D%3Bout+geom%3B",
+    "fetched_at": "2026-10-18T09:12:49Z"
+   },
+   "inat_recent_62949": {
+    "url": "https://api.inaturalist.org/v1/observations?lat=39.9364&lng=-81.5354&radius=10&taxon_id=26159%2C26085%2C30692%2C30668%2C30493%2C30979%2C41638&quality_grade=research&d1=2026-09-18&per_page=200&order_by=observed_on&order=desc",
+    "fetched_at": "2026-10-18T09:12:50Z"
+   },
+   "inat_season_62949_alligator": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=39.9364&lng=-81.5354&radius=25&taxon_id=26159&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T09:12:51Z"
+   },
+   "inat_season_62949_crocodile": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=39.9364&lng=-81.5354&radius=25&taxon_id=26085&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T09:12:52Z"
+   },
+   "inat_season_62949_snakes": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=39.9364&lng=-81.5354&radius=25&taxon_id=30692%2C30668%2C30493%2C30979&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T09:12:52Z"
+   },
+   "inat_season_62949_bear": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=39.9364&lng=-81.5354&radius=25&taxon_id=41638&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T09:12:53Z"
    },
    "openmeteo_hourly_7722": {
     "url": "https://api.open-meteo.com/v1/forecast?latitude=35.6021%2C35.6021%2C35.7577%2C35.7577%2C35.6021%2C35.4465%2C35.4465&longitude=-84.7895%2C-84.5685%2C-84.6790%2C-84.9000%2C-85.0105%2C-84.9000%2C-84.6790&hourly=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cwind_speed_10m%2Cwind_gusts_10m%2Cshortwave_radiation%2Cprecipitation%2Cprecipitation_probability%2Ccape%2Cuv_index&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=mm&timezone=UTC&past_days=1&forecast_days=4",
-    "fetched_at": "2026-10-18T08:06:18Z"
+    "fetched_at": "2026-10-18T09:12:53Z"
    },
    "openmeteo_sun_7722": {
     "url": "https://api.open-meteo.com/v1/forecast?latitude=35.6021&longitude=-84.7895&daily=sunrise%2Csunset&timezone=America%2FNew_York&forecast_days=4",
-    "fetched_at": "2026-10-18T08:06:18Z"
+    "fetched_at": "2026-10-18T09:12:53Z"
    },
    "nws_alerts_7722": {
     "url": "https://api.weather.gov/alerts/active?point=35.6021%2C-84.7895",
-    "fetched_at": "2026-10-18T08:06:18Z"
+    "fetched_at": "2026-10-18T09:12:54Z"
    },
    "nws_point_7722": {
     "url": "https://api.weather.gov/points/35.6021,-84.7895",
-    "fetched_at": "2026-10-18T08:06:19Z"
+    "fetched_at": "2026-10-18T09:12:54Z"
    },
    "nws_forecast_7722": {
     "url": "https://api.weather.gov/gridpoints/MRX/41,33/forecast",
-    "fetched_at": "2026-10-18T08:06:19Z"
+    "fetched_at": "2026-10-18T09:12:54Z"
    },
    "openmeteo_air_7722": {
     "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=35.6021&longitude=-84.7895&hourly=us_aqi%2Cpm2_5%2Cpm10&timezone=UTC&forecast_days=4&past_days=1",
-    "fetched_at": "2026-10-18T08:06:20Z"
+    "fetched_at": "2026-10-18T09:12:54Z"
    },
    "nld_7722_leveed_areas": {
     "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (leveed_areas)",
-    "fetched_at": "2026-10-18T08:06:20Z"
+    "fetched_at": "2026-10-18T09:12:55Z"
    },
    "nld_7722_alignment_lines": {
     "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (alignment_lines)",
-    "fetched_at": "2026-10-18T08:06:20Z"
+    "fetched_at": "2026-10-18T09:12:55Z"
    },
    "nld_7722_floodwalls": {
     "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (floodwalls)",
-    "fetched_at": "2026-10-18T08:06:20Z"
+    "fetched_at": "2026-10-18T09:12:55Z"
    },
    "nld_7722_closure_structures": {
     "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (closure_structures)",
-    "fetched_at": "2026-10-18T08:06:20Z"
+    "fetched_at": "2026-10-18T09:12:55Z"
    },
    "nld_7722_pump_stations": {
     "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (pump_stations)",
-    "fetched_at": "2026-10-18T08:06:20Z"
+    "fetched_at": "2026-10-18T09:12:55Z"
    },
    "overpass_roads_7722": {
     "url": "https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A60%5D%3Bway%28around%3A2500%2C35.60210%2C-84.78950%29%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%7Cunclassified%7Cresidential%7Cservice%7Ctrack%7Croad%7Cliving_street%7Cmotorway_link%7Ctrunk_link%7Cprimary_link%7Csecondary_link%7Ctertiary_link%29%24%22%5D%5B%22access%22%21~%22%5E%28no%29%24%22%5D%3Bout+geom%3B",
-    "fetched_at": "2026-10-18T08:07:08Z"
+    "fetched_at": "2026-10-18T09:13:37Z"
    },
    "inat_recent_7722": {
     "url": "https://api.inaturalist.org/v1/observations?lat=35.6021&lng=-84.7895&radius=10&taxon_id=26159%2C26085%2C30692%2C30668%2C30493%2C30979%2C41638&quality_grade=research&d1=2026-09-18&per_page=200&order_by=observed_on&order=desc",
-    "fetched_at": "2026-10-18T08:07:09Z"
+    "fetched_at": "2026-10-18T09:13:38Z"
    },
    "inat_season_7722_alligator": {
     "url": "https://api.inaturalist.org/v1/observations/histogram?lat=35.6021&lng=-84.7895&radius=25&taxon_id=26159&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T08:07:10Z"
+    "fetched_at": "2026-10-18T09:13:39Z"
    },
    "inat_season_7722_crocodile": {
     "url": "https://api.inaturalist.org/v1/observations/histogram?lat=35.6021&lng=-84.7895&radius=25&taxon_id=26085&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T08:07:11Z"
+    "fetched_at": "2026-10-18T09:13:39Z"
    },
    "inat_season_7722_snakes": {
     "url": "https://api.inaturalist.org/v1/observations/histogram?lat=35.6021&lng=-84.7895&radius=25&taxon_id=30692%2C30668%2C30493%2C30979&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T08:07:12Z"
+    "fetched_at": "2026-10-18T09:13:40Z"
    },
    "inat_season_7722_bear": {
     "url": "https://api.inaturalist.org/v1/observations/histogram?lat=35.6021&lng=-84.7895&radius=25&taxon_id=41638&quality_grade=research&date_field=observed&interval=month_of_year",
-    "fetched_at": "2026-10-18T08:07:12Z"
+    "fetched_at": "2026-10-18T09:13:41Z"
    }
   },
   "label": "Decision support from forecasts and models. It does not clear any task, route or crossing as safe."
@@ -2976,7 +1692,7 @@
   "status": "ok",
   "graph_file": "2026-10-19/road_graph.json",
   "edges": 887,
-  "rated_edges": 0,
+  "rated_edges": 207,
   "radius_m": 2500,
   "tide_wet_edges": 0,
   "caveats": [
@@ -3843,8 +2559,9 @@
   "A forecast can change. Check the report again in the morning."
  ],
  "changes": {
-  "status": "not_applicable",
-  "reason": "No earlier report exists for this date, so there is nothing to compare.",
+  "status": "ok",
+  "since": "2026-10-18T08:14:07Z",
+  "since_kind": "evening",
   "items": []
  },
  "gaps": [
