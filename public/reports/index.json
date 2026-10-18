@@ -163,6 +163,13 @@
    "verdict": "go"
   },
   {
+   "eia": "7722",
+   "name": "Watts Bar Nuclear Plant",
+   "for_date": "2026-10-19",
+   "generated_at": "2026-10-18T07:44:28Z",
+   "verdict": "limits"
+  },
+  {
    "eia": "56407",
    "name": "West County Energy Center",
    "for_date": "2026-10-19",

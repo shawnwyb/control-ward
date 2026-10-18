@@ -3,31 +3,23 @@
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   gap: var(--space-4);
-  padding: var(--space-4) 0 var(--space-4) var(--space-4);
-  border-top: var(--rule-width) solid var(--rule);
-  border-left: 4px solid var(--rule-strong);
+  padding: var(--space-3) var(--space-2);
+  border-top: var(--rule-width) solid var(--line);
+  border-radius: var(--radius);
 }
 
-.row[data-severity="1"][data-active="true"] {
-  border-left-color: var(--sev-1);
-}
-
-.row[data-severity="2"][data-active="true"] {
-  border-left-color: var(--sev-2);
-}
-
-.row[data-severity="3"][data-active="true"] {
-  border-left-color: var(--sev-3);
+.row:first-child {
+  border-top-color: transparent;
 }
 
 @media (hover: hover) {
   .row[data-active="true"]:hover {
-    background: var(--paper);
+    background: var(--hover);
   }
 }
 
 .row[data-active="false"] {
-  color: var(--ink-muted);
+  color: var(--ink-2);
 }
 
 .content {
@@ -44,7 +36,8 @@
 }
 
 .title h3 {
-  font-size: var(--text-lg);
+  font-size: var(--text-base);
+  font-weight: 600;
 }
 
 /* Each fact stays whole; the coordinates drop to their own line when space is tight. */
@@ -53,7 +46,7 @@
   flex-wrap: wrap;
   gap: 0 var(--space-3);
   font-size: var(--text-sm);
-  color: var(--ink-muted);
+  color: var(--ink-2);
 }
 
 .meta span {

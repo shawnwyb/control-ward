@@ -9,8 +9,9 @@ type Props = {
   reminderCount: number;
   busy: boolean;
   className?: string;
+  /** Showing only the signed-in user's reports (changes the empty-state words). */
+  mine?: boolean;
   onCheckin: (reportId: string, stillThere: boolean) => void;
-  onHover: (reportId: string | null) => void;
   onSelect: (reportId: string) => void;
 };
 
@@ -19,8 +20,8 @@ export function ReportFeed({
   reminderCount,
   busy,
   className,
+  mine,
   onCheckin,
-  onHover,
   onSelect,
 }: Props) {
   const [showResolved, setShowResolved] = useState(false);
@@ -69,17 +70,19 @@ export function ReportFeed({
               report={report}
               busy={busy}
               onCheckin={onCheckin}
-              onHover={onHover}
               onSelect={onSelect}
             />
           ))
         ) : (
           <div className={styles.empty}>
             <Icon name="check" size={28} />
-            <h3>No active hazards reported</h3>
+            <h3>
+              {mine ? "Nothing from you yet" : "No active hazards reported"}
+            </h3>
             <p>
-              Nothing reported at this site. See something? Use the form to
-              report it.
+              {mine
+                ? "You haven't reported anything at this site yet."
+                : "Nothing reported at this site. See something? Use “Report hazard” on the map."}
             </p>
           </div>
         )}

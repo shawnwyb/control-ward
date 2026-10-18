@@ -7,6 +7,7 @@
  * ?fail makes report submissions and check-ins fail (to design error states).
  */
 
+import { explainHazard } from "../lib/explain";
 import { offsetPoint } from "../lib/geo";
 import { handleSafety } from "./mockSafety";
 
@@ -26,6 +27,8 @@ const sites = [
     name: "South Plant · Demo",
     latitude: 29.6296,
     longitude: -82.3498,
+    fema_flood_zone: "AE",
+    river_distance_m: 2400,
   },
   {
     id: "site-tampa",
@@ -38,6 +41,8 @@ const sites = [
     name: "Jacksonville Terminal · Demo",
     latitude: 30.356,
     longitude: -81.629,
+    fema_flood_zone: "X",
+    river_distance_m: 30000,
   },
   {
     id: "site-manatee",
@@ -60,6 +65,61 @@ const sites = [
     eia_plant_id: "621",
   },
 ];
+/**
+ * Live readings per site (hazard, unit, value). The mock subscores are computed from
+ * these with explainHazard, so each score and its explanation agree exactly.
+ */
+const siteReadings: Record<string, [string, string, number][]> = {
+  // Heat 5.0 (WBGT 85-88), flood 2.0 (rain 10-25 mm), weather 3.0, soil 2.0.
+  "site-north": [
+    ["heat", "wbgt_f", 86],
+    ["heat", "heat_index_f", 98],
+    ["flood", "precip_mm_24h", 12],
+    ["weather", "wind_gust_mph", 34],
+    ["soil", "soil_moisture_frac", 0.31],
+    ["wildfire", "nearest_fire_mi", 120],
+  ],
+  // Flood 6.2 = rain 31 mm (4.0) x 1.3 FEMA AE x 1.2 river 2.4 km.
+  "site-south": [
+    ["heat", "wbgt_f", 88.5],
+    ["heat", "heat_index_f", 108],
+    ["flood", "precip_mm_24h", 31],
+    ["weather", "wind_gust_mph", 45],
+    ["soil", "soil_moisture_frac", 0.41],
+  ],
+  "site-tampa": [
+    ["heat", "wbgt_f", 87],
+    ["heat", "heat_index_f", 104],
+    ["wildfire", "nearest_fire_mi", 18.4],
+    ["wildfire", "fires_within_25mi", 2],
+    ["weather", "wind_gust_mph", 34],
+    ["soil", "soil_moisture_frac", 0.31],
+  ],
+  "site-jax": [
+    ["heat", "wbgt_f", 83],
+    ["heat", "heat_index_f", 95],
+    ["flood", "precip_mm_24h", 12],
+    ["weather", "wind_gust_mph", 12],
+  ],
+  "site-manatee": [
+    ["heat", "wbgt_f", 80],
+    ["heat", "heat_index_f", 85],
+    ["soil", "soil_moisture_frac", 0.31],
+    ["weather", "wind_gust_mph", 8],
+  ],
+  "site-everglades": [],
+};
+const mockReadings = (siteId: string) =>
+  (siteReadings[siteId] ?? []).map(([hazard, unit, value], i) => ({
+    site_id: siteId,
+    hazard,
+    unit,
+    value,
+    observed_at: new Date(Date.now() - (10 + i) * 60000).toISOString(),
+    forecast_for: "-infinity",
+    source: "mock",
+  }));
+
 const accounts: Record<string, string[]> = {
   "crew@planit.local": ["site-north"],
   "other@planit.local": ["site-south"],
@@ -77,6 +137,7 @@ const isSupervisorAt = (email: string, siteId: string) =>
 
 type Report = {
   id: string;
+  reporter_id?: string;
   site_id: string;
   type: string;
   severity: number;
@@ -213,15 +274,31 @@ let tasks = [
 const params = new URLSearchParams(location.search);
 const latency = Number(params.get("latency") ?? 150);
 const failWrites = params.has("fail");
+// ?slow=site-north delays that site's alerts and lightning reads by 1.5 s, to test
+// that a late answer for a site you have already left is ignored.
+const slowSite = params.get("slow");
+const slowDown = (siteId: string | null) =>
+  siteId && siteId === slowSite
+    ? new Promise((resolve) => setTimeout(resolve, 1500))
+    : Promise.resolve();
 // ?break=alerts, or window.__mockFlags.breakAlerts at runtime, makes alert reads fail.
 // Created on first use, not at import, so importing this module has no side effects.
-type Flags = { breakAlerts: boolean; breakCrew: boolean };
+type Flags = {
+  breakAlerts: boolean;
+  breakCrew: boolean;
+  /** window.__mockFlags.scores = { "site-jax": 9 } overrides a site's index in the site list (tests re-ranking). */
+  scores: Record<string, number | null>;
+  /** window.__mockFlags.readings = { soil_moisture_frac: 0.5 } changes served readings only, not the stored scores. */
+  readings: Record<string, number>;
+};
 function flags(): Flags {
   const w = window as unknown as { __mockFlags?: Flags };
   return (w.__mockFlags ??= {
     breakAlerts: params.get("break") === "alerts",
     // ?break=crew pretends the crew-assignment migration has not been applied.
     breakCrew: params.get("break") === "crew",
+    scores: {},
+    readings: {},
   });
 }
 
@@ -801,6 +878,7 @@ async function handle(
     } else {
       report = {
         id: crypto.randomUUID(),
+        reporter_id: `user-${email}`,
         site_id: String(body.p_site_id),
         type: String(body.p_type),
         severity: Number(body.p_severity),
@@ -924,30 +1002,86 @@ async function handle(
         role: supervisors.has(email) ? "supervisor" : "crew",
       })),
     );
+  const overviewRow = (site: (typeof sites)[number]) => {
+    // Distinct values per site (north matches the old single-site row).
+    const scores: Record<string, number | null> = {
+      "site-north": 5.2,
+      "site-south": 8.6,
+      "site-tampa": 6.9,
+      "site-jax": 4.1,
+      "site-manatee": 2.3,
+      "site-everglades": null,
+    };
+    const override = flags().scores[site.id];
+    const risk = override !== undefined ? override : (scores[site.id] ?? null);
+    const struck = alerts.find(
+      (a) =>
+        a.site_id === site.id &&
+        a.kind === "lightning" &&
+        a.status === "active",
+    );
+    return {
+      site_id: site.id,
+      name: site.name,
+      lat: site.latitude,
+      lon: site.longitude,
+      risk_now: risk,
+      risk_tomorrow: risk === null ? null : Math.min(10, risk + 1.3),
+      top_driver: risk === null ? null : "heat subscore 5",
+      active_alert_count: alerts.filter(
+        (a) => a.site_id === site.id && a.status === "active",
+      ).length,
+      subscores:
+        risk === null
+          ? {}
+          : (() => {
+              const rows = mockReadings(site.id);
+              const score = (k: Parameters<typeof explainHazard>[0]) =>
+                explainHazard(k, rows, site, {}).score;
+              return {
+                heat: score("heat"),
+                weather: score("weather"),
+                lightning: struck ? 10 : 0,
+                flood: score("flood"),
+                wildfire: score("wildfire"),
+                soil: score("soil"),
+                wildlife: 2,
+              };
+            })(),
+      lightning: {
+        status: struck ? "stop_work" : "clear",
+        last_strike_at: struck
+          ? new Date(
+              Date.now() + lightningClearIn * 1000 - 30 * 60 * 1000,
+            ).toISOString()
+          : null,
+      },
+    };
+  };
+  if (path === "/rest/v1/readings")
+    return respond(
+      memberOf
+        ? mockReadings(siteParam).map((r) => ({
+            ...r,
+            value: flags().readings[r.unit] ?? r.value,
+          }))
+        : [],
+    );
+  if (path === "/rest/v1/site_overview" && !siteParam) {
+    return respond(
+      sites
+        .filter((site) => accounts[email].includes(site.id))
+        .map(overviewRow),
+    );
+  }
   if (path === "/rest/v1/site_overview")
     return respond(
       memberOf
-        ? [
-            {
-              site_id: siteParam,
-              risk_now: 5.2,
-              risk_tomorrow: 6.5,
-              top_driver: "heat subscore 5",
-              active_alert_count: 1,
-              subscores: {
-                heat: 5,
-                weather: 3,
-                lightning: 0,
-                flood: 1.5,
-                wildfire: 0,
-                soil: 2,
-                wildlife: 2,
-              },
-            },
-          ]
+        ? sites.filter((site) => site.id === siteParam).map(overviewRow)
         : [],
     );
   if (path === "/rest/v1/alerts") {
+    await slowDown(siteParam);
     if (flags().breakAlerts)
       return apiError("Simulated outage (?break=alerts)", 503);
     return respond(
@@ -972,6 +1106,7 @@ async function handle(
     );
   }
   if (path === "/rest/v1/lightning_state") {
+    await slowDown(siteParam);
     if (flags().breakAlerts)
       return apiError("Simulated outage (?break=alerts)", 503);
     // ?clear=N makes the stop-work countdown end in N seconds (it runs 30 minutes from the strike).
@@ -1177,6 +1312,21 @@ export function installMockBackend(): void {
   window.fetch = async (input, init) => {
     const request = input instanceof Request ? input : undefined;
     const url = new URL(request?.url ?? String(input), location.href);
+    // Fixed site conditions so design tests are deterministic (no internet call).
+    if (
+      url.hostname === "api.open-meteo.com" &&
+      url.searchParams.has("current")
+    )
+      return respond({
+        current: {
+          temperature_2m: 91,
+          apparent_temperature: 104,
+          precipitation: 0.12,
+          wind_speed_10m: 12,
+          wind_direction_10m: 250,
+          wind_gusts_10m: 22,
+        },
+      });
     if (url.origin !== base.origin || !url.pathname.startsWith(base.pathname))
       return realFetch(input, init);
     const method = (init?.method ?? request?.method ?? "GET").toUpperCase();

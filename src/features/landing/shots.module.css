@@ -1,0 +1,29 @@
+/* Tag chips used inside the recreated screens (Notion tag palette). */
+.tag {
+  display: inline-block;
+  padding: 0 6px;
+  border-radius: 3px;
+  font-size: 12px;
+  line-height: 20px;
+  margin-right: 4px;
+}
+
+.red {
+  background: var(--tag-red-bg);
+  color: var(--tag-red-fg);
+}
+
+.org {
+  background: var(--tag-orange-bg);
+  color: var(--tag-orange-fg);
+}
+
+.yel {
+  background: var(--tag-yellow-bg);
+  color: var(--tag-yellow-fg);
+}
+
+.grn {
+  background: var(--tag-green-bg);
+  color: var(--tag-green-fg);
+}

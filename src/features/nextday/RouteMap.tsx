@@ -201,10 +201,10 @@ export default function RouteMap({
     set("nd-direct", line(p.direct));
     set("nd-detour", line(p.detour));
     const ink = cssColor("--ink"),
-      brand = cssColor("--brand"),
-      sev2 = cssColor("--sev-2"),
-      sev3 = cssColor("--sev-3"),
-      surface = cssColor("--surface");
+      brand = cssColor("--accent"),
+      sev2 = cssColor("--severity-2"),
+      sev3 = cssColor("--severity-3"),
+      surface = cssColor("--bg");
     const add = (spec: Parameters<MapLibreMap["addLayer"]>[0]) => {
       if (!m.getLayer(spec.id)) m.addLayer(spec);
     };
@@ -562,7 +562,7 @@ export default function RouteMap({
       el.textContent = k.toUpperCase();
       el.setAttribute("aria-hidden", "true");
       el.style.cssText =
-        "width:26px;height:26px;border-radius:50%;background:var(--brand);color:var(--brand-ink);display:grid;place-items:center;font:600 13px var(--font-sans);border:2px solid var(--surface)";
+        "width:26px;height:26px;border-radius:50%;background:var(--accent);color:var(--bg);display:grid;place-items:center;font:600 13px var(--font-sans);border:2px solid var(--bg)";
       pins.current[k] = new Marker({ element: el }).setLngLat(at).addTo(m);
     });
   }, [picking, endpoints]);

@@ -1,17 +1,13 @@
-import { test, expect, type Page } from "@playwright/test";
+import { test, expect } from "@playwright/test";
+import { go, signIn } from "./helpers";
 
 // Runs against the mock backend: PLAYWRIGHT_MODE=design npx playwright test
-async function signIn(page: Page, email: string, query = "") {
-  await page.goto(`/${query}`);
-  await page.getByLabel("Email").fill(email);
-  await page.getByLabel("Password").fill("CrewDemo123!");
-  await page.getByRole("button", { name: /sign in/i }).click();
-}
 
 test("supervisor adds and removes crew in the Crew section", async ({
   page,
 }) => {
   await signIn(page, "supervisor@planit.local");
+  await go(page, "Crew");
   const roster = page.locator("#crew-roster");
   await expect(roster).toContainText("Jordan Lee");
 
@@ -41,6 +37,7 @@ test("crew has no stats bar but keeps the connection indicator", async ({
 
 test("crew can acknowledge a stop-work alert", async ({ page }) => {
   await signIn(page, "crew@planit.local");
+  await go(page, "Alerts");
   const ack = page
     .getByRole("button", { name: "Acknowledge", exact: true })
     .first();
@@ -53,6 +50,7 @@ test("a supervisor alert shows on the crew's screen like a safety alert", async 
 }) => {
   await signIn(page, "supervisor@planit.local");
   await page.locator("#site").selectOption({ label: "North Plant · Demo" });
+  await go(page, "Crew");
   await page.locator("#push-title-input").fill("Wrap up early");
   await page
     .locator("#push-body")
@@ -64,6 +62,7 @@ test("a supervisor alert shows on the crew's screen like a safety alert", async 
   await page.getByLabel("Email").fill("crew@planit.local");
   await page.getByLabel("Password").fill("CrewDemo123!");
   await page.getByRole("button", { name: /sign in/i }).click();
+  await go(page, "Alerts");
   await expect(page.getByText("Wrap up early")).toBeVisible();
   await expect(page.getByText("Be off the roof by 1 PM.")).toBeVisible();
   const message = page
@@ -82,6 +81,7 @@ test("only the chosen crew see a targeted supervisor alert", async ({
 }) => {
   await signIn(page, "supervisor@planit.local");
   await page.locator("#site").selectOption({ label: "North Plant · Demo" });
+  await go(page, "Crew");
   await page.getByLabel("Selected (0)").check();
   await page.getByLabel("Select Jordan Lee").check();
   await page.locator("#push-title-input").fill("Jordan only");
@@ -93,6 +93,7 @@ test("only the chosen crew see a targeted supervisor alert", async ({
   await page.getByLabel("Email").fill("crew@planit.local");
   await page.getByLabel("Password").fill("CrewDemo123!");
   await page.getByRole("button", { name: /sign in/i }).click();
+  await go(page, "Alerts");
   await expect(
     page.getByRole("button", { name: "Acknowledge", exact: true }).first(),
   ).toBeVisible();

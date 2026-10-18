@@ -1,4 +1,4 @@
-export { Badge, SeverityTag, StatusTag } from "./Badge";
+export { Badge, IndexTag, SeverityTag, StatusTag } from "./Badge";
 export { Button } from "./Button";
 export { cx } from "./cx";
 export { Field, Input, Select } from "./Field";
@@ -8,7 +8,6 @@ export { Notice } from "./Notice";
 export { Panel, PanelHeader } from "./Panel";
 export { RadioCard } from "./RadioCard";
 export { Segmented } from "./Segmented";
-export { SeverityMark, severityMarkup, severityShape } from "./SeverityMark";
-export { Stat } from "./Stat";
+export { SeverityMark, severityMarkup } from "./SeverityMark";
 export { StatusDot } from "./StatusDot";
 export { TimeSlider } from "./TimeSlider";

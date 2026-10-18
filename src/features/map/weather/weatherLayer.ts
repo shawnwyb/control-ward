@@ -1,6 +1,5 @@
 import type { MapLibreMap } from "maplibre-gl";
 import { applyFrameLayers, clearFrameLayers } from "./frameLayers";
-import { OPEN_METEO_CREDIT } from "./forecast";
 import { RADAR_CREDIT, RADAR_OPACITY, radarTileUrl } from "./radar";
 import type { WeatherView } from "./types";
 
@@ -59,5 +58,3 @@ export function applyWeather(map: MapLibreMap, view: WeatherView | null): void {
   }
   clearFrameLayers(map, FIELD);
 }
-
-export const FIELD_CREDIT = OPEN_METEO_CREDIT;

@@ -16,7 +16,7 @@ CORE = ("hour", "wbgt", "gust", "pop", "mm", "safe", "blocked_by")
 class ParityTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        out = subprocess.run(["node", str(HERE / "gen_golden.mjs")], capture_output=True, text=True, check=True)
+        out = subprocess.run(["node", "--experimental-strip-types", str(HERE / "gen_golden.mjs")], capture_output=True, text=True, check=True)
         cls.g = json.loads(out.stdout)
 
     def test_hourly_plan_matches(self):

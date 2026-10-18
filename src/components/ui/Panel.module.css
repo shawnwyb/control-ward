@@ -2,14 +2,16 @@
   --panel-pad: var(--space-5);
   min-width: 0;
   padding: var(--panel-pad);
-  background: var(--surface);
-  border: var(--rule-width) solid var(--rule);
-  border-radius: var(--radius-sm);
+  background: var(--bg);
+  border: 0;
+  border-radius: var(--radius-card);
+  box-shadow: 0 0 0 1px var(--line);
 }
 
 .emphasis {
-  border-top: var(--heavy-rule) solid var(--ink);
-  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  box-shadow:
+    0 0 0 1px var(--line),
+    0 1px 3px rgba(15, 15, 15, 0.08);
 }
 
 .header {
@@ -27,11 +29,12 @@
 }
 
 .title {
-  font-size: var(--text-xl);
+  font-size: var(--text-lg);
+  font-weight: 600;
 }
 
 .description {
-  color: var(--ink-muted);
+  color: var(--ink-2);
   font-size: var(--text-sm);
 }
 

@@ -6,10 +6,10 @@
   min-height: var(--tap-min);
   padding: 0 var(--space-4);
   border: var(--rule-width) solid transparent;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius);
   background: transparent;
   font-size: var(--text-base);
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.2;
   cursor: pointer;
   text-align: center;
@@ -36,70 +36,66 @@
 .primary {
   min-height: var(--tap-comfort);
   padding: 0 var(--space-6);
-  background: var(--brand);
-  border-color: var(--brand);
-  color: var(--brand-ink);
+  background: var(--ink);
+  border-color: var(--ink);
+  color: #fff;
 }
 
 .primary:not(:disabled):hover {
-  background: var(--brand-hover);
-  border-color: var(--brand-hover);
+  background: color-mix(in srgb, var(--ink) 86%, #fff);
+  border-color: color-mix(in srgb, var(--ink) 86%, #fff);
 }
 
 .primary:not(:disabled):active {
-  background: var(--brand-pressed);
-  border-color: var(--brand-pressed);
+  background: color-mix(in srgb, var(--ink) 74%, #000);
+  border-color: color-mix(in srgb, var(--ink) 74%, #000);
 }
 
 .primary[data-busy]:disabled {
-  background: var(--brand-pressed);
-  border-color: var(--brand-pressed);
+  background: color-mix(in srgb, var(--ink) 74%, #000);
+  border-color: color-mix(in srgb, var(--ink) 74%, #000);
 }
 
 /* Only for confirming something that cannot be undone from the screen. */
 .danger {
-  background: var(--danger);
-  border-color: var(--danger);
+  background: var(--risk-high);
+  border-color: var(--risk-high);
   color: #fff;
 }
 
 .danger:not(:disabled):hover {
-  background: color-mix(in srgb, var(--danger) 82%, #000);
-  border-color: color-mix(in srgb, var(--danger) 82%, #000);
+  background: color-mix(in srgb, var(--risk-high) 82%, #000);
+  border-color: color-mix(in srgb, var(--risk-high) 82%, #000);
 }
 
 .secondary {
-  background: var(--surface);
-  border-color: var(--ink);
+  background: var(--fill);
   color: var(--ink);
 }
 
 .secondary:not(:disabled):hover {
-  background: var(--surface-sunken);
+  background: color-mix(in srgb, var(--fill) 80%, var(--ink-3));
 }
 
 /* Repeated row actions: present, but quieter than the content they act on. */
 .quiet {
-  border-color: var(--rule-strong);
+  border-color: var(--line-strong);
   color: var(--ink);
   font-weight: 500;
 }
 
 .quiet:not(:disabled):hover {
-  border-color: var(--ink);
-  background: var(--surface-sunken);
+  background: var(--hover);
 }
 
 .ghost {
   padding: 0 var(--space-2);
-  color: var(--brand);
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  color: var(--accent);
 }
 
 .ghost:not(:disabled):hover {
-  color: var(--brand-hover);
-  background: var(--brand-soft);
+  color: var(--accent-hover);
+  background: var(--hover);
 }
 
 .block {

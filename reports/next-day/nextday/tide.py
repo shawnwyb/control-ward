@@ -38,7 +38,7 @@ def fetch_hilo(f: Fetcher, station: str, for_date: str) -> list[dict]:
     d0 = datetime.fromisoformat(for_date) - timedelta(days=1)
     d1 = datetime.fromisoformat(for_date) + timedelta(days=1)
     data = f.get_json(f"coops_hilo_{station}", COOPS, {
-        "product": "predictions", "application": "planit_next_day_report", "station": station, "datum": "MLLW",
+        "product": "predictions", "application": "controlward_next_day_report", "station": station, "datum": "MLLW",
         "time_zone": "lst_ldt", "units": "metric", "interval": "hilo", "format": "json",
         "begin_date": d0.strftime("%Y%m%d"), "end_date": d1.strftime("%Y%m%d")})
     if "predictions" not in data:

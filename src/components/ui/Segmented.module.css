@@ -1,17 +1,14 @@
 .group {
   display: inline-flex;
-  border: var(--rule-width) solid var(--rule-strong);
-  border-radius: var(--radius-sm);
-  background: var(--surface);
+  padding: 2px;
+  gap: 2px;
+  border-radius: var(--radius);
+  background: var(--fill);
 }
 
 .option {
   position: relative;
   display: block;
-}
-
-.option + .option {
-  border-left: var(--rule-width) solid var(--rule-strong);
 }
 
 .input {
@@ -30,23 +27,27 @@
   min-width: 3.5rem;
   min-height: var(--tap-min);
   padding: 0 var(--space-3);
+  border-radius: var(--radius-sm);
   font-weight: 500;
   white-space: nowrap;
   transition: background-color var(--duration-fast) var(--ease);
 }
 
 .option:hover .input:not(:checked) + .face {
-  background: var(--surface-sunken);
+  background: var(--hover);
 }
 
 .input:checked + .face {
-  background: var(--ink);
-  color: var(--surface);
+  background: var(--bg);
+  color: var(--ink);
+  box-shadow:
+    0 0 0 1px var(--line),
+    0 1px 2px rgba(15, 15, 15, 0.1);
   font-weight: 600;
 }
 
 .input:focus-visible + .face {
-  outline: 3px solid var(--focus);
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
 

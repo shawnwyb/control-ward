@@ -1,0 +1,282 @@
+/* Bottom right of the map, clear of the attribution. */
+.launch {
+  position: absolute;
+  z-index: 4;
+  right: var(--space-3);
+  bottom: 2.25rem;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--tap-comfort);
+  padding: 0 var(--space-4);
+  border: 0;
+  border-radius: 999px;
+  background: var(--ink);
+  color: #fff;
+  font: inherit;
+  font-weight: 500;
+  box-shadow: var(--shadow-float);
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease),
+    opacity var(--duration) var(--ease);
+}
+
+.launch svg {
+  stroke: currentColor;
+}
+
+.launch:hover {
+  background: color-mix(in srgb, var(--ink) 86%, #fff);
+}
+
+.launch:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.launch[data-hidden] {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* Over the right of the map pane (the pane is position: relative). */
+.drawer {
+  position: absolute;
+  z-index: 5;
+  top: var(--space-3);
+  right: var(--space-3);
+  max-height: calc(100% - 2 * var(--space-3));
+  width: min(21rem, calc(100% - 2 * var(--space-3)));
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  overflow-y: auto;
+  background: var(--bg);
+  border-radius: 12px;
+  box-shadow: var(--shadow-float);
+  transform: translateX(110%);
+  visibility: hidden;
+  transition:
+    transform 0.45s var(--ease-out),
+    visibility 0s linear 0.45s;
+}
+
+.drawer[data-open] {
+  transform: none;
+  visibility: visible;
+  transition:
+    transform 0.45s var(--ease-out),
+    visibility 0s;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--text-lg);
+  font-weight: 600;
+}
+
+.title:focus {
+  outline: none;
+}
+
+.close {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #91918e;
+  cursor: pointer;
+}
+
+.close:hover {
+  background: var(--hover);
+}
+
+.close:focus-visible,
+.remove:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.hint {
+  margin: 0;
+  color: var(--ink-2);
+  font-size: var(--text-sm);
+}
+
+.dot {
+  display: inline-block;
+  margin-right: var(--space-2);
+  vertical-align: 0.05em;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.dot.warn {
+  background: var(--risk-elevated);
+}
+
+/* The site name is context for screen readers only. */
+.siteName {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
+.form {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.group {
+  display: grid;
+  gap: var(--space-2);
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.legend {
+  padding: 0;
+  margin-bottom: var(--space-2);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.types {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-2);
+}
+
+.types > :last-child:nth-child(3n + 2) {
+  grid-column: span 2;
+}
+
+.severities {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-2);
+}
+
+.level {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.drop {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border: 1.5px dashed var(--line-strong);
+  border-radius: 8px;
+  color: var(--ink-2);
+  font-size: var(--text-sm);
+}
+
+.drop:hover,
+.dragging {
+  background: var(--hover);
+  border-color: var(--accent);
+}
+
+.drop:focus-within {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.pick {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.pickText {
+  min-width: 0;
+}
+
+.fileName {
+  overflow-wrap: anywhere;
+}
+
+.optional {
+  color: var(--ink-2);
+}
+
+.limits {
+  color: var(--ink-3);
+  font-size: 0.75rem;
+}
+
+/* Visually hidden but focusable. */
+.fileInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.remove {
+  display: grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #91918e;
+  cursor: pointer;
+}
+
+.remove:hover {
+  background: var(--hover);
+}
+
+/* Phones: the same panel is a bottom sheet. */
+@media (max-width: 47.99rem) {
+  .drawer {
+    position: fixed;
+    z-index: 30;
+    top: auto;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: auto;
+    max-height: 55dvh;
+    border-radius: 12px 12px 0 0;
+    transform: translateY(110%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drawer,
+  .drawer[data-open] {
+    transition: none;
+  }
+}

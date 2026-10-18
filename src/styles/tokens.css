@@ -1,65 +1,75 @@
 /*
- * PlanIT design tokens — "Field Ledger".
+ * ControlWard design tokens — Notion-like.
  *
  * Rules of the system:
- *  - Cobalt (--brand) is the only brand colour. It never marks a hazard.
- *  - The warm signal scale (--sev-*) is reserved for hazard severity.
- *    Severity is always paired with a number and a shape, never colour alone.
- *  - Structure comes from rules (1px lines) and whitespace, not shadows.
+ *  - Quiet neutral surfaces and ink; colour appears only in tags, the map
+ *    and the single blue accent.
+ *  - Hazard severity uses the tag palette and is always paired with a number
+ *    (and a word where space allows), never colour alone.
+ *  - Structure comes from fills, hairline dividers and whitespace.
  */
 :root {
   /* Surfaces */
-  --paper: #f3f1ea;
-  --surface: #ffffff;
-  --surface-sunken: #eae7dd;
+  --bg: #ffffff;
+  --sidebar: #f7f7f5;
+  --fill: #f1f1ef;
+  --hover: rgba(55, 53, 47, 0.06);
 
   /* Ink */
-  --ink: #16191f;
-  --ink-muted: #4a515c;
-  --ink-faint: #5d6470;
+  --ink: #37352f;
+  --ink-2: #787774;
+  --ink-3: #9b9a97;
+  --icon: #91918e;
 
-  /* Rules */
-  --rule: #d5d0c3;
-  --rule-strong: #8a8576;
+  /* Dividers and accent */
+  --line: rgba(55, 53, 47, 0.09);
+  --line-strong: rgba(55, 53, 47, 0.16);
+  --accent: #2383e2;
+  --accent-hover: #0b6ec5;
+  --accent-soft: #e7f3f8;
+  --select-tint: rgba(35, 131, 226, 0.08);
 
-  /* Brand */
-  --brand: #1e3fae;
-  --brand-hover: #17328a;
-  --brand-pressed: #112669;
-  --brand-soft: #e4e9f8;
-  --brand-ink: #ffffff;
+  /* Floating panels: Notion's layered shadow */
+  --shadow-float:
+    0 0 0 1px rgba(15, 15, 15, 0.05), 0 3px 6px rgba(15, 15, 15, 0.1),
+    0 9px 24px rgba(15, 15, 15, 0.2);
 
-  /* Hazard severity: 1 low · 2 moderate · 3 high (text/graphics on white) */
-  --sev-1: #7a6b00;
-  --sev-1-bg: #f7f3d6;
-  --sev-2: #a65700;
-  --sev-2-bg: #fdf2e2;
-  --sev-3: #c23b1e;
-  --sev-3-bg: #fcebe6;
+  /* Notion tag palette */
+  --tag-red-bg: #ffe2dd;
+  --tag-red-fg: #5d1715;
+  --tag-orange-bg: #fadec9;
+  --tag-orange-fg: #49290e;
+  --tag-yellow-bg: #fdecc8;
+  --tag-yellow-fg: #402c1b;
+  --tag-green-bg: #dbeddb;
+  --tag-green-fg: #1c3829;
+  --tag-blue-bg: #d3e5ef;
+  --tag-blue-fg: #183347;
+  --tag-gray-bg: #e3e2e0;
+  --tag-gray-fg: #32302c;
+  --tag-purple-bg: #e8deee;
+  --tag-purple-fg: #412454;
+  --tag-brown-bg: #eee0da;
+  --tag-brown-fg: #442a1e;
 
-  /* Feedback */
-  --ok: #1f6b45;
-  --ok-bg: #e2f1e8;
-  --danger: #b3261e;
-  --danger-bg: #fbe4e0;
-  --focus: #1e3fae;
-
-  /* Map */
-  --map-ground: #ece9de;
+  /* Hazard index: map pins and graphics */
+  --risk-high: #e03e3e;
+  --risk-elevated: #d9730d;
+  --risk-low: #448361;
+  --risk-none: #9b9a97;
 
   /* Type */
   --font-sans:
-    "IBM Plex Sans Variable", "IBM Plex Sans", -apple-system,
-    BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-mono:
-    "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica,
+    Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   --text-xs: 0.75rem; /* 12 */
   --text-sm: 0.875rem; /* 14 */
-  --text-base: 1rem; /* 16 */
-  --text-lg: 1.125rem; /* 18 */
-  --text-xl: 1.25rem; /* 20 */
-  --text-2xl: 1.5rem; /* 24 */
-  --text-3xl: 2rem; /* 32 */
+  --text-base: 0.875rem; /* 14: Notion body size */
+  --text-lg: 1rem;
+  --text-xl: 1.125rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 2.25rem;
   --leading-tight: 1.2;
   --leading-body: 1.5;
 
@@ -74,8 +84,9 @@
   --space-12: 3rem;
 
   /* Shape */
-  --radius-sm: 2px;
-  --radius: 4px;
+  --radius-sm: 4px;
+  --radius: 6px;
+  --radius-card: 12px;
   --rule-width: 1px;
   --heavy-rule: 3px;
 
@@ -87,6 +98,8 @@
   --duration-fast: 120ms;
   --duration: 180ms;
   --ease: cubic-bezier(0.2, 0, 0, 1);
+  --ease-out: cubic-bezier(0.2, 0.9, 0.25, 1);
+  --ease-spring: cubic-bezier(0.3, 1.4, 0.5, 1);
 
   /* Layering */
   --z-toast: 50;
@@ -94,6 +107,14 @@
   /* Layout */
   --page-max: 80rem;
   --page-gutter: var(--space-4);
+
+  /* Report severity (Low / Moderate / High): tag palette; always with a shape */
+  --severity-1: var(--tag-yellow-fg);
+  --severity-1-bg: var(--tag-yellow-bg);
+  --severity-2: var(--tag-orange-fg);
+  --severity-2-bg: var(--tag-orange-bg);
+  --severity-3: var(--tag-red-fg);
+  --severity-3-bg: var(--tag-red-bg);
 }
 
 @media (pointer: coarse) {
@@ -106,22 +127,4 @@
   :root {
     --page-gutter: var(--space-8);
   }
-}
-
-/* Dark theme is stubbed for later; nothing sets data-theme="dark" yet. */
-:root[data-theme="dark"] {
-  --paper: #14161a;
-  --surface: #1b1e24;
-  --surface-sunken: #101215;
-  --ink: #eceae3;
-  --ink-muted: #b4b8c0;
-  --ink-faint: #9aa0aa;
-  --rule: #2f343c;
-  --rule-strong: #6b717c;
-  --brand: #8ea6f5;
-  --brand-hover: #a9bcf8;
-  --brand-pressed: #c4d0fa;
-  --brand-soft: #232b45;
-  --brand-ink: #0d1330;
-  --focus: #8ea6f5;
 }

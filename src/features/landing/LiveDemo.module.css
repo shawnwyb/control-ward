@@ -1,0 +1,323 @@
+.demo {
+  position: relative;
+  display: flex;
+  height: 360px;
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  background: var(--bg);
+  box-shadow:
+    0 0 0 1px var(--line),
+    0 20px 50px rgba(15, 15, 15, 0.12);
+  font-size: 13px;
+  color: var(--ink);
+}
+
+.side {
+  width: 170px;
+  flex: none;
+  padding: 10px 6px;
+  background: var(--sidebar);
+  border-right: 1px solid var(--line);
+}
+
+.workspace {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px 10px;
+  font-weight: 700;
+}
+
+.workspace i {
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  background: linear-gradient(135deg, #2b6cb0, #38a169);
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 8px;
+  border-radius: var(--radius-sm);
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+
+.item svg {
+  flex: none;
+  color: var(--icon);
+}
+
+.on {
+  background: var(--hover);
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.badge {
+  margin-left: auto;
+  padding: 0 6px;
+  border-radius: var(--radius-sm);
+  background: var(--tag-red-bg);
+  color: var(--tag-red-fg);
+  font-size: 11px;
+  font-weight: 600;
+  opacity: 0;
+  transition: opacity 0.3s var(--ease-out);
+}
+
+.badgeOn {
+  opacity: 1;
+}
+
+.list {
+  width: 300px;
+  flex: none;
+  padding: 16px;
+  border-right: 1px solid var(--line);
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.title svg {
+  color: var(--icon);
+}
+
+.head {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 8px 6px;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink-2);
+  font-size: 12px;
+}
+
+.rows {
+  position: relative;
+  height: 220px;
+}
+
+.row {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 42px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 0 8px;
+  border-bottom: 1px solid var(--line);
+  background: var(--bg);
+  transition:
+    top 0.7s var(--ease-spring),
+    background-color 0.4s;
+}
+
+.hot {
+  background: #fff7f5;
+  z-index: 2;
+}
+
+.sel {
+  background: rgba(35, 131, 226, 0.08);
+}
+
+.name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.name svg {
+  flex: none;
+  color: var(--icon);
+}
+
+.map {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.pulseWrap {
+  transition: opacity 0.3s;
+}
+
+.pulse {
+  fill: none;
+  stroke: var(--risk-high);
+  stroke-width: 2;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pulse 1.8s ease-out infinite;
+}
+
+@keyframes pulse {
+  from {
+    transform: scale(0.6);
+    opacity: 0.9;
+  }
+  to {
+    transform: scale(3);
+    opacity: 0;
+  }
+}
+
+.bolt {
+  fill: var(--risk-elevated);
+  animation: flash 0.9s ease-out;
+}
+
+@keyframes flash {
+  0%,
+  30%,
+  60% {
+    opacity: 1;
+  }
+  15%,
+  45% {
+    opacity: 0.1;
+  }
+}
+
+.ring {
+  fill: rgba(217, 115, 13, 0.08);
+  stroke: var(--risk-elevated);
+  stroke-width: 1.5;
+  stroke-dasharray: 5 4;
+  animation: ring 1.2s cubic-bezier(0.2, 0.8, 0.3, 1) forwards;
+}
+
+.ringDone {
+  r: 66px;
+  animation: none;
+}
+
+@keyframes ring {
+  to {
+    r: 66px;
+  }
+}
+
+.pin {
+  transition: fill 0.3s;
+}
+
+.toast {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  top: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--bg);
+  box-shadow: var(--shadow-float);
+  transform: translateY(-140%);
+  visibility: hidden;
+  transition: transform 0.6s var(--ease-spring);
+}
+
+.toastIn {
+  transform: none;
+  visibility: visible;
+}
+
+.toastIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: var(--tag-red-bg);
+  color: var(--risk-high);
+}
+
+.toastText {
+  flex: 1;
+  min-width: 0;
+}
+
+.toastText b,
+.toastText small {
+  display: block;
+}
+
+.toastText small {
+  color: var(--ink-2);
+}
+
+.count {
+  color: var(--risk-high);
+  font-size: 22px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.cursor {
+  position: absolute;
+  z-index: 5;
+  pointer-events: none;
+  transition:
+    left 1s cubic-bezier(0.4, 0, 0.2, 1),
+    top 1s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.3s,
+    transform 0.15s;
+}
+
+.click {
+  transform: scale(0.8);
+}
+
+@media (max-width: 767px) {
+  .side {
+    display: none;
+  }
+  .list {
+    width: 46%;
+    padding: 12px 8px;
+  }
+  .toast {
+    left: 8px;
+    right: 8px;
+    padding: 8px;
+  }
+  .toastText small {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .row,
+  .badge,
+  .toast,
+  .cursor,
+  .pin,
+  .pulseWrap {
+    transition: none;
+  }
+  .pulse,
+  .bolt,
+  .ring {
+    animation: none;
+  }
+}

@@ -1,6 +1,6 @@
 {
-  "name": "PlanIT Control",
-  "short_name": "PlanIT",
+  "name": "ControlWard",
+  "short_name": "ControlWard",
   "description": "Site safety for utility field crews",
   "start_url": "/",
   "display": "standalone",

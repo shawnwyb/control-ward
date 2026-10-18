@@ -1,9 +1,9 @@
 .history {
   margin-top: var(--space-3);
   padding-top: var(--space-3);
-  border-top: var(--rule-width) dashed var(--rule-strong);
+  border-top: var(--rule-width) solid var(--line);
   font-size: var(--text-sm);
-  color: var(--ink-muted);
+  color: var(--ink-2);
 }
 
 .list {
@@ -32,5 +32,6 @@
   width: 6rem;
   height: 6rem;
   object-fit: cover;
-  border: var(--rule-width) solid var(--rule-strong);
+  border-radius: var(--radius);
+  box-shadow: 0 0 0 1px var(--line);
 }

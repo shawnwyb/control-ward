@@ -1,0 +1,252 @@
+.landing {
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--ink);
+}
+
+/* ---- Nav ---- */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+  font-size: var(--text-sm);
+}
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: 700;
+}
+
+.logo i {
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #2b6cb0, #38a169);
+}
+
+.links {
+  display: none;
+  gap: var(--space-5);
+  margin-left: var(--space-4);
+}
+
+.links button,
+.signIn {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink-2);
+  cursor: pointer;
+}
+
+.links button:hover,
+.signIn:hover {
+  color: var(--ink);
+}
+
+.spacer {
+  flex: 1;
+}
+
+.btn {
+  display: inline-block;
+  padding: 9px 16px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--ink);
+  color: #fff;
+  font-weight: 600;
+  font-size: var(--text-sm);
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease);
+}
+
+.btn:hover {
+  background: color-mix(in srgb, var(--ink) 86%, #fff);
+}
+
+.ghost {
+  background: var(--fill);
+  color: var(--ink);
+}
+
+.ghost:hover {
+  background: color-mix(in srgb, var(--fill) 80%, var(--ink-3));
+}
+
+/* ---- Hero ---- */
+.hero {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-5);
+  align-items: center;
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-4) var(--space-12);
+}
+
+.copy {
+  flex: 1 1 300px;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 14px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: var(--fill);
+  color: var(--ink-2);
+  font-size: var(--text-xs);
+}
+
+.h1 {
+  margin: 0 0 26px;
+  font-size: clamp(2.25rem, 7vw, 3.125rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+/* The second line carries a pale yellow underline band. */
+.h1 em {
+  font-style: normal;
+  background: linear-gradient(transparent 62%, var(--tag-yellow-bg) 62%);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.hero > :last-child {
+  flex: 1 1 380px;
+  min-width: 0;
+}
+
+/* ---- Sections ---- */
+.section {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-4);
+  border-top: 1px solid var(--line);
+}
+
+.h2 {
+  margin: 0 0 6px;
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.lede {
+  margin: 0 0 22px;
+  max-width: 44rem;
+  color: var(--ink-2);
+  font-size: 15px;
+}
+
+.story,
+.sources {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.story {
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+}
+
+.card {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 14px;
+  border-radius: 10px;
+  background: var(--sidebar);
+  font-size: var(--text-sm);
+  transition: transform 0.2s var(--ease-out);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+}
+
+.card svg {
+  flex: none;
+  color: var(--icon);
+}
+
+.sources {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 6px;
+}
+
+.pill {
+  padding: 5px 12px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  color: var(--ink-2);
+  font-size: 13px;
+}
+
+/* ---- Closing call to action ---- */
+.cta {
+  padding: 48px var(--space-4);
+  background: var(--sidebar);
+  text-align: center;
+}
+
+.cta .lede {
+  margin-inline: auto;
+}
+
+.foot {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 0 var(--space-4);
+}
+
+@media (min-width: 48rem) {
+  .nav {
+    padding: var(--space-3) 28px;
+    gap: 22px;
+  }
+
+  .links {
+    display: flex;
+  }
+
+  .hero {
+    padding: 56px 40px 70px;
+  }
+
+  .section {
+    padding: 40px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    transition: none;
+  }
+
+  .card:hover {
+    transform: none;
+  }
+}

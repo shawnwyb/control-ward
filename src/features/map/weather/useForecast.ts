@@ -12,6 +12,8 @@ type Status = "idle" | "loading" | "ready" | "error";
 export function useForecast(site: Site, enabled: boolean) {
   const [status, setStatus] = useState<Status>("idle");
   const [grid, setGrid] = useState<ForecastGrid>();
+  // The map now outlives a site switch, so remember whose grid this is.
+  const [gridSite, setGridSite] = useState<string>();
   const [attempt, setAttempt] = useState(0);
   const playback = usePlayback(grid?.times.length ?? 0);
   const { setIndex, setPlaying } = playback;
@@ -21,7 +23,7 @@ export function useForecast(site: Site, enabled: boolean) {
       setPlaying(false);
       return;
     }
-    if (grid && attempt === 0) {
+    if (grid && attempt === 0 && gridSite === site.id) {
       setStatus("ready");
       return;
     }
@@ -30,6 +32,7 @@ export function useForecast(site: Site, enabled: boolean) {
     fetchForecastGrid(site, controller.signal)
       .then((next) => {
         setGrid(next);
+        setGridSite(site.id);
         setIndex(0); // "now"
         setStatus("ready");
       })
@@ -40,7 +43,7 @@ export function useForecast(site: Site, enabled: boolean) {
         }
       });
     return () => controller.abort();
-    // `grid` is deliberately not a dependency: a loaded grid should not refetch.
+    // `grid` and `gridSite` are deliberately not dependencies: a loaded grid should not refetch.
   }, [enabled, attempt, site, setIndex, setPlaying]);
 
   const retry = useCallback(() => {

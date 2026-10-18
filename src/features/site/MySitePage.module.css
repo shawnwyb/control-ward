@@ -1,0 +1,137 @@
+.page {
+  position: relative;
+  /* The content area's full height. */
+  height: calc(100dvh - 2 * var(--space-8));
+  min-height: 30rem;
+}
+
+.map {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  min-width: 0;
+  min-height: 0;
+}
+
+/* Top left, under the weather chips. The map sits behind; only the cards take the pointer. */
+.float {
+  position: absolute;
+  z-index: 3;
+  top: 3.25rem;
+  left: var(--space-3);
+  display: grid;
+  gap: var(--space-2);
+  justify-items: start;
+  width: min(26rem, calc(100% - 2 * var(--space-3)));
+  pointer-events: none;
+}
+
+.float > * {
+  pointer-events: auto;
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  max-width: 100%;
+  padding: 8px 12px;
+  border-radius: var(--radius-card);
+  background: var(--bg);
+  box-shadow: var(--shadow-float);
+}
+
+.card {
+  flex-wrap: wrap;
+}
+
+.why {
+  flex-basis: 100%;
+  margin: 0;
+  color: var(--ink-2);
+  font-size: var(--text-xs);
+}
+
+.name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--text-lg);
+  font-weight: 600;
+}
+
+@media (max-width: 47.99rem) {
+  .page {
+    height: calc(100dvh - 3rem - 2 * var(--space-5));
+  }
+}
+
+.alertChip {
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--bg);
+  box-shadow: var(--shadow-float);
+  color: var(--ink);
+  font-size: var(--text-sm, 0.875rem);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.conditions {
+  display: grid;
+  gap: var(--space-2);
+  max-width: 100%;
+}
+
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  justify-self: start;
+  padding: 6px 12px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--bg);
+  box-shadow: var(--shadow-float);
+  color: var(--ink);
+  font: inherit;
+  font-size: var(--text-sm, 0.875rem);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.toggle svg {
+  color: var(--icon);
+}
+
+.chevOpen {
+  transform: rotate(180deg);
+}
+
+.body {
+  padding: var(--space-3);
+  border-radius: var(--radius-card);
+  background: var(--bg);
+  box-shadow: var(--shadow-float);
+  max-height: calc(100dvh - 24rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.body[hidden] {
+  display: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .chevOpen {
+    transition: transform 0.15s ease;
+  }
+}
+
+/* On phones the card stops short of the Report hazard button and scrolls inside. */
+@media (max-width: 47.99rem) {
+  .body {
+    max-height: calc(100dvh - 33rem);
+  }
+}

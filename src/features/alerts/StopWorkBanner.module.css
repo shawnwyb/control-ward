@@ -1,0 +1,60 @@
+.banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--radius-card);
+  background: var(--bg);
+  box-shadow: var(--shadow-float);
+  pointer-events: auto;
+  animation: drop-in 0.6s var(--ease-spring);
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: var(--tag-red-bg);
+  color: var(--risk-high);
+}
+
+.text {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+  line-height: 1.35;
+}
+
+.text strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.text small {
+  color: var(--ink-2);
+  font-size: var(--text-xs);
+}
+
+.count {
+  color: var(--risk-high);
+  font-size: 22px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+@keyframes drop-in {
+  from {
+    transform: translateY(-140%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .banner {
+    animation: none;
+  }
+}

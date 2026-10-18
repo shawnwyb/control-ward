@@ -1,10 +1,16 @@
+/* The map fills its container (the Sites and My site map panes). */
 .map {
   width: 100%;
-  aspect-ratio: 3 / 2;
-  min-height: 18rem;
-  border: var(--rule-width) solid var(--rule-strong);
-  background: var(--map-ground);
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--fill);
   cursor: crosshair;
+}
+
+.map:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .map :global(.maplibregl-canvas) {
@@ -12,14 +18,18 @@
 }
 
 .map :global(.maplibregl-ctrl-group) {
-  border-radius: var(--radius-sm);
-  box-shadow: none;
-  border: var(--rule-width) solid var(--rule-strong);
+  border-radius: var(--radius);
+  border: 0;
+  box-shadow: var(--shadow-float);
 }
 
 .map :global(.maplibregl-ctrl-group button) {
   width: var(--tap-min);
   height: var(--tap-min);
+}
+
+.map :global(.maplibregl-ctrl-group button + button) {
+  border-top-color: var(--line);
 }
 
 .map :global(.maplibregl-ctrl-attrib) {
@@ -28,25 +38,175 @@
 }
 
 .map :global(.maplibregl-ctrl-scale) {
-  font-family: var(--font-mono);
-  border-color: var(--ink);
-  color: var(--ink);
+  font-family: var(--font-sans);
+  border-color: var(--ink-2);
+  color: var(--ink-2);
+  background: rgba(255, 255, 255, 0.8);
 }
 
+/* Hazard report: the type's gray line icon on a white disc, severity shape in the corner. */
 .hazard {
+  /* No position here: MapLibre's markers are position: absolute. */
   display: grid;
   place-items: center;
+  width: var(--size, 30px);
+  height: var(--size, 30px);
+  border-radius: 50%;
+  background: var(--bg);
+  color: var(--icon);
+  box-shadow:
+    0 0 0 1px rgba(15, 15, 15, 0.12),
+    0 2px 6px rgba(15, 15, 15, 0.18);
   cursor: default;
 }
 
-/* A hovered feed row rings its marker. */
-.highlight::after {
-  content: "";
+.hazard[data-severity="3"] {
+  box-shadow:
+    0 0 0 1.5px var(--severity-3),
+    0 2px 6px rgba(15, 15, 15, 0.22);
+}
+
+/* A report you just sent lands on the map with a small bounce. */
+.dropIn {
+  animation: drop-in 0.5s var(--ease-spring);
+}
+
+@keyframes drop-in {
+  from {
+    opacity: 0;
+    translate: 0 -28px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dropIn {
+    animation: none;
+  }
+}
+
+.hazardBadge {
   position: absolute;
-  inset: -5px;
-  border: 2px solid var(--ink);
+  right: -5px;
+  bottom: -5px;
+  display: grid;
+  line-height: 0;
+}
+
+/* Site score pin: the index on a pill in its band colour, with a pointer at the site. */
+.sitePin {
+  /* Site navigation must remain clickable above overlapping hazard markers. */
+  z-index: 1;
+  --pin: var(--risk-none);
+  display: grid;
+  justify-items: center;
+  padding: 0 0 1px;
+  border: 0;
+  background: none;
+  font: inherit;
+  cursor: pointer;
+  /* No transform or transition here: MapLibre positions markers with transform. */
+  filter: drop-shadow(0 1px 2px rgba(15, 15, 15, 0.3));
+}
+
+.sitePin[data-tone="high"] {
+  --pin: var(--risk-high);
+}
+
+.sitePin[data-tone="elevated"] {
+  --pin: var(--risk-elevated);
+}
+
+.sitePin[data-tone="low"] {
+  --pin: var(--risk-low);
+}
+
+/* Lift and scale the pill, not the marker element. */
+.sitePill {
+  display: grid;
+  place-items: center;
+  min-width: 2.375rem;
+  height: 1.375rem;
+  padding: 0 0.5rem;
+  border: 2px solid var(--bg);
+  border-radius: 999px;
+  background: var(--pin);
+  color: #fff;
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  transition: transform var(--duration-fast) var(--ease);
+  transform-origin: 50% 100%;
+}
+
+.sitePin::after {
+  content: "";
+  width: 0;
+  height: 0;
+  margin-top: -1px;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 7px solid var(--pin);
+}
+
+.sitePin:hover .sitePill {
+  transform: translateY(-2px);
+}
+
+/* While a report or check-in is sending, site switching is paused. */
+.sitePin:disabled {
+  cursor: progress;
+  opacity: 0.55;
+}
+
+.sitePin:disabled:hover .sitePill {
+  transform: none;
+}
+
+.sitePin[aria-current="true"] {
+  z-index: 2;
+}
+
+.sitePin[aria-current="true"] .sitePill {
+  transform: scale(1.15);
+  box-shadow: 0 0 0 2px var(--ink);
+}
+
+.sitePin:focus-visible {
+  outline: none;
+}
+
+.sitePin:focus-visible .sitePill {
+  box-shadow: 0 0 0 3px var(--accent);
+}
+
+/* Lightning stop-work bolt, on the 10-mile ring. */
+.stopWork {
+  display: grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
   border-radius: 50%;
-  pointer-events: none;
+  background: var(--risk-elevated);
+  color: #fff;
+  box-shadow:
+    0 0 0 2px var(--bg),
+    0 2px 6px rgba(15, 15, 15, 0.25);
+}
+
+.stopWork svg {
+  fill: currentColor;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sitePill {
+    transition: none;
+  }
+
+  .sitePin:hover .sitePill {
+    transform: none;
+  }
 }
 
 /* 44px hit area so the pin can be dragged with a thumb. */
@@ -62,9 +222,9 @@
   width: 1.375rem;
   height: 1.375rem;
   border-radius: 50%;
-  background: var(--brand);
-  border: 3px solid var(--surface);
-  box-shadow: 0 0 0 6px color-mix(in srgb, var(--brand) 22%, transparent);
+  background: var(--accent);
+  border: 3px solid var(--bg);
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent) 22%, transparent);
 }
 
 .pin:active {
@@ -75,7 +235,7 @@
   width: 0.875rem;
   height: 0.875rem;
   background: var(--ink);
-  border: 2px solid var(--surface);
+  border: 2px solid var(--bg);
 }
 
 @media (max-width: 40rem) {
@@ -92,10 +252,10 @@
 
 .popup :global(.maplibregl-popup-content) {
   padding: 0;
-  border: var(--rule-width) solid var(--ink);
-  border-radius: var(--radius-sm);
-  background: var(--surface);
-  box-shadow: none;
+  border: 0;
+  border-radius: var(--radius);
+  background: var(--bg);
+  box-shadow: var(--shadow-float);
   color: var(--ink);
   font-family: var(--font-sans);
 }
@@ -128,12 +288,12 @@
   gap: var(--space-1) var(--space-3);
   margin: 0;
   padding-top: var(--space-2);
-  border-top: var(--rule-width) solid var(--rule);
+  border-top: var(--rule-width) solid var(--line);
   font-size: var(--text-sm);
 }
 
 .cardLabel {
-  color: var(--ink-muted);
+  color: var(--ink-2);
 }
 
 .cardValue {
@@ -150,8 +310,8 @@
   height: 1.75rem;
   border-radius: 50%;
   background: var(--ink);
-  color: var(--surface);
-  border: 2px solid var(--surface);
+  color: var(--bg);
+  border: 2px solid var(--bg);
   font-size: var(--text-xs);
   font-weight: 600;
   cursor: pointer;

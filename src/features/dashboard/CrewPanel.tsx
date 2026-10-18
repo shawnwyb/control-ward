@@ -79,7 +79,7 @@ export function CrewPanel({
               {m.latitude !== null ? (
                 <button
                   type="button"
-                  className={styles.toggle}
+                  className={styles.locate}
                   onClick={() => onLocate(m)}
                 >
                   Show on map

@@ -1,5 +1,6 @@
 import { readFileSync } from "node:fs";
 import { test, expect, type Page } from "@playwright/test";
+import { go, signIn } from "./helpers";
 
 // Runs against the mock backend: PLAYWRIGHT_MODE=design npx playwright test tests/ui-design/next-day-report.spec.ts
 // The mock has a demo site mapped to Turkey Point (EIA 621). Its report is public/reports/621/latest.json,
@@ -9,13 +10,19 @@ const sample = (eia: string) =>
   JSON.parse(readFileSync(`public/reports/${eia}/latest.json`, "utf8"));
 
 async function openReport(page: Page, siteName = "Turkey Point · Report demo") {
-  await page.goto("/");
-  await page.getByLabel("Email").fill("supervisor@planit.local");
-  await page.getByLabel("Password").fill("CrewDemo123!");
-  await page.getByRole("button", { name: /sign in/i }).click();
-  await page.waitForSelector("#workspace select");
-  await page.selectOption("#site", { label: siteName });
-  await page.locator("label", { hasText: "Next-day report" }).click();
+  await signIn(page, "supervisor@planit.local");
+  const nav = page.getByRole("navigation", { name: "Pages" });
+  await nav
+    .or(page.getByRole("button", { name: /Menu/ }))
+    .first()
+    .waitFor();
+  if (!(await nav.isVisible()))
+    await page.getByRole("button", { name: /Menu/ }).click();
+  await page.locator("#site").selectOption({ label: siteName });
+  await go(page, "Daily safety");
+  await page
+    .getByText("View detailed forecast & sources", { exact: true })
+    .click();
 }
 
 test("shows the verdict, heat timeline, map, flood and gaps for a site with a report", async ({
@@ -96,7 +103,9 @@ test("a site with no report file says how to build one", async ({ page }) => {
   );
   await openReport(page);
   await expect(page.getByText("No report yet")).toBeVisible();
-  await expect(page.getByText("run.sh build --site 621")).toBeVisible();
+  await expect(
+    page.getByText("No detailed forecast has been published", { exact: false }),
+  ).toBeVisible();
 });
 
 test("a report in a newer format is refused with a clear message", async ({
@@ -115,7 +124,11 @@ test("a site without an EIA plant id explains why there is no report", async ({
   page,
 }) => {
   await openReport(page, "North Plant · Demo");
-  await expect(page.getByText("no EIA plant id")).toBeVisible();
+  await expect(
+    page.getByText("A detailed forecast is not available for this site.", {
+      exact: false,
+    }),
+  ).toBeVisible();
 });
 
 test("a missing forecast leaves the rest of the report readable", async ({
@@ -319,6 +332,13 @@ test("phones get section links that jump to a panel; wide screens do not", async
   ).toBe(true);
   await nav.getByRole("link", { name: "Routes" }).click();
   await expect(page.locator("#routes")).toBeInViewport();
+  await expect
+    .poll(async () => {
+      const heading = await page.locator("#routes h2").first().boundingBox();
+      const links = await nav.boundingBox();
+      return !!heading && !!links && heading.y >= links.y + links.height - 1;
+    })
+    .toBe(true);
   await nav.getByRole("link", { name: "Gaps" }).click();
   await expect(page.locator("#gaps")).toBeInViewport();
   await page.setViewportSize({ width: 1280, height: 900 });

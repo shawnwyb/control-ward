@@ -1,9 +1,14 @@
 import { test, expect, type Page } from "@playwright/test";
-async function login(page: Page, email: string, navigate = true) {
-  if (navigate) await page.goto("/");
-  await page.getByLabel("Email").fill(email);
-  await page.getByLabel("Password").fill("CrewDemo123!");
-  await page.getByRole("button", { name: /sign in/i }).click();
+import { go, signIn } from "./helpers";
+async function login(page: Page, email: string, navigate = true, query = "") {
+  if (navigate) await signIn(page, email, query);
+  else {
+    await page.getByLabel("Email").fill(email);
+    await page.getByLabel("Password").fill("CrewDemo123!");
+    await page.getByRole("button", { name: /sign in/i }).click();
+    await expect(page.locator("#sidebar")).toBeAttached();
+  }
+  await go(page, "Daily safety");
 }
 test("a checklist appears automatically for supervisor and worker, with no planning or publication steps", async ({
   page,
@@ -64,8 +69,7 @@ test("a checklist appears automatically for supervisor and worker, with no plann
 test("stale guidance cannot be acknowledged while urgent crew alerts remain visible", async ({
   page,
 }) => {
-  await page.goto("/?safety=stale");
-  await login(page, "crew@planit.local", false);
+  await login(page, "crew@planit.local", true, "?safety=stale");
   const panel = page.locator("#safety-checklist");
   await expect(
     panel.getByText("Updating / out of date", { exact: true }),
@@ -81,8 +85,7 @@ test("stale guidance cannot be acknowledged while urgent crew alerts remain visi
 test("automatic retry preserves the previous checklist without requiring an admin action", async ({
   page,
 }) => {
-  await page.goto("/?safety=retry");
-  await login(page, "supervisor@planit.local", false);
+  await login(page, "supervisor@planit.local", true, "?safety=retry");
   const panel = page.locator("#safety-checklist");
   await panel.getByText(/Research details ·/).click();
   await expect(
@@ -98,8 +101,7 @@ test("automatic retry preserves the previous checklist without requiring an admi
 test("an automatically replaced checklist requires a fresh receipt", async ({
   page,
 }) => {
-  await page.goto("/?safety=revised");
-  await login(page, "crew@planit.local", false);
+  await login(page, "crew@planit.local", true, "?safety=revised");
   const panel = page.locator("#safety-checklist");
   await panel
     .getByRole("button", { name: "Acknowledge this checklist" })
@@ -120,8 +122,7 @@ test("an automatically replaced checklist requires a fresh receipt", async ({
 test("missing jurisdiction and condition data produce explicit gaps instead of fabricated instructions", async ({
   page,
 }) => {
-  await page.goto("/?safety=missing");
-  await login(page, "crew@planit.local", false);
+  await login(page, "crew@planit.local", true, "?safety=missing");
   const panel = page.locator("#safety-checklist");
   await expect(
     panel.getByRole("region", { name: "Automatic worker checklist" }),
@@ -143,8 +144,7 @@ test("a long legacy checklist stays compact on mobile and preserves every instru
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/?safety=long");
-  await login(page, "crew@planit.local", false);
+  await login(page, "crew@planit.local", true, "?safety=long");
   const panel = page.locator("#safety-checklist");
   const actions = panel.getByRole("list", { name: "Priority worker actions" });
   await expect(actions.locator(":scope > li")).toHaveCount(5);

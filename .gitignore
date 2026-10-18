@@ -8,6 +8,11 @@ test-results/
 
 .venv
 models/mud-trafficability/cache/
+# Routine prediction runs stay local. Already tracked reference snapshots remain tracked.
+/models/hazard-index/artifacts/dryrun/
+/models/hazard-index/cache/dryrun_raw/
+/models/hazard-index/cache/weather/ledger.jsonl
+/models/mud-trafficability/output/
 
 
 __pycache__
@@ -17,3 +22,4 @@ reports/next-day/cache/
 public/reports/**/report.prev.json
 docs/*
 docs/screenshots/
+.superpowers/
