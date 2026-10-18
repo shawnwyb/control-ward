@@ -5,132 +5,130 @@ async function login(page: Page, email: string, navigate = true) {
   await page.getByLabel("Password").fill("CrewDemo123!");
   await page.getByRole("button", { name: /sign in/i }).click();
 }
-async function saveWork(page: Page) {
-  const panel = page.locator("#safety-checklist");
-  await panel
-    .getByLabel("Planned task description")
-    .fill("Inspect generator before maintenance");
-  await panel.getByRole("button", { name: "Save work context" }).click();
-  await expect(
-    panel.getByText("Work context saved.", { exact: false }),
-  ).toBeVisible();
-  return panel;
-}
-test("supervisor drafts, edits, publishes; crew sees only publication and exact receipt", async ({
+test("a checklist appears automatically for supervisor and worker, with no planning or publication steps", async ({
   page,
 }) => {
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
   await login(page, "supervisor@planit.local");
   await page.locator("#site").selectOption("site-north");
-  const panel = await saveWork(page);
-  await panel
-    .getByRole("button", { name: "Generate safety draft", exact: true })
-    .click();
+  const panel = page.locator("#safety-checklist");
   await expect(
-    panel.getByRole("region", { name: "Supervisor draft review" }),
+    panel.getByRole("region", { name: "Automatic worker checklist" }),
   ).toBeVisible({ timeout: 12000 });
-  await panel
-    .getByLabel("Private review notes")
-    .fill("Private note: follow up with safety officer");
   await expect(
-    panel.getByRole("button", { name: "Publish safety checklist" }),
-  ).toBeDisabled();
-  await panel.getByRole("button", { name: "Save reviewed revision" }).click();
-  await expect(
-    panel.getByText("Supervisor draft review · Revision 2"),
+    panel.getByText("Heat index (F): 92", { exact: true }),
   ).toBeVisible();
-  await panel.getByRole("button", { name: "Publish safety checklist" }).click();
   await expect(
-    panel.getByText("Safety checklist published to site members."),
+    panel.getByText(/Gainesville city, Alachua County, Florida/),
   ).toBeVisible();
+  await expect(panel.getByLabel("Planned task description")).toHaveCount(0);
+  await expect(
+    panel.getByRole("button", {
+      name: /Generate|Publish|Save work|reviewed revision/,
+    }),
+  ).toHaveCount(0);
   await panel
-    .getByRole("region", { name: "Published worker checklist" })
-    .getByText("FICTIONAL DEMO company pre-job procedure")
+    .getByText("FICTIONAL DEMO safety guidance", { exact: true })
+    .first()
     .click();
-  await panel.screenshot({ path: "test-results/safety-supervisor.png" });
+  await expect(panel.getByRole("blockquote")).toContainText("FICTIONAL DEMO");
+  await panel.screenshot({
+    path: "test-results/safety-automatic-supervisor.png",
+  });
   await page.getByRole("button", { name: "Sign out" }).click();
   await login(page, "crew@planit.local", false);
   await expect(
-    panel.getByRole("button", { name: "Acknowledge this revision" }),
+    panel.getByRole("button", { name: "Acknowledge this checklist" }),
   ).toBeEnabled();
-  await expect(
-    panel.getByRole("region", { name: "Supervisor draft review" }),
-  ).toHaveCount(0);
-  await expect(
-    panel.getByText("Private note: follow up with safety officer"),
-  ).toHaveCount(0);
   await panel
-    .getByRole("button", { name: "Acknowledge this revision" })
+    .getByRole("button", { name: "Acknowledge this checklist" })
     .click();
   await expect(
     panel.getByRole("button", { name: "Receipt recorded", exact: true }),
   ).toBeDisabled();
-  await panel.screenshot({ path: "test-results/safety-crew.png" });
   await page.setViewportSize({ width: 390, height: 844 });
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= window.innerWidth,
     ),
   ).toBe(true);
-  await panel.screenshot({ path: "test-results/safety-crew-mobile.png" });
+  await panel.screenshot({
+    path: "test-results/safety-automatic-worker-mobile.png",
+  });
   expect(errors).toEqual([]);
 });
-test("stale guidance is visible and cannot be acknowledged; crew alerts remain", async ({
+test("stale guidance cannot be acknowledged while urgent crew alerts remain visible", async ({
   page,
 }) => {
   await page.goto("/?safety=stale");
   await login(page, "crew@planit.local", false);
   const panel = page.locator("#safety-checklist");
   await expect(
-    panel.getByText("Needs supervisor review", { exact: true }),
+    panel.getByText("Updating / out of date", { exact: true }),
   ).toBeVisible();
   await expect(
-    panel.getByRole("button", { name: "Acknowledge this revision" }),
+    panel.getByRole("button", { name: "Acknowledge this checklist" }),
   ).toBeDisabled();
-  await expect(
-    panel.getByText(/Hazard feed is missing or stale/),
-  ).toBeVisible();
+  await expect(panel.getByText(/STALE/)).toBeVisible();
   await expect(
     page.getByRole("alert").filter({ hasText: "Stop work" }),
   ).toBeVisible();
 });
-test("pending/retry states preserve published checklist and display attempt status", async ({
+test("automatic retry preserves the previous checklist without requiring an admin action", async ({
   page,
 }) => {
   await page.goto("/?safety=retry");
   await login(page, "supervisor@planit.local", false);
-  const panel = await saveWork(page);
-  await panel
-    .getByRole("button", { name: "Generate safety draft", exact: true })
-    .click();
-  await expect(panel.getByText(/Generation: queued · Attempt 2/)).toBeVisible();
+  const panel = page.locator("#safety-checklist");
   await expect(
-    panel.getByRole("button", { name: "Generate new safety draft" }),
-  ).toBeDisabled();
+    panel.getByText(/Updating automatically: queued.*Attempt 2/),
+  ).toBeVisible();
+  await expect(
+    panel.getByRole("region", { name: "Automatic worker checklist" }),
+  ).toBeVisible();
+  await expect(
+    panel.getByRole("button", { name: /Generate|Publish/ }),
+  ).toHaveCount(0);
 });
-test("site change clears private draft; date changes clear prior checklist", async ({
+test("an automatically replaced checklist requires a fresh receipt", async ({
   page,
 }) => {
-  await login(page, "supervisor@planit.local");
-  const panel = await saveWork(page);
+  await page.goto("/?safety=revised");
+  await login(page, "crew@planit.local", false);
+  const panel = page.locator("#safety-checklist");
   await panel
-    .getByRole("button", { name: "Generate safety draft", exact: true })
+    .getByRole("button", { name: "Acknowledge this checklist" })
     .click();
   await expect(
-    panel.getByRole("region", { name: "Supervisor draft review" }),
-  ).toBeVisible({ timeout: 12000 });
-  const siteSelect = page
-    .locator("select")
-    .filter({ has: page.locator('option[value="site-south"]') });
-  const selected = await siteSelect.inputValue();
-  await siteSelect.selectOption(
-    selected === "site-south" ? "site-north" : "site-south",
-  );
+    panel.getByRole("button", { name: "Receipt recorded", exact: true }),
+  ).toBeDisabled();
   await expect(
-    panel.getByRole("region", { name: "Supervisor draft review" }),
-  ).toHaveCount(0);
-  await expect(panel.getByLabel("Planned task description")).toHaveValue("");
-  await panel.getByLabel("Checklist work date").fill("2026-11-10");
-  await expect(panel.getByLabel("Planned task description")).toHaveValue("");
+    panel.getByRole("button", { name: "Acknowledge this checklist" }),
+  ).toBeEnabled({ timeout: 12000 });
+  await panel
+    .getByRole("button", { name: "Acknowledge this checklist" })
+    .click();
+  await expect(
+    panel.getByRole("button", { name: "Receipt recorded", exact: true }),
+  ).toBeDisabled();
+});
+test("missing jurisdiction and condition data produce explicit gaps instead of fabricated instructions", async ({
+  page,
+}) => {
+  await page.goto("/?safety=missing");
+  await login(page, "crew@planit.local", false);
+  const panel = page.locator("#safety-checklist");
+  await expect(
+    panel.getByRole("region", { name: "Automatic worker checklist" }),
+  ).toBeVisible({ timeout: 12000 });
+  await expect(
+    panel.getByText("Jurisdiction: Lookup unavailable", { exact: true }),
+  ).toBeVisible();
+  await expect(
+    panel.getByText(/Jurisdiction lookup and official sources unavailable/),
+  ).toBeVisible();
+  await expect(
+    panel.getByText(/No verified instruction could be extracted/),
+  ).toBeVisible();
 });

@@ -114,6 +114,159 @@ export type Database = {
           },
         ]
       }
+      automatic_safety_checklists: {
+        Row: {
+          content: Json
+          generated_at: string
+          id: string
+          input_key: string
+          run_id: string
+          site_id: string
+          superseded_at: string | null
+          valid_until: string
+          work_date: string
+        }
+        Insert: {
+          content: Json
+          generated_at?: string
+          id?: string
+          input_key: string
+          run_id: string
+          site_id: string
+          superseded_at?: string | null
+          valid_until: string
+          work_date: string
+        }
+        Update: {
+          content?: Json
+          generated_at?: string
+          id?: string
+          input_key?: string
+          run_id?: string
+          site_id?: string
+          superseded_at?: string | null
+          valid_until?: string
+          work_date?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "automatic_safety_checklists_run_id_fkey"
+            columns: ["run_id"]
+            isOneToOne: true
+            referencedRelation: "automatic_safety_runs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "automatic_safety_checklists_site_id_fkey"
+            columns: ["site_id"]
+            isOneToOne: false
+            referencedRelation: "site_overview"
+            referencedColumns: ["site_id"]
+          },
+          {
+            foreignKeyName: "automatic_safety_checklists_site_id_fkey"
+            columns: ["site_id"]
+            isOneToOne: false
+            referencedRelation: "sites"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      automatic_safety_reads: {
+        Row: {
+          checklist_id: string
+          read_at: string
+          user_id: string
+        }
+        Insert: {
+          checklist_id: string
+          read_at?: string
+          user_id: string
+        }
+        Update: {
+          checklist_id?: string
+          read_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "automatic_safety_reads_checklist_id_fkey"
+            columns: ["checklist_id"]
+            isOneToOne: false
+            referencedRelation: "automatic_safety_checklists"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      automatic_safety_runs: {
+        Row: {
+          attempt: number
+          available_at: string
+          created_at: string
+          diagnostics: Json
+          error_category: string | null
+          fingerprint: string
+          finished_at: string | null
+          id: string
+          input_snapshot: Json
+          lease_token: string | null
+          leased_until: string | null
+          site_id: string
+          source_documents: Json
+          state: string
+          work_date: string
+        }
+        Insert: {
+          attempt?: number
+          available_at?: string
+          created_at?: string
+          diagnostics?: Json
+          error_category?: string | null
+          fingerprint: string
+          finished_at?: string | null
+          id?: string
+          input_snapshot: Json
+          lease_token?: string | null
+          leased_until?: string | null
+          site_id: string
+          source_documents?: Json
+          state?: string
+          work_date: string
+        }
+        Update: {
+          attempt?: number
+          available_at?: string
+          created_at?: string
+          diagnostics?: Json
+          error_category?: string | null
+          fingerprint?: string
+          finished_at?: string | null
+          id?: string
+          input_snapshot?: Json
+          lease_token?: string | null
+          leased_until?: string | null
+          site_id?: string
+          source_documents?: Json
+          state?: string
+          work_date?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "automatic_safety_runs_site_id_fkey"
+            columns: ["site_id"]
+            isOneToOne: false
+            referencedRelation: "site_overview"
+            referencedColumns: ["site_id"]
+          },
+          {
+            foreignKeyName: "automatic_safety_runs_site_id_fkey"
+            columns: ["site_id"]
+            isOneToOne: false
+            referencedRelation: "sites"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       briefing_drafts: {
         Row: {
           content: Json
@@ -1636,6 +1789,10 @@ export type Database = {
         Args: { p_alert_id: string; p_request_id: string }
         Returns: Json
       }
+      acknowledge_automatic_safety_checklist: {
+        Args: { p_checklist_id: string }
+        Returns: undefined
+      }
       acknowledge_safety_publication: {
         Args: { p_publication_id: string }
         Returns: undefined
@@ -1655,6 +1812,32 @@ export type Database = {
           p_still_there: boolean
         }
         Returns: Json
+      }
+      claim_automatic_safety_runs: {
+        Args: never
+        Returns: {
+          attempt: number
+          available_at: string
+          created_at: string
+          diagnostics: Json
+          error_category: string | null
+          fingerprint: string
+          finished_at: string | null
+          id: string
+          input_snapshot: Json
+          lease_token: string | null
+          leased_until: string | null
+          site_id: string
+          source_documents: Json
+          state: string
+          work_date: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "automatic_safety_runs"
+          isOneToOne: false
+          isSetofReturn: true
+        }
       }
       claim_hazard_events: {
         Args: { p_consumer: string; p_lease_seconds?: number; p_limit?: number }
@@ -1740,12 +1923,27 @@ export type Database = {
         }
         Returns: string
       }
+      enqueue_automatic_safety_checklists: {
+        Args: { p_now?: string }
+        Returns: number
+      }
       enqueue_due_safety_briefings: {
         Args: { p_now?: string }
         Returns: number
       }
       evaluate_all_sites: { Args: never; Returns: Json }
       evaluate_site: { Args: { p_site_id: string }; Returns: Json }
+      finish_automatic_safety_run: {
+        Args: {
+          p_content?: Json
+          p_diagnostics?: Json
+          p_documents?: Json
+          p_error?: string
+          p_lease_token: string
+          p_run_id: string
+        }
+        Returns: boolean
+      }
       finish_push: {
         Args: { p_id: string; p_result: Json; p_status: string }
         Returns: undefined
@@ -1761,6 +1959,10 @@ export type Database = {
         Returns: boolean
       }
       generate_due_briefings: { Args: never; Returns: Json }
+      get_automatic_safety_workspace: {
+        Args: { p_site_id: string; p_work_date: string }
+        Returns: Json
+      }
       get_briefing_inputs: { Args: { p_site_id: string }; Returns: Json }
       get_safety_workspace: {
         Args: { p_site_id: string; p_work_date: string }
