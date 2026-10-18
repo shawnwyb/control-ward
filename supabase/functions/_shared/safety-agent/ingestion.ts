@@ -27,7 +27,7 @@ export async function fetchApprovedHtml(
   const response = await fetcher(url, {
     redirect: "error",
     signal,
-    headers: { accept: "text/html", "user-agent": "PlanITSafetyPilot/1.0" },
+    headers: { accept: "text/html", "user-agent": "ControlWardSafetyPilot/1.0" },
   });
   if (
     !response.ok ||

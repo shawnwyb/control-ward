@@ -1,4 +1,4 @@
-# PlanIT Control UI revamp — design
+# ControlWard UI revamp — design
 
 Date: 2026-10-17 · Status: draft for approval
 
@@ -84,7 +84,7 @@ SwampHacks 2026, so first impressions for judges matter as much as day-to-day us
 ### App shell
 
 - Notion-style **left sidebar** replaces the top bar + section nav for signed-in users: workspace name
-  ("PlanIT Control"), site switcher, page links, and the account/sign-out control at the bottom.
+  ("ControlWard"), site switcher, page links, and the account/sign-out control at the bottom.
 - Pages are shown one at a time in the main area (not one long scrolling page).
 
 **Supervisor sidebar:** Sites · Alerts (count badge) · Next-day briefing · Crew · Reports.
@@ -163,7 +163,7 @@ browser back/forward works between pages and a page can be linked directly.
 
 Shown to signed-out visitors at the root; "Sign in" / "Open live demo" lead to sign-in.
 
-1. **Nav:** logo + PlanIT Control, How it works, Features, Data, Sign in, **Open live demo**.
+1. **Nav:** logo + ControlWard, How it works, Features, Data, Sign in, **Open live demo**.
 2. **Hero:** badge "Built for utility field crews · SwampHacks 2026"; headline
    "Every hazard on site. _One picture._" (highlighted second line); buttons "Open live demo →" and
    "See how it works". **No gray paragraph under the headline.** Right side: six pastel jigsaw pieces
@@ -171,7 +171,7 @@ Shown to signed-out visitors at the root; "Sign in" / "Open live demo" lead to s
    by one and snap into a 3×2 grid, then a score card pops in below: "Big Cypress Sub · Hazard index
    8.6 · Stop work". Replays on a small "↻ replay" link.
 3. **"6:45 AM, the Everglades."** The brief's scenario as four hazard cards.
-4. **"What PlanIT Control does":** a horizontal sliding carousel of wide cards, each with a picture of
+4. **"What ControlWard does":** a horizontal sliding carousel of wide cards, each with a picture of
    the app on top and number + title + description below. Six cards: one risk picture per site,
    instant stop-work alerts, 6 PM next-day briefing, crew hazard reports, supervisor dashboard,
    hazard index 0–10 (7-day forecast). Auto-advances every ~4.5s, pauses on hover, arrows + dots.

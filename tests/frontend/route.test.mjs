@@ -4,7 +4,9 @@ import { allowedPage, homeFor, parseRoute } from "../../src/lib/route.ts";
 
 test("parseRoute reads the hash and falls back to landing", () => {
   assert.equal(parseRoute("#/alerts"), "alerts");
-  assert.equal(parseRoute("#/next-day-report"), "next-day-report");
+  assert.equal(parseRoute("#/next-day-report"), "daily-safety");
+  assert.equal(parseRoute("#/briefing"), "daily-safety");
+  assert.equal(parseRoute("#/daily-safety"), "daily-safety");
   assert.equal(parseRoute("#/sign-in"), "sign-in");
   assert.equal(parseRoute(""), "landing");
   assert.equal(parseRoute("#/"), "landing");
@@ -23,6 +25,6 @@ test("allowedPage keeps role-only pages away from the wrong role", () => {
   assert.equal(allowedPage("alerts", "crew"), "alerts");
   assert.equal(allowedPage("reports", "supervisor"), "reports");
   assert.equal(allowedPage("crew", "supervisor"), "crew");
-  assert.equal(allowedPage("next-day-report", "crew"), "next-day-report");
-  assert.equal(allowedPage("next-day-report", "supervisor"), "next-day-report");
+  assert.equal(allowedPage("daily-safety", "crew"), "daily-safety");
+  assert.equal(allowedPage("daily-safety", "supervisor"), "daily-safety");
 });

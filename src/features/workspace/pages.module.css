@@ -50,3 +50,26 @@
   margin: 0;
   accent-color: var(--accent);
 }
+
+.forecast {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.forecast > summary {
+  padding: var(--space-4);
+  min-height: 2.75rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.forecast > summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.forecastBody {
+  display: grid;
+  gap: var(--space-4);
+  padding: 0 var(--space-4) var(--space-4);
+}

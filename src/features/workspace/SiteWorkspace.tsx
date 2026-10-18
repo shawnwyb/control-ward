@@ -34,10 +34,9 @@ import {
 } from "../report/ReportDrawer";
 import type { ReportDraft } from "../report/types";
 import { useReportSubmit } from "../report/useReportSubmit";
-import { NextDayReport } from "../nextday/NextDayReport";
 import { StopWorkBanner } from "../alerts/StopWorkBanner";
 import { MySitePage } from "../site/MySitePage";
-import { AlertsPage, BriefingPage, CrewPage, ReportsPage } from "./pages";
+import { AlertsPage, DailySafetyPage, CrewPage, ReportsPage } from "./pages";
 import styles from "./SiteWorkspace.module.css";
 
 const noLightning: LightningView = {
@@ -356,8 +355,7 @@ export function SiteWorkspace({
         {page === "alerts" ? (
           <AlertsPage {...base} alerts={alerts} lightning={lightning} />
         ) : null}
-        {page === "next-day-report" ? <NextDayReport site={site} /> : null}
-        {page === "briefing" ? <BriefingPage {...base} /> : null}
+        {page === "daily-safety" ? <DailySafetyPage {...base} /> : null}
         {page === "crew" ? (
           <CrewPage
             {...base}

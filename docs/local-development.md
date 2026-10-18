@@ -1,4 +1,4 @@
-# Run PlanIT locally
+# Run ControlWard locally
 
 Start here after cloning the repository. The main path uses the real application, agent and prediction code. The optional UI preview at the end uses fictional data.
 
@@ -53,7 +53,7 @@ Then:
 npm run dev
 ```
 
-Open <http://127.0.0.1:5173>, choose **Sign in** (or open <http://127.0.0.1:5173/#/sign-in> directly), sign in, and select the assigned worksite. Open **Next-day briefing** (supervisor) or **Tomorrow's briefing** (worker) for the automatic safety checklist. **Next-day report** is the separate full forecast/model report. On phones, open **Menu** to access navigation and the site selector. Both roles can read the safety checklist and expand its scope/citations. Supervisors also see research details. Acknowledge only a current version; a new version requires a new receipt.
+Open <http://127.0.0.1:5173>, choose **Sign in** (or open <http://127.0.0.1:5173/#/sign-in> directly), sign in, and select the assigned worksite. Open **Daily safety** for the automatic safety checklist. Expand **View detailed forecast & sources** on the same page for the full forecast/model report. On phones, open **Menu** to access navigation and the site selector. Both roles can read the safety checklist and expand its scope/citations. Supervisors also see research details. Acknowledge only a current version; a new version requires a new receipt.
 
 This uses the hosted project's existing ingestion, saved predictions and checklist generation. It does not enable CodeAct or start a model job. The project owner must separately keep the CodeAct executor running and activate its queue mode; see [safety operations](safety-operations.md#start-against-the-real-database). A local frontend does not need Docker for this path.
 
@@ -80,7 +80,7 @@ Install the Supabase CLI and start Docker. Keep the three long-running processes
 ### A. Start the database and frontend
 
 ```sh
-SAFETY_LOCAL_DIR=/tmp/planit-local npm run safety:local:start
+SAFETY_LOCAL_DIR=/tmp/controlward-local npm run safety:local:start
 npm run safety:dev
 ```
 
@@ -117,7 +117,7 @@ Edit that ignored file. Set:
 Ask the project owner for the model ID and budget settings if unsure. Hosted secret values are not downloaded by cloning the repository. See [server configuration](safety-operations.md#one-time-server-setup) for provider documentation and budget details. These values do not belong in `.env.local` or a `VITE_` variable.
 
 ```sh
-SAFETY_LOCAL_DIR=/tmp/planit-local node scripts/safety/local-stack.mjs serve "$PWD/.env.safety-functions"
+SAFETY_LOCAL_DIR=/tmp/controlward-local node scripts/safety/local-stack.mjs serve "$PWD/.env.safety-functions"
 ```
 
 Leave this terminal running. It serves the model broker and weather ingestion locally; no function deployment or Supabase login is needed for this local path.
@@ -169,7 +169,7 @@ These SQL steps are one-time developer setup for a local database. Supervisors d
 Still in the third terminal:
 
 ```sh
-supabase status --workdir /tmp/planit-local -o env
+supabase status --workdir /tmp/controlward-local -o env
 ```
 
 Copy **`SERVICE_ROLE_KEY`** from this local status output, not `ANON_KEY`. Create ignored `.env.codeact.local`:
@@ -199,10 +199,10 @@ The database queues work each minute; the worker polls for CodeAct jobs. Local w
 
 ### E. Verify both roles
 
-1. Sign in to the frontend as the local supervisor, select **West County Energy Center**, and open **Next-day briefing**. Refresh the page if it was open before the membership insert.
+1. Sign in to the frontend as the local supervisor, select **West County Energy Center**, and open **Daily safety**. Refresh the page if it was open before the membership insert.
 2. Confirm the checklist appears automatically with no Generate/Publish step.
 3. Inspect condition timestamps, current/stale state, the action titles, scope, exact quotes, official source links and coverage notes.
-4. Sign out and repeat as the local worker, opening **Tomorrow's briefing**. Acknowledge the current checklist; expect **Receipt recorded**. Missing/expired guidance must not be acknowledged.
+4. Sign out and repeat as the local worker, opening **Daily safety**. Acknowledge the current checklist; expect **Receipt recorded**. Missing/expired guidance must not be acknowledged.
 5. Inspect local Studio's `automatic_safety_runs` for state/errors and `automatic_safety_checklists` for the published content. Private action traces live in `private.safety_codeact_attempts`.
 
 If a site shows no instructions, inspect the gaps. A blocked government page or unresolved jurisdiction is not proof that no regulation applies. Do not replace a failed live run with fictional results while describing it as live.
@@ -210,7 +210,7 @@ If a site shows no instructions, inspect the gaps. A blocked government page or 
 Stop the frontend, Edge server and worker with Ctrl+C. Stop the local Supabase stack with:
 
 ```sh
-SAFETY_LOCAL_DIR=/tmp/planit-local npm run safety:local:stop
+SAFETY_LOCAL_DIR=/tmp/controlward-local npm run safety:local:stop
 ```
 
 ## 4. Run the real prediction models locally
@@ -256,7 +256,7 @@ After both models finish, run from the repository root:
 reports/next-day/run.sh build --site 56407 --for today
 ```
 
-This writes `public/reports/56407/<date>/report.json` and updates `public/reports/index.json`. Reload **Next-day report** for West County. Use `--for tomorrow` for the following day's report. External data fetches can take several minutes; inspect the report's gaps and input timestamps when it finishes. This report is independent of the automatic safety checklist in the briefing page.
+This writes `public/reports/56407/<date>/report.json` and updates `public/reports/index.json`. Open **Daily safety** for West County and expand **View detailed forecast & sources**. Use `--for tomorrow` for the following day's report. External data fetches can take several minutes; inspect the report's gaps and input timestamps when it finishes. This report is independent of the automatic safety checklist on the Daily safety page.
 
 If the report files are absent, the app shows **No report yet** even when database predictions or a safety checklist exist. Generated reports are local static files: a hosted frontend only includes files present when it builds. Generation also changes caches, output pointers and report indexes; inspect `git status` and select intended artifacts before committing. Model scores still require the separate database publishing steps above.
 
@@ -282,7 +282,7 @@ A worker launched in a terminal runs only while that process, Docker and the com
 npm run dev:design
 ```
 
-Open <http://127.0.0.1:5173/#/sign-in>. Sign in as `supervisor@planit.local` or `crew@planit.local` with `CrewDemo123!`, select North, and open the briefing page for its safety checklist. This uses browser-only fixtures: no real database, research, model execution or provider charges. It is useful for UI development and an explicitly labeled fallback, not proof of the AI pipeline.
+Open <http://127.0.0.1:5173/#/sign-in>. Sign in as `supervisor@planit.local` or `crew@planit.local` with `CrewDemo123!`, select North, and open **Daily safety** for its safety checklist. This uses browser-only fixtures: no real database, research, model execution or provider charges. It is useful for UI development and an explicitly labeled fallback, not proof of the AI pipeline.
 
 ## Troubleshooting
 

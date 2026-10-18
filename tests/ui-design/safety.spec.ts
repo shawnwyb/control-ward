@@ -8,12 +8,7 @@ async function login(page: Page, email: string, navigate = true, query = "") {
     await page.getByRole("button", { name: /sign in/i }).click();
     await expect(page.locator("#sidebar")).toBeAttached();
   }
-  await go(
-    page,
-    email.startsWith("supervisor")
-      ? "Next-day briefing"
-      : "Tomorrow's briefing",
-  );
+  await go(page, "Daily safety");
 }
 test("a checklist appears automatically for supervisor and worker, with no planning or publication steps", async ({
   page,

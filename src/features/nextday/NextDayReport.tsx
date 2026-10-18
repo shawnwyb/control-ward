@@ -165,9 +165,10 @@ export function NextDayReport({ site }: { site: Site }) {
   if (!eia)
     return (
       <Panel>
-        <PanelHeader title="Next-day report" />
+        <PanelHeader title="Detailed forecast" />
         <p className={styles.muted}>
-          This site has no EIA plant id, so no report can be built for it.
+          A detailed forecast is not available for this site. The safety
+          checklist and work plan are shown above.
         </p>
       </Panel>
     );
@@ -184,9 +185,8 @@ export function NextDayReport({ site }: { site: Site }) {
       <Panel>
         <PanelHeader title="No report yet" />
         <p className={styles.muted}>
-          No next-day report has been built for {site.name}. Run{" "}
-          <code>reports/next-day/run.sh build --site {eia}</code>, then reload
-          this page.
+          No detailed forecast has been published for {site.name} yet. The
+          safety checklist and work plan are shown above.
         </p>
       </Panel>
     );

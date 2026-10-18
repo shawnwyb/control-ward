@@ -26,13 +26,7 @@ test("theme: Notion surfaces and fonts", async ({ page }) => {
 test("shell: sidebar pages and role guard", async ({ page }) => {
   await signIn(page, "supervisor@planit.local");
   const nav = page.getByRole("navigation", { name: "Pages" });
-  for (const name of [
-    "Sites",
-    "Alerts",
-    "Next-day briefing",
-    "Crew",
-    "Reports",
-  ])
+  for (const name of ["Sites", "Alerts", "Daily safety", "Crew", "Reports"])
     await expect(nav.getByRole("link", { name })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Sites" })).toBeVisible();
   await go(page, "Crew");
@@ -50,7 +44,7 @@ test("shell: sidebar pages and role guard", async ({ page }) => {
 test("shell: crew cannot open supervisor pages", async ({ page }) => {
   await signIn(page, "crew@planit.local");
   const nav = page.getByRole("navigation", { name: "Pages" });
-  for (const name of ["My site", "Alerts", "Tomorrow's briefing", "Reports"])
+  for (const name of ["My site", "Alerts", "Daily safety", "Reports"])
     await expect(nav.getByRole("link", { name })).toBeVisible();
   await expect(nav.getByRole("link", { name: "Crew" })).toHaveCount(0);
   await page.evaluate(() => (location.hash = "#/crew"));
@@ -77,12 +71,10 @@ test("crew: my site is the map with report button", async ({ page }) => {
     page.getByRole("switch", { name: "Share my location with my supervisor" }),
   ).toBeVisible();
   const nav = page.getByRole("navigation", { name: "Pages" });
-  await expect(
-    nav.getByRole("link", { name: "Tomorrow's briefing" }),
-  ).toBeVisible();
+  await expect(nav.getByRole("link", { name: "Daily safety" })).toBeVisible();
   const titles: [string, string][] = [
     ["Alerts", "Alerts"],
-    ["Tomorrow's briefing", "Tomorrow's briefing"],
+    ["Daily safety", "Daily safety"],
     ["Reports", "Reports"],
   ];
   for (const [link, heading] of titles) {
@@ -95,7 +87,7 @@ test("crew: my site is the map with report button", async ({ page }) => {
 
 test("supervisor: each page renders its title", async ({ page }) => {
   await signIn(page, "supervisor@planit.local");
-  for (const name of ["Alerts", "Next-day briefing", "Crew", "Reports"]) {
+  for (const name of ["Alerts", "Daily safety", "Crew", "Reports"]) {
     await go(page, name);
     await expect(page.getByRole("heading", { level: 1, name })).toBeVisible();
   }
@@ -356,7 +348,7 @@ test("landing: judges see the pitch and reach sign-in", async ({ page }) => {
 
 test("landing: feature carousel slides", async ({ page }) => {
   await page.goto("/");
-  const region = page.getByRole("region", { name: "What PlanIT Control does" });
+  const region = page.getByRole("region", { name: "What ControlWard does" });
   await region.scrollIntoViewIfNeeded();
   await expect(region.getByRole("listitem")).toHaveCount(6);
   const dot = (n: number) => region.getByRole("button", { name: `Slide ${n}` });
@@ -397,7 +389,7 @@ test("landing: carousel does not auto-advance under reduced motion", async ({
 }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
-  const region = page.getByRole("region", { name: "What PlanIT Control does" });
+  const region = page.getByRole("region", { name: "What ControlWard does" });
   await region.scrollIntoViewIfNeeded();
   await page.mouse.move(2, 2);
   await page.waitForTimeout(6000);
@@ -411,7 +403,7 @@ test("landing: carousel navigation is steady and does not skip", async ({
   page,
 }) => {
   await page.goto("/");
-  const region = page.getByRole("region", { name: "What PlanIT Control does" });
+  const region = page.getByRole("region", { name: "What ControlWard does" });
   await region.scrollIntoViewIfNeeded();
   await page.mouse.move(2, 2);
   const current = () =>
@@ -456,7 +448,7 @@ for (const [width, height] of [
     await page.setViewportSize({ width, height });
     await page.goto("/");
     await page
-      .getByRole("region", { name: "What PlanIT Control does" })
+      .getByRole("region", { name: "What ControlWard does" })
       .scrollIntoViewIfNeeded();
     const overflow = await page.evaluate(
       () => document.documentElement.scrollWidth - window.innerWidth,

@@ -1,4 +1,4 @@
-# PlanIT Control
+# ControlWard
 
 A safety platform for utility field crews, built for SwampHacks 2026. It combines weather, heat, lightning, flood, wildfire, soil and crew-reported hazards into one risk score for each power plant site. It raises alerts when conditions turn dangerous and creates a next-day briefing at 6 PM local time for each site.
 
@@ -8,17 +8,19 @@ Follow the [local development guide](docs/local-development.md) for a fresh clon
 
 ## Status
 
-| Area                                                                | Status                                                                                                                  |
-| ------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| Crew hazard reporting (photos, duplicate merging, check-ins)        | Built, with a crew UI                                                                                                   |
-| Site registry (60 real plants from EIA-860M)                        | Built                                                                                                                   |
-| Live feeds (weather, heat, rain, soil, rivers, wildfire, lightning) | Built, scheduled, running on the hosted project                                                                         |
-| Rules, alerts, risk score, evening briefing                         | Built                                                                                                                   |
-| Demo scenarios for lightning, rain, heat, fire and wildlife         | Built (RPCs only, no panel)                                                                                             |
-| Crew app: alerts, lightning countdown, site risk, evening briefing  | Built (read from the monitoring tables; acknowledge and mark-read RPCs)                                                 |
-| Crew location sharing, supervisor dashboard (PlanIt Dash)           | Not built here. Another developer owns the UI.                                                                          |
-| ML scores (`ml_scores`)                                             | Two offline models push per-model rows: `mud` (`models/mud-trafficability`) and `hazard_index` (`models/hazard-index`). |
-| SMS and web push                                                    | Not built. Alerts reach clients through Realtime.                                                                       |
+| Area                                                                | Status                                                                                                                                                         |
+| ------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Crew hazard reporting (photos, duplicate merging, check-ins)        | Built, with a crew UI                                                                                                                                          |
+| Site registry (60 real plants from EIA-860M)                        | Built                                                                                                                                                          |
+| Live feeds (weather, heat, rain, soil, rivers, wildfire, lightning) | Built, scheduled, running on the hosted project                                                                                                                |
+| Rules, alerts, risk score, evening briefing                         | Built                                                                                                                                                          |
+| Demo scenarios for lightning, rain, heat, fire and wildlife         | Built (RPCs only, no panel)                                                                                                                                    |
+| Crew app: alerts, lightning countdown, site risk, evening briefing  | Built (read from the monitoring tables; acknowledge and mark-read RPCs)                                                                                        |
+| Crew location sharing and supervisor workspace                      | Built: opt-in location sharing, map, crew management and briefing review.                                                                                      |
+| ML scores (`ml_scores`)                                             | Two offline models push per-model rows: `mud` (`models/mud-trafficability`) and `hazard_index` (`models/hazard-index`).                                        |
+| Web push                                                            | Built; requires VAPID configuration, deployed sender and user opt-in. SMS is not implemented.                                                                  |
+| Automatic worker safety checklist                                   | Built: cited regulation/guidance research and local conditions, with automatic publication and per-version receipts. CodeAct requires a running Docker worker. |
+| Full next-day report                                                | Built: locally generated static forecast/model reports, served through the frontend.                                                                           |
 
 ## How it works
 
@@ -39,13 +41,15 @@ Read these for details:
 
 ## Setup
 
-Requirements: Node 22 or later, npm and the Supabase CLI for backend setup. Docker is required for local Supabase and for the CodeAct executor, including when that executor connects to a hosted database. Python 3.11 is needed for the prediction jobs. Frontend-only access to a hosted project needs Node/npm and public connection settings.
+Requirements: Node 22 or later, npm and the Supabase CLI for backend setup. Docker is required for local Supabase and for the CodeAct executor, including when that executor connects to a hosted database. Python 3.12 was verified for the prediction jobs; see the local guide for environment creation. Frontend-only access to a hosted project needs Node/npm and public connection settings.
 
 ```sh
 npm ci
 ```
 
 ### Option A: hosted Supabase backend
+
+These are project-owner provisioning steps. If you already have an assigned account on the team's configured project, skip to **Connect the frontend**; you do not need to deploy its backend again. Safety agent configuration and worker deployment are additional steps in [safety operations](docs/safety-operations.md).
 
 1. Run `supabase login`.
 2. Link your project: `supabase link --project-ref <ref>`.
@@ -79,8 +83,8 @@ Do not load `supabase/seed.sql` into a hosted project. It creates demo accounts 
 
 The app reads its Supabase settings from `.env.local` (git-ignored), so nothing secret lives in the repo.
 
-1. Copy `.env.example` to `.env.local`. Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` from **Project Settings → API**. Use the **anon** key only, never the service-role key. Leave `VITE_LOCAL_DEMO` out, so the demo accounts box stays hidden.
-2. Create a user under **Authentication → Users** (confirmed email, with a password), then give them access to a site. The demo accounts exist only in the local `seed.sql`, and `seed-sites.sql` loads plants without memberships, so a user with no rows sees "No sites assigned":
+1. Copy `.env.example` to `.env.local`. Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` from **Project Settings → API**. Use the **anon** key only, never the service-role key. Set `VITE_LOCAL_DEMO=false`, so the demo accounts box stays hidden.
+2. Create a user under **Authentication → Users** (confirmed email, with a password), then give them access to a site. Local demo identities are seeded by `seed.sql`; hosted accounts must be created and assigned separately. `seed-sites.sql` loads plants without memberships, so a user with no rows sees "No sites assigned":
 
    ```sql
    insert into public.site_memberships (site_id, user_id, role)
@@ -102,13 +106,14 @@ The app reads its Supabase settings from `.env.local` (git-ignored), so nothing 
 
 A person's role is per site: `crew` or `supervisor` (the `role` column of `site_memberships`).
 
-|                                                           | Crew                               | Supervisor |
-| --------------------------------------------------------- | ---------------------------------- | ---------- |
-| Alerts, acknowledge, briefing, map, report form, feed     | Yes                                | Yes        |
-| Stats bar (site risk, open hazards, crew risk, wildlife)  | No (the live-feed indicator stays) | Yes        |
-| Supervisor dashboard: plan review, push, **Crew** section | No                                 | Yes        |
+|                                                                | Crew | Supervisor |
+| -------------------------------------------------------------- | ---- | ---------- |
+| Alerts, acknowledge, briefing, map, report form, feed          | Yes  | Yes        |
+| Site ranking and crew management                               | No   | Yes        |
+| Plan review and targeted push                                  | No   | Yes        |
+| Automatic safety checklist, citations and full next-day report | Yes  | Yes        |
 
-Supervisors manage rosters in the app: the dashboard's **Crew** section: type the email of an account that already exists, **Add to site**. To remove someone, choose **Remove**, then **Remove from site**. The app can add and remove only `crew`. It never promotes, demotes or removes a supervisor, so the first supervisor on a site still comes from SQL (see above).
+Supervisors manage rosters in the sidebar's **Crew** page: type the email of an account that already exists, **Add to site**. To remove someone, choose **Remove**, then **Remove from site**. The app can add and remove only `crew`. It never promotes, demotes or removes a supervisor, so the first supervisor on a site still comes from SQL (see above).
 
 This needs one migration, `supabase/migrations/20261017001500_crew_assignment.sql`, which adds `assign_site_member` and `unassign_site_member`. It must run after `20261017001400_push_and_briefing_review.sql`, which provides `list_site_crew`. Apply it with `supabase db push --linked`, or paste the file into the SQL Editor. Without it, the Crew section says it needs a database update. Then check it:
 
@@ -117,9 +122,28 @@ npm run verify:crew-assignment   # rolled back; ends with "ALL CREW ASSIGNMENT C
 CHECK_EMAIL=… CHECK_PASSWORD='…' npm run check:connection   # as a supervisor, also tests the crew list
 ```
 
-The crew screens use the same tables and RPCs as before; the monitoring migrations only add columns to `sites`. The crew screen also reads `alerts`, `site_overview`, `briefings`, `alert_acks` and `briefing_reads`, and calls `acknowledge_alert` and `mark_briefing_read`. `check:connection` tests those reads too. Crew location sharing (`update_crew_location`) is not wired up yet.
+The crew screens use the same tables and RPCs as before; the monitoring migrations only add columns to `sites`. The crew screen also reads `alerts`, `site_overview`, `briefings`, `alert_acks` and `briefing_reads`, and calls `acknowledge_alert` and `mark_briefing_read`. `check:connection` tests those reads too. Crew can opt in to location sharing; the app calls `update_crew_location`, and authorized supervisors can see available crew positions.
+
+## Host the frontend
+
+The frontend is a static Vite build. For [Vercel](https://vercel.com/docs/frameworks/frontend/vite), import this GitHub repository, select `main`, use the Vite preset, install with `npm ci`, build with `npm run build`, and publish `dist`. Add these build environment variables using the project's public settings:
+
+```text
+VITE_SUPABASE_URL
+VITE_SUPABASE_ANON_KEY
+VITE_VAPID_PUBLIC_KEY
+VITE_LOCAL_DEMO=false
+```
+
+Never add service-role, Gemini or cron credentials to the frontend environment. Hash routes require no special path rewrites. Set the deployed URL in Supabase Auth URL Configuration for authentication email links and any future redirect-based sign-in, then verify both assigned roles on the deployed site.
+
+Hosting the frontend does not start CodeAct or model jobs. CodeAct needs a Docker-capable worker host with a restart policy; a worker running on a developer laptop stops when its process or Docker stops or the laptop sleeps. Prediction jobs need separate execution/scheduling. See [safety operations](docs/safety-operations.md#start-against-the-real-database).
+
+Full reports are static files under `public/reports/`: generate and include their JSON, map assets and index before building, or the deployed app may show **No report yet**. New reports require another deployment unless report storage is moved to a separate service.
 
 ## Supervisor dashboard, web push and reviewed briefings
+
+The reviewed daily work plan described here is separate from the automatic safety checklist. The checklist needs no supervisor input or approval; the detailed forecast is independently generated and available under **View detailed forecast & sources** on **Daily safety**.
 
 The UI follows the signed-in user's role at the selected site (`site_memberships.role`). Supervisors get risk, alerts with the lightning countdown, the crew roster with last known locations (also on the map), a push composer and the next-day plan review. Crew get live alerts, the approved plan, and opt-ins for push and location sharing.
 
@@ -144,11 +168,11 @@ npm run dev
 
 Open <http://127.0.0.1:5173>. Studio is at <http://127.0.0.1:54323>. `local:start` and `local:env` write the ignored `.env.local` with the local stack's development credentials. `local:reset` recreates the local database and loads fictional demo data.
 
-Edge Functions are not part of the local start script, so the live feeds run only on the hosted project.
+Edge Functions are not part of this local start script, so it does not fetch live feeds. The [isolated agent guide](docs/local-development.md#3-real-codeact-agent-with-an-isolated-local-database) separately starts local functions and fetches real weather.
 
 **Design-only mode (no Docker or Supabase):** `npm run dev:design` runs the UI against an in-browser mock backend with seeded demo data. Sign in with any demo account and `CrewDemo123!`. Add `?latency=1500` to slow responses or `?fail` to make writes fail, to design busy and error states. State resets on reload, and the mock is excluded from production builds.
 
-**The app:** the landing page is at `/`. Pages use hash routes such as `#/sites`, `#/alerts`, `#/site` (crew's My site) and `#/next-day-report` (the full model report), with the sidebar as navigation. `npm run test:frontend` runs the pure-logic tests (routes, ranking, countdowns, design tokens). The UI tests for the redesign run against the mock backend with `PLAYWRIGHT_MODE=design npx playwright test`.
+**The app:** the landing page is at `/`. Pages use hash routes such as `#/sites`, `#/alerts`, `#/site` (crew's My site) and `#/daily-safety` (checklist, work plan and expandable forecast), with the sidebar as navigation. Existing `#/briefing` and `#/next-day-report` bookmarks still open **Daily safety**; the latter opens the forecast automatically. `npm run test:frontend` runs the pure-logic tests (routes, ranking, countdowns, design tokens). The UI tests for the redesign run against the mock backend with `PLAYWRIGHT_MODE=design npx playwright test`.
 
 The site map uses MapLibre GL with the free OpenFreeMap "liberty" basemap (no API key; needs internet). Set `VITE_MAP_STYLE_URL` to use a different MapLibre style. If the basemap can't load, the map falls back to a plain ground with the site ring and hazard markers.
 
@@ -167,10 +191,22 @@ The site map uses MapLibre GL with the free OpenFreeMap "liberty" basemap (no AP
 
 All demo accounts use `CrewDemo123!`. The sign-in hints appear only when `VITE_LOCAL_DEMO=true`. Never load these identities into a production project or expose the local stack publicly.
 
+## Name compatibility
+
+The official project and application name is **ControlWard**. Existing `@planit.local` account addresses, browser-storage keys and the local Docker stack ID retain their original identifiers so existing logins, preferences, push subscriptions and local data keep working. Historical migrations and the original project brief retain their recorded names; new evidence labels use ControlWard.
+
+## Generated files
+
+Routine prediction outputs, raw forecast caches, the weather request ledger and the mud `output/LATEST` pointer are ignored. They remain on disk after generation. Existing committed reference snapshots and trained model bundles remain tracked; rerunning a reference snapshot can still produce a tracked change. A fresh clone must run the mud forecast to create its local `LATEST` pointer before generating a report with current mud results.
+
+`public/reports/` remains tracked because these are frontend deployment assets. Commit a report's assets and `public/reports/index.json` together. See the [local guide](docs/local-development.md#generate-the-full-report-shown-in-the-app) for generation commands.
+
 ## Verify
 
 ```sh
-npm run test:functions       # Parsers, time zones, WBGT and lightning decoding. No network.
+npm run test:functions       # Function logic and agent fixtures with fake providers
+npm run test:frontend        # Frontend logic, routing and design tokens
+npm run test:nextday         # Node + Python report tests; requires .venv
 npm run verify:monitoring    # Lightning state machine and risk formula on the linked project, rolled back
 npm run verify:rules         # Every rule, briefings and demo scenarios on the linked project, rolled back
 npm test                     # Crew backend against the local stack (needs Docker)
@@ -193,17 +229,21 @@ supabase stop                # Stop the local stack; data is kept
 
 ## Repository layout
 
-| Path                      | Contents                                                            |
-| ------------------------- | ------------------------------------------------------------------- |
-| `supabase/migrations/`    | Database schema, RPCs, rules, and cron jobs, in order               |
-| `supabase/functions/`     | Edge Functions and the shared parsing modules in `_shared/`         |
-| `supabase/seed.sql`       | Fictional local demo data. Never use on a hosted project.           |
-| `supabase/seed-sites.sql` | The 60 real plants, generated by `scripts/load-sites.mjs`           |
-| `src/`                    | Crew reporting UI (Vite, React and TypeScript)                      |
-| `tests/`                  | Backend and UI tests, function tests, and the hosted verify scripts |
-| `docs/`                   | Contracts and the data source reference                             |
-| `requirements.txt`        | Python packages for data work (not used by the backend)             |
-| `.claude/skills/`         | Agent skills for this repository                                    |
+| Path                      | Contents                                                                    |
+| ------------------------- | --------------------------------------------------------------------------- |
+| `supabase/migrations/`    | Database schema, RPCs, rules, and cron jobs, in order                       |
+| `supabase/functions/`     | Edge Functions and the shared parsing modules in `_shared/`                 |
+| `supabase/seed.sql`       | Fictional local demo data. Never use on a hosted project.                   |
+| `supabase/seed-sites.sql` | The 60 real plants, generated by `scripts/load-sites.mjs`                   |
+| `src/`                    | Worker and supervisor UI (Vite, React and TypeScript)                       |
+| `tests/`                  | Backend and UI tests, function tests, and the hosted verify scripts         |
+| `docs/`                   | Local setup, safety operations, contracts and data source references        |
+| `scripts/safety/codeact/` | Node worker, bounded research loop and isolated Python interpreter          |
+| `models/`                 | Hazard Index and mud prediction code, trained model and reference artifacts |
+| `reports/next-day/`       | Full forecast/model report generator and tests                              |
+| `public/reports/`         | Published static report JSON and map assets included in frontend builds     |
+| `requirements.txt`        | Python packages for data work (not used by the backend)                     |
+| `.claude/skills/`         | Agent skills for this repository                                            |
 
 ## Crew reporting design
 
@@ -229,7 +269,7 @@ The pin picker is a MapLibre map over a street basemap (plus coordinate fields a
 | `briefings`, `mark_briefing_read`                             | Evening briefing inbox                  |
 | `demo_inject`, `demo_reset`, `demo_generate_briefing`         | Demo control panel (supervisors)        |
 | `crew_observation_feed`, `ml_scores`, `upsert_ml_scores`      | ML work                                 |
-| `hazard_events` with `claim_hazard_events`                    | A future push or SMS dispatcher         |
+| `push_outbox`, `claim_push_outbox`                            | Deployed web-push sender (`send-push`)  |
 
 Request and response shapes are in [the monitoring contract](docs/api-contract.md) and [the crew API](docs/crew-api.md).
 
@@ -243,9 +283,9 @@ Request and response shapes are in [the monitoring contract](docs/api-contract.m
 
 ## Automatic worker safety checklists
 
-The agent uses each assigned registry worksite's coordinates to resolve its state, county and city, research official safety regulations/guidance, and generate a cited worker checklist from local conditions such as heat. It refreshes and publishes automatically. Supervisors do not enter job plans, approve sources or publish checklists. Both roles read the checklist and acknowledge its exact version. Open **Next-day briefing** (supervisor) or **Tomorrow's briefing** (worker) in the sidebar for the checklist; the full model forecast is under **Next-day report**.
+The agent uses each assigned registry worksite's coordinates to resolve its state, county and city, research official safety regulations/guidance, and generate a cited worker checklist from local conditions such as heat. It refreshes and publishes automatically. Supervisors do not enter job plans, approve sources or publish checklists. Both roles read the checklist and acknowledge its exact version. Open **Daily safety** in the sidebar for the checklist; the full model forecast expands below the checklist and work plan under **View detailed forecast & sources**.
 
-Missing sources, unknown applicability and stale conditions are shown as gaps. Existing weather briefings, risk, live alerts and stop-work rules remain independent. Generation defaults off until the server model, credentials and schedules are configured.
+Missing sources, unknown applicability and stale conditions are shown as gaps. Existing weather briefings, risk, live alerts and stop-work rules remain independent. Fresh database deployments default generation off until the server model, credentials and schedules are configured. The hosted project's enabled state is operational configuration, not a repository default.
 
 Use `npm run dev:design` for the fictional automatic demo. `npm run safety:local:start` creates an isolated local stack; `npm run test:safety:db` checks publication, access, citations and receipts, and `npm run test:safety:ui` checks both roles' browser flow. A local frontend can use the real database after backend deployment.
 

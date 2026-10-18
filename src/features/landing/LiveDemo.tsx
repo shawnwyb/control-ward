@@ -194,7 +194,7 @@ export function LiveDemo() {
       <div className={styles.side} aria-hidden="true">
         <div className={styles.workspace}>
           <i />
-          PlanIT Control
+          ControlWard
         </div>
         <div className={styles.item}>
           <Icon name="globe" size={16} />

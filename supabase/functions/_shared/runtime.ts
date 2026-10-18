@@ -10,7 +10,7 @@ declare const Deno: {
 const url = () => Deno.env.get("SUPABASE_URL")!;
 const key = () => Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 export const userAgent = () =>
-  Deno.env.get("NWS_USER_AGENT") ?? "PlanITControl/1.0 (SwampHacks project)";
+  Deno.env.get("NWS_USER_AGENT") ?? "ControlWard/1.0 (SwampHacks project)";
 
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), {

@@ -4,7 +4,7 @@ For a fresh clone, start with the [local development guide](local-development.md
 
 ## User flow
 
-Sign in, select an assigned worksite, and open **Next-day briefing** (supervisor) or **Tomorrow's briefing** (worker) in the sidebar. On phones, use **Menu** for navigation and the site selector. The Task safety checklist panel automatically shows the site's jurisdiction, heat/weather readings, cited instructions, source links and coverage gaps. Read it and select **Acknowledge this checklist**. A replacement requires a new acknowledgement. No profile form, planned work, source approval, Generate or Publish action is required.
+Sign in, select an assigned worksite, and open **Daily safety** in the sidebar. On phones, use **Menu** for navigation and the site selector. The Task safety checklist panel automatically shows the site's jurisdiction, heat/weather readings, cited instructions, source links and coverage gaps. Read it and select **Acknowledge this checklist**. A replacement requires a new acknowledgement. No profile form, planned work, source approval, Generate or Publish action is required.
 
 Today's date is selected in the site's timezone. After 18:00 local time, tomorrow's checklist can also be available through the date field. Refresh only reloads the current result. Generation continues without a browser open.
 
@@ -15,7 +15,7 @@ npm ci
 npm run dev:design
 ```
 
-Sign in as `supervisor@planit.local` or `crew@planit.local` with password `CrewDemo123!`, select North and open the role's briefing page for its safety checklist. A fictional checklist appears automatically. These design identities and source quotes are fixtures, not real database accounts or legal evidence.
+Sign in as `supervisor@planit.local` or `crew@planit.local` with password `CrewDemo123!`, select North and open **Daily safety** for its safety checklist. A fictional checklist appears automatically. These design identities and source quotes are fixtures, not real database accounts or legal evidence.
 
 URL query cases include `?safety=stale`, `retry`, `revised`, `missing`, `failed` and `disabled`. The `revised` case replaces the checklist after its first acknowledgement so you can verify that a new receipt is required. Design mode does not use the real database.
 
@@ -154,4 +154,4 @@ The minute enqueue selects that mode for future jobs. The Edge pipeline cannot c
 
 Python submits candidate items to `check_proposal`, which returns a validated proposal reference. The model can finish using that reference, preserving the original quote text without copying it into another response. Inline proposals still pass the same validation.
 
-New CodeAct proposals are limited to five actions, 80-character titles, 600-character exact quotes and 240-character scope notes. The worker sees action titles, up to three condition summaries, current/stale status and an acknowledgement. Expand **Scope & sources** for each action's complete scope and verbatim evidence; expand coverage notes for missing information. Supervisors have **Research details** with source timestamps and retry status. Older longer versions retain their remaining instructions under **additional instructions**. Search attribution, when supplied, stays displayed. Acknowledgement records receipt, not completed work, training or applicability.
+New CodeAct proposals are limited to five actions, 80-character titles, 600-character exact quotes and 240-character scope notes. The worker sees action titles, up to three condition summaries, current/stale status and an acknowledgement. Expand **Scope & sources** for each action's complete scope and verbatim evidence; expand coverage notes for missing information. Supervisors have **Research details** with source timestamps and retry status. Older longer versions retain their remaining instructions under **additional instructions**. Sources are shown as external links; provider suggestion pages are not embedded. Acknowledgement records receipt, not completed work, training or applicability.

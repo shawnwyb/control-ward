@@ -106,4 +106,4 @@ TIER_FALLBACK = ((0.0, 0.0), (0.05, 3.0), (0.20, 7.5), (0.40, 10.0))
 TIERS = ((10.0, "stop"), (7.5, "warning"), (3.0, "watch"), (0.0, "none"))
 ESCALATION_POINTS = 2.0
 
-NWS_USER_AGENT = "PlanIT-Control-hazidx/0.1 (SwampHacks 2026 research prototype)"
+NWS_USER_AGENT = "ControlWard-hazidx/0.1 (SwampHacks 2026 research prototype)"
