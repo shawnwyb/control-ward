@@ -1,102 +1,28 @@
-# Task safety checklist setup
+# Automatic safety checklist operations
 
-Generation defaults off in the database, Edge worker and site profiles. Enabling the pilot requires an explicitly confirmed site profile, approved sources, server-side provider configuration and supervisor review. See the [contract](safety-contract.md) for coverage and access rules and the [API](safety-api.md) for browser integration.
+## User flow
 
-## Design demo
+Open an assigned worksite as either a supervisor or worker. The Task safety checklist panel automatically shows the site's jurisdiction, heat/weather readings, cited instructions, source links and coverage gaps. Read it and select **Acknowledge this checklist**. A replacement requires a new acknowledgement. No profile form, planned work, source approval, Generate or Publish action is required.
+
+Today's date is selected in the site's timezone. After 18:00 local time, tomorrow's checklist can also be available through the date field. Refresh only reloads the current result. Generation continues without a browser open.
+
+## Fictional UI demo
 
 ```sh
 npm ci
 npm run dev:design
 ```
 
-Sign in as `supervisor@planit.local` / `CrewDemo123!`, choose **North Plant · Demo**, and use **Task safety checklist** to save work, generate, inspect evidence, edit notes, save a reviewed revision and publish. Sign out and sign in as `crew@planit.local` in the same tab to acknowledge the publication. Reload resets mock state. Instructions are fictional company policy.
+Sign in as `supervisor@planit.local` or `crew@planit.local` with password `CrewDemo123!`, select North and open its safety checklist. A fictional checklist appears automatically. These design identities and source quotes are fixtures, not real database accounts or legal evidence.
 
-Use `?safety=published`, `stale`, `revised`, `missing`, `pending`, `retry` or `failed` for UI scenarios. Pending/retry/failed apply after a request. `?latency=1500` slows requests; `?fail` rejects writes. The missing scenario shows missing-context/procedure gaps; database and host fixtures cover unsupported scope.
+URL query cases include `?safety=stale`, `retry`, `revised`, `missing`, `failed` and `disabled`. The `revised` case replaces the checklist after its first acknowledgement so you can verify that a new receipt is required. Design mode does not use the real database.
 
-## Isolated local stack
-
-Docker and the Supabase CLI are required. Project `planit-safety-agent` uses API 55321, database 55322 and Studio 55323, separately from the existing local stack. The helper does not reset the shared database or copy environment files. `SAFETY_LOCAL_DIR` overrides its generated temporary workdir. `.env.safety` contains generated local public browser configuration only.
+## Isolated local verification
 
 ```sh
 npm run safety:local:start
-npm run test:safety:db
-npm run test:safety:regression
 npm run safety:types
 npm run safety:dev
-npm run safety:local:stop
-```
-
-Database fixtures use local demo identities, serialize fixture groups and clean up or roll back their records. They do not require a database reset. `SAFETY_TEST_DB_URL` can override the local database URL; remote hostnames are rejected. The regression command runs existing backend and browser checks against this stack through `SUPABASE_WORKDIR` and Vite safety mode. The types command regenerates `src/database.types.ts` from the migrated local schema.
-
-## Sources and review
-
-The curated manifest is [corpus.ts](../supabase/functions/_shared/safety-agent/corpus.ts). It includes [OSHA State Plans](https://www.osha.gov/stateplans), [1910.269](https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.269) and [1926.950](https://www.osha.gov/laws-regs/regulations/standardnumber/1926/1926.950). Retain working-alone exceptions and construction cross-references in the conditions. Unknown effective/superseded dates stay null. The corpus is limited briefing material, not complete legal coverage.
-
-Set `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` in the operator process only:
-
-```sh
-npm run safety:ingest
-npm run safety:ingest -- --demo
-npm run safety:ingest -- /absolute/path/company-manifest.json
-```
-
-The first command fetches allowlisted official HTML and stages candidates. The second stages fictional North demo policy, which cannot be used at real registry sites. The third stages company procedures. None approves sources.
-
-Company manifests are arrays shaped like `demoProcedure(...)` in the corpus. Use a unique `key`, actual `site_id`, `category: "company_policy"`, `url: null`, `audience: "crew"` or `"supervisor"`, jurisdiction/task tags and `fictional: false` for real procedures. Use null for unknown dates. `document_file` points to versioned text/Markdown relative to the manifest. Passages contain `anchor`, verbatim `excerpt`, reviewed `instruction` and retained `conditions`. Full text is stored in Postgres under audience RLS. Use a new source key for identity or audience changes.
-
-Review candidates through an authorized operator connection:
-
-```sql
-select s.source_key, v.id, v.status, v.available, v.last_checked_at,
-       p.anchor, p.excerpt, p.instruction, p.conditions
-from public.safety_sources s
-join public.safety_source_versions v on v.source_id = s.id
-join public.safety_passages p on p.version_id = v.id
-where v.status = 'candidate';
-
-select public.review_safety_source(
-  '<candidate uuid>', true,
-  '<reviewer, coverage checked, retained exceptions and rationale>', false
-);
-```
-
-The second argument approves or rejects; the last marks conflicts. Check actual text, applicability, dates, audience and canonical instructions before approval. Conflicting evidence cannot supply worker actions until resolved. Do not approve a `changed-source-review` refresh placeholder: curate passages against the official text and stage a corrected candidate. Real procedures require approval for the actual site.
-
-Weekly refresh stages changes without automatic approval. Failed fetches mark approved versions unavailable; versions checked more than 30 days ago are excluded from retrieval. Source changes invalidate draft inputs and flag publications for review, while preserving historical citations. Verify official-source access before enablement: automated OSHA fetches have returned HTTP 403. Failed retrieval must leave a gap until the operator can stage and review an authentic source.
-
-## Provider and local worker
-
-Copy [safety.env.example](../supabase/functions/safety.env.example) to an ignored path such as `/tmp/planit-safety.env`. Configure:
-
-| Variable                       | Value                                                           |
-| ------------------------------ | --------------------------------------------------------------- |
-| `SAFETY_AGENT_ENABLED`         | `true` to run generation                                        |
-| `GEMINI_API_KEY`               | Server-only provider key                                        |
-| `SAFETY_MODEL`                 | Explicit supported model ID with function calling               |
-| `SAFETY_RESERVED_USD_PER_TURN` | Conservative reservation at the selected model's current prices |
-| `SAFETY_MAX_SPEND_USD`         | Run reservation ceiling; default `0.50`                         |
-| `CRON_SECRET`                  | Fresh secret matching worker requests                           |
-
-Select the model and reservation using the provider's [model catalog](https://ai.google.dev/gemini-api/docs/models), [pricing](https://ai.google.dev/gemini-api/docs/pricing) and [function-calling documentation](https://ai.google.dev/gemini-api/docs/generate-content/function-calling). Reserve for maximum prompt, output and thinking usage per turn. The host bounds prompt size and total usage, but reserved spend still needs reconciliation with provider billing. Missing or invalid configuration produces bounded retries and an explicit error category. Keep these values out of Vite and browser bundles.
-
-```sh
-node scripts/safety/local-stack.mjs serve /tmp/planit-safety.env
-```
-
-On the isolated local database, configure the same model:
-
-```sql
-update private.safety_settings
-set enabled = true, model = '<same model ID as SAFETY_MODEL>';
-```
-
-Save an enabled profile/job through the supervisor UI and stage/review sources, then request a draft. Invoke `http://127.0.0.1:55321/functions/v1/generate-safety-briefings` with `X-Cron-Secret`. The worker claims one run, awaits it and stores a validated private draft. Inspect `safety_briefing_runs` through an authorized operator connection for state, sanitized diagnostics, evidence IDs, timing, usage and reserved spend. Partial failures use `usage_complete=false`.
-
-A provider smoke test ends with draft review: verify canonical evidence, gaps, units/dates and budgets before a supervisor decides whether to publish. Fixture tests do not exercise a paid provider.
-
-## Verification
-
-```sh
 npm run test:functions
 npm run test:safety:db
 npm run test:safety:ui
@@ -106,19 +32,56 @@ npm run build
 npm run format:check
 ```
 
-Install Playwright Chromium if needed. Function fixtures use fake models; browser design tests use fictional policy. Database fixtures cover access, source/citation integrity, concurrency, publication and receipts. Existing backend/browser regressions check integration with weather and crew workflows. Also run the existing monitoring, rules and crew-assignment SQL verification against the intended local or staging database, and lint the migrated schema.
+Docker and Supabase CLI are required. The isolated `planit-safety-agent` stack uses API 55321, database 55322 and Studio 55323. It applies migrations without resetting the shared stack or hosted data and writes ignored `.env.safety`. If another checkout owns the temporary links, use a different `SAFETY_LOCAL_DIR` consistently for these commands. Stop it with `npm run safety:local:stop`.
 
-Before live use, a human must verify pilot employer/installation coverage, every canonical instruction and retained exception, official/company source access and review, and draft quality with the configured provider. Automated citation and retrieval checks do not establish legal applicability or model quality. Measure latency, tokens, billing, gaps and supervisor changes during staging.
+Database fixtures roll back or clean their records and reject remote database hostnames. Function fixtures use fake providers; browser fixtures use fictional source text. Also run the existing monitoring, rules and crew-assignment SQL verification and schema lint against the local stack. These checks do not establish paid-provider quality or complete regulatory coverage.
+
+## One-time server setup
+
+This is deployment configuration, not an admin step for each checklist. Copy [safety.env.example](../supabase/functions/safety.env.example) to an ignored server environment file:
+
+| Variable                       | Purpose                                                         |
+| ------------------------------ | --------------------------------------------------------------- |
+| `SAFETY_AGENT_ENABLED`         | `true` enables the Edge worker                                  |
+| `GEMINI_API_KEY`               | Server-only Gemini credential                                   |
+| `SAFETY_MODEL`                 | Explicit supported model with Google Search grounding           |
+| `SAFETY_RESERVED_USD_PER_TURN` | Conservative maximum model/thinking/search reservation per turn |
+| `SAFETY_MAX_SPEND_USD`         | Per-run reservation ceiling; default `0.50`                     |
+| `CRON_SECRET`                  | Must match the database Vault secret                            |
+
+Use the provider's [model catalog](https://ai.google.dev/gemini-api/docs/models), [Google Search documentation](https://ai.google.dev/gemini-api/docs/google-search) and [pricing](https://ai.google.dev/gemini-api/docs/pricing) when configuring the model and reservation. Include paid search queries, prompt, output and thinking usage. Reconcile actual provider billing and configure account spending controls. There is no daily project spending cap in this worker.
+
+For a local provider check:
+
+```sh
+node scripts/safety/local-stack.mjs serve /absolute/path/safety.env
+```
+
+Set matching database configuration through an authorized server connection:
+
+```sql
+update private.safety_settings
+set model = '<same model ID as SAFETY_MODEL>', enabled = true;
+```
+
+Invoke `/functions/v1/generate-safety-briefings` with `X-Cron-Secret`, or let the configured schedule run. It automatically queues eligible sites, claims one, researches the site and publishes validated content. Inspect `automatic_safety_runs` for state, error category, diagnostics and private source documents; inspect `automatic_safety_checklists` for generated content. The model must match the snapshot configuration.
+
+Check that the site resolves to its actual jurisdiction, source links load, selected quotes retain their scope, units/times match the readings and unavailable sources produce explicit gaps. Provider failures retry automatically. A successful fake-provider test does not substitute for this live check. No supervisor publication action follows it.
+
+## Real database with a local frontend
+
+A hosted frontend is unnecessary. After backend deployment, set ignored `.env.local` to the real project's `VITE_SUPABASE_URL`, public `VITE_SUPABASE_ANON_KEY` and, if needed, `VITE_VAPID_PUBLIC_KEY`. Set `VITE_LOCAL_DEMO=false`. Run `npm run dev` and sign in with real assigned accounts. Never put service-role, provider or cron credentials in a `VITE_` variable. `dev:design` and `safety:dev` intentionally target different environments.
+
+Opening the real database before deployment does not enable the agent. Both the additive schema and scheduled Edge worker must exist, and the server switches/model must be configured. Public browser credentials alone cannot deploy functions or configure server secrets.
 
 ## Deployment and recovery
 
-1. Confirm pilot ownership, access and coverage. Back up the target database and inspect its migration ledger.
-2. Apply migrations `20261018010000`–`20261018010800` after `20261017001600` in staging. The final migration preserves site deletion when alert/lightning rows cascade. Run authorization, queue, browser and source-review checks. Regenerate types if the shared schema changed. Do not reset hosted data or replay edited migrations.
-3. Configure server-only secrets and matching database/model settings. Deploy `generate-safety-briefings` and `refresh-safety-sources`. Platform JWT verification is disabled for these endpoints because they authenticate `X-Cron-Secret`; browser mutations use authenticated SQL RPCs.
-4. Configure Vault `functions_base_url` and `cron_secret`. Verify `safety-enqueue-evening` hourly, `safety-refresh-inputs` and `safety-generate-worker` each minute, and `safety-refresh-sources` weekly. Missing Vault values cause a warning and skip the external invocation. Existing `generate_due_briefings` remains independent.
-5. Stage and human-review official sources and actual company procedures. Enable the global database switch, Edge worker and one confirmed site profile. Run the draft-only provider smoke test and inspect evidence support and budgets.
-6. An authorized supervisor reviews and publishes the checklist. Confirm crew visibility, exact-publication receipts, freshness and replacement behavior before expanding the pilot.
+1. Back up the target and inspect its migration ledger. Apply missing migrations in repository order; never reset hosted data or replay changed historical files. Automatic checklists add migrations `20261018011000` and `20261018011100` after the existing safety migrations and `20261018010900` briefing change.
+2. Deploy `generate-safety-briefings` and configure the server variables above. The endpoint uses `X-Cron-Secret`; platform JWT verification is disabled for this cron endpoint. Browsers still use authenticated SQL RPCs.
+3. Verify Vault `functions_base_url` and `cron_secret`. Check `safety-enqueue-automatic` and `safety-generate-worker`, each scheduled every minute. The old `safety-enqueue-evening`, `safety-refresh-inputs` and `safety-refresh-sources` schedules are retired by migration. Missing Vault values skip the external invocation with a warning.
+4. Enable matching database and Edge configuration. Every assigned EIA registry site becomes eligible automatically; there is no per-site profile switch. Verify one real generated checklist and then monitor the queue, source gaps, latency, replacement receipts and provider billing.
+5. Deploy/use the current frontend. Both roles receive the same automatic panel. Existing alerts, weather briefings and stop-work behavior remain independent.
 
-Identical input requests deduplicate; explicit regeneration creates a new request. Claims have 120-second fenced leases and three attempts with 30/60-second retry delays. Correct terminal failures before regenerating. Reload stale tabs before editing or publishing. Acknowledging an old publication never acknowledges a replacement.
+To stop new generation/publication, set `private.safety_settings.enabled=false` and Edge `SAFETY_AGENT_ENABLED=false`. History and existing urgent alerts remain. Disabling generation does not withdraw previously generated checklists immediately; they retain their normal freshness/expiry behavior. For rollback, disable generation and revert frontend/worker deployment while retaining additive tables and historical citations.
 
-To stop generation, run `update private.safety_settings set enabled=false;` and set Edge `SAFETY_AGENT_ENABLED=false`. Disable an individual site's profile to stop its claims. In-flight work can finish a private draft under its existing lease. Disabling preserves history and urgent alerts; withdraw current guidance separately through the supervisor UI/RPC. Rollback disables generation and reverts frontend/worker deployment while retaining additive tables and historical citations. Existing weather briefings, alerts, lightning and stop-work rules continue independently.
+The earlier curated-source ingestion and draft-review interfaces are historical compatibility tools. They are not prerequisites for automatic research, generation or publication and are not used by the current UI.

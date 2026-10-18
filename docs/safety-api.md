@@ -1,116 +1,57 @@
-# Task safety checklist API
+# Automatic safety checklist API
 
-Use an authenticated Supabase client. Site membership and the supervisor role are checked in SQL. Service-role keys and cron secrets belong only in operator processes and Edge workers. Generated RPC types are in `src/database.types.ts`; payload types and browser helpers are in [api.ts](../src/features/safety/api.ts).
+Use an authenticated Supabase client. Site membership is authoritative. Supervisors and workers receive the same automatic checklist; generating and publishing require no browser mutation. Generated RPC types are in `src/database.types.ts`; payload types and client helpers are in [api.ts](../src/features/safety/api.ts).
 
-## Read a workspace
-
-```ts
-const { data: workspace, error } = await supabase.rpc("get_safety_workspace", {
-  p_site_id: siteId,
-  p_work_date: "2026-10-18", // Local calendar date at the site
-});
-if (error) throw error;
-```
-
-Members receive `enabled`, the current `publication` or null, and freshness information when available. A publication includes its ID, revision ID, publisher, publication time, `valid_until`, status, `needs_review`, `expired`, the current member's `acknowledged` flag, and `worker_payload`. The payload contains approved `worker_items`, `coverage_gaps` and their crew-visible `evidence`.
-
-Supervisors additionally receive `context`, the latest `run`, `revision`, `evidence` and `revision_stale`. Context contains `profile`, `job`, `profile_revision` and `job_revision`. A run exposes its ID, state (`queued`, `running`, `succeeded`, `failed`), attempt, error category and scheduling timestamps. A revision contains its ID, revision number, run ID, content and creation time.
-
-Draft tables are not in Realtime. The safety UI polls this RPC every three seconds; urgent alerts use the existing alert path. Re-fetch after mutations and when switching site or date. Display missing evidence, stale inputs and expiration explicitly.
-
-## Save planned work
-
-Only an assigned supervisor can save context. Read the workspace first and pass its revision numbers; use zero when no profile or job exists.
+## Read a checklist
 
 ```ts
-const { data: saved, error } = await supabase.rpc("save_safety_context", {
-  p_site_id: siteId,
-  p_work_date: workDate,
-  p_profile_revision: workspace.context.profile_revision,
-  p_job_revision: workspace.context.job_revision,
-  p_profile: {
-    state: "FL",
-    employer_sector: "private",
-    classification: "operations_maintenance",
-    coverage_notes: "Coverage confirmed by the site supervisor",
-    enabled: true,
-  },
-  p_job: {
-    task: "electrical_maintenance",
-    description: "Planned maintenance briefing",
-    equipment: "Equipment identified by the supervisor",
-    conditions: "Site conditions confirmed before work",
-    energized: "unknown",
-  },
-});
-if (error) throw error;
-```
-
-The response is the saved context with updated revision numbers. Profile values also allow employer sector `public` or `unknown`, and classification `construction` or `unknown`. Job tasks also allow `construction` or `other`; energized status also allows `energized` or `deenergized`. These values record uncertainty rather than implying supported legal coverage. Enabling a profile does not enable the global worker.
-
-## Request a draft
-
-```ts
-const { data: runId, error } = await supabase.rpc("request_safety_briefing", {
-  p_site_id: siteId,
-  p_work_date: workDate,
-  p_regenerate: false,
-});
-if (error) throw error;
-```
-
-Returns a run UUID immediately; poll the workspace for completion. Identical inputs reuse a request. Set `p_regenerate: true` only for an explicit new generation, including retry after a terminal failure. Generation requires an enabled profile and global configuration. A successful run creates a private draft; it never publishes automatically.
-
-## Review and publish
-
-Draft content contains `supervisor_items`, `worker_items`, `coverage_gaps` and `admin_notes`. Each item has `type` (`legal_requirement`, `company_policy`, `recommendation`, `observed_hazard`), `task`, `text`, `explanation`, `evidence_ids`, `applicability` (`supported`, `conditional`, `unresolved`) and `conditions`.
-
-Select worker instructions from reviewed evidence. Supervisors can remove or reorder instructions, change supported selections and edit private notes. Free-form operating instructions require a reviewed source first. Both SQL and the generation host validate canonical text, evidence IDs, audience, scope and retained conditions.
-
-```ts
-const { data: newRevisionId, error: editError } = await supabase.rpc(
-  "edit_safety_revision",
+const { data: workspace, error } = await supabase.rpc(
+  "get_automatic_safety_workspace",
   {
-    p_revision_id: revision.id,
-    p_expected_revision: revision.revision,
-    p_content: reviewedContent,
+    p_site_id: siteId,
+    p_work_date: "2026-10-18", // Calendar date in the site's timezone
   },
 );
-if (editError) throw editError;
-
-// Re-fetch the workspace and review the new immutable revision before publishing.
-const { data: publicationId, error: publishError } = await supabase.rpc(
-  "publish_safety_revision",
-  {
-    p_revision_id: currentRevision.id,
-    p_expected_revision: currentRevision.revision,
-  },
-);
-if (publishError) throw publishError;
+if (error) throw error;
 ```
 
-Edits return a new revision UUID. Publication returns a publication UUID and supersedes the previous publication atomically. Publication rechecks the latest revision and current profile, job, source and hazard inputs. Reload and review again if these changed. Worker payloads omit private notes, model explanations and supervisor-only evidence.
+The response contains:
 
-## Withdraw and acknowledge
+| Field       | Meaning                                                       |
+| ----------- | ------------------------------------------------------------- |
+| `enabled`   | Database generation switch is on and a model is configured    |
+| `run`       | Latest state, attempt and sanitized error category, or null   |
+| `checklist` | Latest unsuperseded checklist for this site and date, or null |
+
+A checklist contains `id`, `work_date`, `content`, `generated_at`, `valid_until`, `current` and the current member's `acknowledged` flag. `current` requires matching material inputs, generation within four hours and an unexpired validity window. `enabled` does not prove the Edge worker or provider is healthy; inspect `run` and checklist freshness too.
+
+Content includes the resolved `jurisdiction`, recorded `conditions`, site-wide `alerts`, source-backed `items`, verified `sources`, and explicit `coverage_gaps`. Each item has a stable ID within that checklist, `kind` (`regulation` or `guidance`), title, exact source wording, applicability conditions and citations. Citations reference source IDs and verbatim quotes. Sources retain URL, title, jurisdiction level/name and check time. Optional `search_entry_point` is provider attribution HTML; render only in a sandboxed iframe, never as application HTML.
+
+The UI polls every three seconds. Its Refresh button only reads the workspace. Reading does not enqueue a run. A scheduled worker generates checklists even when no browser is open.
+
+## Acknowledge a version
 
 ```ts
-// Supervisor only.
-const withdrawn = await supabase.rpc("withdraw_safety_publication", {
-  p_publication_id: publicationId,
+const { error } = await supabase.rpc("acknowledge_automatic_safety_checklist", {
+  p_checklist_id: workspace.checklist.id,
 });
-if (withdrawn.error) throw withdrawn.error;
-
-// Assigned member; acknowledge the exact publication shown to this user.
-const receipt = await supabase.rpc("acknowledge_safety_publication", {
-  p_publication_id: currentPublication.id,
-});
-if (receipt.error) throw receipt.error;
+if (error) throw error;
 ```
 
-Both RPCs return void. Acknowledgement rejects withdrawn, superseded, stale or expired publications. A replacement requires a new receipt. Receipt records that the user acknowledged that publication; it does not establish training, qualification or completion of work.
+Both roles can acknowledge. SQL rejects nonmembers, old versions, expired checklists and changed inputs. Repeating the same acknowledgement is harmless. A replacement requires a new acknowledgement. A receipt records that this member read that version; it does not establish training or task completion.
 
-## Errors and worker boundary
+## Worker interfaces
 
-Inspect Supabase's `{ data, error }` result before using data. Authorization failures must not expose private draft content. Revision conflicts require a reload rather than retrying stale edits; unsupported scope and missing sources appear as coverage gaps. Failed runs expose a sanitized error category through the workspace.
+Only the service role can call these RPCs:
 
-Trusted workers alone can claim and finish leased runs, retrieve and bind scoped evidence, stage sources and review source versions. Edge endpoints `generate-safety-briefings` and `refresh-safety-sources` authenticate `X-Cron-Secret`; browser clients use the SQL RPCs above. See the [contract](safety-contract.md) for lifecycle rules and [operations](safety-operations.md) for setup and recovery.
+| RPC                                   | Purpose                                                 |
+| ------------------------------------- | ------------------------------------------------------- |
+| `enqueue_automatic_safety_checklists` | Capture eligible sites and local dates automatically    |
+| `claim_automatic_safety_runs`         | Claim one run with a fenced lease                       |
+| `finish_automatic_safety_run`         | Validate and publish, or record a bounded retry/failure |
+
+`generate-safety-briefings` authenticates `X-Cron-Secret`, enqueues, claims one run, resolves location, researches sources, generates supported items and calls finish. Provider credentials and source documents stay server-side. Browsers cannot claim runs, submit source text or publish instructions.
+
+Tables are `automatic_safety_runs`, `automatic_safety_checklists` and `automatic_safety_reads`. Runs and full fetched documents are service-only. Members can read their site's checklists and their own receipts under RLS; direct browser writes are revoked.
+
+The earlier profile, planned-work, source-approval and draft-publication RPCs remain for historical compatibility. The current UI and automatic worker do not call them. See the [contract](safety-contract.md) and [operations](safety-operations.md).

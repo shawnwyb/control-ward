@@ -235,12 +235,12 @@ Request and response shapes are in [the monitoring contract](docs/api-contract.m
 - `river_distance_m` is the distance to the nearest stream gauge. It is a rough measure of how close a plant is to a river.
 - For larger deployments, measure the locking strategy, paginate long feeds, and define limits on confirmation abuse and data retention.
 
-## Cited task safety checklists (pilot)
+## Automatic worker safety checklists
 
-Site supervisors can save planned work, request a cited private draft, review evidence and gaps, and publish a crew checklist. Crew acknowledge the exact publication. Existing weather briefings, risk, live alerts and stop-work rules continue independently. Generation defaults off.
+The agent uses each assigned registry worksite's coordinates to resolve its state, county and city, research official safety regulations/guidance, and generate a cited worker checklist from local conditions such as heat. It refreshes and publishes automatically. Supervisors do not enter job plans, approve sources or publish checklists. Both roles read the checklist and acknowledge its exact version.
 
-The supported pilot requires confirmed Florida/private-sector electrical operations and maintenance coverage; other or unknown coverage produces gaps. Worker instructions come from reviewed canonical source passages and require supervisor review.
+Missing sources, unknown applicability and stale conditions are shown as gaps. Existing weather briefings, risk, live alerts and stop-work rules remain independent. Generation defaults off until the server model, credentials and schedules are configured.
 
-Use `npm run dev:design` for the fictional supervisor-to-crew demo. `npm run safety:local:start` creates an isolated local stack; `npm run test:safety:db` checks access, citations, concurrency and lifecycle. `npm run test:safety:ui` runs browser demo checks.
+Use `npm run dev:design` for the fictional automatic demo. `npm run safety:local:start` creates an isolated local stack; `npm run test:safety:db` checks publication, access, citations and receipts, and `npm run test:safety:ui` checks both roles' browser flow. A local frontend can use the real database after backend deployment.
 
-See the [safety API](docs/safety-api.md), [safety contract](docs/safety-contract.md) and [setup and operations](docs/safety-operations.md) for integration, source review, provider configuration, verification and deployment.
+See the [safety API](docs/safety-api.md), [safety contract](docs/safety-contract.md) and [setup and operations](docs/safety-operations.md).
