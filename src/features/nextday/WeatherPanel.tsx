@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { Badge, Panel, PanelHeader } from "../../components/ui";
 import {
   clockFromHHMM,
@@ -7,6 +8,7 @@ import {
   type NwsAlert,
 } from "../../lib/nextDayReport";
 import { HourStrip } from "./HourStrip";
+import { Abbr } from "./Abbr";
 import { FIRST_HOUR, LAST_HOUR } from "./hours";
 import styles from "./NextDayReport.module.css";
 
@@ -43,22 +45,42 @@ export function WeatherPanel({ report }: { report: NextDayReport }) {
     (h) => h.hour >= FIRST_HOUR && h.hour <= LAST_HOUR,
   );
   const rows: {
-    label: string;
+    id: string;
+    label: ReactNode;
     get: (h: (typeof hours)[number]) => number | null;
     over: (v: number) => boolean;
   }[] = [
     {
+      id: "pop",
       label: "Storm chance (%)",
       get: (h) => h.pop,
       over: (v) => v >= limits.pop,
     },
-    { label: "Gusts (mph)", get: (h) => h.gust, over: (v) => v >= limits.gust },
     {
+      id: "gust",
+      label: "Gusts (mph)",
+      get: (h) => h.gust,
+      over: (v) => v >= limits.gust,
+    },
+    {
+      id: "mm",
       label: "Rain (mm per hour)",
       get: (h) => h.mm,
       over: (v) => v >= limits.mm,
     },
-    { label: "CAPE (J/kg)", get: (h) => h.cape, over: () => false },
+    {
+      id: "cape",
+      label: (
+        <>
+          <Abbr long="convective available potential energy: the fuel a thunderstorm can use. Higher means stronger storms are possible">
+            CAPE
+          </Abbr>{" "}
+          (J/kg)
+        </>
+      ),
+      get: (h) => h.cape,
+      over: () => false,
+    },
   ];
   const hourly = new Map(report.hourly.map((h) => [h.hour, h]));
   const strip = hours.map((h) => {
@@ -133,7 +155,7 @@ export function WeatherPanel({ report }: { report: NextDayReport }) {
           </thead>
           <tbody>
             {rows.map((r) => (
-              <tr key={r.label}>
+              <tr key={r.id}>
                 <th scope="row">{r.label}</th>
                 {hours.map((h) => {
                   const v = r.get(h);

@@ -1,9 +1,10 @@
 import { useMemo, useState } from "react";
-import { Badge, Panel, PanelHeader } from "../../components/ui";
+import { Badge, Button, Panel, PanelHeader } from "../../components/ui";
 import {
   clockFromHHMM,
   formatHour,
   type NextDayReport,
+  type TaskProfile,
 } from "../../lib/nextDayReport";
 import { HourStrip, type StripCell } from "./HourStrip";
 import {
@@ -112,6 +113,13 @@ export function TaskPlanner({ report }: { report: NextDayReport }) {
     setOverrides(next);
     saveOverrides(eia, next);
   };
+  const resetLimits = (profile: TaskProfile) => {
+    const next = { ...overrides };
+    for (const b of profile.blockers)
+      delete next[overrideKey(profile.id, b.id)];
+    setOverrides(next);
+    saveOverrides(eia, next);
+  };
 
   return (
     <Panel id="tasks" aria-labelledby="tasks-title">
@@ -209,14 +217,21 @@ export function TaskPlanner({ report }: { report: NextDayReport }) {
                               <>
                                 <input
                                   type="number"
+                                  inputMode="decimal"
+                                  min={0}
+                                  step={b.factor === "mm" ? 0.5 : 1}
+                                  className={styles.limitInput}
                                   aria-label={`${p.label}: limit for ${b.label}`}
                                   value={limitFor(p, b, overrides) ?? ""}
                                   onChange={(e) =>
                                     setLimit(p.id, b.id, e.target.value)
                                   }
-                                  style={{ width: "5rem" }}
                                 />{" "}
-                                {b.unit}
+                                {b.unit}{" "}
+                                {overrides[overrideKey(p.id, b.id)] !==
+                                undefined ? (
+                                  <Badge>Edited, default {b.limit}</Badge>
+                                ) : null}
                               </>
                             ) : b.kind === "site" ? (
                               `when ${b.flag} is ${b.values?.join(" or ")}`
@@ -235,6 +250,13 @@ export function TaskPlanner({ report }: { report: NextDayReport }) {
                   </tbody>
                 </table>
               </div>
+              {p.blockers.some(
+                (b) => overrides[overrideKey(p.id, b.id)] !== undefined,
+              ) ? (
+                <Button onClick={() => resetLimits(p)}>
+                  Reset {p.label.toLowerCase()} limits to the defaults
+                </Button>
+              ) : null}
             </details>
           </section>
         );

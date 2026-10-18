@@ -1,6 +1,6 @@
 import styles from "./Dashboard.module.css";
 
-const sections = [
+const dashboardSections = [
   ["risk", "Risk"],
   ["plan", "Plan"],
   ["crew", "Crew"],
@@ -18,7 +18,11 @@ export function scrollToSection(id: string) {
 }
 
 /** Phones get a long page: a sticky row of anchors keeps every section one tap away. */
-export function SectionNav() {
+export function SectionNav({
+  sections = dashboardSections,
+}: {
+  sections?: readonly (readonly [id: string, label: string])[];
+}) {
   return (
     <nav className={styles.sectionNav} aria-label="Sections">
       {sections.map(([id, label]) => (

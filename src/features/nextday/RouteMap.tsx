@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type KeyboardEvent } from "react";
 import {
   AttributionControl,
   MapLibreMap,
@@ -44,6 +44,8 @@ type Props = {
   /** While true, a click on the map picks a detour start or end instead of opening a route card. */
   picking: boolean;
   onPick: (point: LngLat) => void;
+  /** Escape while picking. */
+  onCancel: () => void;
   endpoints: { a: LngLat | null; b: LngLat | null };
   paths: { direct: LngLat[] | null; detour: LngLat[] | null };
   onUnavailable: () => void;
@@ -105,6 +107,7 @@ export default function RouteMap({
   show,
   picking,
   onPick,
+  onCancel,
   endpoints,
   paths,
   onUnavailable,
@@ -481,6 +484,70 @@ export default function RouteMap({
     paths,
   ]);
 
+  const crosshair = useRef<Marker | null>(null);
+  const cancelRef = useRef(onCancel);
+  useEffect(() => {
+    cancelRef.current = onCancel;
+  });
+
+  // Keyboard picking: while picking, a crosshair starts at the map centre. Arrow keys move it (Shift moves it
+  // further), Enter picks the point and Escape cancels. The map's own arrow-key panning is off meanwhile.
+  useEffect(() => {
+    const m = map.current;
+    if (!m) return;
+    if (!picking) {
+      m.keyboard.enable();
+      return;
+    }
+    m.keyboard.disable();
+    const el = document.createElement("div");
+    el.className = styles.crosshair;
+    el.setAttribute("aria-hidden", "true");
+    crosshair.current = new Marker({ element: el })
+      .setLngLat(m.getCenter())
+      .addTo(m);
+    node.current?.focus({ preventScroll: true });
+    return () => {
+      crosshair.current?.remove();
+      crosshair.current = null;
+    };
+  }, [picking]);
+
+  function onKeyDown(event: KeyboardEvent<HTMLDivElement>) {
+    const m = map.current;
+    const mark = crosshair.current;
+    if (!picking || !m || !mark) return;
+    if (event.key === "Escape") {
+      event.preventDefault();
+      cancelRef.current();
+      return;
+    }
+    if (event.key === "Enter") {
+      event.preventDefault();
+      const at = mark.getLngLat();
+      latest.current.onPick([at.lng, at.lat]);
+      return;
+    }
+    const direction: Record<string, [number, number]> = {
+      ArrowLeft: [-1, 0],
+      ArrowRight: [1, 0],
+      ArrowUp: [0, 1],
+      ArrowDown: [0, -1],
+    };
+    const d = direction[event.key];
+    if (!d) return;
+    event.preventDefault();
+    const view = m.getBounds();
+    const step = event.shiftKey ? 0.2 : 0.05;
+    const at = mark.getLngLat();
+    const next = {
+      lng: at.lng + d[0] * (view.getEast() - view.getWest()) * step,
+      lat: at.lat + d[1] * (view.getNorth() - view.getSouth()) * step,
+    };
+    mark.setLngLat(next);
+    if (!view.contains(next)) m.panTo(next, { duration: 0 });
+  }
+
   // Start and end pins for the detour, and a crosshair while the manager is picking.
   useEffect(() => {
     const m = map.current;
@@ -530,8 +597,10 @@ export default function RouteMap({
     <div className={styles.mapBox}>
       <div
         ref={node}
-        role="img"
+        role="region"
         aria-label="Map of flagged routes, tide shading and levees near the site. The same facts are listed below the map."
+        tabIndex={picking ? 0 : -1}
+        onKeyDown={onKeyDown}
       />
     </div>
   );

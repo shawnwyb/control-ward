@@ -11,7 +11,7 @@
    "plant_type": "Nuclear"
   },
   "for_date": "2026-10-19",
-  "kind": "morning",
+  "kind": "evening",
   "generated_at": "2026-10-18T06:44:43Z",
   "snapshot": "20261018T064443Z",
   "sources": {
@@ -73,7 +73,7 @@
    },
    "nld2_inspection_rating": {
     "url": "https://levees.sec.usace.army.mil/api-local/system-categories/inspection-rating",
-    "fetched_at": "2026-10-18T06:44:47Z"
+    "fetched_at": "2026-10-18T06:47:18Z"
    },
    "overpass_roads_621": {
     "url": "https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A60%5D%3Bway%28around%3A2500%2C25.43560%2C-80.33080%29%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%7Cunclassified%7Cresidential%7Cservice%7Ctrack%7Croad%7Cliving_street%7Cmotorway_link%7Ctrunk_link%7Cprimary_link%7Csecondary_link%7Ctertiary_link%29%24%22%5D%5B%22access%22%21~%22%5E%28no%29%24%22%5D%3Bout+geom%3B",
@@ -81,31 +81,31 @@
    },
    "inat_taxon_Alligator mississippiensis": {
     "url": "https://api.inaturalist.org/v1/taxa?q=Alligator+mississippiensis&per_page=5&is_active=true",
-    "fetched_at": "2026-10-18T06:45:12Z"
+    "fetched_at": "2026-10-18T06:48:03Z"
    },
    "inat_taxon_Crocodylus acutus": {
     "url": "https://api.inaturalist.org/v1/taxa?q=Crocodylus+acutus&per_page=5&is_active=true",
-    "fetched_at": "2026-10-18T06:45:12Z"
+    "fetched_at": "2026-10-18T06:48:03Z"
    },
    "inat_taxon_Crotalus": {
     "url": "https://api.inaturalist.org/v1/taxa?q=Crotalus&per_page=5&is_active=true",
-    "fetched_at": "2026-10-18T06:45:12Z"
+    "fetched_at": "2026-10-18T06:48:03Z"
    },
    "inat_taxon_Agkistrodon": {
     "url": "https://api.inaturalist.org/v1/taxa?q=Agkistrodon&per_page=5&is_active=true",
-    "fetched_at": "2026-10-18T06:45:12Z"
+    "fetched_at": "2026-10-18T06:48:03Z"
    },
    "inat_taxon_Micrurus": {
     "url": "https://api.inaturalist.org/v1/taxa?q=Micrurus&per_page=5&is_active=true",
-    "fetched_at": "2026-10-18T06:45:12Z"
+    "fetched_at": "2026-10-18T06:48:03Z"
    },
    "inat_taxon_Sistrurus": {
     "url": "https://api.inaturalist.org/v1/taxa?q=Sistrurus&per_page=5&is_active=true",
-    "fetched_at": "2026-10-18T06:45:12Z"
+    "fetched_at": "2026-10-18T06:48:03Z"
    },
    "inat_taxon_Ursus americanus": {
     "url": "https://api.inaturalist.org/v1/taxa?q=Ursus+americanus&per_page=5&is_active=true",
-    "fetched_at": "2026-10-18T06:45:12Z"
+    "fetched_at": "2026-10-18T06:48:03Z"
    },
    "inat_recent_621": {
     "url": "https://api.inaturalist.org/v1/observations?lat=25.4356&lng=-80.3308&radius=10&taxon_id=26159%2C26085%2C30692%2C30668%2C30493%2C30979%2C41638&quality_grade=research&d1=2026-09-18&per_page=200&order_by=observed_on&order=desc",
@@ -2206,9 +2206,8 @@
   "A forecast can change. Check the report again in the morning."
  ],
  "changes": {
-  "status": "ok",
-  "since": "2026-10-18T06:20:50Z",
-  "since_kind": "morning",
+  "status": "not_applicable",
+  "reason": "The earlier report was built at the same time.",
   "items": []
  },
  "gaps": [

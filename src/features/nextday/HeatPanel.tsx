@@ -8,6 +8,8 @@ import {
 } from "../../lib/nextDayReport";
 import { BAND_SEVERITY, bandRange } from "./bands";
 import { HourStrip, type StripCell } from "./HourStrip";
+import { Abbr } from "./Abbr";
+import { AboutData } from "./AboutData";
 import { FIRST_HOUR, LAST_HOUR } from "./hours";
 import styles from "./NextDayReport.module.css";
 
@@ -70,7 +72,12 @@ export function HeatPanel({ report }: { report: NextDayReport }) {
           </>
         ) : null}
         {peak.wbgt !== null ? (
-          <> WBGT at the peak: {Math.round(peak.wbgt)} F.</>
+          <>
+            {" "}
+            Wet bulb globe temperature (
+            <Abbr long="wet bulb globe temperature">WBGT</Abbr>) at the peak:{" "}
+            {Math.round(peak.wbgt)} F.
+          </>
         ) : null}
       </p>
 
@@ -183,28 +190,34 @@ export function HeatPanel({ report }: { report: NextDayReport }) {
         ))}
       </ul>
 
-      <ul className={styles.list} style={{ marginTop: "var(--space-4)" }}>
-        {(heat.notes ?? []).map((n) => (
-          <li key={n} className={styles.muted}>
-            {n}
-          </li>
-        ))}
-      </ul>
       {heat.source ? (
-        <p className={styles.small} style={{ marginTop: "var(--space-3)" }}>
-          Bands: {heat.source.table},{" "}
-          <a href={heat.source.url}>{heat.source.url}</a>, retrieved{" "}
-          {heat.source.retrieved}. {heat.source.verified} Water and rest advice
-          follows OSHA:{" "}
-          {heat.source.osha.map((u, i) => (
-            <span key={u}>
-              {i ? ", " : ""}
-              <a href={u}>{new URL(u).pathname}</a>
-            </span>
-          ))}
-          .
+        <p className={styles.small} style={{ marginTop: "var(--space-4)" }}>
+          {heat.source.verified}
         </p>
       ) : null}
+      <AboutData>
+        <ul className={styles.list}>
+          {(heat.notes ?? []).map((n) => (
+            <li key={n} className={styles.muted}>
+              {n}
+            </li>
+          ))}
+        </ul>
+        {heat.source ? (
+          <p className={styles.small}>
+            Bands: {heat.source.table},{" "}
+            <a href={heat.source.url}>{heat.source.url}</a>, retrieved{" "}
+            {heat.source.retrieved}. Water and rest advice follows OSHA:{" "}
+            {heat.source.osha.map((u, i) => (
+              <span key={u}>
+                {i ? ", " : ""}
+                <a href={u}>{new URL(u).pathname}</a>
+              </span>
+            ))}
+            .
+          </p>
+        ) : null}
+      </AboutData>
     </Panel>
   );
 }

@@ -16,6 +16,13 @@ import {
   type RouteResult,
 } from "./route";
 import type { CrewPoint, Layers, LngLat } from "./RouteMap";
+import { AboutData } from "./AboutData";
+import {
+  flaggedRoutes,
+  milesText,
+  routeLabel,
+  type RouteFeature,
+} from "./routesList";
 import styles from "./NextDayReport.module.css";
 
 const RouteMap = lazy(() => import("./RouteMap"));
@@ -31,19 +38,27 @@ const MILES_PER_METER = 1 / 1609.344;
 const miles = (m: number) =>
   `${(m * MILES_PER_METER).toFixed(m * MILES_PER_METER < 10 ? 2 : 1)} mi`;
 
-function useJson<T>(eia: string, rel: string | null | undefined): T | null {
-  const [data, setData] = useState<T | null>(null);
+function useJson<T>(
+  eia: string,
+  rel: string | null | undefined,
+): { data: T | null; failed: boolean } {
+  const [state, setState] = useState<{ data: T | null; failed: boolean }>({
+    data: null,
+    failed: false,
+  });
   useEffect(() => {
-    setData(null);
+    setState({ data: null, failed: false });
     if (!rel) return;
     const ctl = new AbortController();
     fetch(reportFileUrl(eia, rel), { signal: ctl.signal })
-      .then((r) => (r.ok ? (r.json() as Promise<T>) : null))
-      .then((d) => !ctl.signal.aborted && setData(d))
-      .catch(() => undefined);
+      .then((r) => (r.ok ? (r.json() as Promise<T>) : Promise.reject(r.status)))
+      .then((data) => !ctl.signal.aborted && setState({ data, failed: false }))
+      .catch(
+        () => !ctl.signal.aborted && setState({ data: null, failed: true }),
+      );
     return () => ctl.abort();
   }, [eia, rel]);
-  return data;
+  return state;
 }
 
 function describe(
@@ -79,11 +94,27 @@ export function RoutePanel({
 }) {
   const eia = report.meta.site.eia;
   const { mud, flood } = report;
-  const routes = useJson<FeatureCollection>(eia, mud.routes_file);
-  const tide = useJson<FeatureCollection>(eia, flood.tide.shading_file);
-  const levees = useJson<FeatureCollection>(eia, flood.levees.map_file);
-  const wildlife = useJson<FeatureCollection>(eia, report.wildlife?.map_file);
-  const graph = useJson<RoadGraph>(eia, report.routing?.graph_file);
+  const routesJson = useJson<FeatureCollection>(eia, mud.routes_file);
+  const tideJson = useJson<FeatureCollection>(eia, flood.tide.shading_file);
+  const leveesJson = useJson<FeatureCollection>(eia, flood.levees.map_file);
+  const wildlifeJson = useJson<FeatureCollection>(
+    eia,
+    report.wildlife?.map_file,
+  );
+  const graphJson = useJson<RoadGraph>(eia, report.routing?.graph_file);
+  const routes = routesJson.data;
+  const tide = tideJson.data;
+  const levees = leveesJson.data;
+  const wildlife = wildlifeJson.data;
+  const graph = graphJson.data;
+  const failedLayers = [
+    routesJson.failed && "routes",
+    tideJson.failed && "tide shading",
+    leveesJson.failed && "levees",
+    wildlifeJson.failed && "sightings",
+    graphJson.failed && "road data for detours",
+  ].filter(Boolean) as string[];
+  const [showAllRoutes, setShowAllRoutes] = useState(false);
   const equipmentList = mud.equipment ?? [];
   const [equipment, setEquipment] = useState(
     mud.default_equipment ?? "road_truck",
@@ -149,6 +180,64 @@ export function RoutePanel({
     setB(null);
     setPicking(false);
   };
+  const startAtPlant = () => {
+    setA([report.meta.site.longitude, report.meta.site.latitude]);
+    setB(null);
+    setPicking(true);
+  };
+
+  // Each layer, and why it is missing when it is.
+  const layerList = [
+    {
+      key: "routes",
+      label: "Routes",
+      has: Boolean(mud.routes_file),
+      why: mud.routes_file ? null : (mud.reason ?? "no flagged routes"),
+    },
+    {
+      key: "tide",
+      label: "Tide shading",
+      has: Boolean(flood.tide.shading_file),
+      why: flood.tide.shading_file
+        ? null
+        : (flood.tide.shading_reason ?? flood.tide.reason ?? "no tide data"),
+    },
+    {
+      key: "levees",
+      label: "Levees",
+      has: Boolean(flood.levees.map_file),
+      why: flood.levees.map_file
+        ? null
+        : (flood.levees.reason ?? "no levees mapped nearby"),
+    },
+    {
+      key: "wildlife",
+      label: "Sightings",
+      has: Boolean(report.wildlife?.map_file),
+      why: report.wildlife?.map_file
+        ? null
+        : (report.wildlife?.reason ??
+          "no recent public sightings with coordinates"),
+    },
+    {
+      key: "crew",
+      label: "Crew reports",
+      has: crew.length > 0,
+      why:
+        crew.length > 0
+          ? null
+          : "no open mud or wildlife reports from the crew",
+    },
+  ] as const;
+  const missingLayers = layerList.filter((l) => !l.has);
+  const flagged = useMemo(
+    () =>
+      routes
+        ? flaggedRoutes(routes.features as unknown as RouteFeature[], equipment)
+        : [],
+    [routes, equipment],
+  );
+  const shownRoutes = showAllRoutes ? flagged : flagged.slice(0, 5);
 
   return (
     <Panel id="routes" aria-labelledby="routes-title">
@@ -177,15 +266,7 @@ export function RoutePanel({
             }))}
             onChange={setEquipment}
           />
-          {(
-            [
-              ["routes", "Routes", Boolean(mud.routes_file)],
-              ["tide", "Tide shading", Boolean(flood.tide.shading_file)],
-              ["levees", "Levees", Boolean(flood.levees.map_file)],
-              ["wildlife", "Sightings", Boolean(report.wildlife?.map_file)],
-              ["crew", "Crew reports", crew.length > 0],
-            ] as const
-          ).map(([key, label, has]) => (
+          {layerList.map(({ key, label, has }) => (
             <label key={key} className={styles.check}>
               <input
                 type="checkbox"
@@ -197,6 +278,18 @@ export function RoutePanel({
             </label>
           ))}
         </div>
+      ) : null}
+      {missingLayers.length ? (
+        <p className={`${styles.small} ${styles.noPrint}`}>
+          Not shown:{" "}
+          {missingLayers.map((l) => `${l.label} (${l.why})`).join("; ")}.
+        </p>
+      ) : null}
+      {failedLayers.length ? (
+        <p className={styles.banner} role="alert">
+          Could not load: {failedLayers.join(", ")}. Reload the page to try
+          again.
+        </p>
       ) : null}
       {anyLayer && !noMap ? (
         <Suspense fallback={<p className={styles.muted}>Loading the map…</p>}>
@@ -215,6 +308,7 @@ export function RoutePanel({
             show={show}
             picking={picking}
             onPick={onPick}
+            onCancel={() => setPicking(false)}
             endpoints={{ a, b }}
             paths={{
               direct: plan?.direct?.coordinates ?? null,
@@ -278,9 +372,9 @@ export function RoutePanel({
             Plan a detour
           </h3>
           <p className={styles.muted}>
-            Pick a start and an end on the map. The planner finds the shortest
-            road path that keeps off flagged routes for the equipment chosen
-            above.
+            Pick a start and an end on the map, with a click or with the
+            keyboard. The planner finds the shortest road path that keeps off
+            flagged routes for the equipment chosen above.
           </p>
           <div className={styles.controls}>
             <Button
@@ -294,6 +388,9 @@ export function RoutePanel({
                   ? "Start again"
                   : "Pick start and end on the map"}
             </Button>
+            {!picking && !a && !b ? (
+              <Button onClick={startAtPlant}>Start at the plant</Button>
+            ) : null}
             {a || b ? <Button onClick={clearPlan}>Clear</Button> : null}
             <Segmented
               label="Avoid"
@@ -327,8 +424,8 @@ export function RoutePanel({
           <p role="status" aria-live="polite">
             {picking
               ? a && !b
-                ? "Now click the end point."
-                : "Click the start point."
+                ? "Now choose the end point the same way."
+                : "Choose the start point: click the map, or use the arrow keys to move the crosshair and press Enter. Escape cancels."
               : null}
           </p>
           {plan ? (
@@ -372,13 +469,18 @@ export function RoutePanel({
               </ul>
             )
           ) : null}
-          <ul className={styles.list}>
-            {(report.routing.caveats ?? []).map((c) => (
-              <li key={c} className={styles.muted}>
-                {c}
-              </li>
-            ))}
-          </ul>
+          <p className={styles.muted}>
+            {(report.routing.caveats ?? []).at(-1)}
+          </p>
+          <AboutData label="About the road data">
+            <ul className={styles.list}>
+              {(report.routing.caveats ?? []).slice(0, -1).map((c) => (
+                <li key={c} className={styles.muted}>
+                  {c}
+                </li>
+              ))}
+            </ul>
+          </AboutData>
         </section>
       ) : report.routing && report.routing.status !== "ok" ? (
         <p className={styles.muted}>Detours: {report.routing.reason}</p>
@@ -401,13 +503,58 @@ export function RoutePanel({
             are ok. Soil moisture {mud.horizon?.soil_moisture}, forecast rain{" "}
             {mud.horizon?.rain_in.toFixed(1)} in.
           </p>
-          <ul className={styles.list}>
-            {(mud.caveats ?? []).map((c) => (
-              <li key={c} className={styles.muted}>
-                {c}
-              </li>
-            ))}
-          </ul>
+          {mud.routes_file ? (
+            <>
+              <h3 className={styles.sub}>Worst routes for {equipmentName}</h3>
+              {routesJson.failed ? null : routes === null ? (
+                <p className={styles.muted}>Loading the route list…</p>
+              ) : flagged.length ? (
+                <>
+                  <p className={styles.muted}>
+                    {flagged.length} routes are flagged, longest flagged stretch
+                    first, hold before inspect. Each route is one road from
+                    OpenStreetMap.
+                  </p>
+                  <ol className={styles.plain} aria-label="Flagged routes">
+                    {shownRoutes.map((r) => (
+                      <li key={r.osmId}>
+                        <strong>{routeLabel(r)}</strong>:{" "}
+                        {milesText(r.flaggedFeet)} flagged, worst result{" "}
+                        <strong>
+                          {r.worstFlag === 2 ? "hold" : "inspect"}
+                        </strong>
+                        {r.worstRutIn !== null
+                          ? `, predicted rut up to ${r.worstRutIn.toFixed(1)} in`
+                          : ""}
+                        .
+                      </li>
+                    ))}
+                  </ol>
+                  {flagged.length > 5 ? (
+                    <Button onClick={() => setShowAllRoutes(!showAllRoutes)}>
+                      {showAllRoutes
+                        ? "Show the worst 5 only"
+                        : `Show all ${flagged.length} routes`}
+                    </Button>
+                  ) : null}
+                </>
+              ) : (
+                <p className={styles.muted}>
+                  No route is flagged for {equipmentName}.
+                </p>
+              )}
+            </>
+          ) : null}
+          <p className={styles.muted}>{(mud.caveats ?? [])[0]}</p>
+          <AboutData label="About the mud ratings">
+            <ul className={styles.list}>
+              {(mud.caveats ?? []).slice(1).map((c) => (
+                <li key={c} className={styles.muted}>
+                  {c}
+                </li>
+              ))}
+            </ul>
+          </AboutData>
         </>
       ) : null}
     </Panel>

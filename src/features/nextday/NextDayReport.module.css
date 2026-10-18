@@ -1,5 +1,7 @@
 .stack {
   display: grid;
+  /* minmax(0, ...) lets wide children (the section links, tables, strips) scroll inside the column instead of widening the page. */
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-5);
 }
 
@@ -14,6 +16,12 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
     align-items: start;
   }
+}
+
+/* Panels that the section links jump to must clear the sticky links on phones. */
+.stack section[id],
+.cols section[id] {
+  scroll-margin-top: 4rem;
 }
 
 .muted {
@@ -111,6 +119,8 @@
 }
 
 .cell {
+  /* The cell is the positioning context for its screen-reader text, so the scrolling strip clips it. */
+  position: relative;
   display: grid;
   gap: var(--space-1);
   justify-items: center;
@@ -122,6 +132,12 @@
 
 .cell:first-child {
   border-left: 0;
+}
+
+/* "10 AM" must stay on one line in the narrowest cells. */
+.cell > span:first-child {
+  white-space: nowrap;
+  font-size: 0.6875rem;
 }
 
 .cell b {
@@ -185,6 +201,28 @@
   position: sticky;
   left: 0;
   background: var(--surface);
+}
+
+/* A table that wraps instead of scrolling: short text columns in a half-width panel. */
+.table.wrap th,
+.table.wrap td {
+  white-space: normal;
+}
+
+.table.wrap th:first-child,
+.table.wrap td:first-child {
+  position: static;
+}
+
+.table caption {
+  text-align: left;
+  white-space: normal;
+  padding-bottom: var(--space-2);
+}
+
+.table .left,
+.table th.left {
+  text-align: left;
 }
 
 .table td[data-over="true"] {
@@ -290,6 +328,59 @@
 .mapBox > div {
   position: absolute;
   inset: 0;
+}
+
+.mapBox > div:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: -3px;
+}
+
+/* Keyboard crosshair for picking a detour point. */
+.crosshair {
+  width: 28px;
+  height: 28px;
+  box-sizing: border-box;
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+  background:
+    linear-gradient(var(--ink), var(--ink)) center / 2px 100% no-repeat,
+    linear-gradient(var(--ink), var(--ink)) center / 100% 2px no-repeat,
+    color-mix(in srgb, var(--surface) 55%, transparent);
+}
+
+/* "About this data": folded notes. */
+.about {
+  margin-top: var(--space-3);
+  font-size: var(--text-sm);
+}
+
+.about summary {
+  display: flex;
+  align-items: center;
+  min-height: var(--tap-min);
+  cursor: pointer;
+  color: var(--ink-muted);
+  font-weight: 500;
+}
+
+/* display: flex removes the browser's arrow, so draw one: it tells the reader the line opens. */
+.about summary::before {
+  content: "\25B8";
+  display: inline-block;
+  width: 1.25rem;
+}
+
+.about[open] summary::before {
+  content: "\25BE";
+}
+
+.about > div {
+  padding-bottom: var(--space-2);
+}
+
+.limitInput {
+  width: 5rem;
+  min-height: var(--tap-min);
 }
 
 .legend {

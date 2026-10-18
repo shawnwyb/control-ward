@@ -157,7 +157,9 @@ def build_site(site: Site, ctx: Context) -> tuple[dict, dict[str, dict]]:
 
     sections["verdict"] = verdict.evaluate(sections, window, [h for h in hourly if 6 <= h["hour"] < 19])
 
-    kind = "morning" if localtime.local_hour(as_ms, tz) < 12 else "evening"
+    # The report is the 6 PM report when it is for tomorrow and the morning refresh when it is for today. The clock time of
+    # the run does not decide it: a build at 2 AM for tomorrow is still the evening report.
+    kind = "evening" if ctx.when == "tomorrow" else "morning"
     report = {
         "schema_version": SCHEMA_VERSION,
         "meta": {

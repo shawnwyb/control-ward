@@ -1,6 +1,7 @@
 import { Panel, PanelHeader } from "../../components/ui";
 import type { Report } from "../../lib/types";
 import type { NextDayReport } from "../../lib/nextDayReport";
+import { AboutData } from "./AboutData";
 import styles from "./NextDayReport.module.css";
 
 const MONTHS = [
@@ -57,7 +58,7 @@ export function WildlifePanel({
           : "no open wildlife reports."}
       </p>
       <div className={styles.tableWrap}>
-        <table className={styles.table}>
+        <table className={`${styles.table} ${styles.wrap}`}>
           <caption className={styles.small}>
             Sightings reported to iNaturalist. These show where people looked as
             well as where animals are.
@@ -65,9 +66,11 @@ export function WildlifePanel({
           <thead>
             <tr>
               <th scope="col">Group</th>
-              <th scope="col">Sightings, last {w.days} days</th>
-              <th scope="col">{month} reports in past years</th>
-              <th scope="col">Usual for {month}</th>
+              <th scope="col">Sightings in the last {w.days} days</th>
+              <th scope="col">Reports in past {month}s</th>
+              <th scope="col" className={styles.left}>
+                Compared with a usual month
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -78,9 +81,7 @@ export function WildlifePanel({
                 <td>
                   {g.season.this_month} of {g.season.year_total}
                 </td>
-                <td style={{ whiteSpace: "normal", textAlign: "left" }}>
-                  {g.season.label}
-                </td>
+                <td className={styles.left}>{g.season.label}</td>
               </tr>
             ))}
           </tbody>
@@ -93,17 +94,28 @@ export function WildlifePanel({
         </p>
       ) : null}
       <ul className={styles.list}>
-        {(w.caveats ?? []).map((c) => (
+        {(w.caveats ?? []).slice(1, 2).map((c) => (
           <li key={c} className={styles.muted}>
             {c}
           </li>
         ))}
       </ul>
-      {w.source ? (
-        <p className={styles.small}>
-          Source: <a href={w.source.url}>{w.source.name}</a>. {w.source.note}
-        </p>
-      ) : null}
+      <AboutData label="About the sightings">
+        <ul className={styles.list}>
+          {[(w.caveats ?? [])[0], (w.caveats ?? [])[2]]
+            .filter(Boolean)
+            .map((c) => (
+              <li key={c} className={styles.muted}>
+                {c}
+              </li>
+            ))}
+        </ul>
+        {w.source ? (
+          <p className={styles.small}>
+            Source: <a href={w.source.url}>{w.source.name}</a>. {w.source.note}
+          </p>
+        ) : null}
+      </AboutData>
     </Panel>
   );
 }
