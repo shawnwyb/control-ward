@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { ErrorBoundary } from "../../components/ErrorBoundary";
 import { Panel } from "../../components/ui";
 import { useBusy } from "../../hooks/busy";
@@ -20,6 +20,7 @@ import { checkinRequestId, completeCheckin } from "../../lib/submission";
 import type { SiteSummary } from "../../lib/sites";
 import type { Site } from "../../lib/types";
 import { SiteMap } from "../map/SiteMap";
+import { SitesPage } from "../sites/SitesPage";
 import { ReportForm } from "../report/ReportForm";
 import type { ReportDraft } from "../report/types";
 import { useReportSubmit } from "../report/useReportSubmit";
@@ -29,7 +30,6 @@ import {
   CrewPage,
   MySitePage,
   ReportsPage,
-  SitesPage,
 } from "./pages";
 import styles from "./SiteWorkspace.module.css";
 
@@ -173,46 +173,56 @@ export function SiteWorkspace({
     }
   }
 
-  const mapAndForm = (overview?: { sites: SiteSummary[] }) => (
-    <div className={styles.grid}>
-      <ReportForm
-        className={styles.form}
-        draft={draft}
-        busy={busy}
-        onChange={patch}
-        onSubmit={() => submit(draft)}
-        onLocate={locate}
+  const reportForm = (className?: string) => (
+    <ReportForm
+      className={className}
+      draft={draft}
+      busy={busy}
+      onChange={patch}
+      onSubmit={() => submit(draft)}
+      onLocate={locate}
+    />
+  );
+
+  const siteMap = (overview?: { sites: SiteSummary[]; banner?: ReactNode }) => (
+    <ErrorBoundary
+      fallback={
+        <Panel className={styles.map}>
+          <h2>The map couldn’t load</h2>
+          <p>
+            You can still report hazards: use “Use my location” or enter
+            coordinates. Reload the page to try the map again.
+          </p>
+        </Panel>
+      }
+    >
+      <SiteMap
+        className={styles.map}
+        site={site}
+        reports={feed.reports}
+        crew={supervisor ? roster.crew : undefined}
+        crewFocus={crewFocus}
+        pin={{
+          latitude: Number(draft.latitude),
+          longitude: Number(draft.longitude),
+        }}
+        disabled={busy}
+        highlightId={hoveredId}
+        focusRequest={focusRequest}
+        sites={overview?.sites}
+        onSelectSite={overview ? onSiteChange : undefined}
+        stopWork={lightning.data.status === "stop_work"}
+        fitStopWork={overview !== undefined}
+        banner={overview?.banner}
+        onPin={setPin}
       />
-      <ErrorBoundary
-        fallback={
-          <Panel className={styles.map}>
-            <h2>The map couldn’t load</h2>
-            <p>
-              You can still report hazards: use “Use my location” or enter
-              coordinates. Reload the page to try the map again.
-            </p>
-          </Panel>
-        }
-      >
-        <SiteMap
-          className={styles.map}
-          site={site}
-          reports={feed.reports}
-          crew={supervisor ? roster.crew : undefined}
-          crewFocus={crewFocus}
-          pin={{
-            latitude: Number(draft.latitude),
-            longitude: Number(draft.longitude),
-          }}
-          disabled={busy}
-          highlightId={hoveredId}
-          focusRequest={focusRequest}
-          sites={overview?.sites}
-          onSelectSite={overview ? onSiteChange : undefined}
-          stopWork={lightning.data.status === "stop_work"}
-          onPin={setPin}
-        />
-      </ErrorBoundary>
+    </ErrorBoundary>
+  );
+
+  const mapAndForm = () => (
+    <div className={styles.grid}>
+      {reportForm(styles.form)}
+      {siteMap()}
     </div>
   );
 
@@ -226,11 +236,15 @@ export function SiteWorkspace({
       >
         {page === "sites" ? (
           <SitesPage
-            {...base}
+            site={site}
             reports={feed.reports}
             crewTerm={feed.metrics.crewRisk}
+            lightning={lightning.data}
+            onSelectSite={onSiteChange}
+            renderMap={(sites, banner) => siteMap({ sites, banner })}
           >
-            {(sites) => mapAndForm({ sites })}
+            {/* Until the report drawer replaces it. */}
+            {reportForm()}
           </SitesPage>
         ) : null}
         {page === "site" ? (

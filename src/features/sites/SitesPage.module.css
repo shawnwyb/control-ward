@@ -1,0 +1,49 @@
+.page {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    "table"
+    "map"
+    "detail";
+  gap: var(--space-4);
+  align-items: start;
+}
+
+.table {
+  grid-area: table;
+}
+
+.map {
+  grid-area: map;
+  min-width: 0;
+}
+
+.detail {
+  grid-area: detail;
+  display: grid;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+/* Table view: the list on the left (about 44%), the map on the right. */
+@media (min-width: 48rem) {
+  .page:not(.mapView) {
+    grid-template-columns: minmax(0, 44fr) minmax(0, 56fr);
+    grid-template-areas:
+      "table map"
+      "detail map";
+    grid-template-rows: auto 1fr;
+    column-gap: var(--space-5);
+  }
+
+  .page:not(.mapView) .map {
+    position: sticky;
+    top: var(--space-4);
+    grid-row: 1 / span 2;
+  }
+}
+
+/* Map view: the map takes the full width and the ranked list is hidden. */
+.mapView .detail {
+  grid-template-columns: minmax(0, 1fr);
+}

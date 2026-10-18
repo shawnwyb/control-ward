@@ -1,4 +1,4 @@
-import { lazy, Suspense, useMemo, useState } from "react";
+import { lazy, Suspense, useMemo, useState, type ReactNode } from "react";
 import {
   Badge,
   Button,
@@ -78,6 +78,10 @@ type Props = {
   onSelectSite?: (siteId: string) => void;
   /** The selected site is in lightning stop-work. */
   stopWork?: boolean;
+  /** Frame the whole stop-work ring once per stop-work episode. */
+  fitStopWork?: boolean;
+  /** Drops in over the top of the map (the stop-work banner), above the layer chips. */
+  banner?: ReactNode;
   onPin: (latitude: number, longitude: number) => void;
 };
 
@@ -140,6 +144,8 @@ export function SiteMap({
   sites,
   onSelectSite,
   stopWork = false,
+  fitStopWork = false,
+  banner,
   onPin,
 }: Props) {
   const [unavailable, setUnavailable] = useState(false);
@@ -236,52 +242,56 @@ export function SiteMap({
               sites={sites}
               onSelectSite={onSelectSite}
               stopWork={stopWork}
+              fitStopWork={fitStopWork}
               onPin={onPin}
               onUnavailable={() => setUnavailable(true)}
             />
           </Suspense>
           {/* Weather layers float over the map as chips; pressing the active one turns it off. */}
-          <div className={styles.chips}>
-            <div
-              role="group"
-              aria-label="Weather layers"
-              className={styles.chipGroup}
-            >
-              {layerChips.map((chip) => (
-                <button
-                  key={chip.value}
-                  type="button"
-                  className={styles.chip}
-                  aria-pressed={overlay === chip.value}
-                  onClick={() =>
-                    setOverlay(overlay === chip.value ? "off" : chip.value)
-                  }
-                >
-                  <Icon name={chip.icon} size={14} />
-                  {chip.label}
-                </button>
-              ))}
-            </div>
-            {overlay === "rain" ? (
+          <div className={styles.top}>
+            {banner}
+            <div className={styles.chips}>
               <div
                 role="group"
-                aria-label="Rain data"
+                aria-label="Weather layers"
                 className={styles.chipGroup}
               >
-                {sourceChips.map((chip) => (
+                {layerChips.map((chip) => (
                   <button
                     key={chip.value}
                     type="button"
                     className={styles.chip}
-                    aria-pressed={rainSource === chip.value}
-                    aria-label={chip.ariaLabel}
-                    onClick={() => setRainSource(chip.value)}
+                    aria-pressed={overlay === chip.value}
+                    onClick={() =>
+                      setOverlay(overlay === chip.value ? "off" : chip.value)
+                    }
                   >
+                    <Icon name={chip.icon} size={14} />
                     {chip.label}
                   </button>
                 ))}
               </div>
-            ) : null}
+              {overlay === "rain" ? (
+                <div
+                  role="group"
+                  aria-label="Rain data"
+                  className={styles.chipGroup}
+                >
+                  {sourceChips.map((chip) => (
+                    <button
+                      key={chip.value}
+                      type="button"
+                      className={styles.chip}
+                      aria-pressed={rainSource === chip.value}
+                      aria-label={chip.ariaLabel}
+                      onClick={() => setRainSource(chip.value)}
+                    >
+                      {chip.label}
+                    </button>
+                  ))}
+                </div>
+              ) : null}
+            </div>
           </div>
         </div>
       )}

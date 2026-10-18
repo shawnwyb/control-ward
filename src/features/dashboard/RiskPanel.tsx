@@ -1,26 +1,16 @@
-import { Panel, PanelHeader } from "../../components/ui";
-import { cx } from "../../components/ui";
-import { riskLevel, type SiteRiskView } from "../../lib/monitoring";
-import styles from "./Dashboard.module.css";
+import { Icon, IndexTag, cx } from "../../components/ui";
+import {
+  riskTone,
+  type SiteRiskView,
+  type Subscores,
+} from "../../lib/monitoring";
+import { hazardInfo } from "../sites/hazards";
+import styles from "./RiskPanel.module.css";
 
-const names: Record<string, string> = {
-  heat: "Heat · WBGT",
-  weather: "Severe weather",
-  lightning: "Lightning",
-  flood: "Flood",
-  wildfire: "Wildfire",
-  soil: "Soil",
-  wildlife: "Wildlife",
-};
-
-function toneFor(score: number) {
-  return score >= 7
-    ? styles.tone_danger
-    : score >= 4
-      ? styles.tone_caution
-      : styles.tone_ok;
-}
-
+/**
+ * The selected site's numbers: hazard index now and tomorrow, crew-reported hazards,
+ * and one bar per hazard that feeds the index. Shown inside the Sites page's detail card.
+ */
 export function RiskPanel({
   risk,
   loaded,
@@ -33,71 +23,61 @@ export function RiskPanel({
   /** Points the crew-reported hazards add to the score, out of 2. */
   crewTerm: number;
 }) {
-  const now = riskLevel(risk.riskNow);
-  const tomorrow = riskLevel(risk.riskTomorrow);
-  const entries = Object.entries(risk.subscores).filter(
-    ([key, value]) => key in names && typeof value === "number",
-  ) as [string, number][];
+  const entries = (
+    Object.entries(risk.subscores) as [keyof Subscores, number][]
+  )
+    .filter(([key, value]) => key in hazardInfo && typeof value === "number")
+    .sort((a, b) => b[1] - a[1]);
   return (
-    <Panel id="risk" emphasis aria-labelledby="risk-title">
-      <PanelHeader
-        titleId="risk-title"
-        title="Site risk"
-        description="Highest hazard score plus crew-reported hazards, out of 10."
-      />
-      <div className={styles.riskHead}>
-        <div className={styles.score}>
-          <span className={styles.scoreLabel}>Now</span>
-          <span
-            id="risk-now"
-            className={cx(styles.scoreValue, styles[`tone_${now.tone}`])}
-          >
-            {loaded && risk.riskNow !== null ? risk.riskNow.toFixed(1) : "—"}
-            <small>{loaded ? now.label : ""}</small>
+    <div className={styles.root}>
+      <dl className={styles.props}>
+        <dt>Now</dt>
+        <dd>
+          <span id="risk-now">
+            <IndexTag value={loaded ? risk.riskNow : null} showLabel />
           </span>
-        </div>
-        <div className={styles.score}>
-          <span className={styles.scoreLabel}>Tomorrow</span>
-          <span
-            id="risk-tomorrow"
-            className={cx(styles.scoreValue, styles[`tone_${tomorrow.tone}`])}
-          >
-            {loaded && risk.riskTomorrow !== null
-              ? risk.riskTomorrow.toFixed(1)
-              : "—"}
-            <small>{loaded ? tomorrow.label : ""}</small>
+        </dd>
+        <dt>Tomorrow</dt>
+        <dd>
+          <span id="risk-tomorrow">
+            <IndexTag value={loaded ? risk.riskTomorrow : null} showLabel />
           </span>
-        </div>
-        <div className={styles.score}>
-          <span className={styles.scoreLabel}>Crew-reported hazards</span>
-          <span className={styles.scoreValue}>
-            {openHazards}
-            <small>+{crewTerm.toFixed(1)} to score</small>
+        </dd>
+        <dt>Open hazards</dt>
+        <dd>
+          {openHazards}
+          <span className={styles.muted}>
+            {" "}
+            · +{crewTerm.toFixed(1)} to score
           </span>
-        </div>
-      </div>
-      {risk.topDriver ? (
-        <p className={styles.driver}>Main driver: {risk.topDriver}</p>
-      ) : null}
+        </dd>
+        {risk.topDriver ? (
+          <>
+            <dt>Main driver</dt>
+            <dd>{risk.topDriver}</dd>
+          </>
+        ) : null}
+      </dl>
       {entries.length ? (
-        <ul className={styles.subscores}>
+        <ul className={styles.bars} aria-label="Hazard scores">
           {entries.map(([key, value]) => (
-            <li key={key} className={styles.sub}>
-              <span className={styles.subName}>{names[key]}</span>
-              <strong className={toneFor(value)}>{value.toFixed(1)}</strong>
-              <span
-                className={cx(styles.bar, toneFor(value))}
-                aria-hidden="true"
-              >
+            <li
+              key={key}
+              className={cx(styles.bar, styles[`tone_${riskTone(value)}`])}
+            >
+              <Icon name={hazardInfo[key].icon} size={16} />
+              <span className={styles.name}>{hazardInfo[key].name}</span>
+              <span className={styles.track} aria-hidden="true">
                 <span
-                  className={styles.barFill}
+                  className={styles.fill}
                   style={{ width: `${Math.min(100, value * 10)}%` }}
                 />
               </span>
+              <strong>{value.toFixed(1)}</strong>
             </li>
           ))}
         </ul>
       ) : null}
-    </Panel>
+    </div>
   );
 }

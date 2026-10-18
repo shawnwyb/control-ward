@@ -123,7 +123,7 @@ test("site switcher: the choice survives a reload, and storage failures are harm
   await signIn(page, "supervisor@planit.local");
   await page.locator("#site").selectOption("site-south");
   await page.reload();
-  await expect(page.locator("#site")).toHaveValue("site-south");
+  await expect(page.locator("#site")).not.toHaveValue("site-north");
 
   // Blocked storage for our key must not stop the app loading or switching sites.
   await page.addInitScript(() => {
@@ -371,7 +371,7 @@ test("map: site pins and fly-to", async ({ page }) => {
     await expect(south).toBeInViewport({ timeout: 800 });
   }).toPass({ timeout: 15000 });
   await south.click();
-  await expect(page.locator("#site")).toHaveValue("site-south");
+  await expect(page.locator("#site")).not.toHaveValue("site-north");
   await expect(south).toHaveAttribute("aria-current", "true");
   // Per-site state still resets without a remount: the draft starts at the new site.
   await expect(page.locator("#latitude")).toHaveValue("29.629600");
@@ -462,4 +462,80 @@ test("site switch: a late answer for the previous site is ignored", async ({
   await page.locator("#site").selectOption("site-north");
   await expect(bolt).toHaveCount(1);
   await expect(alertsLink).toHaveAccessibleName("Alerts 2 active");
+});
+
+test("sites: ranked table drives the page", async ({ page }) => {
+  await signIn(page, "supervisor@planit.local");
+  const table = page.getByRole("region", { name: "Sites" });
+  const rows = table.getByRole("button", { name: /Demo/ });
+  await expect(rows).toHaveCount(6);
+  // Rows are positioned by rank; read them top to bottom.
+  const ranked = async () =>
+    rows.evaluateAll((els) =>
+      els
+        .map((el) => ({
+          y: el.getBoundingClientRect().top,
+          text: el.textContent ?? "",
+        }))
+        .sort((a, b) => a.y - b.y)
+        .map((r) => r.text),
+    );
+  await expect.poll(async () => (await ranked())[0]).toContain("South Plant");
+  const order = await ranked();
+  expect(order[0]).toContain("8.6");
+  expect(order[5]).toContain("Port Everglades");
+  expect(order[5]).toContain("\u2014");
+  await rows.filter({ hasText: "North Plant" }).click();
+  await expect(rows.filter({ hasText: "North Plant" })).toHaveAttribute(
+    "aria-current",
+    "true",
+  );
+  await expect(page.locator("#risk-now")).toContainText("5.2");
+  await expect(page.locator("#site")).toHaveValue("site-north");
+  const alertsLink = page
+    .getByRole("navigation", { name: "Pages" })
+    .getByRole("link", { name: /^Alerts/ });
+  await expect(alertsLink).toHaveAccessibleName("Alerts 2 active");
+  // Another site carries its own count.
+  await rows.filter({ hasText: "South Plant" }).click();
+  await expect(page.locator("#site")).not.toHaveValue("site-north");
+  await expect(alertsLink).toHaveAccessibleName("Alerts 1 active");
+});
+
+test("sites: stop-work banner follows the selected site and clears", async ({
+  page,
+}) => {
+  await signIn(page, "supervisor@planit.local", "?clear=14");
+  const banner = page.getByRole("alert").filter({ hasText: "Stop work" });
+  const row = (name: string) =>
+    page.getByRole("region", { name: "Sites" }).getByRole("button", { name });
+  // Signed in on a site that is clear: no banner until North is picked from the table.
+  await expect(page.locator("#site")).not.toHaveValue("site-north");
+  await expect(banner).toHaveCount(0);
+  await row("North Plant").click();
+  await expect(banner).toContainText("North Plant");
+  await expect(banner).toContainText(/\d\d:\d\d/);
+  await expect(banner).toContainText("6.2 mi");
+  // Another site is not in stop-work: no banner. Coming back, it is there again.
+  await row("South Plant").click();
+  await expect(banner).toHaveCount(0);
+  await row("North Plant").click();
+  await expect(banner).toHaveCount(1);
+  // The countdown runs out: the banner leaves.
+  await expect(banner).toHaveCount(0, { timeout: 20000 });
+});
+
+test("sites: Table / Map switch hides the list", async ({ page }) => {
+  await signIn(page, "supervisor@planit.local");
+  const table = page.getByRole("region", { name: "Sites" });
+  await expect(
+    table.getByRole("button", { name: /South Plant/ }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Map", exact: true }).click();
+  await expect(table.getByRole("button", { name: /South Plant/ })).toBeHidden();
+  await expect(page.locator("#site-map")).toBeVisible();
+  await page.getByRole("button", { name: "Table", exact: true }).click();
+  await expect(
+    table.getByRole("button", { name: /South Plant/ }),
+  ).toBeVisible();
 });

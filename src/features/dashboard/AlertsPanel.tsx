@@ -1,10 +1,9 @@
-import { useEffect, useState } from "react";
 import { Button, Panel, PanelHeader, StatusTag, cx } from "../../components/ui";
 import type { AlertRow, LightningView } from "../../lib/monitoring";
+import { useNow } from "../../hooks/useNow";
+import { allClearRemaining, formatCountdown } from "../../lib/countdown";
 import { timeAgo } from "../../lib/format";
 import styles from "./Dashboard.module.css";
-
-const COUNTDOWN_MS = 30 * 60 * 1000;
 
 const kindLabels: Record<string, string> = {
   lightning: "Lightning",
@@ -14,16 +13,6 @@ const kindLabels: Record<string, string> = {
   other: "Severe weather",
   supervisor: "Message from your supervisor",
 };
-
-function useNow(active: boolean) {
-  const [now, setNow] = useState(() => Date.now());
-  useEffect(() => {
-    if (!active) return;
-    const id = setInterval(() => setNow(Date.now()), 1000);
-    return () => clearInterval(id);
-  }, [active]);
-  return now;
-}
 
 /** Shared by the supervisor dashboard and the crew banner. */
 export type Acknowledgement = {
@@ -64,15 +53,9 @@ export function AlertsPanel({
   const lightningAlert = alerts.find((a) => a.kind === "lightning");
   const stop = lightning.status === "stop_work";
   const now = useNow(stop);
-  const remaining =
-    stop && lightning.lastStrikeAt
-      ? Math.max(
-          0,
-          new Date(lightning.lastStrikeAt).getTime() + COUNTDOWN_MS - now,
-        )
-      : 0;
-  const mm = String(Math.floor(remaining / 60000)).padStart(2, "0");
-  const ss = String(Math.floor((remaining % 60000) / 1000)).padStart(2, "0");
+  const remaining = stop
+    ? allClearRemaining(lightning.lastStrikeAt, now)
+    : null;
   const others = alerts.filter((a) => !(a.kind === "lightning" && stop));
   const body = (
     <>
@@ -92,7 +75,7 @@ export function AlertsPanel({
             </span>
           </span>
           <span className={styles.countdown}>
-            {mm}:{ss}
+            {formatCountdown(remaining ?? 0)}
           </span>
           {ack(lightningAlert?.id)}
         </div>

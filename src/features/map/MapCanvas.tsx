@@ -60,6 +60,8 @@ export type MapCanvasProps = {
   onSelectSite?: (siteId: string) => void;
   /** The site is in lightning stop-work: draw the 10-mile ring and a bolt. */
   stopWork?: boolean;
+  /** Frame the whole 10-mile ring once each time the site enters stop-work. */
+  fitStopWork?: boolean;
   onPin: (latitude: number, longitude: number) => void;
   onUnavailable: () => void;
 };
@@ -102,6 +104,7 @@ export default function MapCanvas({
   sites,
   onSelectSite,
   stopWork = false,
+  fitStopWork = false,
   onPin,
   onUnavailable,
 }: MapCanvasProps) {
@@ -489,6 +492,30 @@ export default function MapCanvas({
       boltMarker.current = null;
     }
   }, [stopWork]);
+
+  // Entering stop-work frames the whole ring, once per episode (not on every poll, so it never
+  // fights the user's panning). A site switch or the end of stop-work starts a new episode.
+  const fittedFor = useRef<string | null>(null);
+  useEffect(() => {
+    const instance = map.current;
+    if (!stopWork) {
+      fittedFor.current = null;
+      return;
+    }
+    if (!fitStopWork || !instance || fittedFor.current === site.id) return;
+    fittedFor.current = site.id;
+    // Weather already frames the wider area; leave that camera alone.
+    if (savedCamera.current) return;
+    const sw = offsetPoint(site, -STOP_WORK_RADIUS_M, -STOP_WORK_RADIUS_M);
+    const ne = offsetPoint(site, STOP_WORK_RADIUS_M, STOP_WORK_RADIUS_M);
+    instance.fitBounds(
+      [
+        [sw.longitude, sw.latitude],
+        [ne.longitude, ne.latitude],
+      ],
+      { padding: 40, duration: reducedMotion() ? 0 : 1000 },
+    );
+  }, [stopWork, fitStopWork, site]);
 
   // Weather overlay: raster layers follow the frames and the scrubber.
   useEffect(() => {

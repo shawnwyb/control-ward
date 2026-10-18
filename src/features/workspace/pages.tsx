@@ -1,15 +1,9 @@
-import { useCallback, useState, type ReactNode } from "react";
-import { useLive } from "../../hooks/useLive";
-import { useSiteOverviews } from "../../hooks/useSiteOverviews";
-import { useNotice } from "../../hooks/notice";
+import { useState, type ReactNode } from "react";
 import {
-  fetchSiteRisk,
   type AlertRow,
   type CrewMember,
   type LightningView,
   type Role,
-  type SiteRiskView,
-  type SiteSummary,
 } from "../../lib/monitoring";
 import type { Report, Site } from "../../lib/types";
 import { CrewPlanCard, DeviceSettings } from "../crewtools/CrewTools";
@@ -18,7 +12,6 @@ import { BriefingPanel } from "../dashboard/BriefingPanel";
 import { CrewPanel } from "../dashboard/CrewPanel";
 import dashboard from "../dashboard/Dashboard.module.css";
 import { PushComposer } from "../dashboard/PushComposer";
-import { RiskPanel } from "../dashboard/RiskPanel";
 import { ReportFeed } from "../feed/ReportFeed";
 import { SafetyPanel } from "../safety/SafetyPanel";
 import styles from "./pages.module.css";
@@ -38,55 +31,6 @@ function PageTitle({ title, hint }: { title: string; hint?: string }) {
       <h1 className={styles.title}>{title}</h1>
       {hint ? <p className={styles.hint}>{hint}</p> : null}
     </header>
-  );
-}
-
-const noRisk: SiteRiskView = {
-  riskNow: null,
-  riskTomorrow: null,
-  topDriver: null,
-  subscores: {},
-  activeAlerts: 0,
-};
-
-/**
- * Supervisor home. The site table arrives in a later task; for now the selected site's
- * risk, then the map (every site as a score pin) and report form.
- */
-export function SitesPage({
-  site,
-  reports,
-  crewTerm,
-  children,
-}: Base & {
-  reports: Report[];
-  crewTerm: number;
-  /** The map and report form, given every site's summary for the pins. */
-  children: (sites: SiteSummary[]) => ReactNode;
-}) {
-  const { announce } = useNotice();
-  const onError = useCallback((m: string) => announce(m, true), [announce]);
-  // Every site the user can see; kept across site switches (this page is not keyed by site).
-  const overview = useSiteOverviews(onError);
-  const risk = useLive(
-    site.id,
-    ["site_risk", "site_subscores"],
-    fetchSiteRisk,
-    noRisk,
-    30000,
-    onError,
-  );
-  return (
-    <div className={dashboard.stack}>
-      <PageTitle title="Sites" hint={site.name} />
-      <RiskPanel
-        risk={risk.data}
-        loaded={risk.loaded}
-        openHazards={reports.filter((r) => r.is_active).length}
-        crewTerm={crewTerm}
-      />
-      {children(overview.sites)}
-    </div>
   );
 }
 

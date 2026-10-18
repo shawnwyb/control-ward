@@ -65,16 +65,21 @@
   position: relative;
 }
 
-.chips {
+.top {
   position: absolute;
   top: var(--space-3);
   left: var(--space-3);
   /* Clear of the zoom buttons on the right. */
   right: calc(var(--tap-min) + var(--space-5));
+  display: grid;
+  gap: var(--space-2);
+  pointer-events: none;
+}
+
+.chips {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2);
-  pointer-events: none;
 }
 
 .chipGroup {
