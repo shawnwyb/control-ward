@@ -314,14 +314,6 @@ function AutomaticChecklist({
               </p>
             ))}
           </details>
-          {content.search_entry_point ? (
-            <iframe
-              title="Google Search source suggestions"
-              sandbox="allow-popups"
-              srcDoc={content.search_entry_point}
-              className={styles.searchSuggestions}
-            />
-          ) : null}
           <Button
             variant="primary"
             disabled={

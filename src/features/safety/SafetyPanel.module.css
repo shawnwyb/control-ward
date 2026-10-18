@@ -85,12 +85,6 @@
   border-left: 2px solid var(--line);
   overflow-wrap: anywhere;
 }
-.searchSuggestions {
-  width: 100%;
-  min-width: 0;
-  height: 150px;
-  border: 0;
-}
 .check {
   display: flex;
   align-items: flex-start;
