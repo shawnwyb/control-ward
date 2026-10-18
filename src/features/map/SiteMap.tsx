@@ -17,7 +17,7 @@ import {
   type IconName,
 } from "../../components/ui";
 import { SITE_RADIUS_M } from "../../lib/geo";
-import { EQUIPMENT_SHORT, countFlags } from "./mud/mudLayer";
+import { EQUIPMENT_SHORT } from "./mud/mudLayer";
 import { useHasMud, useMudFile } from "./mud/useMudLayer";
 import type { CrewMember } from "../../lib/monitoring";
 import type { SiteSummary } from "../../lib/sites";
@@ -203,7 +203,6 @@ export function SiteMap({
     () => (mudFile ? { routes: mudFile.routes, equipment } : null),
     [mudFile, equipment],
   );
-  const mudCounts = mud ? countFlags(mud.routes, equipment) : null;
 
   const radarOn = overlay === "rain" && rainSource === "radar";
   const forecastOn = overlay !== "off" && !radarOn;
@@ -498,22 +497,32 @@ export function SiteMap({
                   ))}
                 </div>
               ) : null}
-              {mudShown ? (
+              {mudState.status === "ready" ? (
+                <div
+                  className={styles.mudKey}
+                  aria-label="Rut depth color scale"
+                >
+                  <span className={styles.mudKeyTitle}>
+                    Predicted rut depth
+                  </span>
+                  <span className={styles.mudBar} aria-hidden="true">
+                    <span className={styles.mudBarOk} />
+                    <span className={styles.mudBarInspect} />
+                    <span className={styles.mudBarHold} />
+                  </span>
+                  <span className={styles.mudTicks}>
+                    <span>0</span>
+                    <span>4 in · inspect</span>
+                    <span>8+ in · hold</span>
+                  </span>
+                </div>
+              ) : (
                 <p className={styles.mudNote}>
-                  {mudState.status === "loading"
-                    ? "Loading routes…"
-                    : mudState.status === "error"
-                      ? "The mud layer isn’t available right now."
-                      : mudFile
-                        ? `${
-                            mudCounts &&
-                            mudCounts.inspect + mudCounts.hold === 0
-                              ? "No unpaved routes are flagged for this equipment."
-                              : `${mudCounts?.hold ?? 0} to hold, ${mudCounts?.inspect ?? 0} to inspect.`
-                          } ${mudFile.horizon.label}. ${mudFile.label}`
-                        : ""}
+                  {mudState.status === "error"
+                    ? "The mud layer isn’t available right now."
+                    : "Loading routes…"}
                 </p>
-              ) : null}
+              )}
             </div>
           ) : null}
           {weatherEl}

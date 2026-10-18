@@ -14,18 +14,13 @@ test("mud routes show on the site map for a site with a mud layer", async ({
   await expect(mud).toHaveAttribute("aria-pressed", "false");
   await mud.click();
   await expect(mud).toHaveAttribute("aria-pressed", "true");
-  await expect(page.getByText(/\d+ to hold, \d+ to inspect/)).toBeVisible({
+  await expect(page.getByText("Predicted rut depth")).toBeVisible({
     timeout: 10000,
   });
-  await expect(
-    page.getByText(/does not certify a crossing is safe/),
-  ).toBeVisible();
   await page.getByRole("button", { name: /excavator/i }).click();
-  await expect(
-    page.getByText(/\d+ to hold, \d+ to inspect|No unpaved routes/),
-  ).toBeVisible();
+  await expect(page.getByText("Predicted rut depth")).toBeVisible();
   await mud.click();
-  await expect(page.getByText(/\d+ to hold, \d+ to inspect/)).toHaveCount(0);
+  await expect(page.getByText("Predicted rut depth")).toHaveCount(0);
 });
 
 test("a site with no plant id has no mud chip", async ({ page }) => {
@@ -49,7 +44,7 @@ test("satellite imagery can be turned on and off, with mud on top", async ({
   await expect(chip).toHaveAttribute("aria-pressed", "true");
   await expect(map).toHaveAttribute("data-satellite", "on");
   await page.getByRole("button", { name: "Mud" }).click();
-  await expect(page.getByText(/\d+ to hold, \d+ to inspect/)).toBeVisible();
+  await expect(page.getByText("Predicted rut depth")).toBeVisible();
   await chip.click();
   await expect(map).toHaveAttribute("data-satellite", "off");
 });
