@@ -20,7 +20,7 @@ def style() -> None:
     plt.rcParams.update({
         "figure.facecolor": SURFACE, "axes.facecolor": SURFACE, "savefig.facecolor": SURFACE,
         "axes.edgecolor": GRID, "axes.labelcolor": TEXT_2, "axes.titlecolor": TEXT, "axes.titlesize": 11,
-        "axes.titleweight": "semibold", "axes.labelsize": 9, "xtick.color": TEXT_2, "ytick.color": TEXT_2,
+        "axes.titleweight": "bold", "axes.labelsize": 9, "xtick.color": TEXT_2, "ytick.color": TEXT_2,
         "xtick.labelsize": 8, "ytick.labelsize": 8, "axes.grid": True, "grid.color": GRID, "grid.linewidth": 0.8,
         "grid.linestyle": "-", "axes.spines.top": False, "axes.spines.right": False, "lines.linewidth": 2,
         "lines.solid_capstyle": "round", "lines.solid_joinstyle": "round", "legend.frameon": False,

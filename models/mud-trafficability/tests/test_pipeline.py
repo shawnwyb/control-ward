@@ -43,16 +43,24 @@ class EffectiveDTW(unittest.TestCase):
         return {"wt_depth_annual_min_cm": wt,
                 "well_drained_no_wt": np.isin(np.array([drainage], dtype=object), C.WELL_DRAINED) & np.isnan(wt)}
 
-    def test_water_table_caps_dtw(self):
-        d = F.dtw_effective(np.array([3.0]), self.soil(15.0, "Poorly drained"))
-        self.assertAlmostEqual(float(d[0]), 0.15 * C.M_TO_FT)
+    def test_water_table_caps_dtw_in_wet_forecasts(self):
+        for wet in ("moist", "wet"):
+            d = F.dtw_effective(np.array([3.0]), self.soil(15.0, "Poorly drained"), wet)
+            self.assertAlmostEqual(float(d[0]), 0.15 * C.M_TO_FT)
+
+    def test_annual_min_water_table_ignored_on_dry_days(self):
+        # It is the year's shallowest (wet-season) depth; on dry days the DEM DTW stands.
+        for wet in ("very_dry", "dry"):
+            d = F.dtw_effective(np.array([3.0]), self.soil(15.0, "Poorly drained"), wet)
+            self.assertAlmostEqual(float(d[0]), 3.0 * C.M_TO_FT)
 
     def test_no_water_table_and_well_drained_floors_dtw(self):
-        d = F.dtw_effective(np.array([0.1]), self.soil(np.nan, "Well drained"))
-        self.assertAlmostEqual(float(d[0]), C.NO_WATER_TABLE_DTW_M * C.M_TO_FT)
+        for wet in ("dry", "wet"):
+            d = F.dtw_effective(np.array([0.1]), self.soil(np.nan, "Well drained"), wet)
+            self.assertAlmostEqual(float(d[0]), C.NO_WATER_TABLE_DTW_M * C.M_TO_FT)
 
     def test_unknown_water_table_on_wet_soil_keeps_dem_dtw(self):
-        d = F.dtw_effective(np.array([0.1]), self.soil(np.nan, "Poorly drained"))
+        d = F.dtw_effective(np.array([0.1]), self.soil(np.nan, "Poorly drained"), "wet")
         self.assertAlmostEqual(float(d[0]), 0.1 * C.M_TO_FT)
 
 

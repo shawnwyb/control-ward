@@ -49,8 +49,14 @@ EQ3 = {"b0": 1.599, "mc": -0.011, "depth_cm": 0.025, "track": 0.760, "sw": 0.397
 CI_DEPTH_IN = 6.0  # the study sampled the top 15 cm
 
 # Eq 4 as published gives NCI 3.65-4.26x the Table 5 means for the study's own machines. This factor is the
-# minimax fit to Table 5 (max error about 8 %); tests/test_equations.py recomputes it. Cause unknown.
+# minimax fit to Table 5 (max error about 8 %); tests/test_equations.py recomputes it. Cause unknown. Kept to
+# document the mismatch; the model no longer uses Eq 4 for the reference machine (see REFERENCE_NCI_PER_MPA).
 EQ4_NCI_SCALE = 0.253
+
+# NCI per MPa of CI for the JD1510E in Table 5 (Blocks 1 and 2). Every Table 5 statistic (mean, min, max, SD) fits
+# one multiple per machine; rounding allows 2.006-2.012 for this machine. It is the NCI scale Eq 5 was fitted on, so
+# the reference forwarder uses it directly instead of 0.253 x Eq 4 (1.855, 7.6 % low). Agreed 2026-10-17.
+REFERENCE_NCI_PER_MPA = 2.008
 
 # Eq 5 / Table 7: Z_cm = a / NCI_adj * Passes ** (b * NCI_adj), NCI_adj = NCI + 0.48 * DTW_m.
 EQ5_A_CM = 40.886

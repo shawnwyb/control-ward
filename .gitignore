@@ -11,5 +11,5 @@ models/mud-trafficability/cache/
 models/mud-trafficability/output/
 models/hazard-index/cache/
 
-
+__pycache__/
 CLAUDE.md

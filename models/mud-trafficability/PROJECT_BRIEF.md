@@ -46,7 +46,7 @@ inspection before equipment mobilization." It is STRAM-inspired (Jones & Arp 201
 
 ## Functional requirements
 1. **Equations: reuse `example_stram_usa_converter.py`.** Promote `STRAMModel`, `MACHINE_PRESETS` and `adapt_ssurgo_dataframe` into `stram/equations.py` (the example file is left untouched), and run in `unit_system="US"`. Fixes and guards:
-   - **Eq 4 rescale.** As written, Eq 4 gives an NCI 3.65–4.26× the Table 5 values. This was verified this session. Eq 5 *is* consistent with Table 5: fed Table 5's NCI it gives 13.6, 15.5, 14.4 and 23.9 cm against measured 15.6, 13.3, 13.9 and 22.5. Apply a least-squares factor of about 0.26 so Eq 4 reproduces Table 5 (±8 % across machines), and log it.
+   - **Eq 4 rescale.** As written, Eq 4 gives an NCI 3.65–4.26× the Table 5 values. This was verified this session. Eq 5 *is* consistent with Table 5: fed Table 5's NCI it gives 13.6, 15.5, 14.4 and 23.9 cm against measured 15.6, 13.3, 13.9 and 22.5. Apply a least-squares factor of about 0.26 so Eq 4 reproduces Table 5 (±8 % across machines), and log it. *Superseded 2026-10-17: the reference forwarder now uses the paper's own NCI/CI of 2.008 per MPa; see "Eq 4 mismatch: evidence".*
      - The converter's own demo gets NCI values of 13–18. That puts Eq 5's exponent into runaway (Block 9 = 51.8 cm), so its end-to-end numbers must not be reused.
    - **Domain guard.** Clamp NCI_adj to about 2.5–9.5. Allow only passes ∈ {1, 2, 5, 10}. The views are 1, 2 and 10 passes. **Default 1** (one loaded crossing; agreed 2026-10-17, see Decisions), 2 is in and out, 10 is a convoy. Set `extrapolated` with reasons when values fall outside the Table 5 ranges: sand 32–65 %, OM 4.4–13.3 %, Db 0.63–1.20 g/cm³, CF 21–48 %. All three soils in the `example_soil_plants.csv` sample trip this.
    - **Eq 2 is skipped.** Its DEM term is specific to New Brunswick, so MC_PS comes from Eq 1. SW = 0 and HW = 0, because the forest-type terms don't describe a cleared corridor (per `plan.md`).
@@ -71,7 +71,7 @@ inspection before equipment mobilization." It is STRAM-inspired (Jones & Arp 201
    5. Frozen flag when soil temperature is below 32 °F.
    6. **Eq 1** with k_mc = 0.5 m⁻¹ and p_mc = 1.5, sourced from Jones & Arp 2019 (OJF 9:109–142) during implementation.
    7. **Eq 3** (Table 7 coefficients, depth 6 in).
-   8. **Eq 4** (rescaled), for the reference forwarder.
+   8. **NCI** = 2.008 × CI (MPa), the JD1510E's NCI/CI in Table 5. This is the scale Eq 5 was fitted on. It replaced 0.253 × Eq 4 (1.855 per MPa) on 2026-10-17.
    9. **Eq 5 × Eq 7** give the ground index Z in inches. It is labeled "ground index (study forwarder)", **not** a prediction for a specific truck.
    - *Why a reference machine (decided 2026-10-17, during implementation):*
      - Road-truck tires at 100+ psi fall below the study's NCI range.
@@ -133,11 +133,12 @@ inspection before equipment mobilization." It is STRAM-inspired (Jones & Arp 201
 2. `python -m stram prepare --eia 649,56407,6008` then `forecast` produce non-empty outputs for Vogtle GA, West County FL and Palo Verde AZ. West County has more flagged acres and route length than Palo Verde.
 3. The full 60-site run completes. Missing routes and missing soils are handled and tagged.
 4. `agreement.csv` and `run.json` report ρ. It is informational, not a gate.
-5. `ml_scores_push.sql` holds 120 rows. After user approval, hosted `ml_scores` is populated, and `npm run verify:rules` and `verify:monitoring` still pass.
+5. `ml_scores_push.sql` holds 120 rows. After user approval, hosted `ml_scores` is populated, and `npm run verify:rules` and `verify:monitoring` still pass. *Status 2026-10-17: the SQL is generated and checked (120 rows). The user chose **not to push yet**, so the hosted half of this criterion is deferred.*
 6. Every output carries the STRAM-inspired / not-a-clearance label and `locally_validated=false`.
 
 ## Decisions made during implementation (2026-10-17)
 These were found with real data from Vogtle, West County and Palo Verde. The user chose the ones marked *agreed*; the others are fixes that keep to the brief's intent.
+- **The reference forwarder uses the paper's NCI/CI, 2.008 per MPa** (*agreed*, replacing 0.253 × Eq 4). See "Eq 4 mismatch: evidence".
 - **Trucks use a reference machine** (*agreed*). STRAM runs for the study's own forwarder as a ground-condition index. Trucks take the worse of that index and NRCS MIL type 7. Without this, the Table 5 rescale clamps every 100 psi truck to a flat 7.3 in.
 - **Default view is 1 pass** (*agreed*). At 2+ passes the ground index sits at about 4 in (the inspect line) on most firm ground in any weather. That matches the study, whose blocks averaged 13–22 cm. One pass is below the study's observed 2–80 and is labeled as a mild extrapolation.
 - **Eq 1 constants found:** k_mc = 0.5 m⁻¹ and p_mc = 1.5 (Jones & Arp 2019).
@@ -146,10 +147,75 @@ These were found with real data from Vogtle, West County and Palo Verde. The use
   - In dry weather, flat desert reads as "wet area", because dry washes count as channels.
   - Many desert loams are rated Severe for wet-season rutting. Palo Verde would be flagged on dry days.
 - **DTW_eff ≥ 2 m** where SSURGO has no water table and the soil is well, somewhat excessively or excessively drained. NRCS reads that as no water table within 200 cm.
+- **The water-table cap only applies in moist or wet forecasts.** SSURGO's `wt_depth_annual_min` is the year's shallowest (wet-season) depth. Applied every day, it capped DTW on 81 % of route cells at the median site, and 90 % of dry-day truck flags traced back to it. With the gate, dry-day STRAM-inspect drops from 29.9 % to 22.4 % of route length.
 - **Affected areas are limited to 100 ft either side of mapped routes.** Off-route native ground (Track = 0) sits at the inspect line almost everywhere, and over the full tile it swamped the acreage (Palo Verde 3,900 ac). This follows `plan.md`'s step of intersecting affected areas with access roads.
 - **DTW_top is the tile's 95th percentile.** The study used DTW at the block's highest point, which is noisier on 10 m data.
 - **Map is split into pages.** Embedding all 60 sites would make a page of about 110 MB, so there is an overview plus one page per site. Ground index, ranges and drivers are shown for now and tomorrow; other days show flag and source.
+- **What still flags trucks on dry days (60 sites, tomorrow, 1 pass):**
+  - 22 % of route length is STRAM-inspect, on flat, low-DTW ground where the study's equations sit at the 4 in line.
+  - 27 % comes from NRCS's static dry-season ratings for type-7 trucks (loose sand, slope, wet clays).
+  - The median site has 45 % of its route flagged.
+  - This is the transfer limitation `plan.md` warns about, and the main reason to run the validation pilot.
+- **STRAM and NRCS agree moderately across the 60 sites:** Spearman ρ = 0.38 (p = 0.003). That is consistent, but it is not validation.
 - **Finding to act on before any push:** with the agreed worst-segment score, a few static NRCS "hold" segments put every demo site at 6.5 every day. The p90 metric separates them (Palo Verde 3.3).
+
+## Eq 4 mismatch: evidence (checked 2026-10-17)
+**Fact: Table 5's NCI is one fixed multiple of CI per machine.** The mean, min, max and SD all fit it. Allowing ±0.005 for the 2-decimal rounding:
+
+| Machine | NCI per MPa |
+|---|---|
+| JD1510E (Blocks 1 and 2) | 2.006–2.012 |
+| JD1110E (Block 3) | 1.942–1.948 |
+| Tigercat 635D (Block 9) | 1.562–1.568 |
+
+So the paper computed NCI from the same plot CI values it reports. A CI from another depth or position is ruled out. The gap is in the machine term, or in a constant unit factor; the data cannot separate those two.
+
+**Strong evidence, not proof: the two JD machines' weights were swapped somewhere.**
+- The machines have identical tires and pressure, so under Eq 4 the JD1510E/JD1110E ratio should be √(269.68/287.34) = 0.969.
+- Table 5 allows only 1.030–1.036, which contains the swapped value √(287.34/269.68) = 1.032.
+- The match is to the ±0.3 % that rounding permits, not to five significant figures. One external analysis claimed five; its 1.9456 for Block 3 was derived by assuming the ratio.
+- The swap could be in the authors' calculation, in Table 3's column labels, or in the text that assigns machines to blocks.
+- Front chains (JD1110E) versus front tracks (JD1510E) could also shift NCI.
+- `tests/test_equations.py::test_table5_points_to_swapped_jd_weights` checks the bands.
+
+**Unexplained:**
+- With the weights swapped back, both JD machines need the same factor, 3.76–3.78, between Eq 4 and Table 5. That follows from the swap; it is not separate evidence. Its cause is unknown. Putting total weight in Eq 4's leading term would divide NCI by 8, or by 4 per bogie, not by 3.77.
+- The Tigercat's 4.26× gap. An external search found Table 3 column and wheel-count combinations within 3 % of it, but only after trying about 250 of them. That is overfitting, not an explanation.
+
+**What would settle it:** the authors' plot-level data or spreadsheet, the printed Eq 4 in the PDF (the web text drops the square-root structure), the machine data in Jones et al. (2018), and the NCI formulation in Vega-Nieva et al. (2009).
+
+**Effect on the model: controlled A/B, 2026-10-18.**
+
+*Method.* Both arms used the same weather snapshot (`cache/weather_20261018T00_0a2908f01c.json`), the same instant (2026-10-18T00:33Z), and the same cached terrain, soils and routes. Only the reference NCI differed: old = 0.253 × Eq 4 = 1.855 per MPa; new = 2.008 per MPa. Scope was all 60 sites. Results are for tomorrow, 1 pass, unless stated.
+
+| Check | Result |
+|---|---|
+| Ground index new/old, per cell (14.5 M mineral cells) | 0.924–1.000, median 0.968. The NCI change alone bounds it at 0.924–1.0. |
+| Flags made worse (any machine, pass count or day) | 0 |
+| Machine classes affected | Road trucks only; tracked flags come from NRCS. |
+| Route length whose flag changed | 5.0 %, all inspect → ok, all set by STRAM |
+| STRAM-inspect share of route length | 22.5 % → 16.8 % |
+| Median flagged route share per site | 44.6 % → 36.7 % |
+| Sites whose tomorrow site score changes | 20/60 (worst-segment), 32/60 (p90) |
+| Demo trio | West County −273 ft of flagged route; Palo Verde and Vogtle unchanged |
+
+An earlier comparison between two separate runs gave 22.4 % → 16.8 %. The newer weather hour in that comparison made a negligible difference.
+
+*Check against the paper's measured ruts* (Eq 5 at the Table 5 means, JD1510E):
+
+| Block | Old NCI → rut | New NCI → rut | Measured |
+|---|---|---|---|
+| 1 | 4.47 → 14.0 cm | 4.84 → 13.6 cm | 15.6 ± 6.7 cm |
+| 2 | 3.58 → 15.8 cm | 3.88 → 15.4 cm | 13.3 ± 10.5 cm |
+
+The two differ by 0.4 cm, well inside the measured spread. Old is closer for Block 1 and new for Block 2.
+
+*Conclusion.*
+- **Shown:** the change works as intended. It is limited to road-truck STRAM flags, only ever lowers the ground index, and its size matches the 7.6 % NCI correction.
+- **Shown:** the new NCI matches the paper's NCI scale, which Eq 5 was fitted on.
+- **Not shown:** that the model got more accurate. It is a consistency correction.
+- **Also measured:** every segment's ground index lies within the Eq 5 error band (±3.5 in) of the 4 in line, so no single STRAM flag can be told apart from the threshold given the paper's own model error. Only the field pilot can test accuracy.
+- `tests/test_equations.py::test_reference_nci_only_lowers_the_index_within_bound` guards the "only lowers, by at most 7.6 %" property.
 
 ## Operational validation plan (out of scope to run; documented)
 This is the pilot from `plan.md`, using paired observations:
@@ -163,7 +229,7 @@ This is the pilot from `plan.md`, using paired observations:
 - rut depth after traffic;
 - outcome.
 
-Evaluate with whole sites and later periods held out, and test the full chain, not just intermediate values. Those observations then replace the coefficients and the Eq 4 rescale, enable a Random Forest, and calibrate the MIL vehicle-type mapping.
+Evaluate with whole sites and later periods held out, and test the full chain, not just intermediate values. Those observations then replace the coefficients and the reference NCI/CI, enable a Random Forest, and calibrate the MIL vehicle-type mapping.
 
 ## Assumptions (defaults chosen, not explicitly agreed)
 - **Soil moisture:** Open-Meteo grid moisture stands in for ForHyM. Spatial variation within a site comes from DTW_eff, soils and the Track mask.
@@ -189,7 +255,7 @@ Evaluate with whole sites and later periods held out, and test the full chain, n
   - Road tires at 100+ psi are too, which is why trucks use the reference forwarder plus NRCS.
   - NRCS narrows the gap but doesn't close it.
 - **Trucks are under-resolved.** The ground index is computed for a forwarder, which is gentler on the ground than a 100 psi truck tire. For trucks, the machine-specific signal comes only from the static NRCS type-7 rating.
-- **Eq 4 rescale is empirical.** The true cause of the about 3.7–4.3× mismatch is unknown. The minimax factor 0.253 leaves at most about 8 % error on the four blocks.
+- **Eq 4 cannot reproduce the paper's NCI.** The model avoids Eq 4 for the reference machine by using the paper's NCI/CI directly. The cause of the gap is only partly understood (see "Eq 4 mismatch: evidence"). Any machine other than the study's three forwarders still has no trustworthy NCI.
 - **Eq 3 compresses CI** (about 145–360 psi), which underestimates how weak saturated ground is. The wet-area override and the NRCS checks offset this.
 - **NRCS ratings don't respond to weather.** Only the season and pass choice does.
 - **Full 0–10 feed** (agreed): `compute_site_risk` uses max(ML, subscores) with no staleness check.
