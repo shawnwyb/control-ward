@@ -41,3 +41,29 @@ export function topHazards(
     .slice(0, limit)
     .map(([key]) => key);
 }
+
+export type OverviewState = {
+  sites: SiteSummary[];
+  loaded: boolean;
+  error: string | null;
+};
+
+export const initialOverviewState: OverviewState = {
+  sites: [],
+  loaded: false,
+  error: null,
+};
+
+/**
+ * Folds one fetch outcome into the hook state. A failure keeps the last good list,
+ * records the message, and still marks the first attempt as finished, so callers
+ * can tell loading from failed.
+ */
+export function nextOverviewState(
+  prev: OverviewState,
+  result: { ok: true; sites: SiteSummary[] } | { ok: false; message: string },
+): OverviewState {
+  return result.ok
+    ? { sites: result.sites, loaded: true, error: null }
+    : { sites: prev.sites, loaded: true, error: result.message };
+}

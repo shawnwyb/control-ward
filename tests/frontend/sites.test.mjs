@@ -40,3 +40,30 @@ test("topHazards returns the highest non-zero subscores first", () => {
   assert.deepEqual(topHazards({ heat: 0 }), []);
   assert.deepEqual(topHazards({}), []);
 });
+
+import {
+  initialOverviewState,
+  nextOverviewState,
+} from "../../src/lib/sites.ts";
+
+test("nextOverviewState: a failed first fetch is loaded with an error, not stuck loading", () => {
+  const next = nextOverviewState(initialOverviewState, {
+    ok: false,
+    message: "boom",
+  });
+  assert.equal(next.loaded, true);
+  assert.equal(next.error, "boom");
+  assert.deepEqual(next.sites, []);
+});
+
+test("nextOverviewState: success clears the error; later failure keeps the last list", () => {
+  const list = [site("A", 1)];
+  const ok = nextOverviewState(
+    { sites: [], loaded: true, error: "old" },
+    { ok: true, sites: list },
+  );
+  assert.deepEqual(ok, { sites: list, loaded: true, error: null });
+  const failed = nextOverviewState(ok, { ok: false, message: "x" });
+  assert.equal(failed.sites, list);
+  assert.equal(failed.error, "x");
+});

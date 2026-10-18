@@ -269,7 +269,7 @@ export function LiveDemo() {
             )}
           </g>
           {strike && (
-            <g className={styles.strike}>
+            <g>
               <circle
                 className={`${styles.ring} ${reduce ? styles.ringDone : ""}`}
                 cx="112"
