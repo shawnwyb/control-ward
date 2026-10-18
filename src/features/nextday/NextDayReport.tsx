@@ -5,6 +5,9 @@ import {
   clockFromHHMM,
   type NextDayReport as Report,
 } from "../../lib/nextDayReport";
+import { SectionNav } from "../dashboard/SectionNav";
+import { useNotice } from "../../hooks/notice";
+import { useSiteFeed } from "../../hooks/useSiteFeed";
 import type { Site } from "../../lib/types";
 import { AirPanel } from "./AirPanel";
 import { FloodPanel } from "./FloodPanel";
@@ -14,10 +17,48 @@ import { HeatPanel } from "./HeatPanel";
 import { RoutePanel } from "./RoutePanel";
 import { TaskPlanner } from "./TaskPlanner";
 import { WeatherPanel } from "./WeatherPanel";
+import { WildlifePanel } from "./WildlifePanel";
+import { blockedHours, WORKDAY } from "./taskPlan";
 import { useReport } from "./useReport";
 import styles from "./NextDayReport.module.css";
 
 const LEVEL_MARK = { go: null, limits: 2, reschedule: 3 } as const;
+
+/** Jump links for phones: the page is long, and every panel has an id. */
+const SECTIONS = [
+  ["heat", "Heat"],
+  ["weather", "Weather"],
+  ["routes", "Routes"],
+  ["tasks", "Tasks"],
+  ["flood", "Flood"],
+  ["hazard-index", "Hazard"],
+  ["air", "Air"],
+  ["wildlife", "Wildlife"],
+  ["gaps", "Gaps"],
+] as const;
+
+/**
+ * The best work window comes from weather limits only. When the first task profile (heavy equipment) is blocked for
+ * the whole workday by a site-wide flag, such as routes at hold, say so right under the window.
+ */
+function weatherOnlyNote(report: Report): string | null {
+  const t = report.tasks;
+  const first = t?.profiles[0];
+  if (!t || t.status !== "ok" || !first || !report.verdict.work_window)
+    return null;
+  const day = blockedHours(first, report.hourly, t.site_flags).filter(
+    (r) => r.hour >= WORKDAY.start && r.hour < WORKDAY.end,
+  );
+  if (!day.length || !day.every((r) => r.blocked)) return null;
+  const fired = first.blockers.filter((b) => {
+    const flag = b.kind === "site" && b.flag ? t.site_flags[b.flag] : null;
+    return flag && b.values?.includes(flag);
+  });
+  if (!fired.length) return null;
+  return `Weather only. ${first.label} are blocked all day: ${fired
+    .map((b) => b.label.toLowerCase())
+    .join(", ")}. See the Task planner.`;
+}
 
 function Header({ report, stale }: { report: Report; stale: boolean }) {
   const v = report.verdict;
@@ -65,6 +106,9 @@ function Header({ report, stale }: { report: Report; stale: boolean }) {
           <strong>No two-hour work window was found.</strong>
         </p>
       )}
+      {weatherOnlyNote(report) ? (
+        <p className={styles.banner}>{weatherOnlyNote(report)}</p>
+      ) : null}
       {v.reasons.length ? (
         <ul className={styles.list}>
           {v.reasons.map((r) => (
@@ -114,6 +158,9 @@ function Changes({ report }: { report: Report }) {
 export function NextDayReport({ site }: { site: Site }) {
   const eia = site.eia_plant_id;
   const result = useReport(eia);
+  const { announce } = useNotice();
+  // Open crew reports (mud and wildlife) are drawn on the map next to the report's own layers.
+  const feed = useSiteFeed(site.id, (message) => announce(message, true));
 
   if (!eia)
     return (
@@ -154,18 +201,20 @@ export function NextDayReport({ site }: { site: Site }) {
   const { report, stale } = result;
   return (
     <div className={styles.stack} id="next-day-report">
+      <SectionNav sections={SECTIONS} />
       <Header report={report} stale={stale} />
       <div className={styles.cols}>
         <HeatPanel report={report} />
         <WeatherPanel report={report} />
       </div>
-      <RoutePanel report={report} />
+      <RoutePanel report={report} crewReports={feed.reports} />
       <TaskPlanner report={report} />
       <div className={styles.cols}>
         <FloodPanel report={report} />
         <div className={styles.stack}>
           <HazardIndexPanel report={report} />
           <AirPanel report={report} />
+          <WildlifePanel report={report} crewReports={feed.reports} />
         </div>
       </div>
       <GapsPanel report={report} />

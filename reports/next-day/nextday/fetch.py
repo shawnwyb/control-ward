@@ -67,7 +67,7 @@ class Fetcher:
         self.sources[key] = {"url": url, "fetched_at": fetched}
         return data
 
-    def get_json(self, key: str, url: str, params: dict[str, Any] | None = None, *, retries: int = 3) -> Any:
+    def get_json(self, key: str, url: str, params: dict[str, Any] | None = None, *, retries: int = 3, timeout: float | None = None) -> Any:
         path = self.dir / f"{_safe(key)}.json"
         if self.offline:
             if not path.is_file():
@@ -79,7 +79,7 @@ class Fetcher:
         last = "no attempt made"
         for attempt in range(retries):
             try:
-                r = self._http().get(url, params=params)
+                r = self._http().get(url, params=params, timeout=timeout if timeout is not None else httpx.USE_CLIENT_DEFAULT)
             except httpx.HTTPError as e:
                 last = f"{type(e).__name__}: {e}"
             else:

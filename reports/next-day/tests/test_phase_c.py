@@ -106,5 +106,52 @@ class WildlifeTest(unittest.TestCase):
             self.assertTrue(all(n[0].isupper() for n in g["names"]), g)
 
 
+class MudValidationTest(unittest.TestCase):
+    def make_runs(self, root: Path):
+        run = root / "run_2026-10-18T0327Z"
+        (run / "segments").mkdir(parents=True)
+        (run / "run.json").write_text(json.dumps({"generated_at": "2026-10-18T03:27:22+00:00", "sites": [
+            {"eia": "999", "horizons": [{"key": "now", "date": "2026-10-17"}, {"key": "d1", "date": "2026-10-18"}]}]}))
+        seg = lambda i, y, flag: {"type": "Feature", "geometry": {"type": "LineString", "coordinates": [[-80.002, y], [-79.998, y]]},
+                                  "properties": {"id": f"s{i}", "osm_id": i, "r": {"road_truck|1|d1": [flag, 1, 6.0, 9, 8, 10, 300]}}}
+        (run / "segments" / "999.geojson").write_text(json.dumps({"type": "FeatureCollection", "features": [seg(1, 25.0, 2), seg(2, 25.01, 0)]}))
+
+    def test_hits_false_clears_outside_and_missing_runs(self):
+        from nextday import mud_validation
+        with tempfile.TemporaryDirectory() as d:
+            self.make_runs(Path(d))
+            reports = [
+                {"eia": "999", "latitude": 25.0002, "longitude": -80.0, "created_at": "2026-10-18T14:00:00Z"},    # near the hold segment
+                {"eia": "999", "latitude": 25.0101, "longitude": -80.0, "created_at": "2026-10-18T15:00:00Z"},    # near the ok segment
+                {"eia": "999", "latitude": 25.05, "longitude": -80.0, "created_at": "2026-10-18T16:00:00Z"},      # far from any rated route
+                {"eia": "999", "latitude": 25.0, "longitude": -80.0, "created_at": "2026-12-01T16:00:00Z"},       # no run covers that date
+                {"eia": "999", "latitude": 25.0, "longitude": -80.0, "created_at": "2026-10-18T01:00:00Z"},       # before the run was made
+            ]
+            out = mud_validation.evaluate(reports, Path(d), tz_of={"999": "America/New_York"})
+        self.assertEqual((out["hit"], out["false_clear"], out["outside"], out["no_run"]), (1, 1, 1, 2))
+        self.assertEqual(out["hit_rate"], 0.5)
+        self.assertIn("does not change locally_validated", out["note"])
+
+    def test_local_date_uses_the_site_time_zone(self):
+        from nextday import mud_validation
+        with tempfile.TemporaryDirectory() as d:
+            self.make_runs(Path(d))
+            # 02:00 UTC on the 19th is 22:00 EDT on the 18th, which the run covers (d1)
+            out = mud_validation.evaluate([{"eia": "999", "latitude": 25.0, "longitude": -80.0, "created_at": "2026-10-19T02:00:00Z"}],
+                                          Path(d), tz_of={"999": "America/New_York"})
+        self.assertEqual(out["rows"][0]["local_date"], "2026-10-18")
+        self.assertEqual(out["rows"][0]["result"], "hit")
+
+    def test_csv_needs_its_columns(self):
+        from nextday import mud_validation
+        with tempfile.TemporaryDirectory() as d:
+            f = Path(d) / "x.csv"
+            f.write_text("a,b\n1,2\n")
+            with self.assertRaises(SystemExit):
+                mud_validation.read_csv(str(f))
+            f.write_text("eia_plant_id,latitude,longitude,created_at\n999,25,-80,2026-10-18T14:00:00Z\n")
+            self.assertEqual(mud_validation.read_csv(str(f))[0]["eia"], "999")
+
+
 if __name__ == "__main__":
     unittest.main()

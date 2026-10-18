@@ -1,5 +1,6 @@
 import { Badge, Panel, PanelHeader } from "../../components/ui";
 import { formatSiteTime, type NextDayReport } from "../../lib/nextDayReport";
+import { AboutData } from "./AboutData";
 import styles from "./NextDayReport.module.css";
 
 const FAMILY: Record<string, string> = {
@@ -70,12 +71,21 @@ export function HazardIndexPanel({ report }: { report: NextDayReport }) {
           : ""}
       </p>
       <ul className={styles.list}>
-        {(hi.caveats ?? []).map((c) => (
+        {(hi.caveats ?? []).slice(2).map((c) => (
           <li key={c} className={styles.muted}>
             {c}
           </li>
         ))}
       </ul>
+      <AboutData label="About this score">
+        <ul className={styles.list}>
+          {(hi.caveats ?? []).slice(0, 2).map((c) => (
+            <li key={c} className={styles.muted}>
+              {c}
+            </li>
+          ))}
+        </ul>
+      </AboutData>
     </Panel>
   );
 }

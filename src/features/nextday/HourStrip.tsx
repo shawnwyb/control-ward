@@ -6,7 +6,7 @@ import styles from "./NextDayReport.module.css";
 export type StripCell = {
   hour: number;
   value: string;
-  /** Spoken description, for example "3 PM, heat index 104 F, Danger". */
+  /** Read aloud in place of the visible text, for example "3 PM, heat index 104 F, Danger". */
   label: string;
   band?: BandId | null;
   mark?: Severity | null;
@@ -31,16 +31,15 @@ export function HourStrip({
           data-band={c.band ?? undefined}
           data-peak={c.peak ? "true" : undefined}
           data-blocked={c.blocked ? "true" : undefined}
-          aria-label={c.label}
-          title={c.label}
         >
-          <span>{formatHour(c.hour)}</span>
-          <b>{c.value}</b>
+          <span aria-hidden="true">{formatHour(c.hour)}</span>
+          <b aria-hidden="true">{c.value}</b>
           {c.mark ? (
             <SeverityMark severity={c.mark} size={14} />
           ) : (
             <span aria-hidden="true">&nbsp;</span>
           )}
+          <span className="sr-only">{c.label}</span>
         </li>
       ))}
     </ol>

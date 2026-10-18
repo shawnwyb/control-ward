@@ -46,6 +46,14 @@ class BuildSiteTest(unittest.TestCase):
         self.assertEqual(rep["hourly"], [])
         self.assertEqual(rep["verdict"]["level"], "reschedule")       # no window can be found without a forecast
 
+    def test_kind_follows_the_target_day_not_the_clock(self):
+        # 06:00 UTC is 02:00 EDT: a build for tomorrow at that hour is still the evening report
+        ctx = Context(fetcher=fetcher(), as_of=datetime(2026, 10, 18, 6, 0, tzinfo=UTC), hazard_rows=[], fires=None, gauges=[], stations={})
+        self.assertEqual(build_site(SITE, ctx)[0]["meta"]["kind"], "evening")
+        # and a build for today in the afternoon is still the refresh
+        ctx = Context(fetcher=fetcher(), as_of=datetime(2026, 10, 19, 20, 0, tzinfo=UTC), when="today", hazard_rows=[], fires=None, gauges=[], stations={})
+        self.assertEqual(build_site(SITE, ctx)[0]["meta"]["kind"], "morning")
+
     def test_today_mode_and_morning_kind(self):
         ctx = Context(fetcher=fetcher(), as_of=datetime(2026, 10, 19, 9, 0, tzinfo=UTC), when="today", hazard_rows=[], fires=None, gauges=[], stations={})
         rep, _ = build_site(SITE, ctx)

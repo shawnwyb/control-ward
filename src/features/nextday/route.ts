@@ -45,16 +45,56 @@ export function metersBetween(
   return Math.hypot((b[0] - a[0]) * kx, (b[1] - a[1]) * METERS_PER_DEG_LAT);
 }
 
-/** Nearest node to a point, or null if none is within `maxMeters` (a click far from any mapped road). */
+/** Nodes of the largest connected piece of the road network, ignoring one-way limits. Small stubs are left out. */
+const mainNetworkCache = new WeakMap<RoadGraph, Set<number>>();
+export function mainNetwork(graph: RoadGraph): Set<number> {
+  const cached = mainNetworkCache.get(graph);
+  if (cached) return cached;
+  const parent = graph.nodes.map((_, i) => i);
+  const find = (x: number): number => {
+    while (parent[x] !== x) {
+      parent[x] = parent[parent[x]];
+      x = parent[x];
+    }
+    return x;
+  };
+  for (const e of graph.edges) parent[find(e[0])] = find(e[1]);
+  const sizes = new Map<number, number>();
+  graph.nodes.forEach((_, i) =>
+    sizes.set(find(i), (sizes.get(find(i)) ?? 0) + 1),
+  );
+  let root = -1;
+  let most = 0;
+  for (const [r, n] of sizes) {
+    if (n > most) {
+      root = r;
+      most = n;
+    }
+  }
+  const out = new Set<number>();
+  graph.nodes.forEach((_, i) => {
+    if (find(i) === root) out.add(i);
+  });
+  mainNetworkCache.set(graph, out);
+  return out;
+}
+
+/**
+ * Nearest node to a point, or null if none is within `maxMeters` (a click far from any mapped road). With `onlyMain`,
+ * only nodes of the main road network count, so a click beside a disconnected stub still finds a route.
+ */
 export function nearestNode(
   graph: RoadGraph,
   lon: number,
   lat: number,
   maxMeters = 400,
+  onlyMain = false,
 ): number | null {
+  const allowed = onlyMain ? mainNetwork(graph) : null;
   let best = -1;
   let bestD = Infinity;
   graph.nodes.forEach((n, i) => {
+    if (allowed && !allowed.has(i)) return;
     const d = metersBetween([lon, lat], n);
     if (d < bestD) {
       bestD = d;
@@ -189,6 +229,8 @@ export type Detour = {
   detour: RouteResult | null;
   from: number | null;
   to: number | null;
+  /** How far each click was from the road node it snapped to, in metres. */
+  snapMeters: { from: number; to: number } | null;
 };
 
 export function planDetour(
@@ -197,14 +239,18 @@ export function planDetour(
   b: [number, number],
   options: RouteOptions,
 ): Detour {
-  const from = nearestNode(graph, a[0], a[1]);
-  const to = nearestNode(graph, b[0], b[1]);
+  const from = nearestNode(graph, a[0], a[1], 400, true);
+  const to = nearestNode(graph, b[0], b[1], 400, true);
   if (from === null || to === null)
-    return { direct: null, detour: null, from, to };
+    return { direct: null, detour: null, from, to, snapMeters: null };
   return {
     direct: search(graph, from, to, null, options.equipment),
     detour: search(graph, from, to, options, options.equipment),
     from,
     to,
+    snapMeters: {
+      from: Math.round(metersBetween(a, graph.nodes[from])),
+      to: Math.round(metersBetween(b, graph.nodes[to])),
+    },
   };
 }

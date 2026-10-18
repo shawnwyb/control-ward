@@ -1,12 +1,13 @@
 import { Panel, PanelHeader } from "../../components/ui";
 import { formatHour, type NextDayReport } from "../../lib/nextDayReport";
 import { HourStrip } from "./HourStrip";
+import { FIRST_HOUR, LAST_HOUR } from "./hours";
 import styles from "./NextDayReport.module.css";
 
 export function AirPanel({ report }: { report: NextDayReport }) {
   const air = report.air;
   const cells = (air.hours ?? [])
-    .filter((h) => h.hour >= 5 && h.hour <= 20)
+    .filter((h) => h.hour >= FIRST_HOUR && h.hour <= LAST_HOUR)
     .map((h) => ({
       hour: h.hour,
       value: h.us_aqi === null ? "-" : String(Math.round(h.us_aqi)),

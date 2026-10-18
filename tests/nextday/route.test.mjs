@@ -2,6 +2,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import {
+  mainNetwork,
   metersBetween,
   nearestNode,
   planDetour,
@@ -112,4 +113,18 @@ test("no path, and clicks far from any road", () => {
 
 test("distance helper agrees with the generator's 0.002 degrees = about 205 m at 25 N", () => {
   assert.ok(Math.abs(metersBetween([-80.002, 25.0], [-80.0, 25.0]) - 201) < 6);
+});
+
+test("clicks snap to the main network, not to a disconnected stub", () => {
+  const g = graph();
+  g.nodes.push([-80.0, 25.0001]); // node 4: a stub right next to the start, joined to nothing but node 5
+  g.nodes.push([-80.0, 25.0003]); // node 5
+  g.edges.push([4, 5, 22, 0, 0, 0]);
+  assert.deepEqual([...mainNetwork(g)].sort(), [0, 1, 2, 3]);
+  assert.equal(nearestNode(g, -80.0, 25.00012), 4); // plain nearest is the stub
+  assert.equal(nearestNode(g, -80.0, 25.00012, 400, true), 0); // main-network nearest is node 0
+  const r = planDetour(g, [-80.0, 25.00012], B, opts());
+  assert.equal(r.from, 0);
+  assert.equal(r.detour.meters, 300);
+  assert.ok(r.snapMeters.from > 0 && r.snapMeters.from < 30);
 });

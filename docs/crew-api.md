@@ -10,7 +10,7 @@ const requestId = crypto.randomUUID();
 const { data, error } = await supabase.rpc("submit_hazard_report", {
   p_request_id: requestId,
   p_site_id: siteId,
-  p_type: "debris", // debris | wildlife | downed_line | washout | other
+  p_type: "debris", // debris | wildlife | downed_line | washout | other | mud
   p_severity: 2, // 1–3
   p_lat: 29.652,
   p_lon: -82.325,

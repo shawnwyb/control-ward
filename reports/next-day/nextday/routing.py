@@ -114,7 +114,7 @@ def build(f: Fetcher, site: Site, for_date: str, mud_section: dict, tide_geo: di
         return {"status": "not_applicable", "reason": "Detours need the mud model's route ratings, which are not available."}, None
     try:
         if elements is None:
-            data = f.get_json(f"overpass_roads_{site.eia_plant_id}", OVERPASS, {"data": query(site.latitude, site.longitude)})
+            data = f.get_json(f"overpass_roads_{site.eia_plant_id}", OVERPASS, {"data": query(site.latitude, site.longitude)}, timeout=100.0)
             elements = data.get("elements", [])
     except SourceUnavailable as e:
         return {"status": "missing", "reason": str(e)}, None

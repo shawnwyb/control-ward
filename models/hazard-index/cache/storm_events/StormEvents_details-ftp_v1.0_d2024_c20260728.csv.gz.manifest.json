@@ -1,0 +1,20 @@
+{
+  "retrieved_at": "2026-10-17T23:07:07Z",
+  "file": "StormEvents_details-ftp_v1.0_d2024_c20260728.csv.gz",
+  "sha256": "2070b83eccab041b36360ab73645b9a249c3eefc5b92b5b3fc0cbba4d9fcc09c",
+  "bytes": 12693243,
+  "row_count": 69801,
+  "service_base": "https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles/",
+  "query": {
+    "year": 2024
+  },
+  "requests": [
+    {
+      "method": "GET",
+      "url": "https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles/StormEvents_details-ftp_v1.0_d2024_c20260728.csv.gz",
+      "params": null,
+      "at": "2026-10-17T23:07:06Z"
+    }
+  ],
+  "note": ""
+}

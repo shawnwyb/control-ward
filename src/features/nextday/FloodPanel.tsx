@@ -6,6 +6,8 @@ import {
   type RiverSection,
   type TideSection,
 } from "../../lib/nextDayReport";
+import { Abbr } from "./Abbr";
+import { AboutData } from "./AboutData";
 import styles from "./NextDayReport.module.css";
 
 const FT_PER_M = 3.28084;
@@ -112,15 +114,26 @@ function Levees({ levees }: { levees: LeveeSection }) {
         ))}
       </ul>
       <ul className={styles.list}>
-        {(levees.caveats ?? []).map((c) => (
-          <li key={c} className={styles.muted}>
-            {c}
-          </li>
-        ))}
+        {[(levees.caveats ?? [])[0], (levees.caveats ?? []).at(-1)]
+          .filter((c, i, all) => c && all.indexOf(c) === i)
+          .map((c) => (
+            <li key={c} className={styles.muted}>
+              {c}
+            </li>
+          ))}
       </ul>
-      <p className={styles.small}>
-        Source: <a href={levees.source?.url}>{levees.source?.name}</a>.
-      </p>
+      <AboutData label="About the levee data">
+        <ul className={styles.list}>
+          {(levees.caveats ?? []).slice(1, -1).map((c) => (
+            <li key={c} className={styles.muted}>
+              {c}
+            </li>
+          ))}
+        </ul>
+        <p className={styles.small}>
+          Source: <a href={levees.source?.url}>{levees.source?.name}</a>.
+        </p>
+      </AboutData>
     </>
   );
 }
@@ -143,10 +156,20 @@ function Tide({ tide }: { tide: TideSection }) {
             {" "}
             <strong>
               Highest tide {formatLocalClock(tide.highest.t)}:{" "}
-              {tide.highest.ft_mllw} ft above MLLW
-              {tide.highest.m_navd88 !== null
-                ? ` (${(tide.highest.m_navd88 * FT_PER_M).toFixed(1)} ft vs NAVD88)`
-                : ""}
+              {tide.highest.ft_mllw} ft above{" "}
+              <Abbr long="mean lower low water: the average of the lowest tide each day">
+                MLLW
+              </Abbr>
+              {tide.highest.m_navd88 !== null ? (
+                <>
+                  {" "}
+                  ({(tide.highest.m_navd88 * FT_PER_M).toFixed(1)} ft against{" "}
+                  <Abbr long="North American Vertical Datum of 1988: the land-height reference the ground model uses">
+                    NAVD88
+                  </Abbr>
+                  , the land-height reference)
+                </>
+              ) : null}
               .
             </strong>
           </>
@@ -155,7 +178,8 @@ function Tide({ tide }: { tide: TideSection }) {
       <div className={styles.tableWrap}>
         <table className={styles.table}>
           <caption className={styles.small}>
-            High and low tides on the report day. MLLW is mean lower low water.
+            High and low tides on the report day. MLLW is mean lower low water,
+            the average of the lowest tide each day.
           </caption>
           <thead>
             <tr>

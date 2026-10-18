@@ -1,0 +1,58 @@
+[
+  {
+    "eia_plant_id": "621",
+    "site_name": "Turkey Point",
+    "horizon": "now",
+    "driver": "storm",
+    "hazard_score": 2.3,
+    "local_date": "2026-10-18",
+    "model_version": "hazidx-0.1.0+2018-2022.23ed6848",
+    "summary": "{\n  \"summary\": \"The National Weather Service in Miami noted an unsettled weather pattern across Southeast Florida and coastal Miami-Dade County, with scattered to numerous thunderstorms producing localized heavy rain, frequent lightning, and gusty winds. A strengthening frontal pattern is driving gusty northerly-to-easterly winds across the region with gusts reaching 25 to 35 mph along coastal areas. For the Turkey Point facility, the low storm hazard score (2.3/10) aligns with these observed co",
+    "articles": [
+      {
+        "title": "weather.gov",
+        "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQHcBMFJaBKboAnsswmkoXO7y9VdBU9133M3cFzfiCt5Uo37vd5aRIfdFqUJd52U-BydxfdqHowRpcW9xN5sVxD35FS76eruoN_NFhYW-d45ED7BdpdQXupJhCbcMZKX_5GCHYgb2Gc94-87FCdDQd6FA9ANayYzUciY_T5UZpOfZpiKHldmWN9gO788JE6Nwg1YatvPfr-PwYPyCoYRiKnxJkdBM4irziqeZa0zaA==",
+        "source": "vertexaisearch.cloud.google.com",
+        "snippet": ""
+      },
+      {
+        "title": "cbsnews.com",
+        "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQHvjXdeu8ey6YOdayyJ4zVpHdvWBsF2QRupr23fKfl7ZR3QMZ8zZyhHIBg1xE3NKWz0fP6tOFMoZiAWTvLhNbWnMbLoMIj0XvMdKV3SVeuy40WPurObEuNKgTI9wv6fHCLubI3fIlnCRBQfc16Jm_-JRm_WkaVeVDh-7hzsrWjUJKRr3EH1FGL0qB4aMHO7vkLBnaoUD3yu-yGu5L_4nuLe",
+        "source": "vertexaisearch.cloud.google.com",
+        "snippet": ""
+      },
+      {
+        "title": "weather.gov",
+        "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFAPOJsJzNoSSpkSJlp_qjYrnYU6iphUSfFBcAZe7CwRcjz0H3aM5zrGX9yht1ymPsNrPuHqeOn20MNoMKu1x1g78WTMDuQpdRlp2VgoG8GR2Gx",
+        "source": "vertexaisearch.cloud.google.com",
+        "snippet": ""
+      }
+    ],
+    "queried_at": "2026-10-18T06:21:35.058039+00:00"
+  },
+  {
+    "eia_plant_id": "621",
+    "site_name": "Turkey Point",
+    "horizon": "tomorrow",
+    "driver": "storm",
+    "hazard_score": 2.6,
+    "local_date": "2026-10-19",
+    "model_version": "hazidx-0.1.0+2018-2022.23ed6848",
+    "summary": "According to the National Weather Service Forecast Office in Miami, South Florida is experiencing rounds of scattered showers and thunderstorms with localized heavy rainfall and a slight risk of excessive rainfall leading to isolated flash flooding. Breezy to windy conditions with gusts reaching 20 to 28 mph are developing across coastal Miami-Dade County, accompanied by hazardous marine conditions and a high rip current risk along Atlantic waters. These conditions align with Turkey Point's modest storm hazard score and expected peak gusts of 28.6 mph.",
+    "articles": [
+      {
+        "title": "NWS Forecast Office Miami - South Florida Hazardous Weather Outlook & Marine Conditions",
+        "url": "https://www.weather.gov/mfl/",
+        "source": "National Weather Service Miami - South Florida",
+        "snippet": "High rainfall rates combined with slow storm motion could result in localized flooding, with increasing northerly winds resulting in gusts in the 20-25 mph range at times and Small Craft Advisory conditions."
+      },
+      {
+        "title": "7-Day Forecast 25.76N 80.21W - Miami FL",
+        "url": "https://forecast.weather.gov/MapClick.php?lat=25.7617&lon=-80.2127",
+        "source": "National Weather Service",
+        "snippet": "Showers and thunderstorms likely with breezy to windy conditions persisting into early next week across the coastal Miami metropolitan area."
+      }
+    ],
+    "queried_at": "2026-10-18T06:21:44.803802+00:00"
+  }
+]

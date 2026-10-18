@@ -2260,7 +2260,13 @@ export type Database = {
         | "soil"
         | "wildlife"
       hazard_status: "open" | "resolved"
-      hazard_type: "debris" | "wildlife" | "downed_line" | "washout" | "other"
+      hazard_type:
+        | "debris"
+        | "wildlife"
+        | "downed_line"
+        | "washout"
+        | "other"
+        | "mud"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -2402,7 +2408,14 @@ export const Constants = {
         "wildlife",
       ],
       hazard_status: ["open", "resolved"],
-      hazard_type: ["debris", "wildlife", "downed_line", "washout", "other"],
+      hazard_type: [
+        "debris",
+        "wildlife",
+        "downed_line",
+        "washout",
+        "other",
+        "mud",
+      ],
     },
   },
 } as const

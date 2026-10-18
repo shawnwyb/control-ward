@@ -140,6 +140,12 @@ function seedSite(siteId: string, entries: Seed[]): Report[] {
 }
 
 const reports: Report[] = [
+  // Crew mud and wildlife reports near the sample report's flagged routes (Next-day report tab).
+  ...seedSite("site-turkey-point", [
+    ["mud", 2, 2, 90, 400, -300],
+    ["mud", 3, 1, 30, -500, 100],
+    ["wildlife", 2, 1, 200, 150, 450],
+  ]),
   ...seedSite("site-north", [
     ["downed_line", 3, 4, 20, 90, -140],
     ["wildlife", 2, 1, 180, -60, 220],
