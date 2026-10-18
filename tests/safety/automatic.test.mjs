@@ -126,12 +126,16 @@ test("automatic checklists need no admin input and preserve citations, site acce
       coverage_gaps: [scopeGap],
     };
     const documents = [{ ...sources[0], text: quote }];
-    const finish = (body = content, token = run.lease_token) =>
+    const finish = (
+      body = content,
+      token = run.lease_token,
+      docs = documents,
+    ) =>
       q("select public.finish_automatic_safety_run($1,$2,$3,$4) as saved", [
         run.id,
         token,
         body,
-        JSON.stringify(documents),
+        JSON.stringify(docs),
       ]);
     assert.equal((await finish(content, randomUUID()))[0].saved, false);
     await rejects(
@@ -149,6 +153,36 @@ test("automatic checklists need no admin input and preserve citations, site acce
           sources: [{ ...sources[0], url: "https://example.com/" }],
         }),
       /Official source/,
+    );
+    await rejects(
+      () => finish(content, run.lease_token, [{ ...sources[0] }]),
+      /document missing/,
+    );
+    await rejects(
+      () =>
+        finish({ ...content, items: [{ ...content.items[0], kind: null }] }),
+      /Invalid automatic item/,
+    );
+    await rejects(
+      () =>
+        finish({
+          ...content,
+          sources: [{ ...sources[0], jurisdiction: "Wrong state" }],
+        }),
+      /jurisdiction mismatch/,
+    );
+    await rejects(
+      () =>
+        finish({ ...content, private_notes: "Do not publish private fields" }),
+      /shape/,
+    );
+    await rejects(
+      () =>
+        q(
+          "select public.finish_automatic_safety_run($1,$2,p_error=>'provider_failed',p_diagnostics=>$3)",
+          [run.id, run.lease_token, { raw_prompt: "private text" }],
+        ),
+      /diagnostics/,
     );
     assert.equal((await finish())[0].saved, true);
     let workspace = (
@@ -224,6 +258,42 @@ test("automatic checklists need no admin input and preserve citations, site acce
       )[0].n,
       2,
     );
+    // Publish the automatically queued replacement and require a new receipt.
+    [run] = await q("select * from public.claim_automatic_safety_runs()");
+    assert.equal(run.site_id, site);
+    content.alerts = run.input_snapshot.hazards.alerts;
+    content.conditions = run.input_snapshot.hazards.readings;
+    assert.equal((await finish())[0].saved, true);
+    workspace = (
+      await as(
+        crew,
+        "select public.get_automatic_safety_workspace($1,$2) as w",
+        [site, date],
+      )
+    )[0].w;
+    assert.notEqual(workspace.checklist.id, checklist);
+    assert.equal(workspace.checklist.acknowledged, false);
+    assert.equal(workspace.checklist.current, true);
+    await rejects(
+      () =>
+        as(crew, "select public.acknowledge_automatic_safety_checklist($1)", [
+          checklist,
+        ]),
+      /no longer current/,
+    );
+    // Expiry is calculated at local midnight, including the DST transition.
+    await q(
+      "update public.automatic_safety_checklists set generated_at=now()-interval '5 hours' where id=$1",
+      [workspace.checklist.id],
+    );
+    workspace = (
+      await as(
+        crew,
+        "select public.get_automatic_safety_workspace($1,$2) as w",
+        [site, date],
+      )
+    )[0].w;
+    assert.equal(workspace.checklist.current, false);
     await q("update private.safety_settings set enabled=false");
     assert.equal(
       (await q("select * from public.claim_automatic_safety_runs()")).length,

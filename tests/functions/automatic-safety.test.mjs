@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
+  automaticFailureDiagnostics,
   runAutomaticSafety,
   validateItems,
   geminiResearch,
@@ -346,4 +347,47 @@ test("Gemini performs grounded discovery and ignores thought text while retainin
   assert.equal(result.grounded, true);
   assert.equal(result.tokens, 123);
   assert.match(result.search_entry_point, /Google Search/);
+});
+
+test("failed and interrupted runs retain bounded partial usage without source bodies", async () => {
+  for (const interrupted of [false, true]) {
+    const controller = new AbortController();
+    const model = {
+      async ask(prompt, search) {
+        if (search) return fixtureModel().ask(prompt, search);
+        if (!interrupted) throw new Error("provider_failed");
+        controller.abort(new Error("fixture_abort"));
+        return new Promise(() => {}); // A provider that ignores cancellation must not retain the host.
+      },
+    };
+    await assert.rejects(
+      runAutomaticSafety(snapshot, model, {
+        fetcher,
+        reservedUsdPerTurn: 0.1,
+        signal: controller.signal,
+      }),
+      (error) => {
+        const diag = automaticFailureDiagnostics(error);
+        assert.equal(diag.turns, 2);
+        assert.equal(diag.tokens, 100);
+        assert.equal(diag.reserved_spend_usd, 0.2);
+        assert.equal(diag.usage_complete, false);
+        assert.ok(!JSON.stringify(diag).includes(quote));
+        return true;
+      },
+    );
+  }
+});
+test("fresh non-heat readings cannot hide missing heat data", async () => {
+  const input = structuredClone(snapshot);
+  input.hazards.readings[0].hazard = "wind";
+  const output = await runAutomaticSafety(input, fixtureModel(), {
+    fetcher,
+    reservedUsdPerTurn: 0.1,
+  });
+  assert.ok(
+    output.content.coverage_gaps.some((g) =>
+      g.startsWith("Current heat readings are missing"),
+    ),
+  );
 });
