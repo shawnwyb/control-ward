@@ -21,6 +21,58 @@ const job = {
   conditions: "Unknown",
   energized: "unknown",
 };
+test("site deletion cascades alerts and lightning without recreating safety state", async () => {
+  const db = new pg.Client({ connectionString: target });
+  await db.connect();
+  const site = randomUUID();
+  try {
+    await db.query("begin");
+    await db.query(
+      "insert into public.sites(id,name,latitude,longitude,timezone) values($1,'Safety cascade fixture',28,-82,'America/New_York')",
+      [site],
+    );
+    await db.query("insert into public.lightning_state(site_id) values($1)", [
+      site,
+    ]);
+    await db.query(
+      "insert into public.alerts(site_id,kind,level,dedup_key) values($1,'other','info',$2)",
+      [site, `cascade:${site}`],
+    );
+    const revision = async () =>
+      (
+        await db.query(
+          "select hazard_revision::int from private.safety_site_state where site_id=$1",
+          [site],
+        )
+      ).rows[0]?.hazard_revision;
+    assert.equal(await revision(), 2);
+    // Deleting a child while its site remains must still invalidate safety inputs.
+    await db.query("delete from public.lightning_state where site_id=$1", [
+      site,
+    ]);
+    assert.equal(await revision(), 3);
+    await db.query("insert into public.lightning_state(site_id) values($1)", [
+      site,
+    ]);
+    assert.equal(await revision(), 4);
+    // Both AFTER DELETE triggers run during the parent's cascading deletion.
+    await db.query("delete from public.sites where id=$1", [site]);
+    assert.equal(await revision(), undefined);
+    for (const table of ["alerts", "lightning_state"]) {
+      assert.equal(
+        (
+          await db.query(`select 1 from public.${table} where site_id=$1`, [
+            site,
+          ])
+        ).rowCount,
+        0,
+      );
+    }
+  } finally {
+    await db.query("rollback");
+    await db.end();
+  }
+});
 test("concurrent dedup/claims, retries, missing provider fallback, dates/DST and observation/forecast evidence", async () => {
   const admin = new pg.Client({ connectionString: target }),
     a = new pg.Client({ connectionString: target }),

@@ -113,7 +113,7 @@ Before live use, a human must verify pilot employer/installation coverage, every
 ## Deployment and recovery
 
 1. Confirm pilot ownership, access and coverage. Back up the target database and inspect its migration ledger.
-2. Apply migrations `20261018010000`–`20261018010700` after `20261017001600` in staging. Run authorization, queue, browser and source-review checks. Regenerate types if the shared schema changed. Do not reset hosted data or replay edited migrations.
+2. Apply migrations `20261018010000`–`20261018010800` after `20261017001600` in staging. The final migration preserves site deletion when alert/lightning rows cascade. Run authorization, queue, browser and source-review checks. Regenerate types if the shared schema changed. Do not reset hosted data or replay edited migrations.
 3. Configure server-only secrets and matching database/model settings. Deploy `generate-safety-briefings` and `refresh-safety-sources`. Platform JWT verification is disabled for these endpoints because they authenticate `X-Cron-Secret`; browser mutations use authenticated SQL RPCs.
 4. Configure Vault `functions_base_url` and `cron_secret`. Verify `safety-enqueue-evening` hourly, `safety-refresh-inputs` and `safety-generate-worker` each minute, and `safety-refresh-sources` weekly. Missing Vault values cause a warning and skip the external invocation. Existing `generate_due_briefings` remains independent.
 5. Stage and human-review official sources and actual company procedures. Enable the global database switch, Edge worker and one confirmed site profile. Run the draft-only provider smoke test and inspect evidence support and budgets.
