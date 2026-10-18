@@ -32,7 +32,9 @@ test("send explains why it is disabled, then enables", async ({ page }) => {
   await page.locator("#push-body").fill("Wrap up by 1 PM.");
   await expect(send).toBeEnabled();
   await send.click();
-  await expect(page.getByText("Delivered to 2 of 2 devices")).toBeVisible({
+  await expect(
+    page.getByText("Alert sent. It now shows on the crew’s screens."),
+  ).toBeVisible({
     timeout: 10000,
   });
   await page.getByLabel("Selected (0)").check();
