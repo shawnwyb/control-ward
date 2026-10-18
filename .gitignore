@@ -23,3 +23,4 @@ public/reports/**/report.prev.json
 docs/*
 docs/screenshots/
 .superpowers/
+.playwright-mcp/
