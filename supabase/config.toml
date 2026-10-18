@@ -442,3 +442,7 @@ verify_jwt = false
 
 [functions.refresh-safety-sources]
 verify_jwt = false
+
+# Service-role-only model broker; validates a live CodeAct lease and reserves budget.
+[functions.codeact-safety-model]
+verify_jwt = false

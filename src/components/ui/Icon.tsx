@@ -18,6 +18,7 @@ const bodies = {
   downed_line: bolt,
   washout: flood,
   other: '<path d="M12 3l9 9-9 9-9-9z"/><path d="M12 8v5M12 16v.5"/>',
+  mud: '<path d="M7 3c-1.5 5 3 8 1 18"/><path d="M17 3c-1.5 5 3 8 1 18"/><path d="M4 21h16"/>',
   locate:
     '<circle cx="12" cy="12" r="5"/><path d="M12 2v5M12 17v5M2 12h5M17 12h5"/>',
   upload: '<path d="M12 16V4M7 9l5-5 5 5M4 20h16"/>',

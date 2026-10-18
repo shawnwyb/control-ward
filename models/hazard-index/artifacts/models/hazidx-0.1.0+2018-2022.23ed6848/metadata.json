@@ -1,0 +1,393 @@
+{
+ "model_version": "hazidx-0.1.0+2018-2022.23ed6848",
+ "created_at": "2026-10-18T03:11:47Z",
+ "package_version": "0.1.0",
+ "sklearn": "1.9.1",
+ "rows": 174895,
+ "plants": 60,
+ "years": {
+  "train": [
+   2018,
+   2019,
+   2020,
+   2021,
+   2022
+  ],
+  "model_selection": [
+   2023
+  ],
+  "test": [
+   2024,
+   2025
+  ],
+  "calibration": "Platt, out-of-fold, GroupKFold by year, 5 folds",
+  "tier_map": "out-of-fold predictions, training years",
+  "normals_and_drift": "training years"
+ },
+ "calibration_rows_years": [
+  2018,
+  2019,
+  2020,
+  2021,
+  2022
+ ],
+ "tier_map_rows_years": [
+  2018,
+  2019,
+  2020,
+  2021,
+  2022
+ ],
+ "grid": "V1",
+ "weights": {
+  "heat": 1.0,
+  "storm": 0.834,
+  "flood": 0.75,
+  "fire": 0.8594
+ },
+ "families": {
+  "heat": {
+   "positives_train": 669,
+   "positives_select": 488,
+   "params": {
+    "min_samples_leaf": 50,
+    "max_iter": 150
+   },
+   "selection": [
+    {
+     "min_samples_leaf": 30,
+     "max_iter": 150,
+     "log_loss_select": 0.042919906026470764
+    },
+    {
+     "min_samples_leaf": 30,
+     "max_iter": 300,
+     "log_loss_select": 0.04368226003110918
+    },
+    {
+     "min_samples_leaf": 50,
+     "max_iter": 150,
+     "log_loss_select": 0.042844762717672666
+    },
+    {
+     "min_samples_leaf": 50,
+     "max_iter": 300,
+     "log_loss_select": 0.043671596712622704
+    }
+   ],
+   "platt": {
+    "full": {
+     "a": 0.8718779763781034,
+     "b": -0.14972194485717905
+    },
+    "past_only": {
+     "a": 0.7797057658136578,
+     "b": -0.7332223475059262
+    }
+   },
+   "features": {
+    "full": [
+     "wbgt_max",
+     "hi_max",
+     "t_max",
+     "t_min",
+     "td_max",
+     "rh_min",
+     "wbgt_hours_85",
+     "wbgt_max_prev2",
+     "t_max_anom",
+     "hi_max_anom",
+     "doy_sin",
+     "doy_cos"
+    ],
+    "past_only": [
+     "wbgt_max_prev2",
+     "doy_sin",
+     "doy_cos"
+    ]
+   }
+  },
+  "storm": {
+   "positives_train": 1440,
+   "positives_select": 327,
+   "params": {
+    "min_samples_leaf": 30,
+    "max_iter": 150
+   },
+   "selection": [
+    {
+     "min_samples_leaf": 30,
+     "max_iter": 150,
+     "log_loss_select": 0.05880209017194303
+    },
+    {
+     "min_samples_leaf": 30,
+     "max_iter": 300,
+     "log_loss_select": 0.05944589065344283
+    },
+    {
+     "min_samples_leaf": 50,
+     "max_iter": 150,
+     "log_loss_select": 0.05885429731743202
+    },
+    {
+     "min_samples_leaf": 50,
+     "max_iter": 300,
+     "log_loss_select": 0.0593703525559709
+    }
+   ],
+   "platt": {
+    "full": {
+     "a": 0.9470941537635137,
+     "b": -0.1469584819358451
+    },
+    "past_only": {
+     "a": 0.7116838834756465,
+     "b": -1.1473153863599284
+    }
+   },
+   "features": {
+    "full": [
+     "gust_max",
+     "wind_max",
+     "rain_hr_max",
+     "p_drop_24h",
+     "sw_sum",
+     "doy_sin",
+     "doy_cos"
+    ],
+    "past_only": [
+     "doy_sin",
+     "doy_cos"
+    ]
+   }
+  },
+  "flood": {
+   "positives_train": 1614,
+   "positives_select": 204,
+   "params": {
+    "min_samples_leaf": 50,
+    "max_iter": 150
+   },
+   "selection": [
+    {
+     "min_samples_leaf": 30,
+     "max_iter": 150,
+     "log_loss_select": 0.0430215977193579
+    },
+    {
+     "min_samples_leaf": 30,
+     "max_iter": 300,
+     "log_loss_select": 0.043132515101557516
+    },
+    {
+     "min_samples_leaf": 50,
+     "max_iter": 150,
+     "log_loss_select": 0.04299420098661509
+    },
+    {
+     "min_samples_leaf": 50,
+     "max_iter": 300,
+     "log_loss_select": 0.04317821436992116
+    }
+   ],
+   "platt": {
+    "full": {
+     "a": 0.849471023633382,
+     "b": -0.4891694817506854
+    },
+    "past_only": {
+     "a": 0.8576398624196285,
+     "b": -0.47549491885736267
+    }
+   },
+   "features": {
+    "full": [
+     "rain_24h",
+     "rain_overnight",
+     "rain_prev3d",
+     "rain_prev7d",
+     "rain_hours_1mm",
+     "sm07_mean",
+     "sm07_max",
+     "sm728_mean",
+     "doy_sin",
+     "doy_cos"
+    ],
+    "past_only": [
+     "rain_prev3d",
+     "rain_prev7d",
+     "sm07_mean",
+     "sm07_max",
+     "sm728_mean",
+     "doy_sin",
+     "doy_cos"
+    ]
+   }
+  },
+  "fire": {
+   "positives_train": 349,
+   "positives_select": 59,
+   "params": null,
+   "selection": [],
+   "platt": {
+    "full": {
+     "a": 0.8207104242564964,
+     "b": -0.7204017083616153
+    },
+    "past_only": {
+     "a": 0.8884021409212308,
+     "b": -0.4435838710605258
+    }
+   },
+   "features": {
+    "full": [
+     "vpd_max",
+     "rh_min",
+     "wind_max",
+     "gust_max",
+     "t_max_anom",
+     "dry_days",
+     "rain_prev30d",
+     "doy_sin",
+     "doy_cos"
+    ],
+    "past_only": [
+     "dry_days",
+     "rain_prev30d",
+     "doy_sin",
+     "doy_cos"
+    ]
+   }
+  }
+ },
+ "tier_map": {
+  "points": [
+   [
+    0.0,
+    0.0
+   ],
+   [
+    0.017007383515304474,
+    1.5
+   ],
+   [
+    0.017415063297217356,
+    2.0
+   ],
+   [
+    0.03938324001821854,
+    4.0
+   ],
+   [
+    0.07309217507297794,
+    7.0
+   ],
+   [
+    0.1423945809779976,
+    7.5
+   ],
+   [
+    0.39020834790710546,
+    10.0
+   ]
+  ],
+  "fallback": false,
+  "pairs": [
+   [
+    0.017007383515304474,
+    1.5
+   ],
+   [
+    0.017415063297217356,
+    2.0
+   ],
+   [
+    0.01720050253402996,
+    2.5
+   ],
+   [
+    0.01270447512035612,
+    3.0
+   ],
+   [
+    0.03938324001821854,
+    4.0
+   ],
+   [
+    0.030825620910877302,
+    5.0
+   ],
+   [
+    0.03305937227563007,
+    6.0
+   ],
+   [
+    0.07309217507297794,
+    7.0
+   ],
+   [
+    0.1423945809779976,
+    7.5
+   ],
+   [
+    0.09817849492017142,
+    9.0
+   ],
+   [
+    0.39020834790710546,
+    10.0
+   ]
+  ],
+  "removed": [
+   {
+    "median_r": 0.01720050253402996,
+    "rule_max": 2.5,
+    "days": 1815
+   },
+   {
+    "median_r": 0.01270447512035612,
+    "rule_max": 3.0,
+    "days": 22956
+   },
+   {
+    "median_r": 0.030825620910877302,
+    "rule_max": 5.0,
+    "days": 6668
+   },
+   {
+    "median_r": 0.03305937227563007,
+    "rule_max": 6.0,
+    "days": 4973
+   },
+   {
+    "median_r": 0.09817849492017142,
+    "rule_max": 9.0,
+    "days": 135
+   }
+  ],
+  "rule_level_days": {
+   "1.5": 194,
+   "2.0": 5604,
+   "2.5": 1815,
+   "3.0": 22956,
+   "4.0": 2812,
+   "5.0": 6668,
+   "6.0": 4973,
+   "7.0": 106,
+   "7.5": 1140,
+   "8.0": 21,
+   "9.0": 135,
+   "9.5": 47,
+   "10.0": 147
+  },
+  "min_days": 50
+ },
+ "plants_per_train_year": {
+  "2018": 59,
+  "2019": 60,
+  "2020": 60,
+  "2021": 60,
+  "2022": 60
+ }
+}

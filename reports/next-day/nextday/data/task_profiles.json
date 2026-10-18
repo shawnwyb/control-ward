@@ -1,0 +1,52 @@
+{
+  "_comment": "Hours and conditions that block each task type. Edit this file to change a task or a limit, then rebuild. kind 'hour' blocks the hours where the factor reaches the limit. kind 'site' blocks the whole day when the site flag is one of the listed values. Limits copied from the alert rules have needs_confirmation false. Every other limit is a default that needs confirming against the equipment manual or the site safety plan.",
+  "profiles": [
+    {
+      "id": "heavy_equipment",
+      "label": "Heavy equipment moves",
+      "description": "Trucks, excavators and cranes moving on site roads.",
+      "blockers": [
+        {"id": "wbgt", "kind": "hour", "factor": "wbgt", "limit": 88, "label": "Heat (WBGT)", "unit": "F", "source": "Alert rules (briefing.ts)", "needs_confirmation": false},
+        {"id": "gust", "kind": "hour", "factor": "gust", "limit": 40, "label": "Wind gusts", "unit": "mph", "source": "Alert rules (briefing.ts)", "needs_confirmation": false},
+        {"id": "pop", "kind": "hour", "factor": "pop", "limit": 60, "label": "Storm chance", "unit": "%", "source": "Alert rules (briefing.ts)", "needs_confirmation": false},
+        {"id": "mm", "kind": "hour", "factor": "mm", "limit": 1, "label": "Rain", "unit": "mm per hour", "source": "Alert rules (briefing.ts)", "needs_confirmation": false},
+        {"id": "mud", "kind": "site", "flag": "mud", "values": ["hold"], "label": "Routes at hold (mud)", "source": "Mud model, uncalibrated", "needs_confirmation": true}
+      ]
+    },
+    {
+      "id": "aerial_line",
+      "label": "Aerial or line work",
+      "description": "Bucket trucks, lifts and work at height.",
+      "blockers": [
+        {"id": "wbgt", "kind": "hour", "factor": "wbgt", "limit": 88, "label": "Heat (WBGT)", "unit": "F", "source": "Alert rules (briefing.ts)", "needs_confirmation": false},
+        {"id": "gust", "kind": "hour", "factor": "gust", "limit": 40, "label": "Wind gusts", "unit": "mph", "source": "Default from the alert rules. Lift and crane manuals often set a lower limit. Use your equipment manual.", "needs_confirmation": true},
+        {"id": "pop", "kind": "hour", "factor": "pop", "limit": 60, "label": "Storm chance", "unit": "%", "source": "Alert rules (briefing.ts)", "needs_confirmation": false},
+        {"id": "mm", "kind": "hour", "factor": "mm", "limit": 1, "label": "Rain", "unit": "mm per hour", "source": "Alert rules (briefing.ts)", "needs_confirmation": false}
+      ]
+    },
+    {
+      "id": "trenching",
+      "label": "Trenching and excavation",
+      "description": "Open trenches and pits.",
+      "blockers": [
+        {"id": "wbgt", "kind": "hour", "factor": "wbgt", "limit": 88, "label": "Heat (WBGT)", "unit": "F", "source": "Alert rules (briefing.ts)", "needs_confirmation": false},
+        {"id": "pop", "kind": "hour", "factor": "pop", "limit": 60, "label": "Storm chance", "unit": "%", "source": "Alert rules (briefing.ts)", "needs_confirmation": false},
+        {"id": "mm", "kind": "hour", "factor": "mm", "limit": 1, "label": "Rain", "unit": "mm per hour", "source": "Alert rules (briefing.ts)", "needs_confirmation": false},
+        {"id": "tide", "kind": "hour", "factor": "tide_near_high", "limit": 1, "label": "Within one hour of high tide (low ground)", "unit": "", "source": "Tide predictions", "needs_confirmation": true, "only_if": "tide_shading"},
+        {"id": "river", "kind": "site", "flag": "river", "values": ["minor", "moderate", "major"], "label": "River forecast at flood stage", "source": "NWS river forecast", "needs_confirmation": true}
+      ]
+    },
+    {
+      "id": "brush_swamp",
+      "label": "Brush clearing and swamp work on foot",
+      "description": "Work on foot in vegetation, wet ground or near water.",
+      "blockers": [
+        {"id": "wbgt", "kind": "hour", "factor": "wbgt", "limit": 88, "label": "Heat (WBGT)", "unit": "F", "source": "Alert rules (briefing.ts)", "needs_confirmation": false},
+        {"id": "hi", "kind": "hour", "factor": "hi", "limit": 103, "label": "Heat index (Danger band)", "unit": "F", "source": "NWS heat index categories", "needs_confirmation": true},
+        {"id": "pop", "kind": "hour", "factor": "pop", "limit": 60, "label": "Storm chance", "unit": "%", "source": "Alert rules (briefing.ts)", "needs_confirmation": false},
+        {"id": "aqi", "kind": "hour", "factor": "aqi", "limit": 151, "label": "Air quality index (Unhealthy)", "unit": "AQI", "source": "AirNow AQI categories", "needs_confirmation": true},
+        {"id": "tide", "kind": "hour", "factor": "tide_near_high", "limit": 1, "label": "Within one hour of high tide (low ground)", "unit": "", "source": "Tide predictions", "needs_confirmation": true, "only_if": "tide_shading"}
+      ]
+    }
+  ]
+}

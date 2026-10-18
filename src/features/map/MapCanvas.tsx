@@ -529,6 +529,9 @@ export default function MapCanvas({
       });
       // Tabbing to a pin that is off screen brings it into view.
       element.addEventListener("focus", () => {
+        // Pointer focus happens before click; moving the pin then can cancel the
+        // click. Only keyboard focus should pan an off-screen marker into view.
+        if (!element.matches(":focus-visible")) return;
         if (!instance.getBounds().contains(lngLat))
           instance.panTo(lngLat, { duration: reducedMotion() ? 0 : 300 });
       });

@@ -74,6 +74,41 @@ class Table5Reproduction(unittest.TestCase):
         for b in TABLE5:
             self.assertLess(abs(float(published_nci(b, C.EQ4_NCI_SCALE)) / TABLE5[b][2] - 1), 0.10, b)
 
+    def test_reference_nci_reproduces_jd1510e_blocks(self):
+        # Table 5 Blocks 1 and 2 (JD1510E): mean, min and max NCI from the matching CI, within 2-decimal rounding.
+        for ci, nci in ((2.41, 4.84), (1.90, 3.82), (3.00, 6.02), (1.93, 3.87), (1.56, 3.13), (2.42, 4.87)):
+            self.assertLessEqual(abs(float(E.reference_nci(ci * C.MPA_TO_PSI)) - nci), 0.02, (ci, nci))
+
+    def test_reference_nci_only_lowers_the_index_within_bound(self):
+        # The switch from 0.253 x Eq 4 (1.855/MPa) to the paper's 2.008/MPa raises NCI by a fixed 8.2 %. So the
+        # ground index can only fall, and at 1 pass (Z = a/NCI_adj) by at most that factor. The DTW term and the
+        # clamps can only shrink the change. Grid covers clamped (very weak, very strong) and unclamped cells.
+        ci = np.linspace(0.3, 5.0, 60)[:, None, None] * C.MPA_TO_PSI
+        dtw = np.array([0.0, 1.0, 5.0, 20.0])[None, :, None]
+        cf = np.array([0.0, 0.3])[None, None, :]
+        old, new = E.equipment_nci(ci, C.REFERENCE_FORWARDER), E.reference_nci(ci)
+        bound = float(np.min(old / new))
+        for passes in (1, 2, 10):
+            z_old, _, _ = E.eq5_rut_in(old, passes, dtw, cf)
+            z_new, _, _ = E.eq5_rut_in(new, passes, dtw, cf)
+            self.assertTrue(np.all(z_new <= z_old + 1e-12), passes)
+            if passes == 1:
+                self.assertTrue(np.all(z_new / z_old >= bound - 1e-9))
+                self.assertAlmostEqual(bound, 1.855 / 2.008, places=3)
+
+    def test_table5_points_to_swapped_jd_weights(self):
+        # Rounding (+-0.005) bounds each machine's NCI/CI. Same tires, so under Eq 4 the ratio JD1510E/JD1110E
+        # is sqrt(W_1110E / W_1510E) = 0.969. Table 5 instead allows only 1.030-1.036, which contains the
+        # swapped-weight value sqrt(W_1510E / W_1110E) = 1.032. Strong evidence, not proof.
+        def band(pairs):
+            return (max((n - 0.005) / (c + 0.005) for c, n in pairs), min((n + 0.005) / (c - 0.005) for c, n in pairs))
+        lo15, hi15 = band([(2.41, 4.84), (1.90, 3.82), (3.00, 6.02), (1.93, 3.87), (1.56, 3.13), (2.42, 4.87)])
+        lo11, hi11 = band([(1.84, 3.57), (1.51, 2.94), (2.33, 4.54), (0.19, 0.37)])
+        w15, w11 = 169.66 + 117.68, 161.81 + 107.87
+        self.assertTrue(lo15 <= C.REFERENCE_NCI_PER_MPA <= hi15)
+        self.assertTrue(lo15 / hi11 <= np.sqrt(w15 / w11) <= hi15 / lo11)
+        self.assertFalse(lo15 / hi11 <= np.sqrt(w11 / w15) <= hi15 / lo11)
+
     def test_eq5_reproduces_block_means(self):
         for b, (_, _, nci, passes, dtw_m, mean, sd) in TABLE5.items():
             z, _, _ = E.eq5_rut_in(nci, passes, dtw_m * C.M_TO_FT, guard=False)
@@ -104,7 +139,7 @@ class Guards(unittest.TestCase):
 
     def test_reference_forwarder_in_range_on_study_soil(self):
         ci = E.eq3_ci_psi(65.0, track=1)  # Table 5 MC_PS means are about 64-70 %
-        _, _, out = E.eq5_rut_in(E.equipment_nci(ci, C.REFERENCE_FORWARDER), 2, 1.5 * C.M_TO_FT)
+        _, _, out = E.eq5_rut_in(E.reference_nci(ci), 2, 1.5 * C.M_TO_FT)
         self.assertFalse(bool(out))
 
 

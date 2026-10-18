@@ -56,21 +56,25 @@ def soil_rasters(tile: dict, plant_row: dict | None) -> dict:
     return out
 
 
-def dtw_effective(dtw_m: np.ndarray, soil: dict) -> np.ndarray:
-    """DEM DTW (ft), capped by SSURGO's shallowest water table, floored at 2 m where SSURGO says there is none."""
+def dtw_effective(dtw_m: np.ndarray, soil: dict, wet_class: str) -> np.ndarray:
+    """DEM DTW (ft), floored at 2 m where SSURGO says there is no water table within 200 cm. In moist and wet
+    forecasts it is also capped by SSURGO's annual-minimum water table. That depth is the year's shallowest, a
+    wet-season value, so applying it on dry days made poorly drained ground read wet every day (it bound on 81 % of
+    route cells at the median site)."""
     d = dtw_m * C.M_TO_FT
-    wt = soil["wt_depth_annual_min_cm"] / 100.0 * C.M_TO_FT
-    d = np.where(np.isfinite(wt), np.minimum(d, wt), d)
+    if wet_class in R.WET:
+        wt = soil["wt_depth_annual_min_cm"] / 100.0 * C.M_TO_FT
+        d = np.where(np.isfinite(wt), np.minimum(d, wt), d)
     return np.where(soil["well_drained_no_wt"], np.maximum(d, C.NO_WATER_TABLE_DTW_M * C.M_TO_FT), d)
 
 
 def ground_index(theta: float, d_ft, soil: dict, track, passes: int):
-    """STRAM chain for the reference forwarder: Eq 1 -> Eq 3 -> Eq 4 -> Eq 5 x Eq 7. Returns rasters."""
+    """STRAM chain for the reference forwarder: Eq 1 -> Eq 3 -> paper NCI/CI -> Eq 5 x Eq 7. Returns rasters."""
     db = np.where(np.isfinite(soil["bulk_density_g_cm3"]), soil["bulk_density_g_cm3"], 1.4)
     d_top = float(np.nanpercentile(d_ft, C.DTW_TOP_PERCENTILE))
     mc = E.eq1_mc_ps_dtw(d_ft, d_top, E.mc_ps_from_theta(theta, db))
     ci = E.eq3_ci_psi(mc, C.CI_DEPTH_IN, track)
-    nci = E.equipment_nci(ci, C.REFERENCE_FORWARDER)
+    nci = E.reference_nci(ci)
     cf = np.nan_to_num(soil["coarse_frag_pct"] / 100.0)
     z, nci_adj, out = E.eq5_rut_in(nci, passes, d_ft, cf)
     z = np.where(soil["organic"], np.nan, z)  # outside STRAM: NRCS decides
@@ -128,7 +132,6 @@ def run_site(site: Site, grid: Grid, terrain: dict, tile: dict, plant_row: dict 
     seg_index = index_segments(segs, grid)
     plant_cell = grid.cell_of(*grid.to_utm().transform(site.lon, site.lat))
     plant_flat = plant_cell[0] * grid.n + plant_cell[1] if plant_cell else None
-    dtw_eff = {fia: dtw_effective(d, soil) for fia, d in terrain["dtw_m"].items()}
 
     seg_results = [dict() for _ in segs]  # key "<equipment>|<passes>|<horizon>" -> [flag, source, score, z, zlo, zhi, flagged_ft]
     seg_drivers = [dict() for _ in segs]  # horizon -> [mc_ps, ci_psi, nci_adj, dtw_eff_ft] at the segment's worst cell
@@ -137,7 +140,7 @@ def run_site(site: Site, grid: Grid, terrain: dict, tile: dict, plant_row: dict 
     for h in horizons:
         wet = R.wetness_class(h["rain_in"])
         fia = C.WETNESS_FIA_HA[wet]
-        d = dtw_eff[fia]
+        d = dtw_effective(terrain["dtw_m"][fia], soil, wet)
         for passes in PASSES:
             gi = ground_index(h["theta"], d, soil, track, passes)
             z_lo = ground_index(h["theta_min"], d, soil, track, passes)["z"]
@@ -208,13 +211,13 @@ def run_site(site: Site, grid: Grid, terrain: dict, tile: dict, plant_row: dict 
             "soil": {"organic_frac": round(float(soil["organic"].mean()), 3),
                      "unknown_frac": round(float(soil["soil_unknown"].mean()), 3),
                      "median_domain_reasons": extrap_reasons, "vintages": tile.get("vintages", {})},
-            "agreement": agreement_row(site, soil, dtw_eff, track, plant_row, seg_index)}
+            "agreement": agreement_row(site, soil, terrain["dtw_m"], track, plant_row, seg_index)}
 
 
-def agreement_row(site: Site, soil: dict, dtw_eff: dict, track, plant_row: dict | None, seg_index: SegmentIndex) -> dict:
+def agreement_row(site: Site, soil: dict, dtw_m: dict, track, plant_row: dict | None, seg_index: SegmentIndex) -> dict:
     """STRAM wet case (pore space 90 % full, wettest FIA, default passes) on route cells, beside the NRCS rutting
     hazard. Both rise with rutting, so agreement shows up as a positive rank correlation across sites."""
-    d = dtw_eff[C.WETNESS_FIA_HA["wet"]]
+    d = dtw_effective(dtw_m[C.WETNESS_FIA_HA["wet"]], soil, "wet")
     db = np.where(np.isfinite(soil["bulk_density_g_cm3"]), soil["bulk_density_g_cm3"], 1.4)
     theta = 0.9 * float(np.nanmedian(E.porosity(db)))
     z = ground_index(theta, d, soil, track, C.DEFAULT_PASSES)["z"].ravel()

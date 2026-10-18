@@ -1,0 +1,33 @@
+{
+ "applied_at": "2026-10-18T05:11:16+00:00",
+ "project_ref": "zarkusdtiwdquimnplya",
+ "action": "push",
+ "source": "ml_scores_20261018T042429Z_for20261018.csv",
+ "sql": "ml_scores_20261018T042429Z_for20261018.push.sql",
+ "rows_expected": 120,
+ "rows_read_back": 120,
+ "read_back": [
+  {
+   "hi": 4.1,
+   "horizon": "now",
+   "lo": 0.1,
+   "n": 60
+  },
+  {
+   "hi": 4.1,
+   "horizon": "tomorrow",
+   "lo": 0.1,
+   "n": 60
+  }
+ ],
+ "models_after": [
+  {
+   "model": "hazard_index",
+   "n": 120
+  },
+  {
+   "model": "mud",
+   "n": 120
+  }
+ ]
+}

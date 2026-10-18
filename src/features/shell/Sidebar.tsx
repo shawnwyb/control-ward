@@ -18,6 +18,7 @@ const supervisorItems: Item[] = [
   { page: "briefing", label: "Next-day briefing", icon: "brief" },
   { page: "crew", label: "Crew", icon: "paw" },
   { page: "reports", label: "Reports", icon: "camera" },
+  { page: "next-day-report", label: "Next-day report", icon: "brief" },
 ];
 
 const crewItems: Item[] = [
@@ -25,6 +26,7 @@ const crewItems: Item[] = [
   { page: "alerts", label: "Alerts", icon: "bell" },
   { page: "briefing", label: "Tomorrow's briefing", icon: "brief" },
   { page: "reports", label: "Reports", icon: "camera" },
+  { page: "next-day-report", label: "Next-day report", icon: "brief" },
 ];
 
 type Props = {

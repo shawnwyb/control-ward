@@ -34,6 +34,8 @@ import {
 } from "../report/ReportDrawer";
 import type { ReportDraft } from "../report/types";
 import { useReportSubmit } from "../report/useReportSubmit";
+import { NextDayReport } from "../nextday/NextDayReport";
+import { StopWorkBanner } from "../alerts/StopWorkBanner";
 import { MySitePage } from "../site/MySitePage";
 import { AlertsPage, BriefingPage, CrewPage, ReportsPage } from "./pages";
 import styles from "./SiteWorkspace.module.css";
@@ -315,6 +317,9 @@ export function SiteWorkspace({
   const base = { site, role, userId };
   return (
     <div id="site-workspace" className={styles.workspace}>
+      {!mapPages.includes(page) && page !== "alerts" ? (
+        <StopWorkBanner siteName={site.name} lightning={lightning.data} />
+      ) : null}
       {/* Only this wrapper is keyed (by page, and by site off the map pages), so state above it survives. */}
       <div
         key={mapPages.includes(page) ? page : `${page}:${site.id}`}
@@ -351,6 +356,7 @@ export function SiteWorkspace({
         {page === "alerts" ? (
           <AlertsPage {...base} alerts={alerts} lightning={lightning} />
         ) : null}
+        {page === "next-day-report" ? <NextDayReport site={site} /> : null}
         {page === "briefing" ? <BriefingPage {...base} /> : null}
         {page === "crew" ? (
           <CrewPage

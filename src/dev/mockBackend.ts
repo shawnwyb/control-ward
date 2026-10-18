@@ -56,6 +56,14 @@ const sites = [
     latitude: 26.088,
     longitude: -80.127,
   },
+  // A real plant, so the Next-day report tab has a sample report to show (public/reports/621).
+  {
+    id: "site-turkey-point",
+    name: "Turkey Point · Report demo",
+    latitude: 25.4356,
+    longitude: -80.3308,
+    eia_plant_id: "621",
+  },
 ];
 /**
  * Live readings per site (hazard, unit, value). The mock subscores are computed from
@@ -193,6 +201,12 @@ function seedSite(siteId: string, entries: Seed[]): Report[] {
 }
 
 const reports: Report[] = [
+  // Crew mud and wildlife reports near the sample report's flagged routes (Next-day report tab).
+  ...seedSite("site-turkey-point", [
+    ["mud", 2, 2, 90, 400, -300],
+    ["mud", 3, 1, 30, -500, 100],
+    ["wildlife", 2, 1, 200, 150, 450],
+  ]),
   ...seedSite("site-north", [
     ["downed_line", 3, 4, 20, 90, -140],
     ["wildlife", 2, 1, 180, -60, 220],
@@ -1126,6 +1140,43 @@ async function handle(
     return respond(
       memberOf && draft && (isSupervisor || draft.status === "sent")
         ? [draft]
+        : [],
+    );
+  }
+  if (path === "/rest/v1/hazard_evidence") {
+    return respond(
+      memberOf
+        ? [
+            {
+              id: "mock-evidence-1",
+              site_id: siteParam,
+              horizon: "now",
+              driver: "flood",
+              hazard_score: 4.5,
+              summary:
+                "National Weather Service flood statements and hydrologic updates indicate rising river levels and saturated drainage basins across the plant perimeter following heavy antecedent rainfall.",
+              articles: [
+                {
+                  title:
+                    "Regional River Basin Flood Advisory and Water Level Updates",
+                  url: "https://water.weather.gov/ahps",
+                  source: "weather.gov",
+                  snippet:
+                    "Elevated gauge readings and localized road ponding active across low-lying access corridors.",
+                },
+                {
+                  title:
+                    "Heavy Rainfall Prompts Flood Watches and Travel Advisories",
+                  url: "https://www.localnews.com/weather/flood-watch",
+                  source: "localnews.com",
+                  snippet:
+                    "Accumulation of 3.2 inches over the last 48 hours has created standing water and high-water runoff near transmission corridors.",
+                },
+              ],
+              model_version: "hazidx-0.1.0",
+              queried_at: new Date().toISOString(),
+            },
+          ]
         : [],
     );
   }

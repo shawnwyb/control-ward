@@ -1,0 +1,31 @@
+.sectionNav {
+  position: sticky;
+  top: 3rem;
+  z-index: 10;
+  display: flex;
+  gap: var(--space-2);
+  overflow-x: auto;
+  padding: var(--space-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--bg);
+}
+.sectionNav a {
+  flex: none;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  color: var(--ink-2);
+  text-decoration: none;
+}
+.sectionNav a:hover {
+  background: var(--hover);
+  color: var(--ink);
+}
+.sectionNav a:focus-visible {
+  outline: 2px solid var(--accent);
+}
+@media (min-width: 48rem) {
+  .sectionNav {
+    display: none;
+  }
+}

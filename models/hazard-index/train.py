@@ -150,6 +150,25 @@ def train(data: pd.DataFrame, weights: dict[str, float], log=print) -> tuple[dic
     return bundle, out, metadata
 
 
+def compact_predictions(preds: pd.DataFrame) -> pd.DataFrame:
+    """Committed artifact: float32, weather rounded to 0.01, small integer types. Training rows keep only
+    what evaluate.py and the notebook read from them (labels, rules, out-of-fold p, R, score)."""
+    out = preds.copy()
+    train_rows = out["split"] == "train_oof"
+    blank = list(WEATHER_KEEP) + [f"{k}_{f}" for k in ("pp", "clim") for f in config.FAMILIES]
+    out.loc[train_rows, blank] = np.nan
+    for c in out.columns:
+        if c in WEATHER_KEEP:
+            out[c] = out[c].round(2).astype("float32")
+        elif out[c].dtype == "float64":
+            out[c] = out[c].astype("float32")
+    for c in [f"y_{f}" for f in config.FAMILIES] + ["y_any"]:
+        out[c] = out[c].astype("int8")
+    for c in ("split", "top_driver", "eia_plant_id"):
+        out[c] = out[c].astype("category")
+    return out
+
+
 def save(bundle: dict, preds: pd.DataFrame, metadata: dict) -> str:
     tmp = paths.MODELS / "_building"
     if tmp.exists():
@@ -161,7 +180,7 @@ def save(bundle: dict, preds: pd.DataFrame, metadata: dict) -> str:
     metadata = {"model_version": version, **metadata}
     (tmp / "metadata.json").write_text(json.dumps(metadata, indent=1, default=float))
     (tmp / "tier_map.json").write_text(json.dumps(bundle["tier_map"], indent=1))
-    preds.to_parquet(tmp / "predictions.parquet", index=False)
+    compact_predictions(preds).to_parquet(tmp / "predictions.parquet", index=False, compression="zstd")
     final = paths.MODELS / version
     if final.exists():
         shutil.rmtree(final)

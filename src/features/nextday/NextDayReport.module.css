@@ -1,0 +1,446 @@
+.stack {
+  display: grid;
+  /* minmax(0, ...) lets wide children (the section links, tables, strips) scroll inside the column instead of widening the page. */
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-5);
+}
+
+.cols {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-5);
+}
+
+@media (min-width: 64rem) {
+  .cols {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+  }
+}
+
+/* Panels that the section links jump to must clear the sticky links on phones. */
+.stack section[id],
+.cols section[id] {
+  /* Clear both the mobile app bar and the report section links. */
+  scroll-margin-top: 7rem;
+}
+
+.muted {
+  color: var(--ink-2);
+  font-size: var(--text-sm);
+}
+
+.small {
+  font-size: var(--text-xs);
+  color: var(--ink-2);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.sub {
+  margin: var(--space-5) 0 var(--space-2);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+.list {
+  margin: 0;
+  padding-left: var(--space-5);
+  display: grid;
+  gap: var(--space-2);
+}
+
+.plain {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: var(--space-3);
+}
+
+/* ---- verdict banner */
+.verdict {
+  border: var(--rule-width) solid var(--line);
+  border-left: var(--heavy-rule) solid var(--risk-low);
+  background: var(--bg);
+  padding: var(--space-4) var(--space-5);
+  display: grid;
+  gap: var(--space-3);
+}
+
+.verdict[data-level="limits"] {
+  border-left-color: var(--severity-2);
+}
+
+.verdict[data-level="reschedule"] {
+  border-left-color: var(--severity-3);
+}
+
+.verdictHead {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3) var(--space-6);
+  align-items: baseline;
+}
+
+.verdictLabel {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+  font-size: var(--text-2xl);
+  font-weight: 600;
+  margin: 0;
+}
+
+.banner {
+  border: var(--rule-width) solid var(--severity-2);
+  background: var(--severity-2-bg);
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-sm);
+}
+
+/* ---- hour strip */
+.strip {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(2.4rem, 1fr);
+  overflow-x: auto;
+  border: var(--rule-width) solid var(--line);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cell {
+  /* The cell is the positioning context for its screen-reader text, so the scrolling strip clips it. */
+  position: relative;
+  display: grid;
+  gap: var(--space-1);
+  justify-items: center;
+  padding: var(--space-2) var(--space-1);
+  border-left: var(--rule-width) solid var(--line);
+  font-size: var(--text-xs);
+  background: var(--bg);
+}
+
+.cell:first-child {
+  border-left: 0;
+}
+
+/* "10 AM" must stay on one line in the narrowest cells. */
+.cell > span:first-child {
+  white-space: nowrap;
+  font-size: 0.6875rem;
+}
+
+.cell b {
+  font-family: var(--font-mono);
+  font-size: var(--text-base);
+  font-weight: 600;
+}
+
+.cell[data-band="caution"] {
+  background: var(--severity-1-bg);
+}
+
+.cell[data-band="extreme_caution"] {
+  background: var(--severity-2-bg);
+}
+
+.cell[data-band="danger"],
+.cell[data-band="extreme_danger"] {
+  background: var(--severity-3-bg);
+}
+
+.cell[data-band="extreme_danger"] {
+  outline: 2px solid var(--severity-3);
+  outline-offset: -2px;
+}
+
+.cell[data-peak="true"] {
+  box-shadow: inset 0 3px 0 var(--ink);
+}
+
+.cell[data-blocked="true"] {
+  background-image: repeating-linear-gradient(
+    135deg,
+    transparent 0 5px,
+    color-mix(in srgb, var(--ink) 14%, transparent) 5px 6px
+  );
+}
+
+/* ---- tables */
+.tableWrap {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+}
+
+.table th,
+.table td {
+  padding: var(--space-2) var(--space-2);
+  border-bottom: var(--rule-width) solid var(--line);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.table th:first-child,
+.table td:first-child {
+  text-align: left;
+  position: sticky;
+  left: 0;
+  background: var(--bg);
+}
+
+/* A table that wraps instead of scrolling: short text columns in a half-width panel. */
+.table.wrap th,
+.table.wrap td {
+  white-space: normal;
+}
+
+.table.wrap th:first-child,
+.table.wrap td:first-child {
+  position: static;
+}
+
+.table caption {
+  text-align: left;
+  white-space: normal;
+  padding-bottom: var(--space-2);
+}
+
+.table .left,
+.table th.left {
+  text-align: left;
+}
+
+.table td[data-over="true"] {
+  font-weight: 700;
+  background: var(--severity-2-bg);
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+/* ---- timeline of water breaks */
+.timeline {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0;
+  border: var(--rule-width) solid var(--line);
+}
+
+.step {
+  display: grid;
+  grid-template-columns: 11.5rem minmax(0, 1fr);
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-top: var(--rule-width) solid var(--line);
+}
+
+.step:first-child {
+  border-top: 0;
+}
+
+.step h4 {
+  margin: 0;
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+  font-size: var(--text-sm);
+}
+
+.step p {
+  margin: var(--space-1) 0 0;
+  font-size: var(--text-sm);
+}
+
+.time {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  white-space: nowrap;
+}
+
+@media (max-width: 36rem) {
+  .step {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-1);
+  }
+}
+
+/* ---- score */
+.score {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-6);
+  align-items: flex-end;
+}
+
+.scoreValue {
+  font-family: var(--font-mono);
+  font-size: var(--text-3xl);
+  font-weight: 600;
+  line-height: 1;
+}
+
+.bars {
+  display: grid;
+  gap: var(--space-2);
+  margin: var(--space-3) 0;
+}
+
+.bar {
+  display: grid;
+  grid-template-columns: 4rem minmax(0, 1fr) 4.5rem;
+  gap: var(--space-3);
+  align-items: center;
+  font-size: var(--text-sm);
+}
+
+.bar meter,
+.bar progress {
+  width: 100%;
+  height: 0.75rem;
+}
+
+/* ---- map */
+.mapBox {
+  position: relative;
+  height: 26rem;
+  border: var(--rule-width) solid var(--line);
+  background: var(--fill);
+}
+
+.mapBox > div {
+  position: absolute;
+  inset: 0;
+}
+
+.mapBox > div:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: -3px;
+}
+
+/* Keyboard crosshair for picking a detour point. */
+.crosshair {
+  width: 28px;
+  height: 28px;
+  box-sizing: border-box;
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+  background:
+    linear-gradient(var(--ink), var(--ink)) center / 2px 100% no-repeat,
+    linear-gradient(var(--ink), var(--ink)) center / 100% 2px no-repeat,
+    color-mix(in srgb, var(--bg) 55%, transparent);
+}
+
+/* "About this data": folded notes. */
+.about {
+  margin-top: var(--space-3);
+  font-size: var(--text-sm);
+}
+
+.about summary {
+  display: flex;
+  align-items: center;
+  min-height: var(--tap-min);
+  cursor: pointer;
+  color: var(--ink-2);
+  font-weight: 500;
+}
+
+/* display: flex removes the browser's arrow, so draw one: it tells the reader the line opens. */
+.about summary::before {
+  content: "\25B8";
+  display: inline-block;
+  width: 1.25rem;
+}
+
+.about[open] summary::before {
+  content: "\25BE";
+}
+
+.about > div {
+  padding-bottom: var(--space-2);
+}
+
+.limitInput {
+  width: 5rem;
+  min-height: var(--tap-min);
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-5);
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--text-xs);
+}
+
+.legend li {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.swatch {
+  display: inline-block;
+  width: 1.25rem;
+  height: 0.5rem;
+  border: 1px solid var(--ink);
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3) var(--space-5);
+  align-items: center;
+  margin-bottom: var(--space-3);
+}
+
+.check {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+  min-height: var(--tap-min);
+  font-size: var(--text-sm);
+}
+
+@media print {
+  /* Print only the report: no app bar, footer, page controls or map controls. */
+  :global(#app):has(:global(#next-day-report)) > header,
+  :global(#app):has(:global(#next-day-report)) > footer,
+  :global(#workspace):has(:global(#next-day-report)) > section:first-child {
+    display: none;
+  }
+
+  .noPrint {
+    display: none !important;
+  }
+
+  .stack section,
+  .verdict {
+    break-inside: avoid;
+  }
+
+  .mapBox {
+    height: 18rem;
+  }
+}

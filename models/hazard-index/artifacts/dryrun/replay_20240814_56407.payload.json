@@ -1,0 +1,4 @@
+[
+  {"eia_plant_id": "56407", "horizon": "now", "score": 4.7, "model_version": "hazidx-0.1.0+2018-2022.23ed6848"},
+  {"eia_plant_id": "56407", "horizon": "tomorrow", "score": 3.2, "model_version": "hazidx-0.1.0+2018-2022.23ed6848"}
+]

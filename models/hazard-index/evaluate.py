@@ -154,7 +154,7 @@ def figures(test: pd.DataFrame, metrics: dict, tmap: dict, oof: pd.DataFrame, ou
         ax.plot([0, top], [0, top], color=plots.GRID, linewidth=1)
         for (name, label), color in zip((("full", "full model"), ("past_only", "past-data only")), plots.SERIES):
             b = rel[name]
-            ax.plot([x["p_mean"] for x in b], [x["observed"] for x in b], color=color, marker="o", markersize=4,
+            ax.plot([x["p_mean"] for x in b], [x["observed"] for x in b], color=color, marker="o", markersize=6,
                     markeredgecolor=plots.SURFACE, markeredgewidth=1.5, label=label)
         ax.set_title(fam)
         ax.set_xlabel("predicted probability")
@@ -186,13 +186,14 @@ def figures(test: pd.DataFrame, metrics: dict, tmap: dict, oof: pd.DataFrame, ou
     fig, ax = plt.subplots(figsize=(6, 3.6))
     pts = np.array(tmap["points"])
     grid = np.linspace(0, pts[-1, 0] * 1.15, 400)
-    ax.plot(grid, tiermap.apply(grid, tmap), color=plots.SERIES[0], label="0-10 map")
+    ax.plot(grid, np.interp(grid, pts[:, 0], pts[:, 1]), color=plots.SERIES[0], label="0-10 map (scores round to 0.1)")
     if tmap["pairs"]:
         pr = np.array(tmap["pairs"])
-        ax.plot(pr[:, 0], pr[:, 1], linestyle="none", marker="o", markersize=6, color=plots.SERIES[1],
+        ax.plot(pr[:, 0], pr[:, 1], linestyle="none", marker="o", markersize=7, color=plots.SERIES[1],
                 markeredgecolor=plots.SURFACE, markeredgewidth=1.5, label="median R per rule level (training, out-of-fold)")
-    for cut in (3, 7.5, 10):
+    for cut, name in ((3, "watch"), (7.5, "warning"), (10, "stop work")):
         ax.axhline(cut, color=plots.GRID, linewidth=1)
+        ax.text(grid[-1], cut + 0.15, name, ha="right", va="bottom", fontsize=8, color=plots.TEXT_2)
     ax.set_xlabel("combined value R = max(s × p)")
     ax.set_ylabel("Hazard Index")
     ax.set_ylim(0, 10.5)

@@ -35,6 +35,26 @@ export type SiteRiskView = {
   activeAlerts: number;
 };
 
+export type HazardArticle = {
+  title: string;
+  url: string;
+  source: string;
+  snippet?: string;
+  published_at?: string;
+};
+
+export type HazardEvidenceView = {
+  id: string;
+  site_id: string;
+  horizon: "now" | "tomorrow";
+  driver: string;
+  hazard_score: number;
+  summary: string;
+  articles: HazardArticle[];
+  model_version: string;
+  queried_at: string;
+};
+
 export type AlertRow = {
   id: string;
   kind: string;
@@ -336,4 +356,25 @@ export async function clearSupervisorAlert(alertId: string): Promise<void> {
     p_alert_id: alertId,
   });
   if (error) throw error;
+}
+
+/** Fetches backing news articles and evidence for a site's hazard index drivers. */
+export async function fetchHazardEvidence(
+  siteId: string,
+): Promise<HazardEvidenceView[]> {
+  const { data, error } = await supabase
+    .from("hazard_evidence")
+    .select("*")
+    .eq("site_id", siteId)
+    .order("hazard_score", { ascending: false });
+  if (error) {
+    console.warn("fetchHazardEvidence:", error.message);
+    return [];
+  }
+  return (data ?? []).map((row) => ({
+    ...row,
+    articles: Array.isArray(row.articles)
+      ? (row.articles as HazardArticle[])
+      : [],
+  })) as HazardEvidenceView[];
 }

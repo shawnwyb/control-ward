@@ -1,0 +1,1812 @@
+{
+ "6163": {
+  "site": "Grand Coulee",
+  "candidates": [
+   {
+    "station": "9447659",
+    "name": "Everett",
+    "state": "WA",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 241.6
+   },
+   {
+    "station": "9447717",
+    "name": "Priest Point",
+    "state": "WA",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 242.0
+   },
+   {
+    "station": "9447773",
+    "name": "Tulalip",
+    "state": "WA",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 246.5
+   }
+  ]
+ },
+ "649": {
+  "site": "Vogtle",
+  "candidates": [
+   {
+    "station": "8667076",
+    "name": "Tulifiny River, I-95 bridge",
+    "state": "SC",
+    "type": "S",
+    "reference_id": "8670870",
+    "distance_km": 100.3
+   },
+   {
+    "station": "8667146",
+    "name": "North Dawson Landing, Coosawhatchie River",
+    "state": "SC",
+    "type": "S",
+    "reference_id": "8670870",
+    "distance_km": 102.5
+   },
+   {
+    "station": "8666359",
+    "name": "Bluff Plantation",
+    "state": "SC",
+    "type": "S",
+    "reference_id": "8670870",
+    "distance_km": 108.4
+   }
+  ]
+ },
+ "56407": {
+  "site": "West County Energy Center",
+  "candidates": [
+   {
+    "station": "8722621",
+    "name": "Palm Beach, Highway 704 bridge",
+    "state": "FL",
+    "type": "S",
+    "reference_id": "8723178",
+    "distance_km": 32.8
+   },
+   {
+    "station": "8722588",
+    "name": "Port of Palm Beach",
+    "state": "FL",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 33.0
+   },
+   {
+    "station": "8722607",
+    "name": "Palm Beach",
+    "state": "FL",
+    "type": "S",
+    "reference_id": "8723178",
+    "distance_km": 33.3
+   }
+  ]
+ },
+ "6008": {
+  "site": "Palo Verde",
+  "candidates": [
+   {
+    "station": "9410135",
+    "name": "South San Diego Bay",
+    "state": "CA",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 404.8
+   },
+   {
+    "station": "9410152",
+    "name": "National City, San Diego Bay",
+    "state": "CA",
+    "type": "S",
+    "reference_id": "9410170",
+    "distance_km": 404.8
+   },
+   {
+    "station": "9410120",
+    "name": "Imperial Beach",
+    "state": "CA",
+    "type": "S",
+    "reference_id": "9410170",
+    "distance_km": 408.6
+   }
+  ]
+ },
+ "3470": {
+  "site": "W A Parish",
+  "candidates": [
+   {
+    "station": "8770542",
+    "name": "Buffalo Bayou, Houston Ship Channel",
+    "state": "TX",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 41.6
+   },
+   {
+    "station": "8770777",
+    "name": "Manchester, Houston Ship Channel",
+    "state": "TX",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 44.5
+   },
+   {
+    "station": "8770933",
+    "name": "Clear Lake",
+    "state": "TX",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 55.3
+   }
+  ]
+ },
+ "46": {
+  "site": "Browns Ferry",
+  "candidates": [
+   {
+    "station": "8737373",
+    "name": "Lower Bryant Landing",
+    "state": "AL",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 420.2
+   },
+   {
+    "station": "8737182",
+    "name": "Lower Hall Landing, Tensaw River",
+    "state": "AL",
+    "type": "S",
+    "reference_id": "8737048",
+    "distance_km": 438.5
+   },
+   {
+    "station": "8737138",
+    "name": "William Brooks Park, Chichasaw Creek",
+    "state": "AL",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 445.2
+   }
+  ]
+ },
+ "703": {
+  "site": "Bowen",
+  "candidates": [
+   {
+    "station": "8668701",
+    "name": "Purrysburg Landing, S.C.",
+    "state": "SC",
+    "type": "S",
+    "reference_id": "8670870",
+    "distance_km": 407.5
+   },
+   {
+    "station": "8670073",
+    "name": "S.C.L. RR. bridge",
+    "state": "GA",
+    "type": "S",
+    "reference_id": "8670870",
+    "distance_km": 409.7
+   },
+   {
+    "station": "8667076",
+    "name": "Tulifiny River, I-95 bridge",
+    "state": "SC",
+    "type": "S",
+    "reference_id": "8670870",
+    "distance_km": 409.9
+   }
+  ]
+ },
+ "628": {
+  "site": "Crystal River",
+  "candidates": [
+   {
+    "station": "8727386",
+    "name": "Florida Power",
+    "state": "FL",
+    "type": "S",
+    "reference_id": "8727520",
+    "distance_km": 2.7
+   },
+   {
+    "station": "8727359",
+    "name": "Shell Island, north end",
+    "state": "FL",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 4.7
+   },
+   {
+    "station": "8727395",
+    "name": "Withlacoochee River entrance",
+    "state": "FL",
+    "type": "S",
+    "reference_id": "8727520",
+    "distance_km": 7.1
+   }
+  ],
+  "station": "8727386",
+  "station_name": "Florida Power",
+  "distance_km": 2.7,
+  "reviewed": false,
+  "note": ""
+ },
+ "3": {
+  "site": "Barry",
+  "candidates": [
+   {
+    "station": "8737373",
+    "name": "Lower Bryant Landing",
+    "state": "AL",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 13.4
+   },
+   {
+    "station": "8737182",
+    "name": "Lower Hall Landing, Tensaw River",
+    "state": "AL",
+    "type": "S",
+    "reference_id": "8737048",
+    "distance_km": 22.9
+   },
+   {
+    "station": "8737138",
+    "name": "William Brooks Park, Chichasaw Creek",
+    "state": "AL",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 25.7
+   }
+  ],
+  "station": "8737373",
+  "station_name": "Lower Bryant Landing",
+  "distance_km": 13.4,
+  "reviewed": false,
+  "note": "Station is in the Mobile River delta. Confirm."
+ },
+ "6113": {
+  "site": "Gibson",
+  "candidates": [
+   {
+    "station": "8737373",
+    "name": "Lower Bryant Landing",
+    "state": "AL",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 822.2
+   },
+   {
+    "station": "8737182",
+    "name": "Lower Hall Landing, Tensaw River",
+    "state": "AL",
+    "type": "S",
+    "reference_id": "8737048",
+    "distance_km": 840.1
+   },
+   {
+    "station": "8737138",
+    "name": "William Brooks Park, Chichasaw Creek",
+    "state": "AL",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 844.5
+   }
+  ]
+ },
+ "1733": {
+  "site": "Monroe (MI)",
+  "candidates": [
+   {
+    "station": "8594900",
+    "name": "WASHINGTON, Washington Channel, D.C.",
+    "state": "DC",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 631.8
+   },
+   {
+    "station": "8593005",
+    "name": "Washington Naval Yard",
+    "state": "DC",
+    "type": "S",
+    "reference_id": "8594900",
+    "distance_km": 633.9
+   },
+   {
+    "station": "8579997",
+    "name": "Bladensburg, Md.",
+    "state": "MD",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 634.1
+   }
+  ]
+ },
+ "621": {
+  "site": "Turkey Point",
+  "candidates": [
+   {
+    "station": "8723423",
+    "name": "Turkey Point, Biscayne Bay",
+    "state": "FL",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 0.1
+   },
+   {
+    "station": "8723465",
+    "name": "East Arsenicker, Card Sound",
+    "state": "FL",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 8.0
+   },
+   {
+    "station": "8723467",
+    "name": "Totten Key, west side, Biscayne Bay",
+    "state": "FL",
+    "type": "S",
+    "reference_id": "8723178",
+    "distance_km": 9.8
+   }
+  ],
+  "station": "8723423",
+  "station_name": "Turkey Point, Biscayne Bay",
+  "distance_km": 0.1,
+  "reviewed": false,
+  "note": ""
+ },
+ "6042": {
+  "site": "Manatee",
+  "candidates": [
+   {
+    "station": "8726436",
+    "name": "Little Manatee River, US 41 Bridge",
+    "state": "FL",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 15.0
+   },
+   {
+    "station": "8726278",
+    "name": "Redfish Point, Manatee River",
+    "state": "FL",
+    "type": "S",
+    "reference_id": "8726520",
+    "distance_km": 16.0
+   },
+   {
+    "station": "8726425",
+    "name": "Cockroach Bay",
+    "state": "FL",
+    "type": "S",
+    "reference_id": "8726520",
+    "distance_km": 17.5
+   }
+  ],
+  "station": "8726436",
+  "station_name": "Little Manatee River, US 41 Bridge",
+  "distance_km": 15.0,
+  "reviewed": false,
+  "note": "Station is on the Little Manatee River, 15 km away. Confirm it matches the plant's water body (Tampa Bay)."
+ },
+ "3935": {
+  "site": "John E Amos",
+  "candidates": [
+   {
+    "station": "8635154",
+    "name": "Massaponax",
+    "state": "VA",
+    "type": "S",
+    "reference_id": "8594900",
+    "distance_km": 385.5
+   },
+   {
+    "station": "8634858",
+    "name": "Aquia Creek, Va.",
+    "state": "VA",
+    "type": "S",
+    "reference_id": "8594900",
+    "distance_km": 389.3
+   },
+   {
+    "station": "8634689",
+    "name": "Quantico, Va.",
+    "state": "VA",
+    "type": "S",
+    "reference_id": "8594900",
+    "distance_km": 394.8
+   }
+  ]
+ },
+ "3166": {
+  "site": "Peach Bottom",
+  "candidates": [
+   {
+    "station": "8574008",
+    "name": "Port Deposit",
+    "state": "MD",
+    "type": "S",
+    "reference_id": "8574680",
+    "distance_km": 21.8
+   },
+   {
+    "station": "8574070",
+    "name": "Havre de Grace",
+    "state": "MD",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 29.1
+   },
+   {
+    "station": "8573968",
+    "name": "Charlestown, Northeast River",
+    "state": "MD",
+    "type": "S",
+    "reference_id": "8574680",
+    "distance_km": 32.9
+   }
+  ]
+ },
+ "6167": {
+  "site": "Bath County",
+  "candidates": [
+   {
+    "station": "8635154",
+    "name": "Massaponax",
+    "state": "VA",
+    "type": "S",
+    "reference_id": "8594900",
+    "distance_km": 208.8
+   },
+   {
+    "station": "8634858",
+    "name": "Aquia Creek, Va.",
+    "state": "VA",
+    "type": "S",
+    "reference_id": "8594900",
+    "distance_km": 214.7
+   },
+   {
+    "station": "8634689",
+    "name": "Quantico, Va.",
+    "state": "VA",
+    "type": "S",
+    "reference_id": "8594900",
+    "distance_km": 221.8
+   }
+  ]
+ },
+ "6251": {
+  "site": "South Texas Project",
+  "candidates": [
+   {
+    "station": "8773146",
+    "name": "East Matagorda",
+    "state": "TX",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 16.1
+   },
+   {
+    "station": "8772985",
+    "name": "Sargent, ICWW",
+    "state": "TX",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 42.1
+   },
+   {
+    "station": "8773767",
+    "name": "Matagorda Bay Entrance Channel",
+    "state": "TX",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 49.3
+   }
+  ],
+  "station": "8773146",
+  "station_name": "East Matagorda",
+  "distance_km": 16.1,
+  "reviewed": false,
+  "note": "Plant is on the Colorado River near Bay City; this station is on the Gulf side of East Matagorda Bay. Confirm."
+ },
+ "612": {
+  "site": "Fort Myers",
+  "candidates": [
+   {
+    "station": "8725520",
+    "name": "Fort Myers",
+    "state": "FL",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 10.3
+   },
+   {
+    "station": "8725451",
+    "name": "Cape Coral Bridge",
+    "state": "FL",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 21.0
+   },
+   {
+    "station": "8725418",
+    "name": "Iona Shores",
+    "state": "FL",
+    "type": "S",
+    "reference_id": "8726520",
+    "distance_km": 26.6
+   }
+  ],
+  "station": "8725520",
+  "station_name": "Fort Myers",
+  "distance_km": 10.3,
+  "reviewed": false,
+  "note": ""
+ },
+ "3265": {
+  "site": "Oconee",
+  "candidates": [
+   {
+    "station": "8667076",
+    "name": "Tulifiny River, I-95 bridge",
+    "state": "SC",
+    "type": "S",
+    "reference_id": "8670870",
+    "distance_km": 305.7
+   },
+   {
+    "station": "8666166",
+    "name": "Cuckolds Creek",
+    "state": "SC",
+    "type": "S",
+    "reference_id": "8670870",
+    "distance_km": 308.2
+   },
+   {
+    "station": "8666359",
+    "name": "Bluff Plantation",
+    "state": "SC",
+    "type": "S",
+    "reference_id": "8670870",
+    "distance_km": 308.2
+   }
+  ]
+ },
+ "6166": {
+  "site": "Rockport",
+  "candidates": [
+   {
+    "station": "8737373",
+    "name": "Lower Bryant Landing",
+    "state": "AL",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 776.3
+   },
+   {
+    "station": "8737182",
+    "name": "Lower Hall Landing, Tensaw River",
+    "state": "AL",
+    "type": "S",
+    "reference_id": "8737048",
+    "distance_km": 794.4
+   },
+   {
+    "station": "8737138",
+    "name": "William Brooks Park, Chichasaw Creek",
+    "state": "AL",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 800.0
+   }
+  ]
+ },
+ "8102": {
+  "site": "Gavin Power, LLC",
+  "candidates": [
+   {
+    "station": "8635154",
+    "name": "Massaponax",
+    "state": "VA",
+    "type": "S",
+    "reference_id": "8594900",
+    "distance_km": 415.8
+   },
+   {
+    "station": "8634858",
+    "name": "Aquia Creek, Va.",
+    "state": "VA",
+    "type": "S",
+    "reference_id": "8594900",
+    "distance_km": 417.3
+   },
+   {
+    "station": "8634689",
+    "name": "Quantico, Va.",
+    "state": "VA",
+    "type": "S",
+    "reference_id": "8594900",
+    "distance_km": 421.4
+   }
+  ]
+ },
+ "3399": {
+  "site": "Cumberland (TN)",
+  "candidates": [
+   {
+    "station": "8737373",
+    "name": "Lower Bryant Landing",
+    "state": "AL",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 602.1
+   },
+   {
+    "station": "8737182",
+    "name": "Lower Hall Landing, Tensaw River",
+    "state": "AL",
+    "type": "S",
+    "reference_id": "8737048",
+    "distance_km": 620.0
+   },
+   {
+    "station": "8737138",
+    "name": "William Brooks Park, Chichasaw Creek",
+    "state": "AL",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 624.8
+   }
+  ]
+ },
+ "6071": {
+  "site": "Trimble County",
+  "candidates": [
+   {
+    "station": "8635154",
+    "name": "Massaponax",
+    "state": "VA",
+    "type": "S",
+    "reference_id": "8594900",
+    "distance_km": 697.8
+   },
+   {
+    "station": "8634858",
+    "name": "Aquia Creek, Va.",
+    "state": "VA",
+    "type": "S",
+    "reference_id": "8594900",
+    "distance_km": 701.3
+   },
+   {
+    "station": "8634689",
+    "name": "Quantico, Va.",
+    "state": "VA",
+    "type": "S",
+    "reference_id": "8594900",
+    "distance_km": 706.3
+   }
+  ]
+ },
+ "66923": {
+  "site": "SunZia Wind South",
+  "candidates": [
+   {
+    "station": "9507601",
+    "name": "Guaymas",
+    "state": "",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 875.5
+   },
+   {
+    "station": "8775222",
+    "name": "Viola Turning Basin",
+    "state": "TX",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 1054.7
+   },
+   {
+    "station": "8775188",
+    "name": "White Point",
+    "state": "TX",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 1056.9
+   }
+  ]
+ },
+ "2712": {
+  "site": "Roxboro",
+  "candidates": [
+   {
+    "station": "8638489",
+    "name": "Puddledock, Appomattox River",
+    "state": "VA",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 174.6
+   },
+   {
+    "station": "8638491",
+    "name": "Chester",
+    "state": "VA",
+    "type": "S",
+    "reference_id": "8594900",
+    "distance_km": 180.8
+   },
+   {
+    "station": "8636941",
+    "name": "Richmond Deepwater Terminal, James River",
+    "state": "VA",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 182.6
+   }
+  ]
+ },
+ "7722": {
+  "site": "Watts Bar Nuclear Plant",
+  "candidates": [
+   {
+    "station": "8667076",
+    "name": "Tulifiny River, I-95 bridge",
+    "state": "SC",
+    "type": "S",
+    "reference_id": "8670870",
+    "distance_km": 489.1
+   },
+   {
+    "station": "8667146",
+    "name": "North Dawson Landing, Coosawhatchie River",
+    "state": "SC",
+    "type": "S",
+    "reference_id": "8670870",
+    "distance_km": 491.8
+   },
+   {
+    "station": "8666359",
+    "name": "Bluff Plantation",
+    "state": "SC",
+    "type": "S",
+    "reference_id": "8670870",
+    "distance_km": 494.2
+   }
+  ]
+ },
+ "6103": {
+  "site": "TalenEnergy Susquehanna",
+  "candidates": [
+   {
+    "station": "8545120",
+    "name": "Market Street Bridge",
+    "state": "PA",
+    "type": "S",
+    "reference_id": "8545240",
+    "distance_km": 150.5
+   },
+   {
+    "station": "8538886",
+    "name": "Tacony-Palmyra Bridge",
+    "state": "NJ",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 152.0
+   },
+   {
+    "station": "8545530",
+    "name": "Philadelphia, Municipal Pier 11, Pa.",
+    "state": "PA",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 152.6
+   }
+  ]
+ },
+ "8042": {
+  "site": "Belews Creek",
+  "candidates": [
+   {
+    "station": "8638489",
+    "name": "Puddledock, Appomattox River",
+    "state": "VA",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 263.3
+   },
+   {
+    "station": "8638491",
+    "name": "Chester",
+    "state": "VA",
+    "type": "S",
+    "reference_id": "8594900",
+    "distance_km": 268.3
+   },
+   {
+    "station": "8636941",
+    "name": "Richmond Deepwater Terminal, James River",
+    "state": "VA",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 268.9
+   }
+  ]
+ },
+ "130": {
+  "site": "Cross",
+  "candidates": [
+   {
+    "station": "8663539",
+    "name": "Pimlico, West Branch",
+    "state": "SC",
+    "type": "S",
+    "reference_id": "8665530",
+    "distance_km": 34.2
+   },
+   {
+    "station": "8663631",
+    "name": "Old Rice Mill, West Branch",
+    "state": "SC",
+    "type": "S",
+    "reference_id": "8665530",
+    "distance_km": 37.0
+   },
+   {
+    "station": "8663757",
+    "name": "Dupont, Dean Hall",
+    "state": "SC",
+    "type": "S",
+    "reference_id": "8665530",
+    "distance_km": 38.5
+   }
+  ]
+ },
+ "6022": {
+  "site": "Braidwood Generation Station",
+  "candidates": [
+   {
+    "station": "8634858",
+    "name": "Aquia Creek, Va.",
+    "state": "VA",
+    "type": "S",
+    "reference_id": "8594900",
+    "distance_km": 979.5
+   },
+   {
+    "station": "8634689",
+    "name": "Quantico, Va.",
+    "state": "VA",
+    "type": "S",
+    "reference_id": "8594900",
+    "distance_km": 980.7
+   },
+   {
+    "station": "8635154",
+    "name": "Massaponax",
+    "state": "VA",
+    "type": "S",
+    "reference_id": "8594900",
+    "distance_km": 982.0
+   }
+  ]
+ },
+ "6023": {
+  "site": "Byron Generating Station",
+  "candidates": [
+   {
+    "station": "8634858",
+    "name": "Aquia Creek, Va.",
+    "state": "VA",
+    "type": "S",
+    "reference_id": "8594900",
+    "distance_km": 1089.8
+   },
+   {
+    "station": "8634689",
+    "name": "Quantico, Va.",
+    "state": "VA",
+    "type": "S",
+    "reference_id": "8594900",
+    "distance_km": 1090.2
+   },
+   {
+    "station": "8635154",
+    "name": "Massaponax",
+    "state": "VA",
+    "type": "S",
+    "reference_id": "8594900",
+    "distance_km": 1093.3
+   }
+  ]
+ },
+ "1403": {
+  "site": "Nine Mile Point",
+  "candidates": [
+   {
+    "station": "8761927",
+    "name": "New Canal USCG station, Lake Pontchartrain",
+    "state": "LA",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 9.4
+   },
+   {
+    "station": "8761678",
+    "name": "Michoud Substation, ICWW",
+    "state": "LA",
+    "type": "S",
+    "reference_id": "8760551",
+    "distance_km": 21.2
+   },
+   {
+    "station": "8762372",
+    "name": "East Bank 1, Norco, B. LaBranche",
+    "state": "LA",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 24.3
+   }
+  ],
+  "station": "8761927",
+  "station_name": "New Canal USCG station, Lake Pontchartrain",
+  "distance_km": 9.4,
+  "reviewed": false,
+  "note": "Plant is on the Mississippi River at Westwego; this station is on Lake Pontchartrain. Confirm they share tidal water."
+ },
+ "6145": {
+  "site": "Comanche Peak",
+  "candidates": [
+   {
+    "station": "8770542",
+    "name": "Buffalo Bayou, Houston Ship Channel",
+    "state": "TX",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 365.6
+   },
+   {
+    "station": "8770777",
+    "name": "Manchester, Houston Ship Channel",
+    "state": "TX",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 373.4
+   },
+   {
+    "station": "8770653",
+    "name": "Cypress, San Jacinto River",
+    "state": "TX",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 374.5
+   }
+  ]
+ },
+ "2693": {
+  "site": "Robert Moses Niagara",
+  "candidates": [
+   {
+    "station": "8518995",
+    "name": "ALBANY",
+    "state": "NY",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 434.5
+   },
+   {
+    "station": "8518989",
+    "name": "Castleton",
+    "state": "NY",
+    "type": "S",
+    "reference_id": "8518995",
+    "distance_km": 435.2
+   },
+   {
+    "station": "8518962",
+    "name": "TURKEY POINT, HUDSON RIVER",
+    "state": "NY",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 436.0
+   }
+  ]
+ },
+ "55380": {
+  "site": "Union Power Station",
+  "candidates": [
+   {
+    "station": "8767816",
+    "name": "Lake Charles",
+    "state": "LA",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 346.8
+   },
+   {
+    "station": "8767961",
+    "name": "Calcasieu Ship Channel, Bulk Terminal",
+    "state": "LA",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 351.8
+   },
+   {
+    "station": "8768772",
+    "name": "Gum Cove, ICWW",
+    "state": "LA",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 370.7
+   }
+  ]
+ },
+ "2103": {
+  "site": "Labadie",
+  "candidates": [
+   {
+    "station": "8737373",
+    "name": "Lower Bryant Landing",
+    "state": "AL",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 885.5
+   },
+   {
+    "station": "8737138",
+    "name": "William Brooks Park, Chichasaw Creek",
+    "state": "AL",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 901.2
+   },
+   {
+    "station": "8737182",
+    "name": "Lower Hall Landing, Tensaw River",
+    "state": "AL",
+    "type": "S",
+    "reference_id": "8737048",
+    "distance_km": 901.4
+   }
+  ]
+ },
+ "6146": {
+  "site": "Martin Lake",
+  "candidates": [
+   {
+    "station": "8767961",
+    "name": "Calcasieu Ship Channel, Bulk Terminal",
+    "state": "LA",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 259.9
+   },
+   {
+    "station": "8767816",
+    "name": "Lake Charles",
+    "state": "LA",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 260.3
+   },
+   {
+    "station": "8770520",
+    "name": "Rainbow Bridge",
+    "state": "TX",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 261.9
+   }
+  ]
+ },
+ "6026": {
+  "site": "LaSalle Generating Station",
+  "candidates": [
+   {
+    "station": "8634858",
+    "name": "Aquia Creek, Va.",
+    "state": "VA",
+    "type": "S",
+    "reference_id": "8594900",
+    "distance_km": 1015.2
+   },
+   {
+    "station": "8634689",
+    "name": "Quantico, Va.",
+    "state": "VA",
+    "type": "S",
+    "reference_id": "8594900",
+    "distance_km": 1016.5
+   },
+   {
+    "station": "8635154",
+    "name": "Massaponax",
+    "state": "VA",
+    "type": "S",
+    "reference_id": "8594900",
+    "distance_km": 1017.5
+   }
+  ]
+ },
+ "2410": {
+  "site": "PSEG Salem Generating Station",
+  "candidates": [
+   {
+    "station": "8537614",
+    "name": "Artificial Island, Salem Nuclear Plant, N.J.",
+    "state": "NJ",
+    "type": "S",
+    "reference_id": "8551910",
+    "distance_km": 0.4
+   },
+   {
+    "station": "8537667",
+    "name": "Hope Creek, 0.6 n.mi. above entrance, N.J.",
+    "state": "NJ",
+    "type": "S",
+    "reference_id": "8551910",
+    "distance_km": 3.5
+   },
+   {
+    "station": "8537731",
+    "name": "0.8 n.mi. above entrance",
+    "state": "NJ",
+    "type": "S",
+    "reference_id": "8551910",
+    "distance_km": 4.1
+   }
+  ],
+  "station": "8537614",
+  "station_name": "Artificial Island, Salem Nuclear Plant, N.J.",
+  "distance_km": 0.4,
+  "reviewed": false,
+  "note": ""
+ },
+ "8066": {
+  "site": "Jim Bridger",
+  "candidates": [
+   {
+    "station": "9416174",
+    "name": "Sacramento",
+    "state": "CA",
+    "type": "S",
+    "reference_id": "9415144",
+    "distance_km": 1135.2
+   },
+   {
+    "station": "9416131",
+    "name": "Port of West Sacramento",
+    "state": "CA",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 1139.1
+   },
+   {
+    "station": "9415846",
+    "name": "Clarksburg",
+    "state": "CA",
+    "type": "S",
+    "reference_id": "9415144",
+    "distance_km": 1143.5
+   }
+  ]
+ },
+ "6099": {
+  "site": "Diablo Canyon",
+  "candidates": [
+   {
+    "station": "9412110",
+    "name": "PORT SAN LUIS",
+    "state": "CA",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 10.4
+   },
+   {
+    "station": "9412553",
+    "name": "San Simeon",
+    "state": "CA",
+    "type": "S",
+    "reference_id": "9412110",
+    "distance_km": 56.5
+   },
+   {
+    "station": "9411406",
+    "name": "Oil Platform Harvest",
+    "state": "CA",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 84.1
+   }
+  ],
+  "station": "9412110",
+  "station_name": "PORT SAN LUIS",
+  "distance_km": 10.4,
+  "reviewed": false,
+  "note": ""
+ },
+ "6000": {
+  "site": "Donald C Cook",
+  "candidates": [
+   {
+    "station": "8634689",
+    "name": "Quantico, Va.",
+    "state": "VA",
+    "type": "S",
+    "reference_id": "8594900",
+    "distance_km": 875.6
+   },
+   {
+    "station": "8634858",
+    "name": "Aquia Creek, Va.",
+    "state": "VA",
+    "type": "S",
+    "reference_id": "8594900",
+    "distance_km": 876.0
+   },
+   {
+    "station": "8594900",
+    "name": "WASHINGTON, Washington Channel, D.C.",
+    "state": "DC",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 877.8
+   }
+  ]
+ },
+ "6073": {
+  "site": "Victor J Daniel Jr",
+  "candidates": [
+   {
+    "station": "8741533",
+    "name": "Pascagoula NOAA Lab",
+    "state": "MS",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 18.3
+   },
+   {
+    "station": "8740448",
+    "name": "Point of Pines, Bayou Cumbest",
+    "state": "MS",
+    "type": "S",
+    "reference_id": "8760551",
+    "distance_km": 19.6
+   },
+   {
+    "station": "8740166",
+    "name": "Grand Bay NERR, Mississippi Sound",
+    "state": "MS",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 19.7
+   }
+  ],
+  "station": "8741533",
+  "station_name": "Pascagoula NOAA Lab",
+  "distance_km": 18.3,
+  "reviewed": false,
+  "note": ""
+ },
+ "1356": {
+  "site": "Ghent",
+  "candidates": [
+   {
+    "station": "8635154",
+    "name": "Massaponax",
+    "state": "VA",
+    "type": "S",
+    "reference_id": "8594900",
+    "distance_km": 665.6
+   },
+   {
+    "station": "8634858",
+    "name": "Aquia Creek, Va.",
+    "state": "VA",
+    "type": "S",
+    "reference_id": "8594900",
+    "distance_km": 668.5
+   },
+   {
+    "station": "8634689",
+    "name": "Quantico, Va.",
+    "state": "VA",
+    "type": "S",
+    "reference_id": "8594900",
+    "distance_km": 673.3
+   }
+  ]
+ },
+ "6068": {
+  "site": "Jeffrey Energy Center",
+  "candidates": [
+   {
+    "station": "8767816",
+    "name": "Lake Charles",
+    "state": "LA",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 1041.7
+   },
+   {
+    "station": "8767961",
+    "name": "Calcasieu Ship Channel, Bulk Terminal",
+    "state": "LA",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 1043.5
+   },
+   {
+    "station": "8768772",
+    "name": "Gum Cove, ICWW",
+    "state": "LA",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 1053.0
+   }
+  ]
+ },
+ "2500": {
+  "site": "Ravenswood",
+  "candidates": [
+   {
+    "station": "8518687",
+    "name": "Queensboro Bridge",
+    "state": "NY",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 1.0
+   },
+   {
+    "station": "8518668",
+    "name": "Horns Hook, East 90th Street",
+    "state": "NY",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 2.0
+   },
+   {
+    "station": "8518695",
+    "name": "East 41st Street, New York City",
+    "state": "NY",
+    "type": "S",
+    "reference_id": "8518750",
+    "distance_km": 2.3
+   }
+  ],
+  "station": "8518687",
+  "station_name": "Queensboro Bridge",
+  "distance_km": 1.0,
+  "reviewed": false,
+  "note": ""
+ },
+ "62949": {
+  "site": "Guernsey Power Station",
+  "candidates": [
+   {
+    "station": "8634858",
+    "name": "Aquia Creek, Va.",
+    "state": "VA",
+    "type": "S",
+    "reference_id": "8594900",
+    "distance_km": 398.0
+   },
+   {
+    "station": "8634689",
+    "name": "Quantico, Va.",
+    "state": "VA",
+    "type": "S",
+    "reference_id": "8594900",
+    "distance_km": 398.4
+   },
+   {
+    "station": "8635154",
+    "name": "Massaponax",
+    "state": "VA",
+    "type": "S",
+    "reference_id": "8594900",
+    "distance_km": 402.1
+   }
+  ]
+ },
+ "6011": {
+  "site": "Calvert Cliffs Nuclear Power Plant",
+  "candidates": [
+   {
+    "station": "8577004",
+    "name": "Long Beach",
+    "state": "MD",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 4.4
+   },
+   {
+    "station": "8577188",
+    "name": "Cove Point",
+    "state": "MD",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 6.1
+   },
+   {
+    "station": "8577123",
+    "name": "Broomes Island",
+    "state": "MD",
+    "type": "S",
+    "reference_id": "8574680",
+    "distance_km": 9.3
+   }
+  ],
+  "station": "8577004",
+  "station_name": "Long Beach",
+  "distance_km": 4.4,
+  "reviewed": false,
+  "note": ""
+ },
+ "260": {
+  "site": "Dynegy Moss Landing Power Plant Hybrid",
+  "candidates": [
+   {
+    "station": "9413617",
+    "name": "General Fish Company Pier",
+    "state": "CA",
+    "type": "S",
+    "reference_id": "9413450",
+    "distance_km": 0.6
+   },
+   {
+    "station": "9413623",
+    "name": "Elkhorn Slough, Highway 1 Bridge",
+    "state": "CA",
+    "type": "S",
+    "reference_id": "9413450",
+    "distance_km": 0.6
+   },
+   {
+    "station": "9413616",
+    "name": "Moss Landing, Ocean Pier",
+    "state": "CA",
+    "type": "S",
+    "reference_id": "9413450",
+    "distance_km": 0.8
+   }
+  ],
+  "station": "9413617",
+  "station_name": "General Fish Company Pier",
+  "distance_km": 0.6,
+  "reviewed": false,
+  "note": ""
+ },
+ "8055": {
+  "site": "Arkansas Nuclear One",
+  "candidates": [
+   {
+    "station": "8767816",
+    "name": "Lake Charles",
+    "state": "LA",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 565.7
+   },
+   {
+    "station": "8767961",
+    "name": "Calcasieu Ship Channel, Bulk Terminal",
+    "state": "LA",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 569.4
+   },
+   {
+    "station": "8768772",
+    "name": "Gum Cove, ICWW",
+    "state": "LA",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 584.6
+   }
+  ]
+ },
+ "8223": {
+  "site": "Springerville",
+  "candidates": [
+   {
+    "station": "9507601",
+    "name": "Guaymas",
+    "state": "",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 730.4
+   },
+   {
+    "station": "9410152",
+    "name": "National City, San Diego Bay",
+    "state": "CA",
+    "type": "S",
+    "reference_id": "9410170",
+    "distance_km": 759.9
+   },
+   {
+    "station": "9410135",
+    "name": "South San Diego Bay",
+    "state": "CA",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 760.2
+   }
+  ]
+ },
+ "6065": {
+  "site": "Iatan",
+  "candidates": [
+   {
+    "station": "8767816",
+    "name": "Lake Charles",
+    "state": "LA",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 1038.0
+   },
+   {
+    "station": "8767961",
+    "name": "Calcasieu Ship Channel, Bulk Terminal",
+    "state": "LA",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 1040.6
+   },
+   {
+    "station": "8768772",
+    "name": "Gum Cove, ICWW",
+    "state": "LA",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 1052.4
+   }
+  ]
+ },
+ "400": {
+  "site": "Haynes",
+  "candidates": [
+   {
+    "station": "9410686",
+    "name": "Long Beach, Inner Harbor",
+    "state": "CA",
+    "type": "S",
+    "reference_id": "9410660",
+    "distance_km": 10.3
+   },
+   {
+    "station": "9410678",
+    "name": "Long Beach Fire Boat Pier",
+    "state": "CA",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 11.0
+   },
+   {
+    "station": "9410680",
+    "name": "Long Beach, Terminal Island",
+    "state": "CA",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 11.9
+   }
+  ],
+  "station": "9410686",
+  "station_name": "Long Beach, Inner Harbor",
+  "distance_km": 10.3,
+  "reviewed": false,
+  "note": ""
+ },
+ "2952": {
+  "site": "Muskogee",
+  "candidates": [
+   {
+    "station": "8767816",
+    "name": "Lake Charles",
+    "state": "LA",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 645.1
+   },
+   {
+    "station": "8767961",
+    "name": "Calcasieu Ship Channel, Bulk Terminal",
+    "state": "LA",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 646.5
+   },
+   {
+    "station": "8768772",
+    "name": "Gum Cove, ICWW",
+    "state": "LA",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 655.1
+   }
+  ]
+ },
+ "6190": {
+  "site": "Brame Energy Center",
+  "candidates": [
+   {
+    "station": "8767816",
+    "name": "Lake Charles",
+    "state": "LA",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 138.9
+   },
+   {
+    "station": "8767961",
+    "name": "Calcasieu Ship Channel, Bulk Terminal",
+    "state": "LA",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 145.1
+   },
+   {
+    "station": "8767911",
+    "name": "East Calcasieu Lake",
+    "state": "LA",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 164.5
+   }
+  ]
+ },
+ "6090": {
+  "site": "Sherburne County",
+  "candidates": [
+   {
+    "station": "8594900",
+    "name": "WASHINGTON, Washington Channel, D.C.",
+    "state": "DC",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 1564.0
+   },
+   {
+    "station": "8593005",
+    "name": "Washington Naval Yard",
+    "state": "DC",
+    "type": "S",
+    "reference_id": "8594900",
+    "distance_km": 1566.0
+   },
+   {
+    "station": "8579997",
+    "name": "Bladensburg, Md.",
+    "state": "MD",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 1566.4
+   }
+  ]
+ },
+ "1082": {
+  "site": "Walter Scott Jr Energy Center",
+  "candidates": [
+   {
+    "station": "8767816",
+    "name": "Lake Charles",
+    "state": "LA",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 1240.9
+   },
+   {
+    "station": "8767961",
+    "name": "Calcasieu Ship Channel, Bulk Terminal",
+    "state": "LA",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 1243.2
+   },
+   {
+    "station": "8768772",
+    "name": "Gum Cove, ICWW",
+    "state": "LA",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 1254.1
+   }
+  ]
+ },
+ "6076": {
+  "site": "Colstrip",
+  "candidates": [
+   {
+    "station": "9440079",
+    "name": "Beacon Rock State Park",
+    "state": "WA",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 1193.9
+   },
+   {
+    "station": "9447659",
+    "name": "Everett",
+    "state": "WA",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 1205.7
+   },
+   {
+    "station": "9447717",
+    "name": "Priest Point",
+    "state": "WA",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 1206.6
+   }
+  ]
+ },
+ "3082": {
+  "site": "John Day",
+  "candidates": [
+   {
+    "station": "9440079",
+    "name": "Beacon Rock State Park",
+    "state": "WA",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 103.6
+   },
+   {
+    "station": "9440047",
+    "name": "Washougal",
+    "state": "WA",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 132.1
+   },
+   {
+    "station": "9439221",
+    "name": "Portland Morrison Street Bridge",
+    "state": "OR",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 155.6
+   }
+  ]
+ },
+ "6165": {
+  "site": "Hunter",
+  "candidates": [
+   {
+    "station": "9410580",
+    "name": "Newport Bay Entrance, Corona del Mar",
+    "state": "CA",
+    "type": "R",
+    "reference_id": null,
+    "distance_km": 871.4
+   },
+   {
+    "station": "9410583",
+    "name": "Balboa Pier, Newport Beach",
+    "state": "CA",
+    "type": "S",
+    "reference_id": "9410660",
+    "distance_km": 872.7
+   },
+   {
+    "station": "9410599",
+    "name": "Santa Ana River entrance (inside)",
+    "state": "CA",
+    "type": "S",
+    "reference_id": "9410660",
+    "distance_km": 873.9
+   }
+  ]
+ }
+}

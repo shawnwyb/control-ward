@@ -38,7 +38,9 @@ test("crew has no stats bar but keeps the connection indicator", async ({
 test("crew can acknowledge a stop-work alert", async ({ page }) => {
   await signIn(page, "crew@planit.local");
   await go(page, "Alerts");
-  const ack = page.getByRole("button", { name: "Acknowledge" }).first();
+  const ack = page
+    .getByRole("button", { name: "Acknowledge", exact: true })
+    .first();
   await ack.click();
   await expect(page.getByText("Acknowledged").first()).toBeVisible();
 });
@@ -63,8 +65,15 @@ test("a supervisor alert shows on the crew's screen like a safety alert", async 
   await go(page, "Alerts");
   await expect(page.getByText("Wrap up early")).toBeVisible();
   await expect(page.getByText("Be off the roof by 1 PM.")).toBeVisible();
-  await page.getByRole("button", { name: "Acknowledge" }).last().click();
-  await expect(page.getByText("Acknowledged").first()).toBeVisible();
+  const message = page
+    .getByText("Wrap up early", { exact: true })
+    .locator("../..");
+  await message
+    .getByRole("button", { name: "Acknowledge", exact: true })
+    .click();
+  await expect(
+    message.getByText("Acknowledged", { exact: true }),
+  ).toBeVisible();
 });
 
 test("only the chosen crew see a targeted supervisor alert", async ({
@@ -86,7 +95,7 @@ test("only the chosen crew see a targeted supervisor alert", async ({
   await page.getByRole("button", { name: /sign in/i }).click();
   await go(page, "Alerts");
   await expect(
-    page.getByRole("button", { name: "Acknowledge" }).first(),
+    page.getByRole("button", { name: "Acknowledge", exact: true }).first(),
   ).toBeVisible();
   await expect(page.getByText("Jordan only")).toHaveCount(0);
 });

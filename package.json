@@ -21,6 +21,7 @@
     "verify:monitoring": "supabase db query --linked -f tests/monitoring.verify.sql",
     "verify:rules": "supabase db query --linked -f tests/rules.verify.sql",
     "verify:crew-assignment": "supabase db query --linked -f tests/crew-assignment.verify.sql",
+    "test:nextday": "node --experimental-strip-types --test tests/nextday/*.test.mjs && reports/next-day/run.sh test",
     "test:frontend": "node --experimental-strip-types --test tests/frontend/*.test.mjs",
     "test:functions": "node --experimental-strip-types --test tests/functions/*.test.mjs",
     "safety:local:start": "node scripts/safety/local-stack.mjs start",
@@ -30,7 +31,9 @@
     "test:safety:db": "node --experimental-strip-types --test --test-concurrency=1 tests/safety/*.test.mjs",
     "test:safety:ui": "PLAYWRIGHT_MODE=design playwright test tests/ui-design/safety.spec.ts",
     "safety:ingest": "node --experimental-strip-types scripts/safety/ingest.mjs",
-    "test:safety:regression": "node scripts/safety/regression.mjs"
+    "test:safety:regression": "node scripts/safety/regression.mjs",
+    "safety:codeact": "node --experimental-strip-types scripts/safety/codeact/worker.mjs",
+    "test:safety:codeact": "node --experimental-strip-types --test tests/functions/codeact.test.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.118.0",

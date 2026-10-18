@@ -1,3 +1,4 @@
+import { useLive } from "../../hooks/useLive";
 import { Icon, IndexTag, cx } from "../../components/ui";
 import { useState } from "react";
 import { explainIndex } from "../../lib/explain";
@@ -7,11 +8,14 @@ import type { Site } from "../../lib/types";
 import {
   riskTone,
   type LightningView,
+  fetchHazardEvidence,
+  type HazardEvidenceView,
   type SiteRiskView,
   type Subscores,
 } from "../../lib/monitoring";
 import { hazardInfo } from "../sites/hazards";
 import styles from "./RiskPanel.module.css";
+import evidenceStyles from "./Dashboard.module.css";
 
 /**
  * The selected site's numbers: hazard index now and tomorrow, crew-reported hazards,
@@ -24,6 +28,7 @@ export function RiskPanel({
   loaded,
   openHazards,
   crewTerm,
+  siteId,
 }: {
   site: Site;
   lightning: LightningView;
@@ -32,7 +37,16 @@ export function RiskPanel({
   openHazards: number;
   /** Points the crew-reported hazards add to the score, out of 2. */
   crewTerm: number;
+  siteId: string;
 }) {
+  const { data: evidence } = useLive<HazardEvidenceView[]>(
+    siteId,
+    ["hazard_evidence"],
+    fetchHazardEvidence,
+    [],
+  );
+  const activeEvidence =
+    evidence.find((e) => e.horizon === "now") ?? evidence[0] ?? null;
   const entries = (
     Object.entries(risk.subscores) as [keyof Subscores, number][]
   )
@@ -78,6 +92,48 @@ export function RiskPanel({
           </>
         ) : null}
       </dl>
+      {activeEvidence ? (
+        <div className={evidenceStyles.evidenceCard} id="hazard-evidence">
+          <div className={evidenceStyles.evidenceHeader}>
+            <span className={evidenceStyles.evidenceTitle}>
+              Backing Evidence: {activeEvidence.driver.toUpperCase()}
+            </span>
+            <span className={evidenceStyles.evidenceBadge}>Ground Truth</span>
+          </div>
+          <p className={evidenceStyles.evidenceSummary}>
+            {activeEvidence.summary}
+          </p>
+          {activeEvidence.articles.length > 0 ? (
+            <ul className={evidenceStyles.evidenceArticles}>
+              {activeEvidence.articles.map((art, idx) => (
+                <li key={idx} className={evidenceStyles.articleItem}>
+                  <a
+                    href={art.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={evidenceStyles.articleLink}
+                  >
+                    <span>{art.title}</span>
+                    <span className={evidenceStyles.articleSource}>
+                      ({art.source}){" "}
+                      <Icon
+                        name="arrow-right"
+                        size={12}
+                        style={{ transform: "rotate(-45deg)" }}
+                      />
+                    </span>
+                  </a>
+                  {art.snippet ? (
+                    <p className={evidenceStyles.articleSnippet}>
+                      {art.snippet}
+                    </p>
+                  ) : null}
+                </li>
+              ))}
+            </ul>
+          ) : null}
+        </div>
+      ) : null}
       {entries.length ? (
         <ul className={styles.bars} aria-label="Hazard scores">
           {entries.map(([key, value]) => {

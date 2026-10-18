@@ -32,6 +32,7 @@ export function SiteDetail({
       <RiskPanel
         site={site}
         lightning={lightning}
+        siteId={site.id}
         risk={risk}
         loaded={loaded}
         openHazards={openHazards}

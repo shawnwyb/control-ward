@@ -2,23 +2,27 @@
 
 A safety platform for utility field crews, built for SwampHacks 2026. It combines weather, heat, lightning, flood, wildfire, soil and crew-reported hazards into one risk score for each power plant site. It raises alerts when conditions turn dangerous and creates a next-day briefing at 6 PM local time for each site.
 
+## Start locally
+
+Follow the [local development guide](docs/local-development.md) for a fresh clone. It starts with the real app connected to the team's database, then covers actual CodeAct generation on an isolated local stack and running both prediction models. The browser-only fictional preview is an optional UI-development path.
+
 ## Status
 
-| Area                                                                | Status                                                                  |
-| ------------------------------------------------------------------- | ----------------------------------------------------------------------- |
-| Crew hazard reporting (photos, duplicate merging, check-ins)        | Built, with a crew UI                                                   |
-| Site registry (60 real plants from EIA-860M)                        | Built                                                                   |
-| Live feeds (weather, heat, rain, soil, rivers, wildfire, lightning) | Built, scheduled, running on the hosted project                         |
-| Rules, alerts, risk score, evening briefing                         | Built                                                                   |
-| Demo scenarios for lightning, rain, heat, fire and wildlife         | Built (RPCs only, no panel)                                             |
-| Crew app: alerts, lightning countdown, site risk, evening briefing  | Built (read from the monitoring tables; acknowledge and mark-read RPCs) |
-| Crew location sharing, supervisor dashboard (PlanIt Dash)           | Not built here. Another developer owns the UI.                          |
-| ML hazard index                                                     | Not built. The `ml_scores` table and `upsert_ml_scores` RPC are ready.  |
-| SMS and web push                                                    | Not built. Alerts reach clients through Realtime.                       |
+| Area                                                                | Status                                                                                                                  |
+| ------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| Crew hazard reporting (photos, duplicate merging, check-ins)        | Built, with a crew UI                                                                                                   |
+| Site registry (60 real plants from EIA-860M)                        | Built                                                                                                                   |
+| Live feeds (weather, heat, rain, soil, rivers, wildfire, lightning) | Built, scheduled, running on the hosted project                                                                         |
+| Rules, alerts, risk score, evening briefing                         | Built                                                                                                                   |
+| Demo scenarios for lightning, rain, heat, fire and wildlife         | Built (RPCs only, no panel)                                                                                             |
+| Crew app: alerts, lightning countdown, site risk, evening briefing  | Built (read from the monitoring tables; acknowledge and mark-read RPCs)                                                 |
+| Crew location sharing, supervisor dashboard (PlanIt Dash)           | Not built here. Another developer owns the UI.                                                                          |
+| ML scores (`ml_scores`)                                             | Two offline models push per-model rows: `mud` (`models/mud-trafficability`) and `hazard_index` (`models/hazard-index`). |
+| SMS and web push                                                    | Not built. Alerts reach clients through Realtime.                                                                       |
 
 ## How it works
 
-Everything runs on Supabase (Postgres with PostGIS, Auth, Storage, Realtime, pg_cron, Edge Functions). There is no separate server.
+Monitoring, authentication, data storage and the API run on Supabase (Postgres with PostGIS, Auth, Storage, Realtime, pg_cron and Edge Functions). The CodeAct Python executor runs on a separate Docker-capable machine, and prediction jobs run in Python outside hosted Supabase. They can share one compute machine. The earlier safety pipeline can run as scheduled Edge Functions calling Gemini.
 
 1. pg_cron starts an Edge Function on a schedule.
 2. The Edge Function fetches outside data (Open-Meteo, NWS, NOAA, USGS, NIFC, NOAA GOES) and stores it as readings.
@@ -35,13 +39,13 @@ Read these for details:
 
 ## Setup
 
-Requirements: Node 22 or later, npm and the Supabase CLI. Docker is needed only for the local option.
+Requirements: Node 22 or later, npm and the Supabase CLI for backend setup. Docker is required for local Supabase and for the CodeAct executor, including when that executor connects to a hosted database. Python 3.11 is needed for the prediction jobs. Frontend-only access to a hosted project needs Node/npm and public connection settings.
 
 ```sh
 npm ci
 ```
 
-### Option A: hosted project (no Docker)
+### Option A: hosted Supabase backend
 
 1. Run `supabase login`.
 2. Link your project: `supabase link --project-ref <ref>`.
@@ -144,7 +148,7 @@ Edge Functions are not part of the local start script, so the live feeds run onl
 
 **Design-only mode (no Docker or Supabase):** `npm run dev:design` runs the UI against an in-browser mock backend with seeded demo data. Sign in with any demo account and `CrewDemo123!`. Add `?latency=1500` to slow responses or `?fail` to make writes fail, to design busy and error states. State resets on reload, and the mock is excluded from production builds.
 
-**The app:** the landing page is at `/`. Pages use hash routes such as `#/sites`, `#/alerts` and `#/site` (crew's My site), with the sidebar as navigation. `npm run test:frontend` runs the pure-logic tests (routes, ranking, countdowns, design tokens). The UI tests for the redesign run against the mock backend with `PLAYWRIGHT_MODE=design npx playwright test`.
+**The app:** the landing page is at `/`. Pages use hash routes such as `#/sites`, `#/alerts`, `#/site` (crew's My site) and `#/next-day-report` (the full model report), with the sidebar as navigation. `npm run test:frontend` runs the pure-logic tests (routes, ranking, countdowns, design tokens). The UI tests for the redesign run against the mock backend with `PLAYWRIGHT_MODE=design npx playwright test`.
 
 The site map uses MapLibre GL with the free OpenFreeMap "liberty" basemap (no API key; needs internet). Set `VITE_MAP_STYLE_URL` to use a different MapLibre style. If the basemap can't load, the map falls back to a plain ground with the site ring and hazard markers.
 
@@ -237,12 +241,12 @@ Request and response shapes are in [the monitoring contract](docs/api-contract.m
 - `river_distance_m` is the distance to the nearest stream gauge. It is a rough measure of how close a plant is to a river.
 - For larger deployments, measure the locking strategy, paginate long feeds, and define limits on confirmation abuse and data retention.
 
-## Cited task safety checklists (pilot)
+## Automatic worker safety checklists
 
-Site supervisors can save planned work, request a cited private draft, review evidence and gaps, and publish a crew checklist. Crew acknowledge the exact publication. Existing weather briefings, risk, live alerts and stop-work rules continue independently. Generation defaults off.
+The agent uses each assigned registry worksite's coordinates to resolve its state, county and city, research official safety regulations/guidance, and generate a cited worker checklist from local conditions such as heat. It refreshes and publishes automatically. Supervisors do not enter job plans, approve sources or publish checklists. Both roles read the checklist and acknowledge its exact version. Open **Next-day briefing** (supervisor) or **Tomorrow's briefing** (worker) in the sidebar for the checklist; the full model forecast is under **Next-day report**.
 
-The supported pilot requires confirmed Florida/private-sector electrical operations and maintenance coverage; other or unknown coverage produces gaps. Worker instructions come from reviewed canonical source passages and require supervisor review.
+Missing sources, unknown applicability and stale conditions are shown as gaps. Existing weather briefings, risk, live alerts and stop-work rules remain independent. Generation defaults off until the server model, credentials and schedules are configured.
 
-Use `npm run dev:design` for the fictional supervisor-to-crew demo. `npm run safety:local:start` creates an isolated local stack; `npm run test:safety:db` checks access, citations, concurrency and lifecycle. `npm run test:safety:ui` runs browser demo checks.
+Use `npm run dev:design` for the fictional automatic demo. `npm run safety:local:start` creates an isolated local stack; `npm run test:safety:db` checks publication, access, citations and receipts, and `npm run test:safety:ui` checks both roles' browser flow. A local frontend can use the real database after backend deployment.
 
-See the [safety API](docs/safety-api.md), [safety contract](docs/safety-contract.md) and [setup and operations](docs/safety-operations.md) for integration, source review, provider configuration, verification and deployment.
+See the [safety API](docs/safety-api.md), [safety contract](docs/safety-contract.md) and [setup and operations](docs/safety-operations.md).

@@ -9,7 +9,8 @@ export type Page =
   | "alerts"
   | "briefing"
   | "crew"
-  | "reports";
+  | "reports"
+  | "next-day-report";
 
 const pages: readonly Page[] = [
   "landing",
@@ -20,6 +21,7 @@ const pages: readonly Page[] = [
   "briefing",
   "crew",
   "reports",
+  "next-day-report",
 ];
 
 const supervisorOnly: readonly Page[] = ["sites", "crew"];

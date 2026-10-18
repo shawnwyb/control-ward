@@ -30,3 +30,15 @@ DRYRUN = ARTIFACTS / "dryrun"
 def ensure(*dirs: Path) -> None:
     for d in dirs:
         d.mkdir(parents=True, exist_ok=True)
+
+
+def user_path(p: Path) -> Path:
+    """A path the user typed: relative to the directory run.sh was called from (HAZIDX_CALLER_PWD), else to the
+    current directory, else to models/hazard-index/ or the repository root."""
+    import os
+    if p.is_absolute():
+        return p
+    for base in (os.environ.get("HAZIDX_CALLER_PWD"), Path.cwd(), ROOT, REPO):
+        if base and (Path(base) / p).exists():
+            return Path(base) / p
+    return p

@@ -1,0 +1,6855 @@
+{
+ "generated_at": "2026-10-18T00:33:00+00:00",
+ "model_version": "stram-inspired-nrcs-0.1",
+ "label": "STRAM-inspired, uncalibrated. Prioritizes inspection; does not certify a crossing is safe.",
+ "units": {
+  "z": "in (x 2.54 = cm)",
+  "ci": "psi (/ 145.04 = MPa)",
+  "dtw": "ft (/ 3.281 = m)",
+  "length": "ft",
+  "area": "acres",
+  "rain": "in",
+  "theta": "m3/m3",
+  "mc_ps": "% of pore space"
+ },
+ "flags": [
+  "ok",
+  "inspect",
+  "hold"
+ ],
+ "sources": [
+  "stram",
+  "nrcs",
+  "nrcs_organic",
+  "wet_area",
+  "soil_unknown"
+ ],
+ "equipment": [
+  {
+   "key": "road_truck",
+   "label": "Road trucks: bucket/line, dump, lowboy",
+   "kind": "wheeled",
+   "mil_type": 7
+  },
+  {
+   "key": "excavator",
+   "label": "Tracked excavator (30 t)",
+   "kind": "tracked",
+   "mil_type": 3
+  },
+  {
+   "key": "crawler_crane",
+   "label": "Crawler crane (100 t)",
+   "kind": "tracked",
+   "mil_type": 4
+  }
+ ],
+ "passes": [
+  1,
+  2,
+  10
+ ],
+ "default_passes": 1,
+ "passes_note": "1 pass is below the study's observed range (2-80 passes): mild extrapolation of Eq 5 (Z = a/NCI_adj).",
+ "thresholds_in": {
+  "inspect": 4.0,
+  "hold": 8.0
+ },
+ "ground_band_in": 3.54,
+ "polygon_horizons": [
+  "now",
+  "d1"
+ ],
+ "corridor_ft": 100.0,
+ "sites": [
+  {
+   "eia": "6163",
+   "name": "Grand Coulee",
+   "lat": 47.957511,
+   "lon": -118.9773,
+   "timezone": "America/Los_Angeles",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 17:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.1735,
+     "theta_min": 0.1735,
+     "theta_max": 0.1735,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.17297916666666668,
+     "theta_min": 0.17297916666666668,
+     "theta_max": 0.17297916666666668,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.171875,
+     "theta_min": 0.171875,
+     "theta_max": 0.171875,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.1708125,
+     "theta_min": 0.1708125,
+     "theta_max": 0.1708125,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.16997916666666665,
+     "theta_min": 0.16997916666666665,
+     "theta_max": 0.16997916666666665,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.16860416666666667,
+     "theta_min": 0.16860416666666667,
+     "theta_max": 0.16860416666666667,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.16754166666666667,
+     "theta_min": 0.16754166666666667,
+     "theta_max": 0.16754166666666667,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.1666388888888889,
+     "theta_min": 0.1666388888888889,
+     "theta_max": 0.1666388888888889,
+     "rain_in": 0.0,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.0,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "sand_pct 67.4 outside 32.31-65.16",
+     "om_pct 1.1 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.44 outside 0.63-1.2"
+    ],
+    "vintages": {
+     "WA017": "9/3/2026 8:13:04 PM",
+     "WA025": "9/8/2026 2:38:36 PM",
+     "WA043": "9/8/2026 2:41:52 PM",
+     "WA648": "9/8/2026 8:02:31 PM"
+    }
+   },
+   "segments": 558,
+   "flood_gauge": {
+    "lid": "PATW1",
+    "name": "Methow River near Pateros",
+    "distance_mi": 47.3,
+    "minor": "<0.05",
+    "moderate": "0",
+    "major": "0",
+    "interval": "OND",
+    "date_produced": "2023-10-27T18:55:22Z"
+   }
+  },
+  {
+   "eia": "649",
+   "name": "Vogtle",
+   "lat": 33.1427,
+   "lon": -81.7625,
+   "timezone": "America/New_York",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 20:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.217,
+     "theta_min": 0.217,
+     "theta_max": 0.217,
+     "rain_in": 0.016,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.21316666666666664,
+     "theta_min": 0.21316666666666664,
+     "theta_max": 0.21316666666666664,
+     "rain_in": 0.016,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.20558333333333337,
+     "theta_min": 0.20558333333333337,
+     "theta_max": 0.20558333333333337,
+     "rain_in": 0.016,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.19804166666666667,
+     "theta_min": 0.19804166666666667,
+     "theta_max": 0.19804166666666667,
+     "rain_in": 0.016,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.1902708333333333,
+     "theta_min": 0.1902708333333333,
+     "theta_max": 0.1902708333333333,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.18325,
+     "theta_min": 0.18325,
+     "theta_max": 0.18325,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.17654166666666662,
+     "theta_min": 0.17654166666666662,
+     "theta_max": 0.17654166666666662,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.17097619047619048,
+     "theta_min": 0.17097619047619045,
+     "theta_max": 0.17097619047619045,
+     "rain_in": 0.0,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.0,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "sand_pct 90 outside 32.31-65.16",
+     "om_pct 0.583 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.6 outside 0.63-1.2",
+     "coarse_frag_pct 0 outside 21.23-48.14"
+    ],
+    "vintages": {
+     "GA033": "9/9/2026 8:18:14 PM",
+     "SC696": "9/9/2026 1:00:51 PM"
+    }
+   },
+   "segments": 755,
+   "flood_gauge": {
+    "lid": "AUGG1",
+    "name": "Savannah River at Augusta",
+    "distance_mi": 19.1,
+    "minor": "<0.05",
+    "moderate": "0",
+    "major": "0",
+    "interval": "NDJ",
+    "date_produced": "2023-10-29T20:43:02Z"
+   }
+  },
+  {
+   "eia": "56407",
+   "name": "West County Energy Center",
+   "lat": 26.6986,
+   "lon": -80.3747,
+   "timezone": "America/New_York",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 20:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.246,
+     "theta_min": 0.246,
+     "theta_max": 0.246,
+     "rain_in": 0.24,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.22375,
+     "theta_min": 0.22375,
+     "theta_max": 0.22375,
+     "rain_in": 0.256,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.20510416666666664,
+     "theta_min": 0.20510416666666664,
+     "theta_max": 0.20510416666666664,
+     "rain_in": 0.34299999999999997,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.19664583333333333,
+     "theta_min": 0.19664583333333333,
+     "theta_max": 0.19664583333333333,
+     "rain_in": 0.379,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.19047916666666664,
+     "theta_min": 0.19047916666666664,
+     "theta_max": 0.19047916666666664,
+     "rain_in": 0.12300000000000001,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.18422916666666667,
+     "theta_min": 0.18422916666666667,
+     "theta_max": 0.18422916666666667,
+     "rain_in": 0.135,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.17731249999999998,
+     "theta_min": 0.17731249999999998,
+     "theta_max": 0.17731249999999998,
+     "rain_in": 0.048,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.17366666666666666,
+     "theta_min": 0.17366666666666666,
+     "theta_max": 0.17366666666666666,
+     "rain_in": 0.402,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.859,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "sand_pct 96.4 outside 32.31-65.16",
+     "om_pct 72.5 outside 4.41-13.3",
+     "bulk_density_g_cm3 0.253 outside 0.63-1.2",
+     "coarse_frag_pct 0 outside 21.23-48.14"
+    ],
+    "vintages": {
+     "FL611": "8/26/2026 6:34:45 PM",
+     "FL615": "8/26/2026 6:58:01 PM"
+    }
+   },
+   "segments": 609,
+   "flood_gauge": {
+    "lid": "PLMF1",
+    "name": "Fisheating Creek at Palmdale",
+    "distance_mi": 60.2,
+    "minor": "<0.05",
+    "moderate": "0",
+    "major": "0",
+    "interval": "NDJ",
+    "date_produced": "2023-10-29T20:43:02Z"
+   }
+  },
+  {
+   "eia": "6008",
+   "name": "Palo Verde",
+   "lat": 33.3881,
+   "lon": -112.8617,
+   "timezone": "America/Phoenix",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 17:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.1285,
+     "theta_min": 0.1285,
+     "theta_max": 0.1285,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.12770833333333334,
+     "theta_min": 0.12770833333333334,
+     "theta_max": 0.12770833333333334,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.12610416666666668,
+     "theta_min": 0.12610416666666668,
+     "theta_max": 0.12610416666666668,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.12429166666666668,
+     "theta_min": 0.12429166666666668,
+     "theta_max": 0.12429166666666668,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.12254166666666666,
+     "theta_min": 0.12254166666666666,
+     "theta_max": 0.12254166666666666,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.1211875,
+     "theta_min": 0.1211875,
+     "theta_max": 0.1211875,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.12004166666666667,
+     "theta_min": 0.12004166666666667,
+     "theta_max": 0.12004166666666667,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.11952777777777775,
+     "theta_min": 0.11952777777777775,
+     "theta_max": 0.11952777777777775,
+     "rain_in": 0.0,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.0,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "om_pct 0.3 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.41 outside 0.63-1.2",
+     "coarse_frag_pct 1.8 outside 21.23-48.14"
+    ],
+    "vintages": {
+     "AZ651": "9/11/2026 2:12:05 PM"
+    }
+   },
+   "segments": 506,
+   "flood_gauge": {
+    "lid": "TNRA3",
+    "name": "Tonto Creek near Roosevelt",
+    "distance_mi": 98.5,
+    "minor": "<0.05",
+    "moderate": "0",
+    "major": "0",
+    "interval": "OND",
+    "date_produced": "2023-10-15T12:37:58Z"
+   }
+  },
+  {
+   "eia": "3470",
+   "name": "W A Parish",
+   "lat": 29.4828,
+   "lon": -95.6311,
+   "timezone": "America/Chicago",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 19:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.2735,
+     "theta_min": 0.2735,
+     "theta_max": 0.2735,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.27066666666666667,
+     "theta_min": 0.27066666666666667,
+     "theta_max": 0.27066666666666667,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.2662291666666667,
+     "theta_min": 0.2662291666666667,
+     "theta_max": 0.2662291666666667,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.26197916666666665,
+     "theta_min": 0.26197916666666665,
+     "theta_max": 0.26197916666666665,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.25775,
+     "theta_min": 0.25775,
+     "theta_max": 0.25775,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.25475,
+     "theta_min": 0.25475,
+     "theta_max": 0.25475,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.252,
+     "theta_min": 0.252,
+     "theta_max": 0.252,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.24969999999999998,
+     "theta_min": 0.24969999999999998,
+     "theta_max": 0.24969999999999998,
+     "rain_in": 0.0,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.0,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "sand_pct 22.3 outside 32.31-65.16",
+     "om_pct 2.32 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.38 outside 0.63-1.2",
+     "coarse_frag_pct 0.878 outside 21.23-48.14"
+    ],
+    "vintages": {
+     "TX157": "9/3/2026 2:12:32 PM"
+    }
+   },
+   "segments": 460,
+   "flood_gauge": {
+    "lid": "SLNT2",
+    "name": "Brazos River at US 59",
+    "distance_mi": 6.3,
+    "minor": "<0.05",
+    "moderate": "0",
+    "major": "0",
+    "interval": "NDJ",
+    "date_produced": "2023-10-28T17:12:14Z"
+   }
+  },
+  {
+   "eia": "46",
+   "name": "Browns Ferry",
+   "lat": 34.7042,
+   "lon": -87.1189,
+   "timezone": "America/Chicago",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 19:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.2175,
+     "theta_min": 0.2175,
+     "theta_max": 0.2175,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.21558333333333332,
+     "theta_min": 0.21558333333333332,
+     "theta_max": 0.21558333333333332,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.21139583333333337,
+     "theta_min": 0.21139583333333337,
+     "theta_max": 0.21139583333333337,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.20697916666666671,
+     "theta_min": 0.20697916666666671,
+     "theta_max": 0.20697916666666671,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.20274999999999999,
+     "theta_min": 0.20274999999999999,
+     "theta_max": 0.20274999999999999,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.19752083333333334,
+     "theta_min": 0.19752083333333334,
+     "theta_max": 0.19752083333333334,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.1914375,
+     "theta_min": 0.1914375,
+     "theta_max": 0.1914375,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.1876,
+     "theta_min": 0.18760000000000002,
+     "theta_max": 0.18760000000000002,
+     "rain_in": 0.0,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.0,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "sand_pct 15.8 outside 32.31-65.16",
+     "om_pct 0.866 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.39 outside 0.63-1.2",
+     "coarse_frag_pct 6.98 outside 21.23-48.14"
+    ],
+    "vintages": {
+     "AL079": "9/10/2026 8:05:42 PM",
+     "AL083": "9/10/2026 9:55:03 PM",
+     "AL103": "9/11/2026 2:00:34 PM"
+    }
+   },
+   "segments": 264,
+   "flood_gauge": {
+    "lid": "BNAA1",
+    "name": "Big Nance Creek (AL) at Courtland",
+    "distance_mi": 11.5,
+    "minor": "0.08",
+    "moderate": "0.07",
+    "major": "0.05",
+    "interval": "OND",
+    "date_produced": "2023-10-25T00:24:52Z"
+   }
+  },
+  {
+   "eia": "703",
+   "name": "Bowen",
+   "lat": 34.1256,
+   "lon": -84.9222,
+   "timezone": "America/New_York",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 20:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.1975,
+     "theta_min": 0.1975,
+     "theta_max": 0.1975,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.19562500000000002,
+     "theta_min": 0.19562500000000002,
+     "theta_max": 0.19562500000000002,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.19041666666666668,
+     "theta_min": 0.19041666666666668,
+     "theta_max": 0.19041666666666668,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.18552083333333333,
+     "theta_min": 0.18552083333333333,
+     "theta_max": 0.18552083333333333,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.1809791666666667,
+     "theta_min": 0.1809791666666667,
+     "theta_max": 0.1809791666666667,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.17629166666666665,
+     "theta_min": 0.17629166666666665,
+     "theta_max": 0.17629166666666665,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.17154166666666662,
+     "theta_min": 0.17154166666666662,
+     "theta_max": 0.17154166666666662,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.1679523809523809,
+     "theta_min": 0.1679523809523809,
+     "theta_max": 0.1679523809523809,
+     "rain_in": 0.0,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.0,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "om_pct 1.11 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.48 outside 0.63-1.2",
+     "coarse_frag_pct 10.1 outside 21.23-48.14"
+    ],
+    "vintages": {
+     "GA015": "8/24/2026 7:05:24 PM"
+    }
+   },
+   "segments": 611,
+   "flood_gauge": {
+    "lid": "CTVG1",
+    "name": "Etowah River at GA 61 near Cartersville",
+    "distance_mi": 4.9,
+    "minor": "<0.05",
+    "moderate": "0",
+    "major": "0",
+    "interval": "NDJ",
+    "date_produced": "2023-10-29T20:43:02Z"
+   }
+  },
+  {
+   "eia": "628",
+   "name": "Crystal River",
+   "lat": 28.9656,
+   "lon": -82.6977,
+   "timezone": "America/New_York",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 20:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.2665,
+     "theta_min": 0.2665,
+     "theta_max": 0.2665,
+     "rain_in": 0.197,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.26647916666666666,
+     "theta_min": 0.26647916666666666,
+     "theta_max": 0.26647916666666666,
+     "rain_in": 0.197,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.2657291666666666,
+     "theta_min": 0.2657291666666666,
+     "theta_max": 0.2657291666666666,
+     "rain_in": 0.197,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.26475,
+     "theta_min": 0.26475,
+     "theta_max": 0.26475,
+     "rain_in": 0.197,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.2633541666666667,
+     "theta_min": 0.2633541666666667,
+     "theta_max": 0.2633541666666667,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.26225000000000004,
+     "theta_min": 0.26225000000000004,
+     "theta_max": 0.26225000000000004,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.2611666666666667,
+     "theta_min": 0.2611666666666667,
+     "theta_max": 0.2611666666666667,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.2599523809523809,
+     "theta_min": 0.25995238095238093,
+     "theta_max": 0.25995238095238093,
+     "rain_in": 0.012,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.0,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "sand_pct 96.9 outside 32.31-65.16",
+     "om_pct 0.945 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.56 outside 0.63-1.2",
+     "coarse_frag_pct 0 outside 21.23-48.14"
+    ],
+    "vintages": {
+     "FL017": "8/31/2026 12:19:14 PM"
+    }
+   },
+   "segments": 408,
+   "flood_gauge": {
+    "lid": "DNLF1",
+    "name": "Withlacoochee River (FL) at US 41 Dunnellon",
+    "distance_mi": 15.1,
+    "minor": "<0.05",
+    "moderate": "0",
+    "major": "0",
+    "interval": "NDJ",
+    "date_produced": "2023-10-29T20:43:02Z"
+   }
+  },
+  {
+   "eia": "3",
+   "name": "Barry",
+   "lat": 31.0069,
+   "lon": -88.0103,
+   "timezone": "America/Chicago",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 19:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.2185,
+     "theta_min": 0.2185,
+     "theta_max": 0.2185,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.216875,
+     "theta_min": 0.216875,
+     "theta_max": 0.216875,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.21270833333333336,
+     "theta_min": 0.21270833333333336,
+     "theta_max": 0.21270833333333336,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.20862499999999998,
+     "theta_min": 0.20862499999999998,
+     "theta_max": 0.20862499999999998,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.20425000000000001,
+     "theta_min": 0.20425000000000001,
+     "theta_max": 0.20425000000000001,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.19975,
+     "theta_min": 0.19975,
+     "theta_max": 0.19975,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.19514583333333332,
+     "theta_min": 0.19514583333333332,
+     "theta_max": 0.19514583333333332,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.1915,
+     "theta_min": 0.1915,
+     "theta_max": 0.1915,
+     "rain_in": 0.0,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.018,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "om_pct 1.41 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.49 outside 0.63-1.2",
+     "coarse_frag_pct 1.8 outside 21.23-48.14"
+    ],
+    "vintages": {
+     "AL097": "9/11/2026 1:55:18 PM"
+    }
+   },
+   "segments": 392,
+   "flood_gauge": {
+    "lid": "BCKA1",
+    "name": "Mobile River at Barry Steam Plant",
+    "distance_mi": 0.3,
+    "minor": "<0.05",
+    "moderate": "0",
+    "major": "0",
+    "interval": "NDJ",
+    "date_produced": "2023-10-29T20:43:02Z"
+   }
+  },
+  {
+   "eia": "6113",
+   "name": "Gibson",
+   "lat": 38.372222,
+   "lon": -87.76583,
+   "timezone": "America/Chicago",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 19:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.194,
+     "theta_min": 0.194,
+     "theta_max": 0.194,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.1885625,
+     "theta_min": 0.1885625,
+     "theta_max": 0.1885625,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.1805,
+     "theta_min": 0.1805,
+     "theta_max": 0.1805,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.17377083333333332,
+     "theta_min": 0.17377083333333332,
+     "theta_max": 0.17377083333333332,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.167625,
+     "theta_min": 0.167625,
+     "theta_max": 0.167625,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.16160416666666666,
+     "theta_min": 0.16160416666666666,
+     "theta_max": 0.16160416666666666,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.1564375,
+     "theta_min": 0.1564375,
+     "theta_max": 0.1564375,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.1524,
+     "theta_min": 0.1524,
+     "theta_max": 0.1524,
+     "rain_in": 0.0,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.0,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "sand_pct 12.7 outside 32.31-65.16",
+     "om_pct 2.02 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.37 outside 0.63-1.2",
+     "coarse_frag_pct 0 outside 21.23-48.14"
+    ],
+    "vintages": {
+     "IL185": "8/23/2026 8:20:22 PM",
+     "IN051": "9/17/2026 7:51:30 PM"
+    }
+   },
+   "segments": 209,
+   "flood_gauge": {
+    "lid": "MCRI2",
+    "name": "Wabash River at Mount Carmel",
+    "distance_mi": 1.9,
+    "minor": "<0.05",
+    "moderate": "0",
+    "major": "0",
+    "interval": "SON",
+    "date_produced": "2023-09-19T10:19:00Z"
+   }
+  },
+  {
+   "eia": "1733",
+   "name": "Monroe (MI)",
+   "lat": 41.8906,
+   "lon": -83.3464,
+   "timezone": "America/Detroit",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 20:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.16949999999999998,
+     "theta_min": 0.16949999999999998,
+     "theta_max": 0.16949999999999998,
+     "rain_in": 0.032,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.16533333333333333,
+     "theta_min": 0.16533333333333333,
+     "theta_max": 0.16533333333333333,
+     "rain_in": 0.032,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.15845833333333334,
+     "theta_min": 0.15845833333333334,
+     "theta_max": 0.15845833333333334,
+     "rain_in": 0.032,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.15291666666666667,
+     "theta_min": 0.15291666666666667,
+     "theta_max": 0.15291666666666667,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.14831250000000004,
+     "theta_min": 0.14831250000000004,
+     "theta_max": 0.14831250000000004,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.14460416666666667,
+     "theta_min": 0.14460416666666667,
+     "theta_max": 0.14460416666666667,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.14127083333333335,
+     "theta_min": 0.14127083333333335,
+     "theta_max": 0.14127083333333335,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.13783333333333334,
+     "theta_min": 0.13783333333333334,
+     "theta_max": 0.13783333333333334,
+     "rain_in": 0.0,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.0,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "sand_pct 79.6 outside 32.31-65.16",
+     "om_pct 0.937 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.51 outside 0.63-1.2",
+     "coarse_frag_pct 1.65 outside 21.23-48.14"
+    ],
+    "vintages": {
+     "MI115": "8/27/2026 10:34:52 AM"
+    }
+   },
+   "segments": 284,
+   "flood_gauge": {
+    "lid": "MONM4",
+    "name": "River Raisin at Monroe City",
+    "distance_mi": 2.5,
+    "minor": "<0.05",
+    "moderate": "0",
+    "major": "0",
+    "interval": "NDJ",
+    "date_produced": "2023-10-27T19:03:14Z"
+   }
+  },
+  {
+   "eia": "621",
+   "name": "Turkey Point",
+   "lat": 25.4356,
+   "lon": -80.3308,
+   "timezone": "America/New_York",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 20:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.241,
+     "theta_min": 0.241,
+     "theta_max": 0.241,
+     "rain_in": 0.174,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.22485416666666666,
+     "theta_min": 0.22485416666666666,
+     "theta_max": 0.22485416666666666,
+     "rain_in": 0.718,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.19616666666666668,
+     "theta_min": 0.19616666666666668,
+     "theta_max": 0.19616666666666668,
+     "rain_in": 0.631,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.1844583333333333,
+     "theta_min": 0.1844583333333333,
+     "theta_max": 0.1844583333333333,
+     "rain_in": 0.7830000000000001,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.17647916666666666,
+     "theta_min": 0.17647916666666666,
+     "theta_max": 0.17647916666666666,
+     "rain_in": 0.7560000000000001,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.16947916666666663,
+     "theta_min": 0.16947916666666663,
+     "theta_max": 0.16947916666666663,
+     "rain_in": 0.24000000000000002,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.16245833333333334,
+     "theta_min": 0.16245833333333334,
+     "theta_max": 0.16245833333333334,
+     "rain_in": 0.54,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.1582380952380952,
+     "theta_min": 0.15823809523809526,
+     "theta_max": 0.15823809523809526,
+     "rain_in": 1.1590000000000003,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.106,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "bulk_density_g_cm3 1.36 outside 0.63-1.2",
+     "coarse_frag_pct 16.6 outside 21.23-48.14"
+    ],
+    "vintages": {
+     "FL624": "8/26/2026 8:09:05 PM",
+     "FL686": "8/26/2026 6:27:00 PM"
+    }
+   },
+   "segments": 315,
+   "flood_gauge": {
+    "lid": "PLMF1",
+    "name": "Fisheating Creek at Palmdale",
+    "distance_mi": 120.1,
+    "minor": "<0.05",
+    "moderate": "0",
+    "major": "0",
+    "interval": "NDJ",
+    "date_produced": "2023-10-29T20:43:02Z"
+   }
+  },
+  {
+   "eia": "6042",
+   "name": "Manatee",
+   "lat": 27.6058,
+   "lon": -82.3456,
+   "timezone": "America/New_York",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 20:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.20450000000000002,
+     "theta_min": 0.20450000000000002,
+     "theta_max": 0.20450000000000002,
+     "rain_in": 0.139,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.19608333333333336,
+     "theta_min": 0.19608333333333336,
+     "theta_max": 0.19608333333333336,
+     "rain_in": 0.139,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.18608333333333335,
+     "theta_min": 0.18608333333333335,
+     "theta_max": 0.18608333333333335,
+     "rain_in": 0.139,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.17918749999999997,
+     "theta_min": 0.17918749999999997,
+     "theta_max": 0.17918749999999997,
+     "rain_in": 0.139,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.17316666666666666,
+     "theta_min": 0.17316666666666666,
+     "theta_max": 0.17316666666666666,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.1655,
+     "theta_min": 0.1655,
+     "theta_max": 0.1655,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.15683333333333335,
+     "theta_min": 0.15683333333333335,
+     "theta_max": 0.15683333333333335,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.1530714285714286,
+     "theta_min": 0.15307142857142855,
+     "theta_max": 0.15307142857142855,
+     "rain_in": 0.0,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.044,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "sand_pct 96.9 outside 32.31-65.16",
+     "om_pct 1.13 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.56 outside 0.63-1.2",
+     "coarse_frag_pct 0 outside 21.23-48.14"
+    ],
+    "vintages": {
+     "FL081": "9/2/2026 1:45:08 PM"
+    }
+   },
+   "segments": 428,
+   "flood_gauge": {
+    "lid": "WIMF1",
+    "name": "Little Manatee River (FL) near Wimauma at US 301",
+    "distance_mi": 4.5,
+    "minor": "<0.05",
+    "moderate": "0",
+    "major": "0",
+    "interval": "NDJ",
+    "date_produced": "2023-10-29T20:43:02Z"
+   }
+  },
+  {
+   "eia": "3935",
+   "name": "John E Amos",
+   "lat": 38.4731,
+   "lon": -81.8233,
+   "timezone": "America/New_York",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 20:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.2935,
+     "theta_min": 0.2935,
+     "theta_max": 0.2935,
+     "rain_in": 0.059,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.286875,
+     "theta_min": 0.286875,
+     "theta_max": 0.286875,
+     "rain_in": 0.059,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.2775625,
+     "theta_min": 0.2775625,
+     "theta_max": 0.2775625,
+     "rain_in": 0.059,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.2705416666666667,
+     "theta_min": 0.2705416666666667,
+     "theta_max": 0.2705416666666667,
+     "rain_in": 0.059,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.26508333333333334,
+     "theta_min": 0.26508333333333334,
+     "theta_max": 0.26508333333333334,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.261875,
+     "theta_min": 0.261875,
+     "theta_max": 0.261875,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.2602708333333334,
+     "theta_min": 0.2602708333333334,
+     "theta_max": 0.2602708333333334,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.25678571428571423,
+     "theta_min": 0.2567857142857143,
+     "theta_max": 0.2567857142857143,
+     "rain_in": 0.0,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.304,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "sand_pct 15.1 outside 32.31-65.16",
+     "om_pct 2.89 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.36 outside 0.63-1.2",
+     "coarse_frag_pct 9.17 outside 21.23-48.14"
+    ],
+    "vintages": {
+     "WV079": "8/31/2026 2:10:36 PM"
+    }
+   },
+   "segments": 368,
+   "flood_gauge": {
+    "lid": "TORW2",
+    "name": "Coal River (WV) at Tornado",
+    "distance_mi": 9.3,
+    "minor": "0.21",
+    "moderate": "0.18",
+    "major": "0.12",
+    "interval": "SON",
+    "date_produced": "2023-09-19T10:19:00Z"
+   }
+  },
+  {
+   "eia": "3166",
+   "name": "Peach Bottom",
+   "lat": 39.758936,
+   "lon": -76.26874,
+   "timezone": "America/New_York",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 20:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.217,
+     "theta_min": 0.217,
+     "theta_max": 0.217,
+     "rain_in": 0.327,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.2111875,
+     "theta_min": 0.2111875,
+     "theta_max": 0.2111875,
+     "rain_in": 0.327,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.2027916666666667,
+     "theta_min": 0.2027916666666667,
+     "theta_max": 0.2027916666666667,
+     "rain_in": 0.327,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.1943541666666667,
+     "theta_min": 0.1943541666666667,
+     "theta_max": 0.1943541666666667,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.1866875,
+     "theta_min": 0.1866875,
+     "theta_max": 0.1866875,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.17929166666666663,
+     "theta_min": 0.17929166666666663,
+     "theta_max": 0.17929166666666663,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.1719375,
+     "theta_min": 0.1719375,
+     "theta_max": 0.1719375,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.16697619047619044,
+     "theta_min": 0.16697619047619047,
+     "theta_max": 0.16697619047619047,
+     "rain_in": 0.0,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.0,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "sand_pct 31.9 outside 32.31-65.16",
+     "om_pct 1.5 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.38 outside 0.63-1.2"
+    ],
+    "vintages": {
+     "PA071": "9/3/2026 5:05:10 PM",
+     "PA133": "9/9/2026 11:40:33 AM"
+    }
+   },
+   "segments": 187,
+   "flood_gauge": {
+    "lid": "LNCP1",
+    "name": "Conestoga River at Lancaster",
+    "distance_mi": 20.1,
+    "minor": "<0.05",
+    "moderate": "0",
+    "major": "0",
+    "interval": "NDJ",
+    "date_produced": "2023-10-28T18:27:49Z"
+   }
+  },
+  {
+   "eia": "6167",
+   "name": "Bath County",
+   "lat": 38.20889,
+   "lon": -79.8,
+   "timezone": "America/New_York",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 20:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.2805,
+     "theta_min": 0.2805,
+     "theta_max": 0.2805,
+     "rain_in": 0.41900000000000004,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.27187500000000003,
+     "theta_min": 0.27187500000000003,
+     "theta_max": 0.27187500000000003,
+     "rain_in": 0.348,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.2594791666666667,
+     "theta_min": 0.2594791666666667,
+     "theta_max": 0.2594791666666667,
+     "rain_in": 0.11499999999999999,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.24839583333333337,
+     "theta_min": 0.24839583333333337,
+     "theta_max": 0.24839583333333337,
+     "rain_in": 0.11499999999999999,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.23933333333333331,
+     "theta_min": 0.23933333333333331,
+     "theta_max": 0.23933333333333331,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.23072916666666665,
+     "theta_min": 0.23072916666666665,
+     "theta_max": 0.23072916666666665,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.22266666666666668,
+     "theta_min": 0.22266666666666668,
+     "theta_max": 0.22266666666666668,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.2182619047619047,
+     "theta_min": 0.2182619047619048,
+     "theta_max": 0.2182619047619048,
+     "rain_in": 0.0,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.05,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "sand_pct 27.6 outside 32.31-65.16",
+     "om_pct 0.478 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.33 outside 0.63-1.2"
+    ],
+    "vintages": {
+     "VA017": "8/25/2026 12:15:52 PM"
+    }
+   },
+   "segments": 253,
+   "flood_gauge": {
+    "lid": "BUCW2",
+    "name": "Greenbrier River at Buckeye",
+    "distance_mi": 18.0,
+    "minor": "<0.05",
+    "moderate": "0",
+    "major": "0",
+    "interval": "SON",
+    "date_produced": "2023-09-19T10:19:00Z"
+   }
+  },
+  {
+   "eia": "6251",
+   "name": "South Texas Project",
+   "lat": 28.795,
+   "lon": -96.0481,
+   "timezone": "America/Chicago",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 19:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.305,
+     "theta_min": 0.305,
+     "theta_max": 0.305,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.3016041666666667,
+     "theta_min": 0.3016041666666667,
+     "theta_max": 0.3016041666666667,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.2959583333333333,
+     "theta_min": 0.2959583333333333,
+     "theta_max": 0.2959583333333333,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.2911458333333334,
+     "theta_min": 0.2911458333333334,
+     "theta_max": 0.2911458333333334,
+     "rain_in": 0.004,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.28606250000000005,
+     "theta_min": 0.28606250000000005,
+     "theta_max": 0.28606250000000005,
+     "rain_in": 0.004,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.28162499999999996,
+     "theta_min": 0.28162499999999996,
+     "theta_max": 0.28162499999999996,
+     "rain_in": 0.004,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.2775625,
+     "theta_min": 0.2775625,
+     "theta_max": 0.2775625,
+     "rain_in": 0.004,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.27395,
+     "theta_min": 0.27394999999999997,
+     "theta_max": 0.27394999999999997,
+     "rain_in": 0.0,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.0,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "sand_pct 22 outside 32.31-65.16",
+     "om_pct 4 outside 4.41-13.3",
+     "coarse_frag_pct 0 outside 21.23-48.14"
+    ],
+    "vintages": {
+     "TX321": "9/8/2026 1:17:45 PM"
+    }
+   },
+   "segments": 390,
+   "flood_gauge": {
+    "lid": "MRCT2",
+    "name": "Colorado River (TX) at Matagorda",
+    "distance_mi": 8.0,
+    "minor": "<0.05",
+    "moderate": "0",
+    "major": "0",
+    "interval": "NDJ",
+    "date_produced": "2023-10-28T17:12:14Z"
+   }
+  },
+  {
+   "eia": "612",
+   "name": "Fort Myers",
+   "lat": 26.6967,
+   "lon": -81.7831,
+   "timezone": "America/New_York",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 20:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.249,
+     "theta_min": 0.249,
+     "theta_max": 0.249,
+     "rain_in": 0.333,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.21929166666666666,
+     "theta_min": 0.21929166666666666,
+     "theta_max": 0.21929166666666666,
+     "rain_in": 0.479,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.2026666666666667,
+     "theta_min": 0.2026666666666667,
+     "theta_max": 0.2026666666666667,
+     "rain_in": 0.479,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.1946875,
+     "theta_min": 0.1946875,
+     "theta_max": 0.1946875,
+     "rain_in": 0.43499999999999994,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.1885625,
+     "theta_min": 0.1885625,
+     "theta_max": 0.1885625,
+     "rain_in": 0.087,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.18185416666666665,
+     "theta_min": 0.18185416666666665,
+     "theta_max": 0.18185416666666665,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.17491666666666664,
+     "theta_min": 0.17491666666666664,
+     "theta_max": 0.17491666666666664,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.17142857142857146,
+     "theta_min": 0.1714285714285714,
+     "theta_max": 0.1714285714285714,
+     "rain_in": 0.012,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.077,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "sand_pct 96.8 outside 32.31-65.16",
+     "om_pct 1.18 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.57 outside 0.63-1.2",
+     "coarse_frag_pct 0.065 outside 21.23-48.14"
+    ],
+    "vintages": {
+     "FL071": "8/31/2026 1:08:47 PM"
+    }
+   },
+   "segments": 327,
+   "flood_gauge": {
+    "lid": "PLMF1",
+    "name": "Fisheating Creek at Palmdale",
+    "distance_mi": 33.1,
+    "minor": "<0.05",
+    "moderate": "0",
+    "major": "0",
+    "interval": "NDJ",
+    "date_produced": "2023-10-29T20:43:02Z"
+   }
+  },
+  {
+   "eia": "3265",
+   "name": "Oconee",
+   "lat": 34.7939,
+   "lon": -82.8986,
+   "timezone": "America/New_York",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 20:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.2245,
+     "theta_min": 0.2245,
+     "theta_max": 0.2245,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.22162500000000004,
+     "theta_min": 0.22162500000000004,
+     "theta_max": 0.22162500000000004,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.2155625,
+     "theta_min": 0.2155625,
+     "theta_max": 0.2155625,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.21064583333333334,
+     "theta_min": 0.21064583333333334,
+     "theta_max": 0.21064583333333334,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.20575000000000002,
+     "theta_min": 0.20575000000000002,
+     "theta_max": 0.20575000000000002,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.20120833333333332,
+     "theta_min": 0.20120833333333332,
+     "theta_max": 0.20120833333333332,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.19597916666666668,
+     "theta_min": 0.19597916666666668,
+     "theta_max": 0.19597916666666668,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.19219047619047616,
+     "theta_min": 0.19219047619047616,
+     "theta_max": 0.19219047619047616,
+     "rain_in": 0.0,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.0,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "om_pct 0.734 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.41 outside 0.63-1.2",
+     "coarse_frag_pct 0.003 outside 21.23-48.14"
+    ],
+    "vintages": {
+     "SC077": "9/10/2026 12:13:58 PM",
+     "SC602": "9/10/2026 12:19:58 PM"
+    }
+   },
+   "segments": 277,
+   "flood_gauge": {
+    "lid": "GSLS1",
+    "name": "Saluda River near Greenville north of Old Easley Rd",
+    "distance_mi": 23.9,
+    "minor": "<0.05",
+    "moderate": "0",
+    "major": "0",
+    "interval": "NDJ",
+    "date_produced": "2023-10-29T20:43:02Z"
+   }
+  },
+  {
+   "eia": "6166",
+   "name": "Rockport",
+   "lat": 37.9256,
+   "lon": -87.0372,
+   "timezone": "America/Chicago",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 19:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.203,
+     "theta_min": 0.203,
+     "theta_max": 0.203,
+     "rain_in": 0.087,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.19877083333333334,
+     "theta_min": 0.19877083333333334,
+     "theta_max": 0.19877083333333334,
+     "rain_in": 0.087,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.19160416666666666,
+     "theta_min": 0.19160416666666666,
+     "theta_max": 0.19160416666666666,
+     "rain_in": 0.087,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.18525,
+     "theta_min": 0.18525,
+     "theta_max": 0.18525,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.17918749999999997,
+     "theta_min": 0.17918749999999997,
+     "theta_max": 0.17918749999999997,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.1738333333333333,
+     "theta_min": 0.1738333333333333,
+     "theta_max": 0.1738333333333333,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.1696875,
+     "theta_min": 0.1696875,
+     "theta_max": 0.1696875,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.16562499999999997,
+     "theta_min": 0.16562499999999997,
+     "theta_max": 0.16562499999999997,
+     "rain_in": 0.0,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.0,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "sand_pct 15 outside 32.31-65.16",
+     "om_pct 1.66 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.46 outside 0.63-1.2",
+     "coarse_frag_pct 0 outside 21.23-48.14"
+    ],
+    "vintages": {
+     "IN147": "8/28/2026 12:04:26 PM",
+     "KY615": "9/3/2026 1:08:45 PM"
+    }
+   },
+   "segments": 299,
+   "flood_gauge": {
+    "lid": "OWBK2",
+    "name": "Ohio River at Owensboro",
+    "distance_mi": 10.8,
+    "minor": "<0.05",
+    "moderate": "0",
+    "major": "0",
+    "interval": "SON",
+    "date_produced": "2023-09-19T10:19:00Z"
+   }
+  },
+  {
+   "eia": "8102",
+   "name": "Gavin Power, LLC",
+   "lat": 38.9347,
+   "lon": -82.1158,
+   "timezone": "America/New_York",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 20:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.255,
+     "theta_min": 0.255,
+     "theta_max": 0.255,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.24962499999999999,
+     "theta_min": 0.24962499999999999,
+     "theta_max": 0.24962499999999999,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.24039583333333334,
+     "theta_min": 0.24039583333333334,
+     "theta_max": 0.24039583333333334,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.23235416666666664,
+     "theta_min": 0.23235416666666664,
+     "theta_max": 0.23235416666666664,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.22543750000000004,
+     "theta_min": 0.22543750000000004,
+     "theta_max": 0.22543750000000004,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.22020833333333334,
+     "theta_min": 0.22020833333333334,
+     "theta_max": 0.22020833333333334,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.21547916666666667,
+     "theta_min": 0.21547916666666667,
+     "theta_max": 0.21547916666666667,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.2106904761904762,
+     "theta_min": 0.2106904761904762,
+     "theta_max": 0.2106904761904762,
+     "rain_in": 0.0,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.004,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "sand_pct 14.6 outside 32.31-65.16",
+     "om_pct 1.2 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.45 outside 0.63-1.2",
+     "coarse_frag_pct 3.92 outside 21.23-48.14"
+    ],
+    "vintages": {
+     "OH053": "9/9/2026 12:33:04 PM",
+     "WV600": "8/31/2026 2:14:21 PM"
+    }
+   },
+   "segments": 113,
+   "flood_gauge": {
+    "lid": "POPW2",
+    "name": "Ohio River at Point Pleasant",
+    "distance_mi": 6.4,
+    "minor": "<0.05",
+    "moderate": "0",
+    "major": "0",
+    "interval": "SON",
+    "date_produced": "2023-09-19T10:19:00Z"
+   }
+  },
+  {
+   "eia": "3399",
+   "name": "Cumberland (TN)",
+   "lat": 36.3903,
+   "lon": -87.6539,
+   "timezone": "America/Chicago",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 19:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.178,
+     "theta_min": 0.178,
+     "theta_max": 0.178,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.17495833333333333,
+     "theta_min": 0.17495833333333333,
+     "theta_max": 0.17495833333333333,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.16918750000000002,
+     "theta_min": 0.16918750000000002,
+     "theta_max": 0.16918750000000002,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.16337500000000002,
+     "theta_min": 0.16337500000000002,
+     "theta_max": 0.16337500000000002,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.1580625,
+     "theta_min": 0.1580625,
+     "theta_max": 0.1580625,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.15254166666666666,
+     "theta_min": 0.15254166666666666,
+     "theta_max": 0.15254166666666666,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.1470625,
+     "theta_min": 0.1470625,
+     "theta_max": 0.1470625,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.14355,
+     "theta_min": 0.14355,
+     "theta_max": 0.14355,
+     "rain_in": 0.0,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.006,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "sand_pct 18.8 outside 32.31-65.16",
+     "om_pct 1.42 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.41 outside 0.63-1.2",
+     "coarse_frag_pct 15.5 outside 21.23-48.14"
+    ],
+    "vintages": {
+     "TN083": "8/27/2026 2:00:04 PM",
+     "TN161": "8/28/2026 1:46:17 PM"
+    }
+   },
+   "segments": 196,
+   "flood_gauge": {
+    "lid": "DOVT1",
+    "name": "Cumberland River at Dover",
+    "distance_mi": 12.4,
+    "minor": "<0.05",
+    "moderate": "0",
+    "major": "0",
+    "interval": "SON",
+    "date_produced": "2023-09-19T10:19:00Z"
+   }
+  },
+  {
+   "eia": "6071",
+   "name": "Trimble County",
+   "lat": 38.5847,
+   "lon": -85.4117,
+   "timezone": "America/New_York",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 20:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.196,
+     "theta_min": 0.196,
+     "theta_max": 0.196,
+     "rain_in": 0.173,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.19183333333333338,
+     "theta_min": 0.19183333333333338,
+     "theta_max": 0.19183333333333338,
+     "rain_in": 0.173,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.18422916666666667,
+     "theta_min": 0.18422916666666667,
+     "theta_max": 0.18422916666666667,
+     "rain_in": 0.016,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.17758333333333332,
+     "theta_min": 0.17758333333333332,
+     "theta_max": 0.17758333333333332,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.17147916666666663,
+     "theta_min": 0.17147916666666663,
+     "theta_max": 0.17147916666666663,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.16670833333333332,
+     "theta_min": 0.16670833333333332,
+     "theta_max": 0.16670833333333332,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.16237500000000002,
+     "theta_min": 0.16237500000000002,
+     "theta_max": 0.16237500000000002,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.15785714285714283,
+     "theta_min": 0.15785714285714286,
+     "theta_max": 0.15785714285714286,
+     "rain_in": 0.0,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.0,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "sand_pct 12.7 outside 32.31-65.16",
+     "om_pct 1.59 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.39 outside 0.63-1.2",
+     "coarse_frag_pct 1.46 outside 21.23-48.14"
+    ],
+    "vintages": {
+     "IN019": "9/18/2026 11:53:52 AM",
+     "IN077": "9/17/2026 7:35:29 PM",
+     "KY622": "9/3/2026 1:13:45 PM"
+    }
+   },
+   "segments": 125,
+   "flood_gauge": {
+    "lid": "CLFI3",
+    "name": "Ohio River at Clifty Creek",
+    "distance_mi": 10.5,
+    "minor": "<0.05",
+    "moderate": "0",
+    "major": "0",
+    "interval": "SON",
+    "date_produced": "2023-09-19T10:19:00Z"
+   }
+  },
+  {
+   "eia": "66923",
+   "name": "SunZia Wind South",
+   "lat": 34.351782,
+   "lon": -105.5925,
+   "timezone": "America/Denver",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 18:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.15999999999999998,
+     "theta_min": 0.15999999999999998,
+     "theta_max": 0.15999999999999998,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.1586458333333333,
+     "theta_min": 0.1586458333333333,
+     "theta_max": 0.1586458333333333,
+     "rain_in": 0.071,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.15625,
+     "theta_min": 0.15625,
+     "theta_max": 0.15625,
+     "rain_in": 0.09499999999999999,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.1558125,
+     "theta_min": 0.1558125,
+     "theta_max": 0.1558125,
+     "rain_in": 0.123,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.1563125,
+     "theta_min": 0.1563125,
+     "theta_max": 0.1563125,
+     "rain_in": 0.21400000000000002,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.15495833333333334,
+     "theta_min": 0.15495833333333334,
+     "theta_max": 0.15495833333333334,
+     "rain_in": 0.26,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.20304166666666668,
+     "theta_min": 0.20304166666666668,
+     "theta_max": 0.20304166666666668,
+     "rain_in": 0.308,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.2216578947368421,
+     "theta_min": 0.2216578947368421,
+     "theta_max": 0.2216578947368421,
+     "rain_in": 0.648,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.0,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "om_pct 0.988 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.39 outside 0.63-1.2",
+     "coarse_frag_pct 7.53 outside 21.23-48.14"
+    ],
+    "vintages": {
+     "NM674": "9/8/2026 12:52:02 AM"
+    }
+   },
+   "segments": 211,
+   "flood_gauge": {
+    "lid": "PUEN5",
+    "name": "Pecos River below Puerto De Luna",
+    "distance_mi": 66.1,
+    "minor": "<0.05",
+    "moderate": "0",
+    "major": "0",
+    "interval": "NDJ",
+    "date_produced": "2023-10-28T17:12:14Z"
+   }
+  },
+  {
+   "eia": "2712",
+   "name": "Roxboro",
+   "lat": 36.4833,
+   "lon": -79.0731,
+   "timezone": "America/New_York",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 20:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.189,
+     "theta_min": 0.189,
+     "theta_max": 0.189,
+     "rain_in": 0.732,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.18179166666666666,
+     "theta_min": 0.18179166666666666,
+     "theta_max": 0.18179166666666666,
+     "rain_in": 0.732,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.17220833333333332,
+     "theta_min": 0.17220833333333332,
+     "theta_max": 0.17220833333333332,
+     "rain_in": 0.732,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.16404166666666667,
+     "theta_min": 0.16404166666666667,
+     "theta_max": 0.16404166666666667,
+     "rain_in": 0.732,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.15695833333333334,
+     "theta_min": 0.15695833333333334,
+     "theta_max": 0.15695833333333334,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.15114583333333334,
+     "theta_min": 0.15114583333333334,
+     "theta_max": 0.15114583333333334,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.14562499999999998,
+     "theta_min": 0.14562499999999998,
+     "theta_max": 0.14562499999999998,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.14211904761904762,
+     "theta_min": 0.14211904761904762,
+     "theta_max": 0.14211904761904762,
+     "rain_in": 0.0,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.0,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "om_pct 0.75 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.49 outside 0.63-1.2",
+     "coarse_frag_pct 9.53 outside 21.23-48.14"
+    ],
+    "vintages": {
+     "NC145": "8/31/2026 2:47:09 PM"
+    }
+   },
+   "segments": 296,
+   "flood_gauge": {
+    "lid": "PCEV2",
+    "name": "Dan River at Paces",
+    "distance_mi": 11.0,
+    "minor": "<0.05",
+    "moderate": "0",
+    "major": "0",
+    "interval": "NDJ",
+    "date_produced": "2023-10-29T20:43:02Z"
+   }
+  },
+  {
+   "eia": "7722",
+   "name": "Watts Bar Nuclear Plant",
+   "lat": 35.6021,
+   "lon": -84.7895,
+   "timezone": "America/New_York",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 20:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.1865,
+     "theta_min": 0.1865,
+     "theta_max": 0.1865,
+     "rain_in": 0.016,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.1836875,
+     "theta_min": 0.1836875,
+     "theta_max": 0.1836875,
+     "rain_in": 0.016,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.17814583333333334,
+     "theta_min": 0.17814583333333334,
+     "theta_max": 0.17814583333333334,
+     "rain_in": 0.016,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.17260416666666667,
+     "theta_min": 0.17260416666666667,
+     "theta_max": 0.17260416666666667,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.16689583333333333,
+     "theta_min": 0.16689583333333333,
+     "theta_max": 0.16689583333333333,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.16091666666666668,
+     "theta_min": 0.16091666666666668,
+     "theta_max": 0.16091666666666668,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.15535416666666665,
+     "theta_min": 0.15535416666666665,
+     "theta_max": 0.15535416666666665,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.15154761904761904,
+     "theta_min": 0.15154761904761904,
+     "theta_max": 0.15154761904761904,
+     "rain_in": 0.0,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.0,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "om_pct 1.28 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.45 outside 0.63-1.2",
+     "coarse_frag_pct 4.16 outside 21.23-48.14"
+    ],
+    "vintages": {
+     "TN121": "8/28/2026 1:30:01 PM",
+     "TN143": "8/28/2026 1:39:31 PM"
+    }
+   },
+   "segments": 121,
+   "flood_gauge": {
+    "lid": "OAKT1",
+    "name": "Emory River at Oakdale",
+    "distance_mi": 29.3,
+    "minor": "<0.05",
+    "moderate": "0",
+    "major": "0",
+    "interval": "OND",
+    "date_produced": "2023-10-25T00:24:52Z"
+   }
+  },
+  {
+   "eia": "6103",
+   "name": "TalenEnergy Susquehanna",
+   "lat": 41.0919,
+   "lon": -76.1462,
+   "timezone": "America/New_York",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 20:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.2525,
+     "theta_min": 0.2525,
+     "theta_max": 0.2525,
+     "rain_in": 0.354,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.24647916666666667,
+     "theta_min": 0.24647916666666667,
+     "theta_max": 0.24647916666666667,
+     "rain_in": 0.354,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.23687499999999997,
+     "theta_min": 0.23687499999999997,
+     "theta_max": 0.23687499999999997,
+     "rain_in": 0.354,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.22806249999999997,
+     "theta_min": 0.22806249999999997,
+     "theta_max": 0.22806249999999997,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.21997916666666664,
+     "theta_min": 0.21997916666666664,
+     "theta_max": 0.21997916666666664,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.2123125,
+     "theta_min": 0.2123125,
+     "theta_max": 0.2123125,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.20408333333333337,
+     "theta_min": 0.20408333333333337,
+     "theta_max": 0.20408333333333337,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.19847619047619044,
+     "theta_min": 0.19847619047619047,
+     "theta_max": 0.19847619047619047,
+     "rain_in": 0.0,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.273,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "om_pct 2.81 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.3 outside 0.63-1.2"
+    ],
+    "vintages": {
+     "PA079": "9/8/2026 5:29:52 PM"
+    }
+   },
+   "segments": 228,
+   "flood_gauge": {
+    "lid": "BMBP1",
+    "name": "Susquehanna River at Bloomsburg",
+    "distance_mi": 16.8,
+    "minor": "<0.05",
+    "moderate": "0.07",
+    "major": "0",
+    "interval": "NDJ",
+    "date_produced": "2023-10-28T18:27:49Z"
+   }
+  },
+  {
+   "eia": "8042",
+   "name": "Belews Creek",
+   "lat": 36.2811,
+   "lon": -80.0603,
+   "timezone": "America/New_York",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 20:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.256,
+     "theta_min": 0.256,
+     "theta_max": 0.256,
+     "rain_in": 0.19799999999999998,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.24616666666666664,
+     "theta_min": 0.24616666666666664,
+     "theta_max": 0.24616666666666664,
+     "rain_in": 0.19799999999999998,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.23358333333333334,
+     "theta_min": 0.23358333333333334,
+     "theta_max": 0.23358333333333334,
+     "rain_in": 0.19799999999999998,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.2235,
+     "theta_min": 0.2235,
+     "theta_max": 0.2235,
+     "rain_in": 0.127,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.21422916666666666,
+     "theta_min": 0.21422916666666666,
+     "theta_max": 0.21422916666666666,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.20439583333333333,
+     "theta_min": 0.20439583333333333,
+     "theta_max": 0.20439583333333333,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.1933125,
+     "theta_min": 0.1933125,
+     "theta_max": 0.1933125,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.1877380952380953,
+     "theta_min": 0.18773809523809526,
+     "theta_max": 0.18773809523809526,
+     "rain_in": 0.0,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.0,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "om_pct 0.769 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.37 outside 0.63-1.2",
+     "coarse_frag_pct 5.63 outside 21.23-48.14"
+    ],
+    "vintages": {
+     "NC157": "8/31/2026 3:19:56 PM",
+     "NC169": "8/31/2026 3:25:42 PM"
+    }
+   },
+   "segments": 316,
+   "flood_gauge": {
+    "lid": "WENN7",
+    "name": "Dan River near Wentworth",
+    "distance_mi": 15.9,
+    "minor": "<0.05",
+    "moderate": "0",
+    "major": "0",
+    "interval": "NDJ",
+    "date_produced": "2023-10-29T20:43:02Z"
+   }
+  },
+  {
+   "eia": "130",
+   "name": "Cross",
+   "lat": 33.371506,
+   "lon": -80.11324,
+   "timezone": "America/New_York",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 20:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.274,
+     "theta_min": 0.274,
+     "theta_max": 0.274,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.273625,
+     "theta_min": 0.273625,
+     "theta_max": 0.273625,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.27183333333333337,
+     "theta_min": 0.27183333333333337,
+     "theta_max": 0.27183333333333337,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.269125,
+     "theta_min": 0.269125,
+     "theta_max": 0.269125,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.26587500000000003,
+     "theta_min": 0.26587500000000003,
+     "theta_max": 0.26587500000000003,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.2626875,
+     "theta_min": 0.2626875,
+     "theta_max": 0.2626875,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.2590208333333333,
+     "theta_min": 0.2590208333333333,
+     "theta_max": 0.2590208333333333,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.25716666666666665,
+     "theta_min": 0.2571666666666667,
+     "theta_max": 0.2571666666666667,
+     "rain_in": 0.0,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.0,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "sand_pct 68.2 outside 32.31-65.16",
+     "om_pct 1.34 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.55 outside 0.63-1.2",
+     "coarse_frag_pct 1.96 outside 21.23-48.14"
+    ],
+    "vintages": {
+     "SC015": "9/9/2026 1:12:51 PM"
+    }
+   },
+   "segments": 507,
+   "flood_gauge": {
+    "lid": "JAMS1",
+    "name": "Santee River near Jamestown",
+    "distance_mi": 25.5,
+    "minor": "<0.05",
+    "moderate": "0.0808",
+    "major": "0",
+    "interval": "NDJ",
+    "date_produced": "2023-10-29T20:43:02Z"
+   }
+  },
+  {
+   "eia": "6022",
+   "name": "Braidwood Generation Station",
+   "lat": 41.2435,
+   "lon": -88.2286,
+   "timezone": "America/Chicago",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 19:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.178,
+     "theta_min": 0.178,
+     "theta_max": 0.178,
+     "rain_in": 0.08700000000000001,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.17299999999999996,
+     "theta_min": 0.17299999999999996,
+     "theta_max": 0.17299999999999996,
+     "rain_in": 0.08700000000000001,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.1652708333333333,
+     "theta_min": 0.1652708333333333,
+     "theta_max": 0.1652708333333333,
+     "rain_in": 0.016,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.15899999999999997,
+     "theta_min": 0.15899999999999997,
+     "theta_max": 0.15899999999999997,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.1535,
+     "theta_min": 0.1535,
+     "theta_max": 0.1535,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.14902083333333335,
+     "theta_min": 0.14902083333333335,
+     "theta_max": 0.14902083333333335,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.14475000000000002,
+     "theta_min": 0.14475000000000002,
+     "theta_max": 0.14475000000000002,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.14112500000000003,
+     "theta_min": 0.14112500000000003,
+     "theta_max": 0.14112500000000003,
+     "rain_in": 0.0,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.002,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "sand_pct 80.8 outside 32.31-65.16",
+     "om_pct 1.86 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.47 outside 0.63-1.2",
+     "coarse_frag_pct 0.8 outside 21.23-48.14"
+    ],
+    "vintages": {
+     "IL063": "8/23/2026 7:57:36 PM",
+     "IL197": "8/23/2026 8:22:37 PM"
+    }
+   },
+   "segments": 415,
+   "flood_gauge": {
+    "lid": "COLI2",
+    "name": "Mazon River near Coal City",
+    "distance_mi": 7.4,
+    "minor": "<0.05",
+    "moderate": "0",
+    "major": "0",
+    "interval": "NDJ",
+    "date_produced": "2023-10-27T19:03:14Z"
+   }
+  },
+  {
+   "eia": "6023",
+   "name": "Byron Generating Station",
+   "lat": 42.0742,
+   "lon": -89.2819,
+   "timezone": "America/Chicago",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 19:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.263,
+     "theta_min": 0.263,
+     "theta_max": 0.263,
+     "rain_in": 0.7839999999999999,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.2594166666666667,
+     "theta_min": 0.2594166666666667,
+     "theta_max": 0.2594166666666667,
+     "rain_in": 0.7839999999999999,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.25410416666666663,
+     "theta_min": 0.25410416666666663,
+     "theta_max": 0.25410416666666663,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.25072916666666667,
+     "theta_min": 0.25072916666666667,
+     "theta_max": 0.25072916666666667,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.24762499999999998,
+     "theta_min": 0.24762499999999998,
+     "theta_max": 0.24762499999999998,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.24616666666666664,
+     "theta_min": 0.24616666666666664,
+     "theta_max": 0.24616666666666664,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.2459375,
+     "theta_min": 0.2459375,
+     "theta_max": 0.2459375,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.24425,
+     "theta_min": 0.24425,
+     "theta_max": 0.24425,
+     "rain_in": 0.0,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.0,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "sand_pct 30 outside 32.31-65.16",
+     "om_pct 2.13 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.38 outside 0.63-1.2",
+     "coarse_frag_pct 0.174 outside 21.23-48.14"
+    ],
+    "vintages": {
+     "IL141": "8/23/2026 8:13:51 PM"
+    }
+   },
+   "segments": 92,
+   "flood_gauge": {
+    "lid": "BYRI2",
+    "name": "Rock River at Byron",
+    "distance_mi": 3.6,
+    "minor": "<0.05",
+    "moderate": "0",
+    "major": "0",
+    "interval": "NDJ",
+    "date_produced": "2023-10-27T19:03:14Z"
+   }
+  },
+  {
+   "eia": "1403",
+   "name": "Nine Mile Point",
+   "lat": 29.9472,
+   "lon": -90.1458,
+   "timezone": "America/Chicago",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 19:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.246,
+     "theta_min": 0.246,
+     "theta_max": 0.246,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.24227083333333332,
+     "theta_min": 0.24227083333333332,
+     "theta_max": 0.24227083333333332,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.2369583333333333,
+     "theta_min": 0.2369583333333333,
+     "theta_max": 0.2369583333333333,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.23202083333333332,
+     "theta_min": 0.23202083333333332,
+     "theta_max": 0.23202083333333332,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.227125,
+     "theta_min": 0.227125,
+     "theta_max": 0.227125,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.22254166666666664,
+     "theta_min": 0.22254166666666664,
+     "theta_max": 0.22254166666666664,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.21762500000000004,
+     "theta_min": 0.21762500000000004,
+     "theta_max": 0.21762500000000004,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.21387499999999998,
+     "theta_min": 0.21387499999999998,
+     "theta_max": 0.21387499999999998,
+     "rain_in": 0.0,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.0,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "sand_pct 6.27 outside 32.31-65.16",
+     "om_pct 1.64 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.39 outside 0.63-1.2",
+     "coarse_frag_pct 0 outside 21.23-48.14"
+    ],
+    "vintages": {
+     "LA051": "9/8/2026 1:54:18 PM",
+     "LA071": "9/8/2026 1:58:03 PM"
+    }
+   },
+   "segments": 586,
+   "flood_gauge": {
+    "lid": "NORL1",
+    "name": "Mississippi River at New Orleans",
+    "distance_mi": 1.0,
+    "minor": "<0.05",
+    "moderate": "0",
+    "major": "0",
+    "interval": "OND",
+    "date_produced": "2023-10-25T00:24:52Z"
+   }
+  },
+  {
+   "eia": "6145",
+   "name": "Comanche Peak",
+   "lat": 32.298365,
+   "lon": -97.78552,
+   "timezone": "America/Chicago",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 19:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.22099999999999997,
+     "theta_min": 0.22099999999999997,
+     "theta_max": 0.22099999999999997,
+     "rain_in": 0.28400000000000003,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.21760416666666668,
+     "theta_min": 0.21760416666666668,
+     "theta_max": 0.21760416666666668,
+     "rain_in": 0.28400000000000003,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.2118125,
+     "theta_min": 0.2118125,
+     "theta_max": 0.2118125,
+     "rain_in": 0.256,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.2063125,
+     "theta_min": 0.2063125,
+     "theta_max": 0.2063125,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.20125,
+     "theta_min": 0.20125,
+     "theta_max": 0.20125,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.1963541666666667,
+     "theta_min": 0.1963541666666667,
+     "theta_max": 0.1963541666666667,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.19212500000000002,
+     "theta_min": 0.19212500000000002,
+     "theta_max": 0.19212500000000002,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.189,
+     "theta_min": 0.189,
+     "theta_max": 0.189,
+     "rain_in": 0.0,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.0,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "sand_pct 25.8 outside 32.31-65.16",
+     "om_pct 4.03 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.26 outside 0.63-1.2"
+    ],
+    "vintages": {
+     "TX609": "9/8/2026 1:34:46 PM"
+    }
+   },
+   "segments": 314,
+   "flood_gauge": {
+    "lid": "GROT2",
+    "name": "Paluxy River at Glen Rose",
+    "distance_mi": 4.7,
+    "minor": "<0.05",
+    "moderate": "0",
+    "major": "0",
+    "interval": "NDJ",
+    "date_produced": "2023-10-28T17:12:14Z"
+   }
+  },
+  {
+   "eia": "2693",
+   "name": "Robert Moses Niagara",
+   "lat": 43.1427,
+   "lon": -79.0394,
+   "timezone": "America/New_York",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 20:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.298,
+     "theta_min": 0.298,
+     "theta_max": 0.298,
+     "rain_in": 0.28800000000000003,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.2923125,
+     "theta_min": 0.2923125,
+     "theta_max": 0.2923125,
+     "rain_in": 0.288,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.28379166666666666,
+     "theta_min": 0.28379166666666666,
+     "theta_max": 0.28379166666666666,
+     "rain_in": 0.288,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.27875,
+     "theta_min": 0.27875,
+     "theta_max": 0.27875,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.27560416666666665,
+     "theta_min": 0.27560416666666665,
+     "theta_max": 0.27560416666666665,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.2745208333333333,
+     "theta_min": 0.2745208333333333,
+     "theta_max": 0.2745208333333333,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.2733125,
+     "theta_min": 0.2733125,
+     "theta_max": 0.2733125,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.27109523809523806,
+     "theta_min": 0.2710952380952381,
+     "theta_max": 0.2710952380952381,
+     "rain_in": 0.0,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.0,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "om_pct 1.82 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.51 outside 0.63-1.2"
+    ],
+    "vintages": {
+     "NY664": "9/2/2026 10:46:14 AM"
+    }
+   },
+   "segments": 839,
+   "flood_gauge": {
+    "lid": "WILN6",
+    "name": "Ellicott Creek below Williamsville",
+    "distance_mi": 18.0,
+    "minor": "<0.05",
+    "moderate": "0",
+    "major": "0",
+    "interval": "NDJ",
+    "date_produced": "2023-10-30T11:33:08Z"
+   }
+  },
+  {
+   "eia": "55380",
+   "name": "Union Power Station",
+   "lat": 33.296146,
+   "lon": -92.58936,
+   "timezone": "America/Chicago",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 19:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.11,
+     "theta_min": 0.11,
+     "theta_max": 0.11,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.1085625,
+     "theta_min": 0.1085625,
+     "theta_max": 0.1085625,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.10631250000000002,
+     "theta_min": 0.10631250000000002,
+     "theta_max": 0.10631250000000002,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.10416666666666667,
+     "theta_min": 0.10416666666666667,
+     "theta_max": 0.10416666666666667,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.10200000000000002,
+     "theta_min": 0.10200000000000002,
+     "theta_max": 0.10200000000000002,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.10033333333333333,
+     "theta_min": 0.10033333333333333,
+     "theta_max": 0.10033333333333333,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.098875,
+     "theta_min": 0.098875,
+     "theta_max": 0.098875,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.09800000000000002,
+     "theta_min": 0.098,
+     "theta_max": 0.098,
+     "rain_in": 0.0,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.0,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "om_pct 1.42 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.5 outside 0.63-1.2",
+     "coarse_frag_pct 4.57 outside 21.23-48.14"
+    ],
+    "vintages": {
+     "AR139": "9/8/2026 3:30:55 PM"
+    }
+   },
+   "segments": 39,
+   "flood_gauge": {
+    "lid": "CAMA4",
+    "name": "Ouachita River at Camden",
+    "distance_mi": 24.6,
+    "minor": "<0.05",
+    "moderate": "0.09",
+    "major": "0",
+    "interval": "OND",
+    "date_produced": "2023-10-25T00:24:52Z"
+   }
+  },
+  {
+   "eia": "2103",
+   "name": "Labadie",
+   "lat": 38.562244,
+   "lon": -90.83769,
+   "timezone": "America/Chicago",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 19:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.20500000000000002,
+     "theta_min": 0.20500000000000002,
+     "theta_max": 0.20500000000000002,
+     "rain_in": 0.076,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.20079166666666667,
+     "theta_min": 0.20079166666666667,
+     "theta_max": 0.20079166666666667,
+     "rain_in": 0.076,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.19308333333333336,
+     "theta_min": 0.19308333333333336,
+     "theta_max": 0.19308333333333336,
+     "rain_in": 0.016,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.18708333333333335,
+     "theta_min": 0.18708333333333335,
+     "theta_max": 0.18708333333333335,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.1825,
+     "theta_min": 0.1825,
+     "theta_max": 0.1825,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.17635416666666667,
+     "theta_min": 0.17635416666666667,
+     "theta_max": 0.17635416666666667,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.17006249999999998,
+     "theta_min": 0.17006249999999998,
+     "theta_max": 0.17006249999999998,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.16584999999999997,
+     "theta_min": 0.16585,
+     "theta_max": 0.16585,
+     "rain_in": 0.0,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.0,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "sand_pct 11.4 outside 32.31-65.16",
+     "om_pct 1.66 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.42 outside 0.63-1.2",
+     "coarse_frag_pct 0 outside 21.23-48.14"
+    ],
+    "vintages": {
+     "MO071": "8/25/2026 8:32:52 PM",
+     "MO183": "8/26/2026 1:28:15 PM"
+    }
+   },
+   "segments": 223,
+   "flood_gauge": {
+    "lid": "PCFM7",
+    "name": "Meramec River near Pacific",
+    "distance_mi": 8.6,
+    "minor": "<0.05",
+    "moderate": "0",
+    "major": "0",
+    "interval": "NDJ",
+    "date_produced": "2023-10-27T19:03:14Z"
+   }
+  },
+  {
+   "eia": "6146",
+   "name": "Martin Lake",
+   "lat": 32.2606,
+   "lon": -94.5706,
+   "timezone": "America/Chicago",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 19:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.129,
+     "theta_min": 0.129,
+     "theta_max": 0.129,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.12729166666666666,
+     "theta_min": 0.12729166666666666,
+     "theta_max": 0.12729166666666666,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.123875,
+     "theta_min": 0.123875,
+     "theta_max": 0.123875,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.12079166666666667,
+     "theta_min": 0.12079166666666667,
+     "theta_max": 0.12079166666666667,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.1176875,
+     "theta_min": 0.1176875,
+     "theta_max": 0.1176875,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.11531249999999998,
+     "theta_min": 0.11531249999999998,
+     "theta_max": 0.11531249999999998,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.11343749999999998,
+     "theta_min": 0.11343749999999998,
+     "theta_max": 0.11343749999999998,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.11147499999999999,
+     "theta_min": 0.11147499999999999,
+     "theta_max": 0.11147499999999999,
+     "rain_in": 0.0,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.0,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "om_pct 0.952 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.54 outside 0.63-1.2",
+     "coarse_frag_pct 3.07 outside 21.23-48.14"
+    ],
+    "vintages": {
+     "TX365": "9/3/2026 3:04:19 PM",
+     "TX401": "9/3/2026 3:10:05 PM"
+    }
+   },
+   "segments": 187,
+   "flood_gauge": {
+    "lid": "BEKT2",
+    "name": "Sabine River near Beckville",
+    "distance_mi": 13.5,
+    "minor": "<0.05",
+    "moderate": "0",
+    "major": "0",
+    "interval": "NDJ",
+    "date_produced": "2023-10-28T17:12:14Z"
+   }
+  },
+  {
+   "eia": "6026",
+   "name": "LaSalle Generating Station",
+   "lat": 41.245498,
+   "lon": -88.66907,
+   "timezone": "America/Chicago",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 19:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.2745,
+     "theta_min": 0.2745,
+     "theta_max": 0.2745,
+     "rain_in": 0.032,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.27062500000000006,
+     "theta_min": 0.27062500000000006,
+     "theta_max": 0.27062500000000006,
+     "rain_in": 0.032,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.26356250000000003,
+     "theta_min": 0.26356250000000003,
+     "theta_max": 0.26356250000000003,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.2587291666666667,
+     "theta_min": 0.2587291666666667,
+     "theta_max": 0.2587291666666667,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.2546875,
+     "theta_min": 0.2546875,
+     "theta_max": 0.2546875,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.2523958333333333,
+     "theta_min": 0.2523958333333333,
+     "theta_max": 0.2523958333333333,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.251125,
+     "theta_min": 0.251125,
+     "theta_max": 0.251125,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.2486250000000001,
+     "theta_min": 0.248625,
+     "theta_max": 0.248625,
+     "rain_in": 0.0,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.0,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "sand_pct 7.55 outside 32.31-65.16",
+     "om_pct 3.84 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.41 outside 0.63-1.2",
+     "coarse_frag_pct 0.958 outside 21.23-48.14"
+    ],
+    "vintages": {
+     "IL099": "8/24/2026 12:11:04 PM"
+    }
+   },
+   "segments": 338,
+   "flood_gauge": {
+    "lid": "OTWI2",
+    "name": "Illinois River at Ottawa",
+    "distance_mi": 11.2,
+    "minor": "<0.05",
+    "moderate": "0.1",
+    "major": "0",
+    "interval": "NDJ",
+    "date_produced": "2023-10-27T19:03:14Z"
+   }
+  },
+  {
+   "eia": "2410",
+   "name": "PSEG Salem Generating Station",
+   "lat": 39.4625,
+   "lon": -75.5358,
+   "timezone": "America/New_York",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 20:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.26,
+     "theta_min": 0.26,
+     "theta_max": 0.26,
+     "rain_in": 0.27799999999999997,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.2508958333333333,
+     "theta_min": 0.2508958333333333,
+     "theta_max": 0.2508958333333333,
+     "rain_in": 0.278,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.2385833333333333,
+     "theta_min": 0.2385833333333333,
+     "theta_max": 0.2385833333333333,
+     "rain_in": 0.278,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.22770833333333332,
+     "theta_min": 0.22770833333333332,
+     "theta_max": 0.22770833333333332,
+     "rain_in": 0.262,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.21791666666666668,
+     "theta_min": 0.21791666666666668,
+     "theta_max": 0.21791666666666668,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.21089583333333337,
+     "theta_min": 0.21089583333333337,
+     "theta_max": 0.21089583333333337,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.20539583333333336,
+     "theta_min": 0.20539583333333336,
+     "theta_max": 0.20539583333333336,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.19847619047619044,
+     "theta_min": 0.19847619047619047,
+     "theta_max": 0.19847619047619047,
+     "rain_in": 0.0,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.033,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "om_pct 3 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.52 outside 0.63-1.2",
+     "coarse_frag_pct 0 outside 21.23-48.14"
+    ],
+    "vintages": {
+     "DE003": "9/17/2026 6:48:42 PM",
+     "NJ033": "8/25/2026 11:27:35 AM"
+    }
+   },
+   "segments": 295,
+   "flood_gauge": {
+    "lid": "WMND1",
+    "name": "Brandywine Creek at Wilmington",
+    "distance_mi": 21.3,
+    "minor": "<0.05",
+    "moderate": "0",
+    "major": "0",
+    "interval": "NDJ",
+    "date_produced": "2023-10-28T18:27:49Z"
+   }
+  },
+  {
+   "eia": "8066",
+   "name": "Jim Bridger",
+   "lat": 41.7378,
+   "lon": -108.7875,
+   "timezone": "America/Denver",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 18:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.1725,
+     "theta_min": 0.1725,
+     "theta_max": 0.1725,
+     "rain_in": 0.071,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.17043750000000002,
+     "theta_min": 0.17043750000000002,
+     "theta_max": 0.17043750000000002,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.17043750000000002,
+     "theta_min": 0.17043750000000002,
+     "theta_max": 0.17043750000000002,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.1683125,
+     "theta_min": 0.1683125,
+     "theta_max": 0.1683125,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.16604166666666667,
+     "theta_min": 0.16604166666666667,
+     "theta_max": 0.16604166666666667,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.16325,
+     "theta_min": 0.16325,
+     "theta_max": 0.16325,
+     "rain_in": 0.028,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.16516666666666666,
+     "theta_min": 0.16516666666666666,
+     "theta_max": 0.16516666666666666,
+     "rain_in": 0.49500000000000005,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.17152631578947367,
+     "theta_min": 0.17152631578947367,
+     "theta_max": 0.17152631578947367,
+     "rain_in": 0.8320000000000001,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.0,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "om_pct 0.912 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.49 outside 0.63-1.2",
+     "coarse_frag_pct 18.4 outside 21.23-48.14"
+    ],
+    "vintages": {
+     "WY737": "9/13/2026 3:20:40 PM"
+    }
+   },
+   "segments": 258,
+   "flood_gauge": {
+    "lid": "LABW4",
+    "name": "Green River (WY-UT-CO) near La Barge",
+    "distance_mi": 77.3,
+    "minor": "<0.05",
+    "moderate": "0",
+    "major": "-999",
+    "interval": "OND",
+    "date_produced": "2023-10-15T12:37:58Z"
+   }
+  },
+  {
+   "eia": "6099",
+   "name": "Diablo Canyon",
+   "lat": 35.211536,
+   "lon": -120.8555,
+   "timezone": "America/Los_Angeles",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 17:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.15000000000000002,
+     "theta_min": 0.15000000000000002,
+     "theta_max": 0.15000000000000002,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.14764583333333337,
+     "theta_min": 0.14764583333333337,
+     "theta_max": 0.14764583333333337,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.14543750000000003,
+     "theta_min": 0.14543750000000003,
+     "theta_max": 0.14543750000000003,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.14429166666666668,
+     "theta_min": 0.14429166666666668,
+     "theta_max": 0.14429166666666668,
+     "rain_in": 0.092,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.15691666666666668,
+     "theta_min": 0.15691666666666668,
+     "theta_max": 0.15691666666666668,
+     "rain_in": 0.829,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.21252083333333335,
+     "theta_min": 0.21252083333333335,
+     "theta_max": 0.21252083333333335,
+     "rain_in": 0.877,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.2057291666666667,
+     "theta_min": 0.2057291666666667,
+     "theta_max": 0.2057291666666667,
+     "rain_in": 0.877,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.2007777777777778,
+     "theta_min": 0.20077777777777783,
+     "theta_max": 0.20077777777777783,
+     "rain_in": 0.785,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.0,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "sand_pct 25.6 outside 32.31-65.16",
+     "om_pct 3.05 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.47 outside 0.63-1.2",
+     "coarse_frag_pct 10.2 outside 21.23-48.14"
+    ],
+    "vintages": {
+     "CA664": "9/15/2026 8:16:26 PM"
+    }
+   },
+   "segments": 298,
+   "flood_gauge": {
+    "lid": "PRBC1",
+    "name": "Salinas River at Paso Robles",
+    "distance_mi": 30.4,
+    "minor": "<0.05",
+    "moderate": "0",
+    "major": "0",
+    "interval": "OND",
+    "date_produced": "2023-10-27T19:37:55Z"
+   }
+  },
+  {
+   "eia": "6000",
+   "name": "Donald C Cook",
+   "lat": 41.975604,
+   "lon": -86.56521,
+   "timezone": "America/Detroit",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 20:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.193,
+     "theta_min": 0.193,
+     "theta_max": 0.193,
+     "rain_in": 0.31499999999999995,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.18608333333333335,
+     "theta_min": 0.18608333333333335,
+     "theta_max": 0.18608333333333335,
+     "rain_in": 0.31499999999999995,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.17729166666666665,
+     "theta_min": 0.17729166666666665,
+     "theta_max": 0.17729166666666665,
+     "rain_in": 0.157,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.17216666666666666,
+     "theta_min": 0.17216666666666666,
+     "theta_max": 0.17216666666666666,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.16829166666666664,
+     "theta_min": 0.16829166666666664,
+     "theta_max": 0.16829166666666664,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.16658333333333333,
+     "theta_min": 0.16658333333333333,
+     "theta_max": 0.16658333333333333,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.16622916666666668,
+     "theta_min": 0.16622916666666668,
+     "theta_max": 0.16622916666666668,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.16380952380952385,
+     "theta_min": 0.16380952380952382,
+     "theta_max": 0.16380952380952382,
+     "rain_in": 0.0,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.024,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "sand_pct 93.3 outside 32.31-65.16",
+     "om_pct 1.24 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.54 outside 0.63-1.2",
+     "coarse_frag_pct 5.47 outside 21.23-48.14"
+    ],
+    "vintages": {
+     "MI021": "8/25/2026 5:49:42 PM"
+    }
+   },
+   "segments": 243,
+   "flood_gauge": {
+    "lid": "NILM4",
+    "name": "St. Joseph River (MI/IN) at Niles",
+    "distance_mi": 18.7,
+    "minor": "<0.05",
+    "moderate": "0",
+    "major": "0",
+    "interval": "NDJ",
+    "date_produced": "2023-10-27T19:03:14Z"
+   }
+  },
+  {
+   "eia": "6073",
+   "name": "Victor J Daniel Jr",
+   "lat": 30.5322,
+   "lon": -88.5553,
+   "timezone": "America/Chicago",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 19:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.241,
+     "theta_min": 0.241,
+     "theta_max": 0.241,
+     "rain_in": 0.016,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.23968749999999997,
+     "theta_min": 0.23968749999999997,
+     "theta_max": 0.23968749999999997,
+     "rain_in": 0.016,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.23568749999999997,
+     "theta_min": 0.23568749999999997,
+     "theta_max": 0.23568749999999997,
+     "rain_in": 0.016,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.2319375,
+     "theta_min": 0.2319375,
+     "theta_max": 0.2319375,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.22766666666666666,
+     "theta_min": 0.22766666666666666,
+     "theta_max": 0.22766666666666666,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.2239375,
+     "theta_min": 0.2239375,
+     "theta_max": 0.2239375,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.2197916666666667,
+     "theta_min": 0.2197916666666667,
+     "theta_max": 0.2197916666666667,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.21577499999999997,
+     "theta_min": 0.215775,
+     "theta_max": 0.215775,
+     "rain_in": 0.0,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.305,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "om_pct 1.1 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.41 outside 0.63-1.2",
+     "coarse_frag_pct 0.12 outside 21.23-48.14"
+    ],
+    "vintages": {
+     "MS059": "9/7/2026 5:04:22 PM"
+    }
+   },
+   "segments": 254,
+   "flood_gauge": {
+    "lid": "PGFM6",
+    "name": "Pascagoula River at Graham Ferry",
+    "distance_mi": 7.5,
+    "minor": "<0.05",
+    "moderate": "0",
+    "major": "0",
+    "interval": "OND",
+    "date_produced": "2023-10-25T00:24:52Z"
+   }
+  },
+  {
+   "eia": "1356",
+   "name": "Ghent",
+   "lat": 38.7497,
+   "lon": -85.035,
+   "timezone": "America/New_York",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 20:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.1785,
+     "theta_min": 0.1785,
+     "theta_max": 0.1785,
+     "rain_in": 0.088,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.17493749999999997,
+     "theta_min": 0.17493749999999997,
+     "theta_max": 0.17493749999999997,
+     "rain_in": 0.088,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.16820833333333332,
+     "theta_min": 0.16820833333333332,
+     "theta_max": 0.16820833333333332,
+     "rain_in": 0.088,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.16214583333333332,
+     "theta_min": 0.16214583333333332,
+     "theta_max": 0.16214583333333332,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.15691666666666668,
+     "theta_min": 0.15691666666666668,
+     "theta_max": 0.15691666666666668,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.15308333333333332,
+     "theta_min": 0.15308333333333332,
+     "theta_max": 0.15308333333333332,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.14972916666666666,
+     "theta_min": 0.14972916666666666,
+     "theta_max": 0.14972916666666666,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.14595238095238094,
+     "theta_min": 0.14595238095238097,
+     "theta_max": 0.14595238095238097,
+     "rain_in": 0.0,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.0,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "sand_pct 10.9 outside 32.31-65.16",
+     "om_pct 1.59 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.34 outside 0.63-1.2",
+     "coarse_frag_pct 0.923 outside 21.23-48.14"
+    ],
+    "vintages": {
+     "IN155": "8/28/2026 1:15:44 PM",
+     "KY612": "9/3/2026 1:05:14 PM"
+    }
+   },
+   "segments": 252,
+   "flood_gauge": {
+    "lid": "MKLK2",
+    "name": "Ohio River at Markland Lower",
+    "distance_mi": 4.2,
+    "minor": "<0.05",
+    "moderate": "0",
+    "major": "0",
+    "interval": "SON",
+    "date_produced": "2023-09-19T10:19:00Z"
+   }
+  },
+  {
+   "eia": "6068",
+   "name": "Jeffrey Energy Center",
+   "lat": 39.286453,
+   "lon": -96.11723,
+   "timezone": "America/Chicago",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 19:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.2555,
+     "theta_min": 0.2555,
+     "theta_max": 0.2555,
+     "rain_in": 0.028,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.2523125,
+     "theta_min": 0.2523125,
+     "theta_max": 0.2523125,
+     "rain_in": 0.028,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.2464583333333333,
+     "theta_min": 0.2464583333333333,
+     "theta_max": 0.2464583333333333,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.24191666666666667,
+     "theta_min": 0.24191666666666667,
+     "theta_max": 0.24191666666666667,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.2371875,
+     "theta_min": 0.2371875,
+     "theta_max": 0.2371875,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.2326458333333333,
+     "theta_min": 0.2326458333333333,
+     "theta_max": 0.2326458333333333,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.22956250000000003,
+     "theta_min": 0.22956250000000003,
+     "theta_max": 0.22956250000000003,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.225725,
+     "theta_min": 0.225725,
+     "theta_max": 0.225725,
+     "rain_in": 0.012,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.0,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "sand_pct 6.57 outside 32.31-65.16",
+     "om_pct 3.08 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.31 outside 0.63-1.2",
+     "coarse_frag_pct 8.44 outside 21.23-48.14"
+    ],
+    "vintages": {
+     "KS149": "8/27/2026 2:27:05 PM"
+    }
+   },
+   "segments": 339,
+   "flood_gauge": {
+    "lid": "BVUK1",
+    "name": "Kansas River near Belvue",
+    "distance_mi": 6.6,
+    "minor": "<0.05",
+    "moderate": "0",
+    "major": "0",
+    "interval": "OND",
+    "date_produced": "2023-10-23T22:05:30Z"
+   }
+  },
+  {
+   "eia": "2500",
+   "name": "Ravenswood",
+   "lat": 40.759167,
+   "lon": -73.94611,
+   "timezone": "America/New_York",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 20:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.329,
+     "theta_min": 0.329,
+     "theta_max": 0.329,
+     "rain_in": 0.048,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.32214583333333335,
+     "theta_min": 0.32214583333333335,
+     "theta_max": 0.32214583333333335,
+     "rain_in": 0.048,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.3155,
+     "theta_min": 0.3155,
+     "theta_max": 0.3155,
+     "rain_in": 0.048,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.31106249999999996,
+     "theta_min": 0.31106249999999996,
+     "theta_max": 0.31106249999999996,
+     "rain_in": 0.016,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.30816666666666664,
+     "theta_min": 0.30816666666666664,
+     "theta_max": 0.30816666666666664,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.3088125,
+     "theta_min": 0.3088125,
+     "theta_max": 0.3088125,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.31035416666666665,
+     "theta_min": 0.31035416666666665,
+     "theta_max": 0.31035416666666665,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.30749999999999994,
+     "theta_min": 0.3075,
+     "theta_max": 0.3075,
+     "rain_in": 0.0,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.001,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "om_pct 3.56 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.47 outside 0.63-1.2",
+     "coarse_frag_pct 11.6 outside 21.23-48.14"
+    ],
+    "vintages": {
+     "NY047": "8/31/2026 3:46:44 PM",
+     "NY061": "9/1/2026 3:29:29 PM",
+     "NY081": "8/31/2026 3:53:14 PM"
+    }
+   },
+   "segments": 812,
+   "flood_gauge": {
+    "lid": "LODN4",
+    "name": "Saddle River at Lodi",
+    "distance_mi": 11.5,
+    "minor": "<0.05",
+    "moderate": "0",
+    "major": "0",
+    "interval": "NDJ",
+    "date_produced": "2023-10-28T18:27:49Z"
+   }
+  },
+  {
+   "eia": "62949",
+   "name": "Guernsey Power Station",
+   "lat": 39.9364,
+   "lon": -81.5354,
+   "timezone": "America/New_York",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 20:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.243,
+     "theta_min": 0.243,
+     "theta_max": 0.243,
+     "rain_in": 0.048,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.23962499999999998,
+     "theta_min": 0.23962499999999998,
+     "theta_max": 0.23962499999999998,
+     "rain_in": 0.048,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.23320833333333335,
+     "theta_min": 0.23320833333333335,
+     "theta_max": 0.23320833333333335,
+     "rain_in": 0.048,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.22770833333333332,
+     "theta_min": 0.22770833333333332,
+     "theta_max": 0.22770833333333332,
+     "rain_in": 0.016,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.22312500000000002,
+     "theta_min": 0.22312500000000002,
+     "theta_max": 0.22312500000000002,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.21891666666666665,
+     "theta_min": 0.21891666666666665,
+     "theta_max": 0.21891666666666665,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.214875,
+     "theta_min": 0.214875,
+     "theta_max": 0.214875,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.21109523809523809,
+     "theta_min": 0.21109523809523809,
+     "theta_max": 0.21109523809523809,
+     "rain_in": 0.0,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.003,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "sand_pct 12.2 outside 32.31-65.16",
+     "om_pct 1.83 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.41 outside 0.63-1.2",
+     "coarse_frag_pct 1.67 outside 21.23-48.14"
+    ],
+    "vintages": {
+     "OH059": "9/8/2026 2:31:21 PM"
+    }
+   },
+   "segments": 133,
+   "flood_gauge": {
+    "lid": "CDIO1",
+    "name": "Wills Creek at Cambridge",
+    "distance_mi": 6.1,
+    "minor": "<0.05",
+    "moderate": "0",
+    "major": "0",
+    "interval": "SON",
+    "date_produced": "2023-09-19T10:19:00Z"
+   }
+  },
+  {
+   "eia": "6011",
+   "name": "Calvert Cliffs Nuclear Power Plant",
+   "lat": 38.4344,
+   "lon": -76.4417,
+   "timezone": "America/New_York",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 20:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.2195,
+     "theta_min": 0.2195,
+     "theta_max": 0.2195,
+     "rain_in": 1.499,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.2151875,
+     "theta_min": 0.2151875,
+     "theta_max": 0.2151875,
+     "rain_in": 1.499,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.20793750000000003,
+     "theta_min": 0.20793750000000003,
+     "theta_max": 0.20793750000000003,
+     "rain_in": 1.483,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.20102083333333334,
+     "theta_min": 0.20102083333333334,
+     "theta_max": 0.20102083333333334,
+     "rain_in": 1.467,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.1949375,
+     "theta_min": 0.1949375,
+     "theta_max": 0.1949375,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.19120833333333334,
+     "theta_min": 0.19120833333333334,
+     "theta_max": 0.19120833333333334,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.1895625,
+     "theta_min": 0.1895625,
+     "theta_max": 0.1895625,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.1861190476190476,
+     "theta_min": 0.18611904761904763,
+     "theta_max": 0.18611904761904763,
+     "rain_in": 0.0,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.005,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "om_pct 1.93 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.53 outside 0.63-1.2",
+     "coarse_frag_pct 1.98 outside 21.23-48.14"
+    ],
+    "vintages": {
+     "MD009": "9/13/2026 1:06:10 AM"
+    }
+   },
+   "segments": 376,
+   "flood_gauge": {
+    "lid": "BRKM2",
+    "name": "Potomac River near Washington DC (Little Falls)",
+    "distance_mi": 51.3,
+    "minor": "<0.05",
+    "moderate": "0.09",
+    "major": "0",
+    "interval": "NDJ",
+    "date_produced": "2023-10-28T18:27:49Z"
+   }
+  },
+  {
+   "eia": "260",
+   "name": "Dynegy Moss Landing Power Plant Hybrid",
+   "lat": 36.804837,
+   "lon": -121.7822,
+   "timezone": "America/Los_Angeles",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 17:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.2485,
+     "theta_min": 0.2485,
+     "theta_max": 0.2485,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.2455625,
+     "theta_min": 0.2455625,
+     "theta_max": 0.2455625,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.24291666666666667,
+     "theta_min": 0.24291666666666667,
+     "theta_max": 0.24291666666666667,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.23991666666666664,
+     "theta_min": 0.23991666666666664,
+     "theta_max": 0.23991666666666664,
+     "rain_in": 0.016,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.299875,
+     "theta_min": 0.299875,
+     "theta_max": 0.299875,
+     "rain_in": 0.44600000000000006,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.3044166666666666,
+     "theta_min": 0.3044166666666666,
+     "theta_max": 0.3044166666666666,
+     "rain_in": 0.44600000000000006,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.29774999999999996,
+     "theta_min": 0.29774999999999996,
+     "theta_max": 0.29774999999999996,
+     "rain_in": 0.44600000000000006,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.28580555555555553,
+     "theta_min": 0.28580555555555553,
+     "theta_max": 0.28580555555555553,
+     "rain_in": 0.43000000000000005,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.0,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "om_pct 3.5 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.52 outside 0.63-1.2",
+     "coarse_frag_pct 9.24 outside 21.23-48.14"
+    ],
+    "vintages": {
+     "CA053": "9/16/2026 10:53:30 PM"
+    }
+   },
+   "segments": 350,
+   "flood_gauge": {
+    "lid": "AROC1",
+    "name": "Pajaro River at Chittenden",
+    "distance_mi": 12.1,
+    "minor": "<0.05",
+    "moderate": "0",
+    "major": "0",
+    "interval": "OND",
+    "date_produced": "2023-10-27T19:37:55Z"
+   }
+  },
+  {
+   "eia": "8055",
+   "name": "Arkansas Nuclear One",
+   "lat": 35.311,
+   "lon": -93.2351,
+   "timezone": "America/Chicago",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 19:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.191,
+     "theta_min": 0.191,
+     "theta_max": 0.191,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.18716666666666668,
+     "theta_min": 0.18716666666666668,
+     "theta_max": 0.18716666666666668,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.18085416666666665,
+     "theta_min": 0.18085416666666665,
+     "theta_max": 0.18085416666666665,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.17493749999999997,
+     "theta_min": 0.17493749999999997,
+     "theta_max": 0.17493749999999997,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.16931249999999998,
+     "theta_min": 0.16931249999999998,
+     "theta_max": 0.16931249999999998,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.16385416666666666,
+     "theta_min": 0.16385416666666666,
+     "theta_max": 0.16385416666666666,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.15824999999999997,
+     "theta_min": 0.15824999999999997,
+     "theta_max": 0.15824999999999997,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.154125,
+     "theta_min": 0.154125,
+     "theta_max": 0.154125,
+     "rain_in": 0.0,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.0,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "sand_pct 26.6 outside 32.31-65.16",
+     "om_pct 1.01 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.45 outside 0.63-1.2",
+     "coarse_frag_pct 0.019 outside 21.23-48.14"
+    ],
+    "vintages": {
+     "AR115": "9/8/2026 2:21:05 PM",
+     "AR149": "9/8/2026 4:07:13 PM"
+    }
+   },
+   "segments": 83,
+   "flood_gauge": {
+    "lid": "DARA4",
+    "name": "Arkansas River at Dardanelle",
+    "distance_mi": 7.6,
+    "minor": "<0.05",
+    "moderate": "0.0765",
+    "major": "0",
+    "interval": "OND",
+    "date_produced": "2023-10-26T17:41:30Z"
+   }
+  },
+  {
+   "eia": "8223",
+   "name": "Springerville",
+   "lat": 34.3186,
+   "lon": -109.1639,
+   "timezone": "America/Phoenix",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 17:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.157,
+     "theta_min": 0.157,
+     "theta_max": 0.157,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.15660416666666668,
+     "theta_min": 0.15660416666666668,
+     "theta_max": 0.15660416666666668,
+     "rain_in": 0.032,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.15804166666666666,
+     "theta_min": 0.15804166666666666,
+     "theta_max": 0.15804166666666666,
+     "rain_in": 0.041,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.15968749999999998,
+     "theta_min": 0.15968749999999998,
+     "theta_max": 0.15968749999999998,
+     "rain_in": 0.041,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.16010416666666663,
+     "theta_min": 0.16010416666666663,
+     "theta_max": 0.16010416666666663,
+     "rain_in": 0.18000000000000002,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.16716666666666666,
+     "theta_min": 0.16716666666666666,
+     "theta_max": 0.16716666666666666,
+     "rain_in": 0.28700000000000003,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.19360416666666666,
+     "theta_min": 0.19360416666666666,
+     "theta_max": 0.19360416666666666,
+     "rain_in": 0.278,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.19483333333333336,
+     "theta_min": 0.19483333333333333,
+     "theta_max": 0.19483333333333333,
+     "rain_in": 0.278,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.0,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "om_pct 1.25 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.25 outside 0.63-1.2",
+     "coarse_frag_pct 19.9 outside 21.23-48.14"
+    ],
+    "vintages": {
+     "AZ635": "8/31/2026 11:02:39 PM"
+    }
+   },
+   "segments": 233,
+   "flood_gauge": {
+    "lid": "LCLA3",
+    "name": "Little Colorado River above Lyman Lake",
+    "distance_mi": 11.3,
+    "minor": "<0.05",
+    "moderate": "0",
+    "major": "0",
+    "interval": "OND",
+    "date_produced": "2023-10-15T12:37:58Z"
+   }
+  },
+  {
+   "eia": "6065",
+   "name": "Iatan",
+   "lat": 39.4472,
+   "lon": -94.98,
+   "timezone": "America/Chicago",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 19:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.2405,
+     "theta_min": 0.2405,
+     "theta_max": 0.2405,
+     "rain_in": 0.071,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.23762499999999998,
+     "theta_min": 0.23762499999999998,
+     "theta_max": 0.23762499999999998,
+     "rain_in": 0.043,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.23229166666666665,
+     "theta_min": 0.23229166666666665,
+     "theta_max": 0.23229166666666665,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.22829166666666667,
+     "theta_min": 0.22829166666666667,
+     "theta_max": 0.22829166666666667,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.2239375,
+     "theta_min": 0.2239375,
+     "theta_max": 0.2239375,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.21906250000000002,
+     "theta_min": 0.21906250000000002,
+     "theta_max": 0.21906250000000002,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.2153125,
+     "theta_min": 0.2153125,
+     "theta_max": 0.2153125,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.21212500000000004,
+     "theta_min": 0.21212499999999998,
+     "theta_max": 0.21212499999999998,
+     "rain_in": 0.0,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.0,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "sand_pct 16.7 outside 32.31-65.16",
+     "om_pct 1.72 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.36 outside 0.63-1.2",
+     "coarse_frag_pct 0 outside 21.23-48.14"
+    ],
+    "vintages": {
+     "KS005": "8/27/2026 1:01:59 PM",
+     "MO165": "8/26/2026 1:46:31 PM"
+    }
+   },
+   "segments": 315,
+   "flood_gauge": {
+    "lid": "LEVK1",
+    "name": "Missouri River at Leavenworth",
+    "distance_mi": 9.1,
+    "minor": "<0.05",
+    "moderate": "0",
+    "major": "0",
+    "interval": "OND",
+    "date_produced": "2023-10-23T22:05:30Z"
+   }
+  },
+  {
+   "eia": "400",
+   "name": "Haynes",
+   "lat": 33.764741,
+   "lon": -118.0991,
+   "timezone": "America/Los_Angeles",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 17:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.2415,
+     "theta_min": 0.2415,
+     "theta_max": 0.2415,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.23758333333333334,
+     "theta_min": 0.23758333333333334,
+     "theta_max": 0.23758333333333334,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.23291666666666666,
+     "theta_min": 0.23291666666666666,
+     "theta_max": 0.23291666666666666,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.22964583333333333,
+     "theta_min": 0.22964583333333333,
+     "theta_max": 0.22964583333333333,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.22841666666666663,
+     "theta_min": 0.22841666666666663,
+     "theta_max": 0.22841666666666663,
+     "rain_in": 0.32100000000000006,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.3228125,
+     "theta_min": 0.3228125,
+     "theta_max": 0.3228125,
+     "rain_in": 0.44500000000000006,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.3075208333333333,
+     "theta_min": 0.3075208333333333,
+     "theta_max": 0.3075208333333333,
+     "rain_in": 0.44500000000000006,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.2915833333333333,
+     "theta_min": 0.2915833333333333,
+     "theta_max": 0.2915833333333333,
+     "rain_in": 0.44500000000000006,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.0,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "om_pct 0.554 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.52 outside 0.63-1.2",
+     "coarse_frag_pct 0.44 outside 21.23-48.14"
+    ],
+    "vintages": {
+     "CA678": "9/8/2026 3:47:57 PM",
+     "CA696": "9/8/2026 4:05:43 PM"
+    }
+   },
+   "segments": 1748,
+   "flood_gauge": {
+    "lid": "YDRC1",
+    "name": "Santa Margarita River at Ysidora",
+    "distance_mi": 53.5,
+    "minor": "<0.05",
+    "moderate": "0",
+    "major": "0",
+    "interval": "OND",
+    "date_produced": "2023-10-27T19:37:55Z"
+   }
+  },
+  {
+   "eia": "2952",
+   "name": "Muskogee",
+   "lat": 35.76135,
+   "lon": -95.28732,
+   "timezone": "America/Chicago",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 19:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.245,
+     "theta_min": 0.245,
+     "theta_max": 0.245,
+     "rain_in": 0.016,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.2379375,
+     "theta_min": 0.2379375,
+     "theta_max": 0.2379375,
+     "rain_in": 0.016,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.22610416666666666,
+     "theta_min": 0.22610416666666666,
+     "theta_max": 0.22610416666666666,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.21527083333333333,
+     "theta_min": 0.21527083333333333,
+     "theta_max": 0.21527083333333333,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.20550000000000002,
+     "theta_min": 0.20550000000000002,
+     "theta_max": 0.20550000000000002,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.19616666666666668,
+     "theta_min": 0.19616666666666668,
+     "theta_max": 0.19616666666666668,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.186875,
+     "theta_min": 0.186875,
+     "theta_max": 0.186875,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.1796,
+     "theta_min": 0.1796,
+     "theta_max": 0.1796,
+     "rain_in": 0.0,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.0,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "sand_pct 25.4 outside 32.31-65.16",
+     "om_pct 1.59 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.44 outside 0.63-1.2",
+     "coarse_frag_pct 0.06 outside 21.23-48.14"
+    ],
+    "vintages": {
+     "OK101": "8/28/2026 4:35:43 PM"
+    }
+   },
+   "segments": 286,
+   "flood_gauge": {
+    "lid": "MKGO2",
+    "name": "Arkansas River near Muskogee",
+    "distance_mi": 0.8,
+    "minor": "<0.05",
+    "moderate": "0",
+    "major": "0",
+    "interval": "OND",
+    "date_produced": "2023-10-26T17:41:30Z"
+   }
+  },
+  {
+   "eia": "6190",
+   "name": "Brame Energy Center",
+   "lat": 31.395,
+   "lon": -92.71667,
+   "timezone": "America/Chicago",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 19:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.126,
+     "theta_min": 0.126,
+     "theta_max": 0.126,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.12370833333333335,
+     "theta_min": 0.12370833333333335,
+     "theta_max": 0.12370833333333335,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.11993749999999999,
+     "theta_min": 0.11993749999999999,
+     "theta_max": 0.11993749999999999,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.11691666666666667,
+     "theta_min": 0.11691666666666667,
+     "theta_max": 0.11691666666666667,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.11449999999999998,
+     "theta_min": 0.11449999999999998,
+     "theta_max": 0.11449999999999998,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.11172916666666666,
+     "theta_min": 0.11172916666666666,
+     "theta_max": 0.11172916666666666,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.109,
+     "theta_min": 0.109,
+     "theta_max": 0.109,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.10682500000000002,
+     "theta_min": 0.10682500000000002,
+     "theta_max": 0.10682500000000002,
+     "rain_in": 0.0,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.0,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "sand_pct 15 outside 32.31-65.16",
+     "om_pct 1.12 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.47 outside 0.63-1.2",
+     "coarse_frag_pct 0 outside 21.23-48.14"
+    ],
+    "vintages": {
+     "LA043": "9/10/2026 1:59:06 PM",
+     "LA079": "9/4/2026 8:34:24 PM"
+    }
+   },
+   "segments": 49,
+   "flood_gauge": {
+    "lid": "AEXL1",
+    "name": "Red River at Alexandria",
+    "distance_mi": 17.4,
+    "minor": "<0.05",
+    "moderate": "0",
+    "major": "0",
+    "interval": "OND",
+    "date_produced": "2023-10-25T00:24:52Z"
+   }
+  },
+  {
+   "eia": "6090",
+   "name": "Sherburne County",
+   "lat": 45.3808,
+   "lon": -93.8931,
+   "timezone": "America/Chicago",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 19:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.095,
+     "theta_min": 0.095,
+     "theta_max": 0.095,
+     "rain_in": 0.23399999999999999,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.09120833333333334,
+     "theta_min": 0.09120833333333334,
+     "theta_max": 0.09120833333333334,
+     "rain_in": 0.23399999999999999,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.08656249999999999,
+     "theta_min": 0.08656249999999999,
+     "theta_max": 0.08656249999999999,
+     "rain_in": 0.016,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.08304166666666667,
+     "theta_min": 0.08304166666666667,
+     "theta_max": 0.08304166666666667,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.07975,
+     "theta_min": 0.07975,
+     "theta_max": 0.07975,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.07722916666666667,
+     "theta_min": 0.07722916666666667,
+     "theta_max": 0.07722916666666667,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.07556250000000002,
+     "theta_min": 0.07556250000000002,
+     "theta_max": 0.07556250000000002,
+     "rain_in": 0.04,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.07335000000000001,
+     "theta_min": 0.07335000000000001,
+     "theta_max": 0.07335000000000001,
+     "rain_in": 0.144,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.002,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "sand_pct 79.3 outside 32.31-65.16",
+     "om_pct 2.13 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.57 outside 0.63-1.2",
+     "coarse_frag_pct 2.81 outside 21.23-48.14"
+    ],
+    "vintages": {
+     "MN141": "9/7/2026 3:38:34 AM",
+     "MN171": "9/8/2026 3:10:39 PM"
+    }
+   },
+   "segments": 590,
+   "flood_gauge": {
+    "lid": "SCOM5",
+    "name": "Mississippi River at St. Cloud",
+    "distance_mi": 16.8,
+    "minor": "<0.05",
+    "moderate": "0",
+    "major": "0",
+    "interval": "NDJ",
+    "date_produced": "2023-10-27T19:03:14Z"
+   }
+  },
+  {
+   "eia": "1082",
+   "name": "Walter Scott Jr Energy Center",
+   "lat": 41.18,
+   "lon": -95.8408,
+   "timezone": "America/Chicago",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 19:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.2505,
+     "theta_min": 0.2505,
+     "theta_max": 0.2505,
+     "rain_in": 0.632,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.244375,
+     "theta_min": 0.244375,
+     "theta_max": 0.244375,
+     "rain_in": 0.632,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.235,
+     "theta_min": 0.235,
+     "theta_max": 0.235,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.2275625,
+     "theta_min": 0.2275625,
+     "theta_max": 0.2275625,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.21927083333333333,
+     "theta_min": 0.21927083333333333,
+     "theta_max": 0.21927083333333333,
+     "rain_in": 0.032,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.21335416666666665,
+     "theta_min": 0.21335416666666665,
+     "theta_max": 0.21335416666666665,
+     "rain_in": 0.032,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.2086875,
+     "theta_min": 0.2086875,
+     "theta_max": 0.2086875,
+     "rain_in": 0.032,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.20315000000000003,
+     "theta_min": 0.20315000000000003,
+     "theta_max": 0.20315000000000003,
+     "rain_in": 0.044,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.0,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "sand_pct 10.6 outside 32.31-65.16",
+     "om_pct 1.66 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.32 outside 0.63-1.2",
+     "coarse_frag_pct 0 outside 21.23-48.14"
+    ],
+    "vintages": {
+     "IA129": "9/8/2026 6:43:26 PM",
+     "IA155": "9/11/2026 1:17:01 PM",
+     "NE153": "9/11/2026 1:07:30 PM"
+    }
+   },
+   "segments": 333,
+   "flood_gauge": {
+    "lid": "OMHN1",
+    "name": "Missouri River at Omaha",
+    "distance_mi": 6.9,
+    "minor": "<0.05",
+    "moderate": "0",
+    "major": "0",
+    "interval": "OND",
+    "date_produced": "2023-10-23T22:05:30Z"
+   }
+  },
+  {
+   "eia": "6076",
+   "name": "Colstrip",
+   "lat": 45.8831,
+   "lon": -106.614,
+   "timezone": "America/Denver",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 18:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.172,
+     "theta_min": 0.172,
+     "theta_max": 0.172,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.17037499999999997,
+     "theta_min": 0.17037499999999997,
+     "theta_max": 0.17037499999999997,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.16779166666666664,
+     "theta_min": 0.16779166666666664,
+     "theta_max": 0.16779166666666664,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.1656458333333333,
+     "theta_min": 0.1656458333333333,
+     "theta_max": 0.1656458333333333,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.16372916666666665,
+     "theta_min": 0.16372916666666665,
+     "theta_max": 0.16372916666666665,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.16189583333333332,
+     "theta_min": 0.16189583333333332,
+     "theta_max": 0.16189583333333332,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.16074999999999998,
+     "theta_min": 0.16074999999999998,
+     "theta_max": 0.16074999999999998,
+     "rain_in": 0.18300000000000002,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.19560526315789473,
+     "theta_min": 0.19560526315789473,
+     "theta_max": 0.19560526315789473,
+     "rain_in": 0.246,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.0,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "om_pct 1.15 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.4 outside 0.63-1.2",
+     "coarse_frag_pct 5.2 outside 21.23-48.14"
+    ],
+    "vintages": {
+     "MT649": "9/3/2026 3:24:05 PM"
+    }
+   },
+   "segments": 467,
+   "flood_gauge": {
+    "lid": "FRYM8",
+    "name": "Yellowstone River at Forsyth",
+    "distance_mi": 26.7,
+    "minor": "<0.05",
+    "moderate": "0",
+    "major": "0",
+    "interval": "OND",
+    "date_produced": "2023-10-24T22:05:30Z"
+   }
+  },
+  {
+   "eia": "3082",
+   "name": "John Day",
+   "lat": 45.71644,
+   "lon": -120.6941,
+   "timezone": "America/Los_Angeles",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 17:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.178,
+     "theta_min": 0.178,
+     "theta_max": 0.178,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.17731249999999998,
+     "theta_min": 0.17731249999999998,
+     "theta_max": 0.17731249999999998,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.17610416666666664,
+     "theta_min": 0.17610416666666664,
+     "theta_max": 0.17610416666666664,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.17493749999999997,
+     "theta_min": 0.17493749999999997,
+     "theta_max": 0.17493749999999997,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.17337499999999997,
+     "theta_min": 0.17337499999999997,
+     "theta_max": 0.17337499999999997,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.1718125,
+     "theta_min": 0.1718125,
+     "theta_max": 0.1718125,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.17054166666666667,
+     "theta_min": 0.17054166666666667,
+     "theta_max": 0.17054166666666667,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.16972222222222225,
+     "theta_min": 0.16972222222222222,
+     "theta_max": 0.16972222222222222,
+     "rain_in": 0.0,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.0,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "om_pct 1.57 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.31 outside 0.63-1.2"
+    ],
+    "vintages": {
+     "OR055": "9/8/2026 8:58:48 PM",
+     "WA639": "9/8/2026 4:32:47 PM"
+    }
+   },
+   "segments": 279,
+   "flood_gauge": {
+    "lid": "PITW1",
+    "name": "Klickitat River near Pitt",
+    "distance_mi": 25.0,
+    "minor": "<0.05",
+    "moderate": "0",
+    "major": "0",
+    "interval": "OND",
+    "date_produced": "2023-10-27T18:55:22Z"
+   }
+  },
+  {
+   "eia": "6165",
+   "name": "Hunter",
+   "lat": 39.1747,
+   "lon": -111.0289,
+   "timezone": "America/Denver",
+   "horizons": [
+    {
+     "key": "now",
+     "label": "Now (Sat 18:00 local)",
+     "date": "2026-10-17",
+     "theta": 0.197,
+     "theta_min": 0.197,
+     "theta_max": 0.197,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d1",
+     "label": "Tomorrow Sun Oct 18",
+     "date": "2026-10-18",
+     "theta": 0.1943125,
+     "theta_min": 0.1943125,
+     "theta_max": 0.1943125,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d2",
+     "label": "Mon Oct 19",
+     "date": "2026-10-19",
+     "theta": 0.19125,
+     "theta_min": 0.19125,
+     "theta_max": 0.19125,
+     "rain_in": 0.0,
+     "frozen": false
+    },
+    {
+     "key": "d3",
+     "label": "Tue Oct 20",
+     "date": "2026-10-20",
+     "theta": 0.1883125,
+     "theta_min": 0.1883125,
+     "theta_max": 0.1883125,
+     "rain_in": 0.004,
+     "frozen": false
+    },
+    {
+     "key": "d4",
+     "label": "Wed Oct 21",
+     "date": "2026-10-21",
+     "theta": 0.18660416666666668,
+     "theta_min": 0.18660416666666668,
+     "theta_max": 0.18660416666666668,
+     "rain_in": 0.078,
+     "frozen": false
+    },
+    {
+     "key": "d5",
+     "label": "Thu Oct 22",
+     "date": "2026-10-22",
+     "theta": 0.2071666666666667,
+     "theta_min": 0.2071666666666667,
+     "theta_max": 0.2071666666666667,
+     "rain_in": 0.654,
+     "frozen": false
+    },
+    {
+     "key": "d6",
+     "label": "Fri Oct 23",
+     "date": "2026-10-23",
+     "theta": 0.27308333333333334,
+     "theta_min": 0.27308333333333334,
+     "theta_max": 0.27308333333333334,
+     "rain_in": 0.7170000000000001,
+     "frozen": false
+    },
+    {
+     "key": "d7",
+     "label": "Sat Oct 24",
+     "date": "2026-10-24",
+     "theta": 0.2617105263157895,
+     "theta_min": 0.2617105263157895,
+     "theta_max": 0.2617105263157895,
+     "rain_in": 0.7130000000000001,
+     "frozen": false
+    }
+   ],
+   "soil": {
+    "organic_frac": 0.0,
+    "unknown_frac": 0.0,
+    "median_domain_reasons": [
+     "sand_pct 18.9 outside 32.31-65.16",
+     "om_pct 1.08 outside 4.41-13.3",
+     "bulk_density_g_cm3 1.25 outside 0.63-1.2",
+     "coarse_frag_pct 1.96 outside 21.23-48.14"
+    ],
+    "vintages": {
+     "UT623": "9/10/2026 8:57:15 PM"
+    }
+   },
+   "segments": 110,
+   "flood_gauge": {
+    "lid": "TADU1",
+    "name": "Duchesne River near Tabiona",
+    "distance_mi": 81.0,
+    "minor": "<0.05",
+    "moderate": "0",
+    "major": "0",
+    "interval": "OND",
+    "date_produced": "2023-10-15T12:37:58Z"
+   }
+  }
+ ],
+ "failed": [],
+ "agreement": {
+  "n": 60,
+  "spearman_rho": 0.375,
+  "p_value": 0.0031,
+  "note": "STRAM wet-case ground index vs NRCS FOR rutting hazard. Informational; neither is ground truth."
+ }
+}

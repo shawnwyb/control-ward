@@ -79,6 +79,18 @@
 .evidence p {
   margin: 0.4rem 0;
 }
+.evidence blockquote {
+  margin: 0.5rem 0;
+  padding-left: 0.75rem;
+  border-left: 2px solid var(--line);
+  overflow-wrap: anywhere;
+}
+.searchSuggestions {
+  width: 100%;
+  min-width: 0;
+  height: 150px;
+  border: 0;
+}
 .check {
   display: flex;
   align-items: flex-start;
@@ -93,4 +105,14 @@
     flex-direction: column;
     align-items: stretch;
   }
+}
+
+.conditions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  font-size: var(--text-sm);
 }
