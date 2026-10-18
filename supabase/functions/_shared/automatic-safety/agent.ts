@@ -261,6 +261,10 @@ export async function runAutomaticSafety(
     for (const [url, title] of [
       ["https://www.osha.gov/heat-exposure", "OSHA heat exposure guidance"],
       ["https://www.osha.gov/stateplans", "OSHA state plan coverage"],
+      [
+        "https://www.cdc.gov/niosh/heat-stress/recommendations/index.html",
+        "CDC NIOSH workplace heat recommendations",
+      ],
     ]) {
       if (candidates.length < 8 && !candidates.some((c) => c.url === url))
         candidates.push({

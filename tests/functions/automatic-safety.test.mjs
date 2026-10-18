@@ -391,3 +391,24 @@ test("fresh non-heat readings cannot hide missing heat data", async () => {
     ),
   );
 });
+
+test("blocked OSHA pages retain their failure status and do not prevent independently fetched CDC guidance", async () => {
+  const output = await runAutomaticSafety(snapshot, fixtureModel(), {
+    reservedUsdPerTurn: 0.1,
+    fetcher: async (url) =>
+      String(url).includes("osha.gov")
+        ? new Response("Forbidden", { status: 403 })
+        : fetcher(url),
+  });
+  assert.ok(
+    output.content.sources.some((s) =>
+      s.url.startsWith("https://www.cdc.gov/niosh/"),
+    ),
+  );
+  assert.equal(output.research.fetch_failures.length, 2);
+  assert.ok(
+    output.research.fetch_failures.every(
+      (f) => f.category === "source_http_403",
+    ),
+  );
+});
