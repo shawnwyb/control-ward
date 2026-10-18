@@ -1,0 +1,367 @@
+{
+ "schema_version": 1,
+ "generated_at": "2026-10-18T03:27:22+00:00",
+ "run": "run_2026-10-18T0327Z",
+ "sites": [
+  {
+   "eia": "6163",
+   "horizon": "Now (Sat 20:00 local)",
+   "date": "2026-10-17",
+   "routes": 311
+  },
+  {
+   "eia": "649",
+   "horizon": "Now (Sat 23:00 local)",
+   "date": "2026-10-17",
+   "routes": 180
+  },
+  {
+   "eia": "56407",
+   "horizon": "Now (Sat 23:00 local)",
+   "date": "2026-10-17",
+   "routes": 602
+  },
+  {
+   "eia": "6008",
+   "horizon": "Now (Sat 20:00 local)",
+   "date": "2026-10-17",
+   "routes": 3
+  },
+  {
+   "eia": "3470",
+   "horizon": "Now (Sat 22:00 local)",
+   "date": "2026-10-17",
+   "routes": 268
+  },
+  {
+   "eia": "46",
+   "horizon": "Now (Sat 22:00 local)",
+   "date": "2026-10-17",
+   "routes": 28
+  },
+  {
+   "eia": "703",
+   "horizon": "Now (Sat 23:00 local)",
+   "date": "2026-10-17",
+   "routes": 430
+  },
+  {
+   "eia": "628",
+   "horizon": "Now (Sat 23:00 local)",
+   "date": "2026-10-17",
+   "routes": 365
+  },
+  {
+   "eia": "3",
+   "horizon": "Now (Sat 22:00 local)",
+   "date": "2026-10-17",
+   "routes": 104
+  },
+  {
+   "eia": "6113",
+   "horizon": "Now (Sat 22:00 local)",
+   "date": "2026-10-17",
+   "routes": 55
+  },
+  {
+   "eia": "1733",
+   "horizon": "Now (Sat 23:00 local)",
+   "date": "2026-10-17",
+   "routes": 104
+  },
+  {
+   "eia": "621",
+   "horizon": "Now (Sat 23:00 local)",
+   "date": "2026-10-17",
+   "routes": 304
+  },
+  {
+   "eia": "6042",
+   "horizon": "Now (Sat 23:00 local)",
+   "date": "2026-10-17",
+   "routes": 230
+  },
+  {
+   "eia": "3935",
+   "horizon": "Now (Sat 23:00 local)",
+   "date": "2026-10-17",
+   "routes": 322
+  },
+  {
+   "eia": "3166",
+   "horizon": "Now (Sat 23:00 local)",
+   "date": "2026-10-17",
+   "routes": 138
+  },
+  {
+   "eia": "6167",
+   "horizon": "Now (Sat 23:00 local)",
+   "date": "2026-10-17",
+   "routes": 167
+  },
+  {
+   "eia": "6251",
+   "horizon": "Now (Sat 22:00 local)",
+   "date": "2026-10-17",
+   "routes": 151
+  },
+  {
+   "eia": "612",
+   "horizon": "Now (Sat 23:00 local)",
+   "date": "2026-10-17",
+   "routes": 191
+  },
+  {
+   "eia": "3265",
+   "horizon": "Now (Sat 23:00 local)",
+   "date": "2026-10-17",
+   "routes": 262
+  },
+  {
+   "eia": "6166",
+   "horizon": "Now (Sat 22:00 local)",
+   "date": "2026-10-17",
+   "routes": 139
+  },
+  {
+   "eia": "8102",
+   "horizon": "Now (Sat 23:00 local)",
+   "date": "2026-10-17",
+   "routes": 14
+  },
+  {
+   "eia": "3399",
+   "horizon": "Now (Sat 22:00 local)",
+   "date": "2026-10-17",
+   "routes": 146
+  },
+  {
+   "eia": "6071",
+   "horizon": "Now (Sat 23:00 local)",
+   "date": "2026-10-17",
+   "routes": 48
+  },
+  {
+   "eia": "66923",
+   "horizon": "Now (Sat 21:00 local)",
+   "date": "2026-10-17",
+   "routes": 0
+  },
+  {
+   "eia": "2712",
+   "horizon": "Now (Sat 23:00 local)",
+   "date": "2026-10-17",
+   "routes": 134
+  },
+  {
+   "eia": "7722",
+   "horizon": "Now (Sat 23:00 local)",
+   "date": "2026-10-17",
+   "routes": 111
+  },
+  {
+   "eia": "6103",
+   "horizon": "Now (Sat 23:00 local)",
+   "date": "2026-10-17",
+   "routes": 96
+  },
+  {
+   "eia": "8042",
+   "horizon": "Now (Sat 23:00 local)",
+   "date": "2026-10-17",
+   "routes": 172
+  },
+  {
+   "eia": "130",
+   "horizon": "Now (Sat 23:00 local)",
+   "date": "2026-10-17",
+   "routes": 247
+  },
+  {
+   "eia": "6022",
+   "horizon": "Now (Sat 22:00 local)",
+   "date": "2026-10-17",
+   "routes": 246
+  },
+  {
+   "eia": "6023",
+   "horizon": "Now (Sat 22:00 local)",
+   "date": "2026-10-17",
+   "routes": 35
+  },
+  {
+   "eia": "1403",
+   "horizon": "Now (Sat 22:00 local)",
+   "date": "2026-10-17",
+   "routes": 329
+  },
+  {
+   "eia": "6145",
+   "horizon": "Now (Sat 22:00 local)",
+   "date": "2026-10-17",
+   "routes": 102
+  },
+  {
+   "eia": "2693",
+   "horizon": "Now (Sat 23:00 local)",
+   "date": "2026-10-17",
+   "routes": 183
+  },
+  {
+   "eia": "55380",
+   "horizon": "Now (Sat 22:00 local)",
+   "date": "2026-10-17",
+   "routes": 0
+  },
+  {
+   "eia": "2103",
+   "horizon": "Now (Sat 22:00 local)",
+   "date": "2026-10-17",
+   "routes": 100
+  },
+  {
+   "eia": "6146",
+   "horizon": "Now (Sat 22:00 local)",
+   "date": "2026-10-17",
+   "routes": 86
+  },
+  {
+   "eia": "6026",
+   "horizon": "Now (Sat 22:00 local)",
+   "date": "2026-10-17",
+   "routes": 177
+  },
+  {
+   "eia": "2410",
+   "horizon": "Now (Sat 23:00 local)",
+   "date": "2026-10-17",
+   "routes": 2
+  },
+  {
+   "eia": "8066",
+   "horizon": "Now (Sat 21:00 local)",
+   "date": "2026-10-17",
+   "routes": 0
+  },
+  {
+   "eia": "6099",
+   "horizon": "Now (Sat 20:00 local)",
+   "date": "2026-10-17",
+   "routes": 281
+  },
+  {
+   "eia": "6000",
+   "horizon": "Now (Sat 23:00 local)",
+   "date": "2026-10-17",
+   "routes": 119
+  },
+  {
+   "eia": "6073",
+   "horizon": "Now (Sat 22:00 local)",
+   "date": "2026-10-17",
+   "routes": 52
+  },
+  {
+   "eia": "1356",
+   "horizon": "Now (Sat 23:00 local)",
+   "date": "2026-10-17",
+   "routes": 181
+  },
+  {
+   "eia": "6068",
+   "horizon": "Now (Sat 22:00 local)",
+   "date": "2026-10-17",
+   "routes": 252
+  },
+  {
+   "eia": "2500",
+   "horizon": "Now (Sat 23:00 local)",
+   "date": "2026-10-17",
+   "routes": 65
+  },
+  {
+   "eia": "62949",
+   "horizon": "Now (Sat 23:00 local)",
+   "date": "2026-10-17",
+   "routes": 70
+  },
+  {
+   "eia": "6011",
+   "horizon": "Now (Sat 23:00 local)",
+   "date": "2026-10-17",
+   "routes": 354
+  },
+  {
+   "eia": "260",
+   "horizon": "Now (Sat 20:00 local)",
+   "date": "2026-10-17",
+   "routes": 166
+  },
+  {
+   "eia": "8055",
+   "horizon": "Now (Sat 22:00 local)",
+   "date": "2026-10-17",
+   "routes": 21
+  },
+  {
+   "eia": "8223",
+   "horizon": "Now (Sat 20:00 local)",
+   "date": "2026-10-17",
+   "routes": 62
+  },
+  {
+   "eia": "6065",
+   "horizon": "Now (Sat 22:00 local)",
+   "date": "2026-10-17",
+   "routes": 57
+  },
+  {
+   "eia": "400",
+   "horizon": "Now (Sat 20:00 local)",
+   "date": "2026-10-17",
+   "routes": 666
+  },
+  {
+   "eia": "2952",
+   "horizon": "Now (Sat 22:00 local)",
+   "date": "2026-10-17",
+   "routes": 152
+  },
+  {
+   "eia": "6190",
+   "horizon": "Now (Sat 22:00 local)",
+   "date": "2026-10-17",
+   "routes": 31
+  },
+  {
+   "eia": "6090",
+   "horizon": "Now (Sat 22:00 local)",
+   "date": "2026-10-17",
+   "routes": 1
+  },
+  {
+   "eia": "1082",
+   "horizon": "Now (Sat 22:00 local)",
+   "date": "2026-10-17",
+   "routes": 143
+  },
+  {
+   "eia": "6076",
+   "horizon": "Now (Sat 21:00 local)",
+   "date": "2026-10-17",
+   "routes": 294
+  },
+  {
+   "eia": "3082",
+   "horizon": "Now (Sat 20:00 local)",
+   "date": "2026-10-17",
+   "routes": 200
+  },
+  {
+   "eia": "6165",
+   "horizon": "Now (Sat 21:00 local)",
+   "date": "2026-10-17",
+   "routes": 90
+  }
+ ]
+}
