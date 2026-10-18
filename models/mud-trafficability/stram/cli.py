@@ -179,12 +179,19 @@ def cmd_map(args) -> int:
 
 
 def cmd_push(args) -> int:
-    from .push import write_push_sql
+    from .push import ApplyError, apply, write_push_sql
     run_dir = latest_run(args.run)
+    if args.apply:
+        try:
+            apply(run_dir, metric=args.metric, clear=args.clear, confirm=args.confirm, allow_stale=args.allow_stale)
+        except ApplyError as exc:
+            print(f"NOT APPLIED: {exc}" if "Applied," not in str(exc) else f"WARNING: {exc}", file=sys.stderr)
+            return 1
+        return 0
     path, rows = write_push_sql(run_dir, clear=args.clear, metric=args.metric)
-    print(f"wrote {path} ({rows} scores)" if not args.clear else f"wrote {path} (clears {C.MODEL_VERSION})")
-    print("Not applied. To apply to the HOSTED project (affects live site risk):\n"
-          f"  supabase db query --linked -f {path}")
+    print(f"wrote {path} ({rows} scores, metric {args.metric})" if not args.clear else f"wrote {path} (clears {C.MODEL_VERSION})")
+    print("Not applied. To preview, confirm and apply to the production project:\n"
+          f"  python -m stram push{' --clear' if args.clear else ''} --apply")
     return 0
 
 
@@ -203,8 +210,15 @@ def main(argv: list[str] | None = None) -> int:
         p.add_argument("--run", help="run directory (default: output/LATEST)")
         if name == "push":
             p.add_argument("--clear", action="store_true", help=f"write SQL that deletes the {C.MODEL_VERSION} scores")
-            p.add_argument("--metric", choices=("max", "p90"), default="max",
-                           help="site score: worst segment (agreed default) or the score exceeded by 10%% of route length")
+            p.add_argument("--metric", choices=("max", "p90"), default="p90",
+                           help="site score: the score exceeded by 10%% of route length (default, chosen for production) "
+                                "or the worst segment")
+            p.add_argument("--apply", action="store_true",
+                           help="preview, confirm with the project ref, apply to the linked production project, read back")
+            p.add_argument("--confirm", metavar="PROJECT_REF",
+                           help="non-interactive confirmation; must equal the linked project ref")
+            p.add_argument("--allow-stale", action="store_true", dest="allow_stale",
+                           help="allow applying a run older than 24 h")
     args = ap.parse_args(argv)
     if args.cmd == "all":
         rc = cmd_prepare(args)

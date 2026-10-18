@@ -161,10 +161,13 @@ def status(args, clock: Callable) -> int:
         miss = (len(sites) - have) * task_weight(y)
         remaining += miss
         print(f"{y:<6}{have:>5}/{len(sites):<2}{miss:>15,.0f}")
-    used_h, used_d = ledger.used_since(3600), ledger.used_since(86400)
+    # Open-Meteo's daily counter resets at UTC midnight (12,717 calls in a rolling 24 hours were accepted
+    # on 2026-10-17/18 without a daily-limit answer), so "today" counts from 00:00 UTC.
+    now = clock()
+    used_h, used_day = ledger.used_since(3600), ledger.used_since(now % 86400)
     print(f"to download: {remaining:,.0f} weighted calls")
-    print(f"used by this project: {used_h:,.0f} in the last hour, {used_d:,.0f} in the last 24 hours")
-    print(f"left today (if nobody else on this address used any): {max(0, config.DAILY_LIMIT - used_d):,.0f}")
+    print(f"used by this project: {used_h:,.0f} in the last hour, {used_day:,.0f} since 00:00 UTC")
+    print(f"left today (if nobody else on this address used any): {max(0, config.DAILY_LIMIT - used_day):,.0f}")
     return 0
 
 

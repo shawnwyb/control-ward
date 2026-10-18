@@ -1,0 +1,2166 @@
+{
+ "model_version": "hazidx-0.1.0+2018-2022.23ed6848",
+ "years": {
+  "train": [
+   2018,
+   2019,
+   2020,
+   2021,
+   2022
+  ],
+  "model_selection": [
+   2023
+  ],
+  "test": [
+   2024,
+   2025
+  ],
+  "calibration": "Platt, out-of-fold, GroupKFold by year, 5 folds",
+  "tier_map": "out-of-fold predictions, training years",
+  "normals_and_drift": "training years"
+ },
+ "test_rows": 43800,
+ "test_plants": 60,
+ "weights": {
+  "heat": 1.0,
+  "storm": 0.834,
+  "flood": 0.75,
+  "fire": 0.8594
+ },
+ "families": {
+  "heat": {
+   "events": 327,
+   "days": 43800,
+   "event_rate": 0.007465753424657534,
+   "train_base_rate": 0.006126654150831082,
+   "roc_auc": {
+    "full": 0.9568696053812724,
+    "past_only": 0.910943774655449,
+    "climatology": 0.9309736768668886,
+    "rule": 0.9296262554191075
+   },
+   "pr_auc": {
+    "full": 0.2912402657969309,
+    "past_only": 0.10150895650366625,
+    "climatology": 0.17545632858412435,
+    "base_rate": 0.007465753424657534,
+    "rule": 0.14966806950046457
+   },
+   "brier": {
+    "full": 0.006000086199492216,
+    "past_only": 0.0069640278816223145,
+    "climatology": 0.00669448496773839,
+    "base_rate": 0.00741180913732491
+   },
+   "brier_skill": {
+    "full": 0.1037269889457626,
+    "past_only": -0.04026342805800409
+   },
+   "mean_predicted": {
+    "full": 0.007814661599695683,
+    "past_only": 0.00729407649487257,
+    "climatology": 0.006125438027083874
+   },
+   "reliability": {
+    "full": [
+     {
+      "p_mean": 9.847719047684222e-05,
+      "observed": 0.0,
+      "days": 4380,
+      "events": 0
+     },
+     {
+      "p_mean": 0.00010509201092645526,
+      "observed": 0.0,
+      "days": 4380,
+      "events": 0
+     },
+     {
+      "p_mean": 0.00010987218411173671,
+      "observed": 0.0,
+      "days": 4380,
+      "events": 0
+     },
+     {
+      "p_mean": 0.00012180248450022191,
+      "observed": 0.001141552511415525,
+      "days": 4380,
+      "events": 5
+     },
+     {
+      "p_mean": 0.00014899010420776904,
+      "observed": 0.002054794520547945,
+      "days": 4380,
+      "events": 9
+     },
+     {
+      "p_mean": 0.00020345827215351164,
+      "observed": 0.0,
+      "days": 4380,
+      "events": 0
+     },
+     {
+      "p_mean": 0.0003785537846852094,
+      "observed": 0.0,
+      "days": 4380,
+      "events": 0
+     },
+     {
+      "p_mean": 0.000909669732209295,
+      "observed": 0.00022831050228310502,
+      "days": 4380,
+      "events": 1
+     },
+     {
+      "p_mean": 0.002440500073134899,
+      "observed": 0.0015981735159817352,
+      "days": 4380,
+      "events": 7
+     },
+     {
+      "p_mean": 0.0736302062869072,
+      "observed": 0.06963470319634703,
+      "days": 4380,
+      "events": 305
+     }
+    ],
+    "past_only": [
+     {
+      "p_mean": 0.00015738258662167937,
+      "observed": 0.0,
+      "days": 4380,
+      "events": 0
+     },
+     {
+      "p_mean": 0.00015781055844854563,
+      "observed": 0.0031963470319634705,
+      "days": 4380,
+      "events": 14
+     },
+     {
+      "p_mean": 0.00015781055844854563,
+      "observed": 0.0,
+      "days": 4380,
+      "events": 0
+     },
+     {
+      "p_mean": 0.0001579317031428218,
+      "observed": 0.0,
+      "days": 4380,
+      "events": 0
+     },
+     {
+      "p_mean": 0.00015992736734915525,
+      "observed": 0.0,
+      "days": 4380,
+      "events": 0
+     },
+     {
+      "p_mean": 0.00022418309526983649,
+      "observed": 0.0,
+      "days": 4380,
+      "events": 0
+     },
+     {
+      "p_mean": 0.001497560879215598,
+      "observed": 0.00045662100456621003,
+      "days": 4380,
+      "events": 2
+     },
+     {
+      "p_mean": 0.005408968310803175,
+      "observed": 0.0029680365296803654,
+      "days": 4380,
+      "events": 13
+     },
+     {
+      "p_mean": 0.012179035693407059,
+      "observed": 0.010730593607305937,
+      "days": 4380,
+      "events": 47
+     },
+     {
+      "p_mean": 0.052840154618024826,
+      "observed": 0.05730593607305936,
+      "days": 4380,
+      "events": 251
+     }
+    ]
+   },
+   "forecast_dependent_share": 1.6386669330871482,
+   "beats_climatology": true,
+   "ranges_90": {
+    "roc_auc_full": [
+     0.9058464326630988,
+     0.9854209769827141
+    ],
+    "pr_auc_full": [
+     0.15771175897620823,
+     0.51050882026553
+    ],
+    "pr_auc_climatology": [
+     0.08788076474216172,
+     0.2507749868137108
+    ],
+    "brier_skill_full": [
+     -0.036428917030283475,
+     0.2162410165171463
+    ]
+   }
+  },
+  "storm": {
+   "events": 599,
+   "days": 43800,
+   "event_rate": 0.01367579908675799,
+   "train_base_rate": 0.013187417006273182,
+   "roc_auc": {
+    "full": 0.9079666198291413,
+    "past_only": 0.7022374814408512,
+    "climatology": 0.75775741603706,
+    "rule": 0.6168250139822785
+   },
+   "pr_auc": {
+    "full": 0.1445071753913871,
+    "past_only": 0.023999424134089134,
+    "climatology": 0.03751272492658813,
+    "base_rate": 0.01367579908675799,
+    "rule": 0.02673637184717082
+   },
+   "brier": {
+    "full": 0.01245324406772852,
+    "past_only": 0.013396689668297768,
+    "climatology": 0.013317098841071129,
+    "base_rate": 0.013489010123153159
+   },
+   "brier_skill": {
+    "full": 0.06486809053923992,
+    "past_only": -0.005976589058660053
+   },
+   "mean_predicted": {
+    "full": 0.012448346242308617,
+    "past_only": 0.013242356479167938,
+    "climatology": 0.013178566470742226
+   },
+   "reliability": {
+    "full": [
+     {
+      "p_mean": 0.0002625365450512618,
+      "observed": 0.0,
+      "days": 4380,
+      "events": 0
+     },
+     {
+      "p_mean": 0.0003603317018132657,
+      "observed": 0.00022831050228310502,
+      "days": 4380,
+      "events": 1
+     },
+     {
+      "p_mean": 0.0004833535640500486,
+      "observed": 0.0,
+      "days": 4380,
+      "events": 0
+     },
+     {
+      "p_mean": 0.0007014236762188375,
+      "observed": 0.00022831050228310502,
+      "days": 4380,
+      "events": 1
+     },
+     {
+      "p_mean": 0.0011217821156606078,
+      "observed": 0.001141552511415525,
+      "days": 4380,
+      "events": 5
+     },
+     {
+      "p_mean": 0.002276600804179907,
+      "observed": 0.00228310502283105,
+      "days": 4380,
+      "events": 10
+     },
+     {
+      "p_mean": 0.004880417138338089,
+      "observed": 0.006621004566210046,
+      "days": 4380,
+      "events": 29
+     },
+     {
+      "p_mean": 0.01047445647418499,
+      "observed": 0.010502283105022832,
+      "days": 4380,
+      "events": 46
+     },
+     {
+      "p_mean": 0.023957079276442528,
+      "observed": 0.02511415525114155,
+      "days": 4380,
+      "events": 110
+     },
+     {
+      "p_mean": 0.07996547967195511,
+      "observed": 0.09063926940639269,
+      "days": 4380,
+      "events": 397
+     }
+    ],
+    "past_only": [
+     {
+      "p_mean": 0.002532070269808173,
+      "observed": 0.002511415525114155,
+      "days": 4380,
+      "events": 11
+     },
+     {
+      "p_mean": 0.0036676048766821623,
+      "observed": 0.0045662100456621,
+      "days": 4380,
+      "events": 20
+     },
+     {
+      "p_mean": 0.00458393432199955,
+      "observed": 0.0009132420091324201,
+      "days": 4380,
+      "events": 4
+     },
+     {
+      "p_mean": 0.006352318916469812,
+      "observed": 0.0031963470319634705,
+      "days": 4380,
+      "events": 14
+     },
+     {
+      "p_mean": 0.009000600315630436,
+      "observed": 0.015296803652968037,
+      "days": 4380,
+      "events": 67
+     },
+     {
+      "p_mean": 0.012069576419889927,
+      "observed": 0.008447488584474886,
+      "days": 4380,
+      "events": 37
+     },
+     {
+      "p_mean": 0.017401155084371567,
+      "observed": 0.020776255707762557,
+      "days": 4380,
+      "events": 91
+     },
+     {
+      "p_mean": 0.021700924262404442,
+      "observed": 0.026255707762557076,
+      "days": 4380,
+      "events": 115
+     },
+     {
+      "p_mean": 0.02541792020201683,
+      "observed": 0.030821917808219176,
+      "days": 4380,
+      "events": 135
+     },
+     {
+      "p_mean": 0.02969745732843876,
+      "observed": 0.023972602739726026,
+      "days": 4380,
+      "events": 105
+     }
+    ]
+   },
+   "forecast_dependent_share": 1.1262990812494977,
+   "beats_climatology": true,
+   "ranges_90": {
+    "roc_auc_full": [
+     0.8975588006278951,
+     0.9177677434003223
+    ],
+    "pr_auc_full": [
+     0.12649254753838943,
+     0.16620676973820894
+    ],
+    "pr_auc_climatology": [
+     0.03191021841999167,
+     0.04087595600347275
+    ],
+    "brier_skill_full": [
+     0.054708103567856846,
+     0.0744074655231969
+    ]
+   }
+  },
+  "flood": {
+   "events": 488,
+   "days": 43800,
+   "event_rate": 0.011141552511415525,
+   "train_base_rate": 0.014780896561197857,
+   "roc_auc": {
+    "full": 0.8584838062143078,
+    "past_only": 0.8335869654493209,
+    "climatology": 0.7592449675098562,
+    "rule": 0.7182713674550496
+   },
+   "pr_auc": {
+    "full": 0.08778257197392478,
+    "past_only": 0.06943844894167533,
+    "climatology": 0.058210057786403355,
+    "base_rate": 0.011141552511415525,
+    "rule": 0.05158057756585068
+   },
+   "brier": {
+    "full": 0.010571355931460857,
+    "past_only": 0.010690124705433846,
+    "climatology": 0.010900312103331089,
+    "base_rate": 0.011030663144163583
+   },
+   "brier_skill": {
+    "full": 0.030178601195254173,
+    "past_only": 0.01928269538566796
+   },
+   "mean_predicted": {
+    "full": 0.014353033155202866,
+    "past_only": 0.014391454868018627,
+    "climatology": 0.014791800640523434
+   },
+   "reliability": {
+    "full": [
+     {
+      "p_mean": 0.001062195049598813,
+      "observed": 0.00022831050228310502,
+      "days": 4380,
+      "events": 1
+     },
+     {
+      "p_mean": 0.001575818401761353,
+      "observed": 0.0006849315068493151,
+      "days": 4380,
+      "events": 3
+     },
+     {
+      "p_mean": 0.002495346823707223,
+      "observed": 0.00022831050228310502,
+      "days": 4380,
+      "events": 1
+     },
+     {
+      "p_mean": 0.0036362868268042803,
+      "observed": 0.001141552511415525,
+      "days": 4380,
+      "events": 5
+     },
+     {
+      "p_mean": 0.005077867303043604,
+      "observed": 0.0031963470319634705,
+      "days": 4380,
+      "events": 14
+     },
+     {
+      "p_mean": 0.007851211354136467,
+      "observed": 0.005251141552511416,
+      "days": 4380,
+      "events": 23
+     },
+     {
+      "p_mean": 0.011984302662312984,
+      "observed": 0.00502283105022831,
+      "days": 4380,
+      "events": 22
+     },
+     {
+      "p_mean": 0.018209954723715782,
+      "observed": 0.012328767123287671,
+      "days": 4380,
+      "events": 54
+     },
+     {
+      "p_mean": 0.02778814174234867,
+      "observed": 0.025799086757990867,
+      "days": 4380,
+      "events": 113
+     },
+     {
+      "p_mean": 0.06384919583797455,
+      "observed": 0.057534246575342465,
+      "days": 4380,
+      "events": 252
+     }
+    ],
+    "past_only": [
+     {
+      "p_mean": 0.0014014840126037598,
+      "observed": 0.00022831050228310502,
+      "days": 4380,
+      "events": 1
+     },
+     {
+      "p_mean": 0.0021503691095858812,
+      "observed": 0.00022831050228310502,
+      "days": 4380,
+      "events": 1
+     },
+     {
+      "p_mean": 0.003232930786907673,
+      "observed": 0.0015981735159817352,
+      "days": 4380,
+      "events": 7
+     },
+     {
+      "p_mean": 0.004472014028578997,
+      "observed": 0.0027397260273972603,
+      "days": 4380,
+      "events": 12
+     },
+     {
+      "p_mean": 0.0060279835015535355,
+      "observed": 0.003424657534246575,
+      "days": 4380,
+      "events": 15
+     },
+     {
+      "p_mean": 0.00872357003390789,
+      "observed": 0.005479452054794521,
+      "days": 4380,
+      "events": 24
+     },
+     {
+      "p_mean": 0.013226778246462345,
+      "observed": 0.005936073059360731,
+      "days": 4380,
+      "events": 26
+     },
+     {
+      "p_mean": 0.018668679520487785,
+      "observed": 0.015296803652968037,
+      "days": 4380,
+      "events": 67
+     },
+     {
+      "p_mean": 0.028058648109436035,
+      "observed": 0.025342465753424658,
+      "days": 4380,
+      "events": 111
+     },
+     {
+      "p_mean": 0.05795208737254143,
+      "observed": 0.05114155251141553,
+      "days": 4380,
+      "events": 224
+     }
+    ]
+   },
+   "forecast_dependent_share": 0.6203098903234283,
+   "beats_climatology": true,
+   "ranges_90": {
+    "roc_auc_full": [
+     0.8360698002690284,
+     0.8818876181078664
+    ],
+    "pr_auc_full": [
+     0.058023960818720174,
+     0.12781827724845174
+    ],
+    "pr_auc_climatology": [
+     0.02148150533701385,
+     0.12299837547954426
+    ],
+    "brier_skill_full": [
+     -0.002921412571475389,
+     0.0749019525326631
+    ]
+   }
+  },
+  "fire": {
+   "events": 196,
+   "days": 43800,
+   "event_rate": 0.004474885844748858,
+   "train_base_rate": 0.0031961170383259306,
+   "roc_auc": {
+    "full": 0.8627571613912971,
+    "past_only": 0.8617954681184463,
+    "climatology": 0.8024324673452539,
+    "rule": null
+   },
+   "pr_auc": {
+    "full": 0.06259199373560063,
+    "past_only": 0.04771027409023376,
+    "climatology": 0.1768291999097641,
+    "base_rate": 0.004474885844748858,
+    "rule": null
+   },
+   "brier": {
+    "full": 0.004313567187637091,
+    "past_only": 0.004328086040914059,
+    "climatology": 0.003946040757000446,
+    "base_rate": 0.004456496491085604
+   },
+   "brier_skill": {
+    "full": -0.09313802194887022,
+    "past_only": -0.09681736896301629
+   },
+   "mean_predicted": {
+    "full": 0.0037810285575687885,
+    "past_only": 0.003777583595365286,
+    "climatology": 0.0031938778702169657
+   },
+   "reliability": {
+    "full": [
+     {
+      "p_mean": 5.792536285298411e-06,
+      "observed": 0.0015981735159817352,
+      "days": 4380,
+      "events": 7
+     },
+     {
+      "p_mean": 7.376217581622768e-06,
+      "observed": 0.00022831050228310502,
+      "days": 4380,
+      "events": 1
+     },
+     {
+      "p_mean": 2.2380172595148906e-05,
+      "observed": 0.0,
+      "days": 4380,
+      "events": 0
+     },
+     {
+      "p_mean": 5.7762907090364024e-05,
+      "observed": 0.0013698630136986301,
+      "days": 4380,
+      "events": 6
+     },
+     {
+      "p_mean": 0.0001346404169453308,
+      "observed": 0.0,
+      "days": 4380,
+      "events": 0
+     },
+     {
+      "p_mean": 0.0003103229682892561,
+      "observed": 0.00045662100456621003,
+      "days": 4380,
+      "events": 2
+     },
+     {
+      "p_mean": 0.0007268438348546624,
+      "observed": 0.00410958904109589,
+      "days": 4380,
+      "events": 18
+     },
+     {
+      "p_mean": 0.001898276968859136,
+      "observed": 0.002511415525114155,
+      "days": 4380,
+      "events": 11
+     },
+     {
+      "p_mean": 0.006027876399457455,
+      "observed": 0.0027397260273972603,
+      "days": 4380,
+      "events": 12
+     },
+     {
+      "p_mean": 0.028619015589356422,
+      "observed": 0.031735159817351595,
+      "days": 4380,
+      "events": 139
+     }
+    ],
+    "past_only": [
+     {
+      "p_mean": 2.9987493235239526e-06,
+      "observed": 0.0018264840182648401,
+      "days": 4380,
+      "events": 8
+     },
+     {
+      "p_mean": 3.6598391943698516e-06,
+      "observed": 0.0,
+      "days": 4380,
+      "events": 0
+     },
+     {
+      "p_mean": 1.1928323147003539e-05,
+      "observed": 0.00022831050228310502,
+      "days": 4380,
+      "events": 1
+     },
+     {
+      "p_mean": 3.499750164337456e-05,
+      "observed": 0.001141552511415525,
+      "days": 4380,
+      "events": 5
+     },
+     {
+      "p_mean": 9.098076407099143e-05,
+      "observed": 0.0,
+      "days": 4380,
+      "events": 0
+     },
+     {
+      "p_mean": 0.00023174523084890097,
+      "observed": 0.00022831050228310502,
+      "days": 4380,
+      "events": 1
+     },
+     {
+      "p_mean": 0.0005854630726389587,
+      "observed": 0.00410958904109589,
+      "days": 4380,
+      "events": 18
+     },
+     {
+      "p_mean": 0.0016088263364508748,
+      "observed": 0.0036529680365296802,
+      "days": 4380,
+      "events": 16
+     },
+     {
+      "p_mean": 0.005589797627180815,
+      "observed": 0.001141552511415525,
+      "days": 4380,
+      "events": 5
+     },
+     {
+      "p_mean": 0.029615439474582672,
+      "observed": 0.032420091324200914,
+      "days": 4380,
+      "events": 142
+     }
+    ]
+   },
+   "forecast_dependent_share": null,
+   "beats_climatology": false,
+   "ranges_90": {
+    "roc_auc_full": [
+     0.6226693744809689,
+     0.9562562097205152
+    ],
+    "pr_auc_full": [
+     0.002356542609520599,
+     0.17740641310681457
+    ],
+    "pr_auc_climatology": [
+     0.010232810600323317,
+     0.3154533250355718
+    ],
+    "brier_skill_full": [
+     -0.17764809348469535,
+     -0.00015638607722562425
+    ]
+   }
+  }
+ },
+ "index": {
+  "roc_auc_any_event": 0.8302934767334755,
+  "rule_max_roc_auc_any_event": 0.7334426662038245,
+  "pr_auc_any_event": 0.19969817937315973,
+  "rule_max_pr_auc_any_event": 0.10931701703056498,
+  "any_event_rate": 0.03525114155251142,
+  "tier_table": {
+   "rows": "index tier",
+   "columns": "rule tier",
+   "days": {
+    "none": {
+     "none": 25052,
+     "watch": 8661,
+     "warning": 64,
+     "stop": 0
+    },
+    "watch": {
+     "none": 3720,
+     "watch": 4778,
+     "warning": 378,
+     "stop": 21
+    },
+    "warning": {
+     "none": 153,
+     "watch": 533,
+     "warning": 258,
+     "stop": 39
+    },
+    "stop": {
+     "none": 1,
+     "watch": 22,
+     "warning": 79,
+     "stop": 41
+    }
+   },
+   "event_rate": {
+    "none": {
+     "none": 0.008981318856777902,
+     "watch": 0.023784782357695416,
+     "warning": 0.046875,
+     "stop": null
+    },
+    "watch": {
+     "none": 0.06370967741935483,
+     "watch": 0.10401841774801172,
+     "warning": 0.10582010582010581,
+     "stop": 0.047619047619047616
+    },
+    "warning": {
+     "none": 0.09803921568627451,
+     "watch": 0.300187617260788,
+     "warning": 0.29457364341085274,
+     "stop": 0.46153846153846156
+    },
+    "stop": {
+     "none": 0.0,
+     "watch": 0.2727272727272727,
+     "warning": 0.5189873417721519,
+     "stop": 0.4634146341463415
+    }
+   }
+  },
+  "escalation": {
+   "points": 2.0,
+   "days": 7862,
+   "event_rate": 0.08725515136097685,
+   "same_rule_tier_event_rate": 0.017109216637953013
+  },
+  "score_distribution": {
+   "none": 33777,
+   "watch": 8897,
+   "warning": 983,
+   "stop": 143
+  },
+  "top_driver_share": {
+   "flood": 0.564634703196347,
+   "storm": 0.20623287671232876,
+   "fire": 0.17013698630136986,
+   "heat": 0.05899543378995434
+  }
+ },
+ "per_plant": {
+  "1082": {
+   "heat": {
+    "events": 10,
+    "observed": 0.0136986301369863,
+    "predicted": 0.007124870549887419
+   },
+   "storm": {
+    "events": 28,
+    "observed": 0.038356164383561646,
+    "predicted": 0.015547353774309158
+   },
+   "flood": {
+    "events": 16,
+    "observed": 0.021917808219178082,
+    "predicted": 0.015052241273224354
+   },
+   "fire": {
+    "events": 1,
+    "observed": 0.0013698630136986301,
+    "predicted": 0.001762120402418077
+   }
+  },
+  "130": {
+   "heat": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.008436513133347034
+   },
+   "storm": {
+    "events": 11,
+    "observed": 0.015068493150684932,
+    "predicted": 0.014386845752596855
+   },
+   "flood": {
+    "events": 2,
+    "observed": 0.0027397260273972603,
+    "predicted": 0.01736336573958397
+   },
+   "fire": {
+    "events": 1,
+    "observed": 0.0013698630136986301,
+    "predicted": 0.0008731517009437084
+   }
+  },
+  "1356": {
+   "heat": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.003826410509645939
+   },
+   "storm": {
+    "events": 13,
+    "observed": 0.01780821917808219,
+    "predicted": 0.015847908332943916
+   },
+   "flood": {
+    "events": 3,
+    "observed": 0.00410958904109589,
+    "predicted": 0.024556031450629234
+   },
+   "fire": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.0014658031286671758
+   }
+  },
+  "1403": {
+   "heat": {
+    "events": 3,
+    "observed": 0.00410958904109589,
+    "predicted": 0.006340489257127047
+   },
+   "storm": {
+    "events": 11,
+    "observed": 0.015068493150684932,
+    "predicted": 0.01336123887449503
+   },
+   "flood": {
+    "events": 34,
+    "observed": 0.04657534246575343,
+    "predicted": 0.026611464098095894
+   },
+   "fire": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.0008000988746061921
+   }
+  },
+  "1733": {
+   "heat": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.002157529816031456
+   },
+   "storm": {
+    "events": 6,
+    "observed": 0.00821917808219178,
+    "predicted": 0.012690287083387375
+   },
+   "flood": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.008678913116455078
+   },
+   "fire": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.0015954063273966312
+   }
+  },
+  "2103": {
+   "heat": {
+    "events": 13,
+    "observed": 0.01780821917808219,
+    "predicted": 0.0076920208521187305
+   },
+   "storm": {
+    "events": 10,
+    "observed": 0.0136986301369863,
+    "predicted": 0.014611377380788326
+   },
+   "flood": {
+    "events": 2,
+    "observed": 0.0027397260273972603,
+    "predicted": 0.019327983260154724
+   },
+   "fire": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.0026099763344973326
+   }
+  },
+  "2410": {
+   "heat": {
+    "events": 6,
+    "observed": 0.00821917808219178,
+    "predicted": 0.006572424434125423
+   },
+   "storm": {
+    "events": 8,
+    "observed": 0.010958904109589041,
+    "predicted": 0.012352152727544308
+   },
+   "flood": {
+    "events": 5,
+    "observed": 0.00684931506849315,
+    "predicted": 0.018999509513378143
+   },
+   "fire": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.0014927765587344766
+   }
+  },
+  "2500": {
+   "heat": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.0047167399898171425
+   },
+   "storm": {
+    "events": 16,
+    "observed": 0.021917808219178082,
+    "predicted": 0.01093289814889431
+   },
+   "flood": {
+    "events": 9,
+    "observed": 0.012328767123287671,
+    "predicted": 0.012514946982264519
+   },
+   "fire": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.0015967941144481301
+   }
+  },
+  "260": {
+   "heat": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.0009562810882925987
+   },
+   "storm": {
+    "events": 2,
+    "observed": 0.0027397260273972603,
+    "predicted": 0.00336995511315763
+   },
+   "flood": {
+    "events": 11,
+    "observed": 0.015068493150684932,
+    "predicted": 0.012725979089736938
+   },
+   "fire": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.015597661025822163
+   }
+  },
+  "2693": {
+   "heat": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.0014495152281597257
+   },
+   "storm": {
+    "events": 2,
+    "observed": 0.0027397260273972603,
+    "predicted": 0.012489763088524342
+   },
+   "flood": {
+    "events": 4,
+    "observed": 0.005479452054794521,
+    "predicted": 0.016389885917305946
+   },
+   "fire": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.0010001964401453733
+   }
+  },
+  "2712": {
+   "heat": {
+    "events": 2,
+    "observed": 0.0027397260273972603,
+    "predicted": 0.0055832089856266975
+   },
+   "storm": {
+    "events": 18,
+    "observed": 0.024657534246575342,
+    "predicted": 0.012830236926674843
+   },
+   "flood": {
+    "events": 12,
+    "observed": 0.01643835616438356,
+    "predicted": 0.011917329393327236
+   },
+   "fire": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.001413777470588684
+   }
+  },
+  "2952": {
+   "heat": {
+    "events": 24,
+    "observed": 0.03287671232876712,
+    "predicted": 0.017190834507346153
+   },
+   "storm": {
+    "events": 14,
+    "observed": 0.019178082191780823,
+    "predicted": 0.013024849817156792
+   },
+   "flood": {
+    "events": 2,
+    "observed": 0.0027397260273972603,
+    "predicted": 0.018207132816314697
+   },
+   "fire": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.002858281834051013
+   }
+  },
+  "3": {
+   "heat": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.010055918246507645
+   },
+   "storm": {
+    "events": 5,
+    "observed": 0.00684931506849315,
+    "predicted": 0.014885546639561653
+   },
+   "flood": {
+    "events": 1,
+    "observed": 0.0013698630136986301,
+    "predicted": 0.022694231942296028
+   },
+   "fire": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.0011375667527318
+   }
+  },
+  "3082": {
+   "heat": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.007483753375709057
+   },
+   "storm": {
+    "events": 2,
+    "observed": 0.0027397260273972603,
+    "predicted": 0.004812303464859724
+   },
+   "flood": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.010305345989763737
+   },
+   "fire": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.01619613543152809
+   }
+  },
+  "3166": {
+   "heat": {
+    "events": 4,
+    "observed": 0.005479452054794521,
+    "predicted": 0.005671495106071234
+   },
+   "storm": {
+    "events": 18,
+    "observed": 0.024657534246575342,
+    "predicted": 0.01299441047012806
+   },
+   "flood": {
+    "events": 6,
+    "observed": 0.00821917808219178,
+    "predicted": 0.010098323225975037
+   },
+   "fire": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.0011837799102067947
+   }
+  },
+  "3265": {
+   "heat": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.0026028139982372522
+   },
+   "storm": {
+    "events": 17,
+    "observed": 0.023287671232876714,
+    "predicted": 0.013072351925075054
+   },
+   "flood": {
+    "events": 2,
+    "observed": 0.0027397260273972603,
+    "predicted": 0.01397971622645855
+   },
+   "fire": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.002960683312267065
+   }
+  },
+  "3399": {
+   "heat": {
+    "events": 1,
+    "observed": 0.0013698630136986301,
+    "predicted": 0.005114901345223188
+   },
+   "storm": {
+    "events": 8,
+    "observed": 0.010958904109589041,
+    "predicted": 0.015442500822246075
+   },
+   "flood": {
+    "events": 14,
+    "observed": 0.019178082191780823,
+    "predicted": 0.012704433873295784
+   },
+   "fire": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.002693814691156149
+   }
+  },
+  "3470": {
+   "heat": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.0075484649278223515
+   },
+   "storm": {
+    "events": 6,
+    "observed": 0.00821917808219178,
+    "predicted": 0.012976289726793766
+   },
+   "flood": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.01342208031564951
+   },
+   "fire": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.0010956943733617663
+   }
+  },
+  "3935": {
+   "heat": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.0028323873411864042
+   },
+   "storm": {
+    "events": 25,
+    "observed": 0.03424657534246575,
+    "predicted": 0.013097087852656841
+   },
+   "flood": {
+    "events": 24,
+    "observed": 0.03287671232876712,
+    "predicted": 0.021544577553868294
+   },
+   "fire": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.0016123977256938815
+   }
+  },
+  "400": {
+   "heat": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.0008506487356498837
+   },
+   "storm": {
+    "events": 2,
+    "observed": 0.0027397260273972603,
+    "predicted": 0.002415596041828394
+   },
+   "flood": {
+    "events": 13,
+    "observed": 0.01780821917808219,
+    "predicted": 0.0069921924732625484
+   },
+   "fire": {
+    "events": 26,
+    "observed": 0.03561643835616438,
+    "predicted": 0.014114055782556534
+   }
+  },
+  "46": {
+   "heat": {
+    "events": 29,
+    "observed": 0.03972602739726028,
+    "predicted": 0.005050313659012318
+   },
+   "storm": {
+    "events": 27,
+    "observed": 0.036986301369863014,
+    "predicted": 0.015483989380300045
+   },
+   "flood": {
+    "events": 4,
+    "observed": 0.005479452054794521,
+    "predicted": 0.01079531479626894
+   },
+   "fire": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.002484926488250494
+   }
+  },
+  "55380": {
+   "heat": {
+    "events": 55,
+    "observed": 0.07534246575342465,
+    "predicted": 0.02389596588909626
+   },
+   "storm": {
+    "events": 7,
+    "observed": 0.009589041095890411,
+    "predicted": 0.014279465191066265
+   },
+   "flood": {
+    "events": 133,
+    "observed": 0.1821917808219178,
+    "predicted": 0.021705467253923416
+   },
+   "fire": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.0024027444887906313
+   }
+  },
+  "56407": {
+   "heat": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.0020141147542744875
+   },
+   "storm": {
+    "events": 8,
+    "observed": 0.010958904109589041,
+    "predicted": 0.014586764387786388
+   },
+   "flood": {
+    "events": 1,
+    "observed": 0.0013698630136986301,
+    "predicted": 0.01434243842959404
+   },
+   "fire": {
+    "events": 10,
+    "observed": 0.0136986301369863,
+    "predicted": 0.0006173487054184079
+   }
+  },
+  "6000": {
+   "heat": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.0009719402296468616
+   },
+   "storm": {
+    "events": 10,
+    "observed": 0.0136986301369863,
+    "predicted": 0.014072509482502937
+   },
+   "flood": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.004460248630493879
+   },
+   "fire": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.001401020446792245
+   }
+  },
+  "6008": {
+   "heat": {
+    "events": 14,
+    "observed": 0.019178082191780823,
+    "predicted": 0.05984575301408768
+   },
+   "storm": {
+    "events": 3,
+    "observed": 0.00410958904109589,
+    "predicted": 0.0033298295456916094
+   },
+   "flood": {
+    "events": 4,
+    "observed": 0.005479452054794521,
+    "predicted": 0.0028694914653897285
+   },
+   "fire": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.018079649657011032
+   }
+  },
+  "6011": {
+   "heat": {
+    "events": 4,
+    "observed": 0.005479452054794521,
+    "predicted": 0.0066430289298295975
+   },
+   "storm": {
+    "events": 11,
+    "observed": 0.015068493150684932,
+    "predicted": 0.010331593453884125
+   },
+   "flood": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.01290946640074253
+   },
+   "fire": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.0012826710008084774
+   }
+  },
+  "6022": {
+   "heat": {
+    "events": 4,
+    "observed": 0.005479452054794521,
+    "predicted": 0.003587377490475774
+   },
+   "storm": {
+    "events": 10,
+    "observed": 0.0136986301369863,
+    "predicted": 0.015980150550603867
+   },
+   "flood": {
+    "events": 14,
+    "observed": 0.019178082191780823,
+    "predicted": 0.014991767704486847
+   },
+   "fire": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.001363772782497108
+   }
+  },
+  "6023": {
+   "heat": {
+    "events": 2,
+    "observed": 0.0027397260273972603,
+    "predicted": 0.0023923120461404324
+   },
+   "storm": {
+    "events": 13,
+    "observed": 0.01780821917808219,
+    "predicted": 0.016948938369750977
+   },
+   "flood": {
+    "events": 5,
+    "observed": 0.00684931506849315,
+    "predicted": 0.01637626811861992
+   },
+   "fire": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.0019525683019310236
+   }
+  },
+  "6026": {
+   "heat": {
+    "events": 3,
+    "observed": 0.00410958904109589,
+    "predicted": 0.0032413352746516466
+   },
+   "storm": {
+    "events": 8,
+    "observed": 0.010958904109589041,
+    "predicted": 0.015501492656767368
+   },
+   "flood": {
+    "events": 13,
+    "observed": 0.01780821917808219,
+    "predicted": 0.01696314662694931
+   },
+   "fire": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.0018254673341289163
+   }
+  },
+  "6042": {
+   "heat": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.0032210550270974636
+   },
+   "storm": {
+    "events": 2,
+    "observed": 0.0027397260273972603,
+    "predicted": 0.01582343690097332
+   },
+   "flood": {
+    "events": 1,
+    "observed": 0.0013698630136986301,
+    "predicted": 0.011065921746194363
+   },
+   "fire": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.0012653549201786518
+   }
+  },
+  "6065": {
+   "heat": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.011188308708369732
+   },
+   "storm": {
+    "events": 14,
+    "observed": 0.019178082191780823,
+    "predicted": 0.01596241258084774
+   },
+   "flood": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.016550445929169655
+   },
+   "fire": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.0014998370315879583
+   }
+  },
+  "6068": {
+   "heat": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.00617280974984169
+   },
+   "storm": {
+    "events": 11,
+    "observed": 0.015068493150684932,
+    "predicted": 0.015684349462389946
+   },
+   "flood": {
+    "events": 2,
+    "observed": 0.0027397260273972603,
+    "predicted": 0.013787664473056793
+   },
+   "fire": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.0019295394886285067
+   }
+  },
+  "6071": {
+   "heat": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.004379777237772942
+   },
+   "storm": {
+    "events": 18,
+    "observed": 0.024657534246575342,
+    "predicted": 0.015159727074205875
+   },
+   "flood": {
+    "events": 3,
+    "observed": 0.00410958904109589,
+    "predicted": 0.02467142976820469
+   },
+   "fire": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.001695455750450492
+   }
+  },
+  "6073": {
+   "heat": {
+    "events": 3,
+    "observed": 0.00410958904109589,
+    "predicted": 0.00792206171900034
+   },
+   "storm": {
+    "events": 11,
+    "observed": 0.015068493150684932,
+    "predicted": 0.015914078801870346
+   },
+   "flood": {
+    "events": 5,
+    "observed": 0.00684931506849315,
+    "predicted": 0.024964502081274986
+   },
+   "fire": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.0006180409109219909
+   }
+  },
+  "6076": {
+   "heat": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.006214869674295187
+   },
+   "storm": {
+    "events": 2,
+    "observed": 0.0027397260273972603,
+    "predicted": 0.009142252616584301
+   },
+   "flood": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.007772889919579029
+   },
+   "fire": {
+    "events": 10,
+    "observed": 0.0136986301369863,
+    "predicted": 0.007659197319298983
+   }
+  },
+  "6090": {
+   "heat": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.001642510644160211
+   },
+   "storm": {
+    "events": 13,
+    "observed": 0.01780821917808219,
+    "predicted": 0.01393019501119852
+   },
+   "flood": {
+    "events": 1,
+    "observed": 0.0013698630136986301,
+    "predicted": 0.01014626119285822
+   },
+   "fire": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.001535281422547996
+   }
+  },
+  "6099": {
+   "heat": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.0010522844968363643
+   },
+   "storm": {
+    "events": 1,
+    "observed": 0.0013698630136986301,
+    "predicted": 0.0032879940699785948
+   },
+   "flood": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.012389504350721836
+   },
+   "fire": {
+    "events": 28,
+    "observed": 0.038356164383561646,
+    "predicted": 0.01313905417919159
+   }
+  },
+  "6103": {
+   "heat": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.0020778891630470753
+   },
+   "storm": {
+    "events": 11,
+    "observed": 0.015068493150684932,
+    "predicted": 0.01281037274748087
+   },
+   "flood": {
+    "events": 4,
+    "observed": 0.005479452054794521,
+    "predicted": 0.018599290400743484
+   },
+   "fire": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.001187850721180439
+   }
+  },
+  "6113": {
+   "heat": {
+    "events": 18,
+    "observed": 0.024657534246575342,
+    "predicted": 0.005616098642349243
+   },
+   "storm": {
+    "events": 17,
+    "observed": 0.023287671232876714,
+    "predicted": 0.015052136965095997
+   },
+   "flood": {
+    "events": 27,
+    "observed": 0.036986301369863014,
+    "predicted": 0.022978058084845543
+   },
+   "fire": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.0017429846338927746
+   }
+  },
+  "612": {
+   "heat": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.003566679311916232
+   },
+   "storm": {
+    "events": 5,
+    "observed": 0.00684931506849315,
+    "predicted": 0.015010833740234375
+   },
+   "flood": {
+    "events": 4,
+    "observed": 0.005479452054794521,
+    "predicted": 0.011582248844206333
+   },
+   "fire": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.0011625327169895172
+   }
+  },
+  "6145": {
+   "heat": {
+    "events": 35,
+    "observed": 0.04794520547945205,
+    "predicted": 0.023868326097726822
+   },
+   "storm": {
+    "events": 11,
+    "observed": 0.015068493150684932,
+    "predicted": 0.012212185189127922
+   },
+   "flood": {
+    "events": 4,
+    "observed": 0.005479452054794521,
+    "predicted": 0.01219103205949068
+   },
+   "fire": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.00395636772736907
+   }
+  },
+  "6146": {
+   "heat": {
+    "events": 53,
+    "observed": 0.07260273972602739,
+    "predicted": 0.019553428515791893
+   },
+   "storm": {
+    "events": 20,
+    "observed": 0.0273972602739726,
+    "predicted": 0.012356611900031567
+   },
+   "flood": {
+    "events": 16,
+    "observed": 0.021917808219178082,
+    "predicted": 0.013859555125236511
+   },
+   "fire": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.0026371616404503584
+   }
+  },
+  "6163": {
+   "heat": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.007271320093423128
+   },
+   "storm": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.004745893646031618
+   },
+   "flood": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.00731519004330039
+   },
+   "fire": {
+    "events": 96,
+    "observed": 0.13150684931506848,
+    "predicted": 0.01771664246916771
+   }
+  },
+  "6165": {
+   "heat": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.013133015483617783
+   },
+   "storm": {
+    "events": 1,
+    "observed": 0.0013698630136986301,
+    "predicted": 0.007599259726703167
+   },
+   "flood": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.004169713240116835
+   },
+   "fire": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.012509460560977459
+   }
+  },
+  "6166": {
+   "heat": {
+    "events": 19,
+    "observed": 0.026027397260273973,
+    "predicted": 0.005219629500061274
+   },
+   "storm": {
+    "events": 19,
+    "observed": 0.026027397260273973,
+    "predicted": 0.01557618472725153
+   },
+   "flood": {
+    "events": 15,
+    "observed": 0.02054794520547945,
+    "predicted": 0.025251252576708794
+   },
+   "fire": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.002351094037294388
+   }
+  },
+  "6167": {
+   "heat": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.0009339977405034006
+   },
+   "storm": {
+    "events": 5,
+    "observed": 0.00684931506849315,
+    "predicted": 0.014815565198659897
+   },
+   "flood": {
+    "events": 8,
+    "observed": 0.010958904109589041,
+    "predicted": 0.010855522938072681
+   },
+   "fire": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.0017226150957867503
+   }
+  },
+  "6190": {
+   "heat": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.016667235642671585
+   },
+   "storm": {
+    "events": 17,
+    "observed": 0.023287671232876714,
+    "predicted": 0.013216567225754261
+   },
+   "flood": {
+    "events": 6,
+    "observed": 0.00821917808219178,
+    "predicted": 0.022406060248613358
+   },
+   "fire": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.0024227083195000887
+   }
+  },
+  "621": {
+   "heat": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.001591213745996356
+   },
+   "storm": {
+    "events": 6,
+    "observed": 0.00821917808219178,
+    "predicted": 0.013969683088362217
+   },
+   "flood": {
+    "events": 1,
+    "observed": 0.0013698630136986301,
+    "predicted": 0.011199099011719227
+   },
+   "fire": {
+    "events": 22,
+    "observed": 0.030136986301369864,
+    "predicted": 0.0006363141001202166
+   }
+  },
+  "6251": {
+   "heat": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.0042671277187764645
+   },
+   "storm": {
+    "events": 3,
+    "observed": 0.00410958904109589,
+    "predicted": 0.013030276633799076
+   },
+   "flood": {
+    "events": 2,
+    "observed": 0.0027397260273972603,
+    "predicted": 0.01317302230745554
+   },
+   "fire": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.0008079192484728992
+   }
+  },
+  "628": {
+   "heat": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.0044591124169528484
+   },
+   "storm": {
+    "events": 3,
+    "observed": 0.00410958904109589,
+    "predicted": 0.012325826101005077
+   },
+   "flood": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.015045147389173508
+   },
+   "fire": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.0010475671151652932
+   }
+  },
+  "62949": {
+   "heat": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.0022566451225429773
+   },
+   "storm": {
+    "events": 14,
+    "observed": 0.019178082191780823,
+    "predicted": 0.015225748531520367
+   },
+   "flood": {
+    "events": 7,
+    "observed": 0.009589041095890411,
+    "predicted": 0.022020036354660988
+   },
+   "fire": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.0012214866001158953
+   }
+  },
+  "649": {
+   "heat": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.010409137234091759
+   },
+   "storm": {
+    "events": 6,
+    "observed": 0.00821917808219178,
+    "predicted": 0.014249331317842007
+   },
+   "flood": {
+    "events": 1,
+    "observed": 0.0013698630136986301,
+    "predicted": 0.0169235747307539
+   },
+   "fire": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.0017504652496427298
+   }
+  },
+  "66923": {
+   "heat": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.010901371017098427
+   },
+   "storm": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.008639468811452389
+   },
+   "flood": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.0034870989620685577
+   },
+   "fire": {
+    "events": 2,
+    "observed": 0.0027397260273972603,
+    "predicted": 0.0050359792076051235
+   }
+  },
+  "703": {
+   "heat": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.003045210847631097
+   },
+   "storm": {
+    "events": 20,
+    "observed": 0.0273972602739726,
+    "predicted": 0.014109297655522823
+   },
+   "flood": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.01242542639374733
+   },
+   "fire": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.0023171124048531055
+   }
+  },
+  "7722": {
+   "heat": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.0033791998866945505
+   },
+   "storm": {
+    "events": 14,
+    "observed": 0.019178082191780823,
+    "predicted": 0.013401485048234463
+   },
+   "flood": {
+    "events": 1,
+    "observed": 0.0013698630136986301,
+    "predicted": 0.011703092604875565
+   },
+   "fire": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.002059311605989933
+   }
+  },
+  "8042": {
+   "heat": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.0035846971441060305
+   },
+   "storm": {
+    "events": 16,
+    "observed": 0.021917808219178082,
+    "predicted": 0.012473550625145435
+   },
+   "flood": {
+    "events": 8,
+    "observed": 0.010958904109589041,
+    "predicted": 0.011724861338734627
+   },
+   "fire": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.0015529374359175563
+   }
+  },
+  "8055": {
+   "heat": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.018209893256425858
+   },
+   "storm": {
+    "events": 9,
+    "observed": 0.012328767123287671,
+    "predicted": 0.0133287962526083
+   },
+   "flood": {
+    "events": 5,
+    "observed": 0.00684931506849315,
+    "predicted": 0.013634144328534603
+   },
+   "fire": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.0019417505245655775
+   }
+  },
+  "8066": {
+   "heat": {
+    "events": 14,
+    "observed": 0.019178082191780823,
+    "predicted": 0.014702151529490948
+   },
+   "storm": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.0056912838481366634
+   },
+   "flood": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.00394462002441287
+   },
+   "fire": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.013939431868493557
+   }
+  },
+  "8102": {
+   "heat": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.0030405803117901087
+   },
+   "storm": {
+    "events": 10,
+    "observed": 0.0136986301369863,
+    "predicted": 0.013440488837659359
+   },
+   "flood": {
+    "events": 29,
+    "observed": 0.03972602739726028,
+    "predicted": 0.02193349041044712
+   },
+   "fire": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.0020075913053005934
+   }
+  },
+  "8223": {
+   "heat": {
+    "events": 11,
+    "observed": 0.015068493150684932,
+    "predicted": 0.02748270146548748
+   },
+   "storm": {
+    "events": 1,
+    "observed": 0.0013698630136986301,
+    "predicted": 0.007059802766889334
+   },
+   "flood": {
+    "events": 4,
+    "observed": 0.005479452054794521,
+    "predicted": 0.003912486135959625
+   },
+   "fire": {
+    "events": 0,
+    "observed": 0.0,
+    "predicted": 0.010322337038815022
+   }
+  }
+ },
+ "acceptance_3": {
+  "heat": true,
+  "storm": true,
+  "flood": true,
+  "fire": false
+ },
+ "figures": [
+  "reliability.png",
+  "pr_auc.png",
+  "tier_map.png"
+ ]
+}

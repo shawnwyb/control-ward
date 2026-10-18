@@ -15,7 +15,7 @@ inspection before equipment mobilization." It is STRAM-inspired (Jones & Arp 201
   - **affected-area polygons** above the inspect threshold;
   - **route segments** that intersect them, flagged **ok / inspect / hold**. "Hold" means hold mobilization until the segment is inspected. It is not a stop-work rule.
   - a plant summary: affected acres, intersected route length, worst segment.
-- The worst-segment score goes to `ml_scores`.
+- A site score goes to `ml_scores`: the p90 score (exceeded by 10 % of route length), chosen for production 2026-10-18; worst-segment was the original choice.
 
 ## Target users and use cases
 - **Supervisors** at the 6 PM planning point (matches the next-day briefing). They decide which segments to walk or probe and which equipment is riskiest.
@@ -133,7 +133,7 @@ inspection before equipment mobilization." It is STRAM-inspired (Jones & Arp 201
 2. `python -m stram prepare --eia 649,56407,6008` then `forecast` produce non-empty outputs for Vogtle GA, West County FL and Palo Verde AZ. West County has more flagged acres and route length than Palo Verde.
 3. The full 60-site run completes. Missing routes and missing soils are handled and tagged.
 4. `agreement.csv` and `run.json` report ρ. It is informational, not a gate.
-5. `ml_scores_push.sql` holds 120 rows. After user approval, hosted `ml_scores` is populated, and `npm run verify:rules` and `verify:monitoring` still pass. *Status 2026-10-17: the SQL is generated and checked (120 rows). The user chose **not to push yet**, so the hosted half of this criterion is deferred.*
+5. `ml_scores_push.sql` holds 120 rows. After user approval, hosted `ml_scores` is populated, and `npm run verify:rules` and `verify:monitoring` still pass. *Status 2026-10-17: the SQL is generated and checked (120 rows). The user chose **not to push yet**, so the hosted half of this criterion is deferred.* *2026-10-18: the user asked to apply with the p90 metric through `push --apply`; status is updated in `applied.json` of the applied run.*
 6. Every output carries the STRAM-inspired / not-a-clearance label and `locally_validated=false`.
 
 ## Decisions made during implementation (2026-10-17)
@@ -157,6 +157,10 @@ These were found with real data from Vogtle, West County and Palo Verde. The use
   - The median site has 45 % of its route flagged.
   - This is the transfer limitation `plan.md` warns about, and the main reason to run the validation pilot.
 - **STRAM and NRCS agree moderately across the 60 sites:** Spearman ρ = 0.38 (p = 0.003). That is consistent, but it is not validation.
+- **Production push uses p90, with a confirmed apply** (*agreed* 2026-10-18).
+  - The site score sent to `ml_scores` is now the score exceeded by 10 % of route length. On the 2026-10-18 run, worst-segment put 38/60 sites at 6.5 every day; p90 puts 25/60 there.
+  - `push --apply` checks the Supabase CLI, the project link, run age (≤ 24 h) and that all sites exist. It previews the change, requires the linked project ref as confirmation, applies, reads the rows back, and records `applied.json`.
+  - The Supabase CLI was installed from the official v2.121.0 release binary into `~/.local/bin`, with the SHA-256 checked. Homebrew needed updated Xcode Command Line Tools.
 - **Finding to act on before any push:** with the agreed worst-segment score, a few static NRCS "hold" segments put every demo site at 6.5 every day. The p90 metric separates them (Palo Verde 3.3).
 
 ## Eq 4 mismatch: evidence (checked 2026-10-17)

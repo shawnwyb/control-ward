@@ -99,6 +99,17 @@ class DryRunTest(unittest.TestCase):
         ledger = (self.dir / "ledger.jsonl").read_text().splitlines()
         self.assertEqual(len(ledger), 2)
 
+    def test_fixed_date_for_every_plant(self):
+        rows, payload = self.run_dry(["--date", "2026-10-18"])
+        self.assertEqual(len(rows), 120)
+        self.assertEqual({r["local_date"] for r in rows if r["horizon"] == "now"}, {"2026-10-18"})
+        self.assertEqual({r["local_date"] for r in rows if r["horizon"] == "tomorrow"}, {"2026-10-19"})
+        now = {r["eia_plant_id"]: r for r in rows if r["horizon"] == "now"}
+        self.assertEqual(int(now["6008"]["forecast_hours"]), 24)   # 21:30 MST on 17 Oct: all of 18 Oct to come
+        self.assertEqual(int(now["56407"]["forecast_hours"]), 23)  # 00:30 EDT on 18 Oct
+        self.assertEqual(len(payload), 120)
+        self.assertTrue(next((self.dir / "out").glob("*.csv")).stem.endswith("_for20261018"))
+
     def test_soil_fallback_and_site_map(self):
         site_map = self.dir / "map.csv"
         site_map.write_text("id,eia_plant_id\n" + "\n".join(f"00000000-0000-0000-0000-{i:012d},{s.eia_plant_id}"

@@ -4,6 +4,25 @@ One calibrated model per hazard family predicts the probability that NOAA Storm 
 
 Brief: `docs/PROJECT_BRIEF.md`. Results: `notebooks/results.ipynb` and `artifacts/models/<version>/metrics.json`.
 
+**Where the model lives.** The trained model is `artifacts/models/<model_version>/bundle.joblib` (about 0.7 MB: the four family models and their past-data-only twins, Platt calibrators, severity weights, the 0–10 map, per-plant monthly normals and drift ranges). `artifacts/models/latest.json` names the current version; `train.load_bundle()` loads it. It runs only on this machine; nothing is deployed to Supabase.
+
+## Quick start: `run.sh`
+
+`run.sh` wraps the scripts below and works from any directory (`./run.sh help` for all options):
+
+```sh
+models/hazard-index/run.sh                          # live scores for today and tomorrow (~220 Open-Meteo calls)
+models/hazard-index/run.sh replay 2024-08-14 56407  # a past day from the ERA5 cache, offline
+models/hazard-index/run.sh rescore 20261018T001527Z # saved live responses with the current model, offline
+models/hazard-index/run.sh score --date 2026-10-18  # same date for every plant (default: each plant's local today)
+models/hazard-index/run.sh status                   # download coverage, current model, test metrics, latest scores
+models/hazard-index/run.sh fetch 5000               # download what is missing (exit 3 = daily quota; run again after 00:00 UTC)
+models/hazard-index/run.sh train                    # build_dataset -> compute_severity -> train -> evaluate
+models/hazard-index/run.sh all                      # fetch -> train -> score
+models/hazard-index/run.sh test                     # unit tests
+models/hazard-index/run.sh notebook                 # re-execute notebooks/results.ipynb
+```
+
 ## Run order
 
 Run from anywhere; every script finds its files relative to `models/hazard-index/`. Use the repository venv (`.venv/bin/python`, Python 3.11) after `pip install -r requirements.txt`.
@@ -59,6 +78,23 @@ artifacts/                small committed results: sites_nws.json, labels_report
 **0–10 map** (`hazidx/tiermap.py`). Median out-of-fold `R` for each daily rule maximum seen on at least 50 training days, kept only while increasing, joined by straight lines from (0, 0) and extended to 10; fixed fallback points if fewer than 3 pairs survive or none reaches 7.5.
 
 **Dry-run** (`dryrun.py`). One forecast request for all 60 plants (default model, 31 past days, 3 forecast days) plus the ECMWF endpoint for the 0–7 and 7–28 cm soil layers the archive has. `forecast_hours` counts the target-day hours still to come; `drift_flags` lists inputs outside the 0.5–99.5 percentile range of the training data; `rule_max_fc` is the highest heat/gust/rain/soil rule from the same forecast and `risk_preview = max(score, rule_max_fc)` (no crew term, NWS alerts, gauges, lightning or fire distance).
+
+## Results (Version 1, `hazidx-0.1.0+2018-2022.23ed6848`)
+
+Training years 2018–2022 (2018: 59 of 60 plants), 2023 for settings only, test years 2024–2025 (43,800 plant-days). Full tables and figures: `notebooks/results.ipynb`, `artifacts/models/<version>/metrics.json`.
+
+| Family | Test events | PR-AUC model | past-data only | climatology | rule | ROC-AUC model | rule | Brier skill (vs climatology) | Weight s |
+|---|---|---|---|---|---|---|---|---|---|
+| heat | 327 | 0.291 | 0.102 | 0.175 | 0.150 | 0.957 | 0.930 | 0.104 | 1.00 |
+| storm | 599 | 0.145 | 0.024 | 0.038 | 0.027 | 0.908 | 0.617 | 0.065 | 0.83 |
+| flood | 488 | 0.088 | 0.069 | 0.058 | 0.052 | 0.858 | 0.718 | 0.030 | 0.75 |
+| fire | 196 | 0.063 | 0.048 | 0.177 | – | 0.863 | – | −0.093 | 0.86 |
+
+- Heat, storm and flood meet acceptance criterion 3; fire does not (its records cluster at a few plants, and climatology knows the plant while the model may not).
+- Combined index: ROC-AUC for "any event" 0.830 against 0.733 for the rule maximum. On the 7,862 days when the index is more than 2 points above the rule maximum, events happen on 8.7% of days, against 1.7% on other days at the same rule tier.
+- Skill mostly needs the same-day forecast; flood keeps the most from past data alone (forecast-dependent share 0.62).
+- West County Energy Center replays: 14 Aug 2024 scores 4.7 (heat) under the heat rule's 7.5, so live risk stays 7.5; 9 Aug 2024 scores 7.3 (storm) above the rule maximum of 5.0.
+- Not yet done: training years 2015–2017 (about 4,700 weighted calls: `fetch_weather.py run --budget 5000` after 00:00 UTC) and the Version 2 retrain (`build_dataset.py`, `train.py`, `evaluate.py`, `dryrun.py`); Open-Meteo's daily counter resets at 00:00 UTC.
 
 ## Limitations
 
