@@ -17,6 +17,12 @@ import styles from "./MapCanvas.module.css";
 
 const sizes: Record<Severity, number> = { 1: 26, 2: 30, 3: 34 };
 
+/** Reports just sent from this device: their marker drops in once, when first drawn. */
+const dropIns = new Set<string>();
+export function markForDropIn(reportId: string) {
+  dropIns.add(reportId);
+}
+
 /**
  * DOM for a hazard marker: the report type's gray line icon on a white disc, sized by
  * severity, with the severity shape as a corner badge (shape + colour, never colour alone).
@@ -29,6 +35,7 @@ export function hazardMarkerElement(report: Report): HTMLElement {
   element.className = `${styles.hazard} hazard-marker`;
   element.dataset.hazardId = report.id;
   element.dataset.severity = String(severity);
+  if (dropIns.delete(report.id)) element.classList.add(styles.dropIn);
   element.style.setProperty("--size", `${size}px`);
   element.innerHTML = `${iconMarkup(report.type, Math.round(size * 0.58))}<span class="${styles.hazardBadge}">${severityMarkup(severity, 13, true)}</span>`;
   return element;

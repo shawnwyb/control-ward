@@ -34,7 +34,7 @@ export function SitesPage({
   lightning,
   onSelectSite,
   renderMap,
-  children,
+  mapOverlay,
 }: {
   site: Site;
   reports: Report[];
@@ -45,8 +45,8 @@ export function SitesPage({
   onSelectSite: (siteId: string) => void;
   /** The map, given every site's summary for the pins. */
   renderMap: (sites: SiteSummary[]) => ReactNode;
-  /** Under the detail (the report form, until it moves into a drawer). */
-  children?: ReactNode;
+  /** Floats over the map pane (the report button and drawer). */
+  mapOverlay?: ReactNode;
 }) {
   const { announce } = useNotice();
   const onError = useCallback((m: string) => announce(m, true), [announce]);
@@ -77,6 +77,7 @@ export function SitesPage({
         {/* Not part of the map: the stop-work signal must show even if the map cannot load. */}
         <StopWorkBanner siteName={site.name} lightning={lightning} />
         <div className={styles.mapSlot}>{renderMap(overview.sites)}</div>
+        {mapOverlay}
       </div>
       <div className={styles.detail}>
         <SiteDetail
@@ -86,7 +87,6 @@ export function SitesPage({
           openHazards={reports.filter((r) => r.is_active).length}
           crewTerm={crewTerm}
         />
-        {children}
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ErrorBoundary } from "../../components/ErrorBoundary";
 import { Panel } from "../../components/ui";
 import { useBusy } from "../../hooks/busy";
@@ -18,10 +18,15 @@ import {
 import { homeFor, type Page } from "../../lib/route";
 import { checkinRequestId, completeCheckin } from "../../lib/submission";
 import type { SiteSummary } from "../../lib/sites";
-import type { Site } from "../../lib/types";
+import type { MutationResult, Site } from "../../lib/types";
 import { SiteMap } from "../map/SiteMap";
 import { SitesPage } from "../sites/SitesPage";
-import { ReportForm } from "../report/ReportForm";
+import { markForDropIn } from "../map/markers";
+import {
+  ReportButton,
+  ReportDrawer,
+  type Locating,
+} from "../report/ReportDrawer";
 import type { ReportDraft } from "../report/types";
 import { useReportSubmit } from "../report/useReportSubmit";
 import {
@@ -117,6 +122,13 @@ export function SiteWorkspace({
       patch({ latitude: latitude.toFixed(6), longitude: longitude.toFixed(6) }),
     [patch],
   );
+  // The report drawer (and the map pin it places) is open only on request; location is asked then.
+  const [reportOpen, setReportOpen] = useState(false);
+  const [locating, setLocating] = useState<Locating>("idle");
+  const [accuracyFt, setAccuracyFt] = useState<number>();
+  const reportButton = useRef<HTMLButtonElement>(null);
+  // Bumped whenever a pending location answer should be ignored (closed, pin moved, site changed).
+  const locateToken = useRef(0);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [focusRequest, setFocusRequest] = useState<{
     id: string;
@@ -127,29 +139,71 @@ export function SiteWorkspace({
   if (stateSite !== site.id) {
     setStateSite(site.id);
     setDraft(freshDraft(site));
+    setReportOpen(false);
+    setLocating("idle");
+    setAccuracyFt(undefined);
     setSelectedCrew(new Set());
     setCrewFocus(undefined);
     setHoveredId(null);
     setFocusRequest(undefined);
   }
-  const clearFile = useCallback(() => patch({ file: undefined }), [patch]);
-  const submit = useReportSubmit(site, feed.refresh, clearFile);
+  useEffect(() => {
+    locateToken.current++;
+  }, [site.id]);
+  // Focus goes back to the button once it is usable again (it is inert while the drawer is open).
+  const returnFocus = useRef(false);
+  useEffect(() => {
+    if (reportOpen || !returnFocus.current) return;
+    returnFocus.current = false;
+    reportButton.current?.focus();
+  }, [reportOpen]);
+  const onSaved = useCallback(
+    (response: MutationResult) => {
+      patch({ file: undefined });
+      locateToken.current++;
+      setReportOpen(false);
+      returnFocus.current = true;
+      if (response.outcome === "created") markForDropIn(response.report.id);
+    },
+    [patch],
+  );
+  const submit = useReportSubmit(site, feed.refresh, onSaved);
 
-  function locate() {
-    if (!navigator.geolocation)
-      return announce(
-        "Location is unavailable. Select a pin on the map.",
-        true,
-      );
+  /** Opens the drawer and pins the report at the user's location, or at the site center. */
+  function openReport() {
+    const token = ++locateToken.current;
+    const toCenter = () => {
+      setPin(site.latitude, site.longitude);
+      setAccuracyFt(undefined);
+      setLocating("denied");
+    };
+    setReportOpen(true);
+    if (!navigator.geolocation) return toCenter();
+    setLocating("pending");
     navigator.geolocation.getCurrentPosition(
-      (position) => setPin(position.coords.latitude, position.coords.longitude),
-      () =>
-        announce(
-          "Could not access your location. Select a pin on the map or enter coordinates.",
-          true,
-        ),
+      (position) => {
+        if (token !== locateToken.current) return;
+        setPin(position.coords.latitude, position.coords.longitude);
+        setAccuracyFt(Math.round(position.coords.accuracy * 3.28084));
+        setLocating("idle");
+      },
+      () => {
+        if (token === locateToken.current) toCenter();
+      },
       { timeout: 10000 },
     );
+  }
+  const closeReport = useCallback(() => {
+    locateToken.current++;
+    setReportOpen(false);
+    returnFocus.current = true;
+  }, []);
+  /** A map click or arrow key places the pin by hand, which also drops a pending location answer. */
+  function placePin(latitude: number, longitude: number) {
+    locateToken.current++;
+    setAccuracyFt(undefined);
+    setLocating((current) => (current === "pending" ? "idle" : current));
+    setPin(latitude, longitude);
   }
 
   async function checkin(reportId: string, stillThere: boolean) {
@@ -173,31 +227,41 @@ export function SiteWorkspace({
     }
   }
 
-  const reportForm = (className?: string) => (
-    <ReportForm
-      className={className}
-      draft={draft}
-      busy={busy}
-      onChange={patch}
-      onSubmit={() => submit(draft)}
-      onLocate={locate}
-    />
+  /** The floating button and drawer, placed inside the map pane (which is position: relative). */
+  const reportLayer = (
+    <>
+      <ReportButton
+        ref={reportButton}
+        hidden={reportOpen}
+        onClick={openReport}
+      />
+      <ReportDrawer
+        open={reportOpen}
+        site={site}
+        draft={draft}
+        busy={busy}
+        locating={locating}
+        accuracyFt={accuracyFt}
+        onChange={patch}
+        onSubmit={() => submit(draft)}
+        onClose={closeReport}
+      />
+    </>
   );
 
   const siteMap = (overview?: { sites: SiteSummary[] }) => (
     <ErrorBoundary
       fallback={
-        <Panel className={styles.map}>
+        <Panel>
           <h2>The map couldn’t load</h2>
           <p>
-            You can still report hazards: use “Use my location” or enter
-            coordinates. Reload the page to try the map again.
+            You can still report hazards with “Report hazard”. Reload the page
+            to try the map again.
           </p>
         </Panel>
       }
     >
       <SiteMap
-        className={styles.map}
         site={site}
         reports={feed.reports}
         crew={supervisor ? roster.crew : undefined}
@@ -206,6 +270,7 @@ export function SiteWorkspace({
           latitude: Number(draft.latitude),
           longitude: Number(draft.longitude),
         }}
+        pinActive={reportOpen}
         disabled={busy}
         highlightId={hoveredId}
         focusRequest={focusRequest}
@@ -214,15 +279,15 @@ export function SiteWorkspace({
         stopWork={lightning.data.status === "stop_work"}
         fitStopWork={overview !== undefined}
         variant={overview ? "fill" : "card"}
-        onPin={setPin}
+        onPin={placePin}
       />
     </ErrorBoundary>
   );
 
-  const mapAndForm = () => (
-    <div className={styles.grid}>
-      {reportForm(styles.form)}
+  const mapWithReport = () => (
+    <div className={styles.mapWrap}>
       {siteMap()}
+      {reportLayer}
     </div>
   );
 
@@ -242,13 +307,11 @@ export function SiteWorkspace({
             lightning={lightning.data}
             onSelectSite={onSiteChange}
             renderMap={(sites) => siteMap({ sites })}
-          >
-            {/* Until the report drawer replaces it. */}
-            {reportForm()}
-          </SitesPage>
+            mapOverlay={reportLayer}
+          />
         ) : null}
         {page === "site" ? (
-          <MySitePage {...base}>{mapAndForm()}</MySitePage>
+          <MySitePage {...base}>{mapWithReport()}</MySitePage>
         ) : null}
         {page === "alerts" ? (
           <AlertsPage {...base} alerts={alerts} lightning={lightning} />

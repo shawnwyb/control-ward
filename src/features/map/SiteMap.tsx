@@ -78,6 +78,8 @@ type Props = {
   crew?: CrewMember[];
   crewFocus?: { id: string; nonce: number };
   pin: { latitude: number; longitude: number };
+  /** Show and allow moving the report pin (while the report drawer is open). */
+  pinActive: boolean;
   disabled: boolean;
   className?: string;
   highlightId?: string | null;
@@ -149,6 +151,7 @@ export function SiteMap({
   crew,
   crewFocus,
   pin,
+  pinActive,
   disabled,
   className,
   highlightId,
@@ -338,7 +341,8 @@ export function SiteMap({
         </li>
       ) : null}
       <li className={`${styles.note} ${styles.keyboardHint}`}>
-        With the map focused, arrow keys move the pin (Shift for 100 m).
+        While reporting, arrow keys on the focused map move the pin (Shift for
+        100 m).
       </li>
     </ul>
   );
@@ -359,8 +363,8 @@ export function SiteMap({
       )}
       {unavailable ? (
         <div className={styles.placeholder}>
-          The map isn’t available on this device. Use “Use my location” or enter
-          coordinates.
+          The map isn’t available on this device. You can still send a report
+          from your location with “Report hazard”.
         </div>
       ) : (
         <div className={cx(styles.stage, fill && styles.stageFill)}>
@@ -373,6 +377,7 @@ export function SiteMap({
               crew={crew}
               crewFocus={crewFocus}
               pin={pin}
+              pinActive={pinActive}
               disabled={disabled}
               highlightId={highlightId}
               focusRequest={focusRequest}

@@ -92,9 +92,10 @@ test("reports: Mine narrows the list to the signed-in user's reports", async ({
   const before = await cards.count();
   expect(before).toBeGreaterThan(1);
   await go(page, "My site");
+  await page.getByRole("button", { name: "Report hazard" }).click();
   await page.getByRole("radio", { name: /Wildlife/ }).check();
-  await page.getByRole("button", { name: "Submit hazard report" }).click();
-  await expect(page.getByRole("status")).toContainText("Hazard reported");
+  await page.getByRole("button", { name: "Send report" }).click();
+  await expect(page.getByRole("status")).toContainText("Report sent");
   await go(page, "Reports");
   await expect(cards).toHaveCount(before + 1);
   await page.getByLabel("Mine").check();
@@ -360,8 +361,9 @@ test("map: site pins and fly-to", async ({ page }) => {
   ).toBeAttached();
 
   const canvas = await page.locator(".maplibregl-map").elementHandle();
-  // A moved report pin belongs to this site only.
-  await page.locator("#latitude").fill("29.6600");
+  // A report draft belongs to this site only.
+  await page.getByRole("button", { name: "Report hazard" }).click();
+  await page.getByRole("radio", { name: /Wildlife/ }).check();
   // The other plant is a few km away: zoom out until its pin is on screen.
   const south = map.getByRole("button", {
     name: "South Plant · Demo, hazard index 8.6",
@@ -373,8 +375,12 @@ test("map: site pins and fly-to", async ({ page }) => {
   await south.click();
   await expect(page.locator("#site")).toHaveValue("site-south");
   await expect(south).toHaveAttribute("aria-current", "true");
-  // Per-site state still resets without a remount: the draft starts at the new site.
-  await expect(page.locator("#latitude")).toHaveValue("29.629600");
+  // Per-site state still resets without a remount: the drawer closes and the draft starts clean.
+  await expect(
+    page.getByRole("dialog", { name: "Report a hazard" }),
+  ).toBeHidden();
+  await page.getByRole("button", { name: "Report hazard" }).click();
+  await expect(page.getByRole("radio", { name: /Debris/ })).toBeChecked();
   // Same map element: the site switch flew the map instead of remounting it.
   expect(await canvas!.evaluate((node) => node.isConnected)).toBe(true);
   await expect(page.locator(".maplibregl-map")).toHaveCount(1);
@@ -627,4 +633,161 @@ test("sites: the map legend closes on Escape and outside click", async ({
   await expect(text).toBeVisible();
   await page.getByRole("heading", { name: "Sites", level: 1 }).click();
   await expect(text).toBeHidden();
+});
+
+// A 1x1 PNG.
+const tinyPng = Buffer.from(
+  "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==",
+  "base64",
+);
+
+test("report: drawer sends with location", async ({ page, context }) => {
+  await context.grantPermissions(["geolocation"]);
+  await context.setGeolocation({
+    latitude: 29.652,
+    longitude: -82.325,
+    accuracy: 30,
+  });
+  await signIn(page, "supervisor@planit.local");
+  const open = page.getByRole("button", { name: "Report hazard" });
+  const drawer = page.getByRole("dialog", { name: "Report a hazard" });
+  await expect(drawer).toBeHidden();
+  await open.click();
+  await expect(drawer).toBeVisible();
+  await expect(
+    drawer.getByText(/Pinned at your location · ±\d+ ft/),
+  ).toBeVisible();
+  await drawer.getByRole("radio", { name: /Wildlife/ }).check();
+  await drawer.getByRole("radio", { name: /Moderate/ }).check();
+  await drawer.locator("#photo").setInputFiles({
+    name: "gator.png",
+    mimeType: "image/png",
+    buffer: tinyPng,
+  });
+  await expect(drawer.getByText("gator.png")).toBeVisible();
+  await drawer.getByRole("button", { name: "Send report" }).click();
+  await expect(page.getByRole("status")).toContainText("Report sent");
+  await expect(drawer).toBeHidden();
+  await expect(open).toBeFocused();
+  await expect(page.locator(".hazard-marker").first()).toBeAttached();
+});
+
+test("report: Esc and the close button close the drawer and focus returns", async ({
+  page,
+}) => {
+  await signIn(page, "supervisor@planit.local");
+  const open = page.getByRole("button", { name: "Report hazard" });
+  const drawer = page.getByRole("dialog", { name: "Report a hazard" });
+  await open.click();
+  await expect(drawer).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(drawer).toBeHidden();
+  await expect(open).toBeFocused();
+  await open.click();
+  await drawer.getByRole("button", { name: "Close" }).click();
+  await expect(drawer).toBeHidden();
+  await expect(open).toBeFocused();
+  // Focus stays inside while open.
+  await open.click();
+  for (let i = 0; i < 25; i++) {
+    await page.keyboard.press("Tab");
+    expect(
+      await drawer.evaluate((node) => node.contains(document.activeElement)),
+    ).toBe(true);
+  }
+});
+
+test("report: location denied falls back to site center", async ({ page }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, "geolocation", {
+      value: {
+        getCurrentPosition: (_ok: unknown, fail: (e: unknown) => void) =>
+          setTimeout(() => fail({ code: 1, message: "denied" }), 0),
+      },
+    });
+  });
+  await signIn(page, "supervisor@planit.local");
+  await page.locator("#site").selectOption("site-north");
+  await page.getByRole("button", { name: "Report hazard" }).click();
+  const drawer = page.getByRole("dialog", { name: "Report a hazard" });
+  await expect(
+    drawer.getByText(
+      "Couldn't get your location. Click the map to place the pin.",
+    ),
+  ).toBeVisible();
+  // The mock lives in the page, so record what it is sent from there.
+  await page.evaluate(() => {
+    const w = window as unknown as { sent: Record<string, unknown>[] };
+    w.sent = [];
+    const real = window.fetch.bind(window);
+    window.fetch = (input, init) => {
+      if (String(input).includes("submit_hazard_report"))
+        w.sent.push(JSON.parse(String(init?.body)));
+      return real(input, init);
+    };
+  });
+  await drawer.getByRole("button", { name: "Send report" }).click();
+  await expect(page.getByRole("status")).toContainText(
+    /Report sent|Merged with a nearby hazard/,
+  );
+  await expect(drawer).toBeHidden();
+  const [body] = await page.evaluate(
+    () => (window as unknown as { sent: Record<string, unknown>[] }).sent,
+  );
+  expect(Number(body.p_lat)).toBeCloseTo(29.652, 3);
+  expect(Number(body.p_lon)).toBeCloseTo(-82.325, 3);
+});
+
+test("report: switching site closes drawer and discards photo", async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, "geolocation", {
+      value: {
+        getCurrentPosition: (_ok: unknown, fail: (e: unknown) => void) =>
+          setTimeout(() => fail({ code: 1, message: "denied" }), 0),
+      },
+    });
+  });
+  // ?fail makes the mock reject the send after the photo uploaded, so the photo waits to be discarded.
+  await signIn(page, "supervisor@planit.local", "?fail");
+  const drawer = page.getByRole("dialog", { name: "Report a hazard" });
+  await page.evaluate(() => {
+    const w = window as unknown as { deletes: string[] };
+    w.deletes = [];
+    const real = window.fetch.bind(window);
+    window.fetch = (input, init) => {
+      const method = (
+        init?.method ??
+        (input as Request).method ??
+        "GET"
+      ).toUpperCase();
+      if (method === "DELETE") w.deletes.push(String(input));
+      return real(input, init);
+    };
+  });
+  await page.getByRole("button", { name: "Report hazard" }).click();
+  await drawer.getByRole("radio", { name: /Wildlife/ }).check();
+  await drawer.locator("#photo").setInputFiles({
+    name: "gator.png",
+    mimeType: "image/png",
+    buffer: tinyPng,
+  });
+  await drawer.getByRole("button", { name: "Send report" }).click();
+  await expect(page.getByRole("status")).toContainText("you can retry");
+  await expect(drawer).toBeVisible();
+  await page.locator("#site").selectOption("site-south");
+  await expect
+    .poll(() =>
+      page.evaluate(() =>
+        (window as unknown as { deletes: string[] }).deletes.some((url) =>
+          url.includes("/storage/"),
+        ),
+      ),
+    )
+    .toBe(true);
+  await expect(drawer).toBeHidden();
+  await page.getByRole("button", { name: "Report hazard" }).click();
+  await expect(drawer.getByText("gator.png")).toHaveCount(0);
+  await expect(drawer.getByRole("radio", { name: /Debris/ })).toBeChecked();
 });

@@ -45,6 +45,8 @@ export type MapCanvasProps = {
   /** Pan to a worker and open their card. */
   crewFocus?: { id: string; nonce: number };
   pin: { latitude: number; longitude: number };
+  /** The report pin is shown and movable only while a report is being placed. */
+  pinActive: boolean;
   disabled: boolean;
   /** Hazard linked to a hovered feed row: ringed on the map with its card open. */
   highlightId?: string | null;
@@ -98,6 +100,7 @@ export default function MapCanvas({
   crew,
   crewFocus,
   pin,
+  pinActive,
   disabled,
   highlightId,
   focusRequest,
@@ -131,6 +134,7 @@ export default function MapCanvas({
   const pendingHazard = useRef<string | null>(null);
   // Handlers read the latest props without re-creating the map.
   const latest = useRef({
+    pinActive,
     disabled,
     onPin,
     pin,
@@ -141,6 +145,7 @@ export default function MapCanvas({
   });
   useEffect(() => {
     latest.current = {
+      pinActive,
       disabled,
       onPin,
       pin,
@@ -325,7 +330,7 @@ export default function MapCanvas({
     instance.on("click", (event) => {
       // A tap on the map first dismisses an open card (touch has no hover).
       if (openCard.current) return hideCard();
-      if (latest.current.disabled) return;
+      if (latest.current.disabled || !latest.current.pinActive) return;
       latest.current.onPin(event.lngLat.lat, event.lngLat.lng);
     });
 
@@ -419,15 +424,19 @@ export default function MapCanvas({
     if (!Number.isFinite(pin.latitude) || !Number.isFinite(pin.longitude))
       return;
     marker.setLngLat([pin.longitude, pin.latitude]);
-    marker.setDraggable(!disabled);
+    marker.setDraggable(!disabled && pinActive);
+    marker.getElement().style.display = pinActive ? "" : "none";
     // A site switch resets the pin to the new site; the fly-to already brings it into view.
     if (pinSite.current !== site.id) {
       pinSite.current = site.id;
       return;
     }
-    if (!instance.getBounds().contains([pin.longitude, pin.latitude]))
+    if (
+      pinActive &&
+      !instance.getBounds().contains([pin.longitude, pin.latitude])
+    )
       instance.easeTo({ center: [pin.longitude, pin.latitude] });
-  }, [pin.latitude, pin.longitude, disabled, site.id]);
+  }, [pin.latitude, pin.longitude, pinActive, disabled, site.id]);
 
   // Score pins for every site; clicking one selects that site.
   useEffect(() => {
@@ -710,7 +719,7 @@ export default function MapCanvas({
     if (event.key === "Escape") return hideCard();
     // Arrow keys move the pin only while the map itself has focus (not a site pin).
     if (event.target !== event.currentTarget) return;
-    if (disabled || !arrowKeys.includes(event.key)) return;
+    if (disabled || !pinActive || !arrowKeys.includes(event.key)) return;
     event.preventDefault();
     const distance = event.shiftKey ? 100 : 10;
     const north =

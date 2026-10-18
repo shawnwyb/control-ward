@@ -67,6 +67,24 @@
     0 2px 6px rgba(15, 15, 15, 0.22);
 }
 
+/* A report you just sent lands on the map with a small bounce. */
+.dropIn {
+  animation: drop-in 0.5s var(--ease-spring);
+}
+
+@keyframes drop-in {
+  from {
+    opacity: 0;
+    translate: 0 -28px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dropIn {
+    animation: none;
+  }
+}
+
 .hazardBadge {
   position: absolute;
   right: -5px;

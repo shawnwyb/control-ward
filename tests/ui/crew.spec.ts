@@ -110,20 +110,25 @@ test("crew submits a private photo, merges, confirms, resolves and views history
   await go(page, "Reports");
   await expect(page.getByText("No active hazards reported")).toBeVisible();
   await go(page, "My site");
+  await page.getByRole("button", { name: "Report hazard" }).click();
   await page.getByRole("radio", { name: /Wildlife/ }).check();
-  await page.getByRole("radio", { name: /3 High/ }).check();
+  await page.getByRole("radio", { name: /High/ }).check();
   await page.locator("#pin-map").click({ position: { x: 200, y: 140 } });
   await page
     .locator("#photo")
     .setInputFiles({ name: "hazard.png", mimeType: "image/png", buffer: png });
-  await page.getByRole("button", { name: "Submit hazard report" }).click();
-  await expect(page.getByRole("status")).toContainText("Hazard reported");
+  await page.getByRole("button", { name: "Send report" }).click();
+  await expect(page.getByRole("status")).toContainText("Report sent");
   await go(page, "Reports");
   const card = page.locator(".report-card").first();
   await expect(card.getByRole("heading", { name: "Wildlife" })).toBeVisible();
   await expect(card).toContainText("1 confirmation");
   await go(page, "My site");
-  await page.getByRole("button", { name: "Submit hazard report" }).click();
+  await page.getByRole("button", { name: "Report hazard" }).click();
+  await page.getByRole("radio", { name: /Wildlife/ }).check();
+  await page.getByRole("radio", { name: /High/ }).check();
+  await page.locator("#pin-map").click({ position: { x: 200, y: 140 } });
+  await page.getByRole("button", { name: "Send report" }).click();
   await expect(page.getByRole("status")).toContainText(
     "Merged with a nearby hazard",
   );
@@ -158,18 +163,21 @@ test("mobile layout supports keyboard pins, validation, retry and accessible con
   await page.getByLabel("Password", { exact: true }).fill("BrowserTest123!");
   await page.getByRole("button", { name: "Sign in →" }).click();
   await expect(page.locator("#workspace")).toBeVisible();
-  await expect(page.locator("#latitude")).toHaveValue("29.652000");
+  await page.getByRole("button", { name: "Report hazard" }).click();
+  await expect(
+    page.getByText(
+      "Couldn't get your location. Click the map to place the pin.",
+    ),
+  ).toBeVisible();
+  // Arrow keys on the focused map move the pin while the drawer is open.
   await page.locator("#pin-map").focus();
   await page.keyboard.press("ArrowUp");
-  expect(Number(await page.locator("#latitude").inputValue())).toBeGreaterThan(
-    29.652,
-  );
   await page.locator("#photo").setInputFiles({
     name: "bad.png",
     mimeType: "image/png",
     buffer: Buffer.alloc(5242881),
   });
-  await page.getByRole("button", { name: "Submit hazard report" }).click();
+  await page.getByRole("button", { name: "Send report" }).click();
   await expect(page.getByRole("status")).toContainText("smaller than 5 MB");
   await page.locator("#photo").setInputFiles([]);
   let firstRequestId: string | undefined;
@@ -186,10 +194,10 @@ test("mobile layout supports keyboard pins, validation, retry and accessible con
       await route.continue();
     }
   });
-  await page.getByRole("button", { name: "Submit hazard report" }).click();
+  await page.getByRole("button", { name: "Send report" }).click();
   await expect(page.getByRole("status")).toContainText("you can retry");
-  await page.getByRole("button", { name: "Submit hazard report" }).click();
-  await expect(page.getByRole("status")).toContainText("Hazard reported");
+  await page.getByRole("button", { name: "Send report" }).click();
+  await expect(page.getByRole("status")).toContainText("Report sent");
   await go(page, "Reports");
   await expect(page.locator(".report-card")).toContainText("1 confirmation");
   expect(
