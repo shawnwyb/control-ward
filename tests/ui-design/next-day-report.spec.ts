@@ -15,7 +15,10 @@ async function openReport(page: Page, siteName = "Turkey Point · Report demo") 
   if (!(await nav.isVisible()))
     await page.getByRole("button", { name: /Menu/ }).click();
   await page.locator("#site").selectOption({ label: siteName });
-  await go(page, "Next-day report");
+  await go(page, "Daily safety");
+  await page
+    .getByText("View detailed forecast & sources", { exact: true })
+    .click();
 }
 
 test("shows the verdict, heat timeline, map, flood and gaps for a site with a report", async ({
@@ -96,7 +99,9 @@ test("a site with no report file says how to build one", async ({ page }) => {
   );
   await openReport(page);
   await expect(page.getByText("No report yet")).toBeVisible();
-  await expect(page.getByText("run.sh build --site 621")).toBeVisible();
+  await expect(
+    page.getByText("No detailed forecast has been published", { exact: false }),
+  ).toBeVisible();
 });
 
 test("a report in a newer format is refused with a clear message", async ({
@@ -115,7 +120,11 @@ test("a site without an EIA plant id explains why there is no report", async ({
   page,
 }) => {
   await openReport(page, "North Plant · Demo");
-  await expect(page.getByText("no EIA plant id")).toBeVisible();
+  await expect(
+    page.getByText("A detailed forecast is not available for this site.", {
+      exact: false,
+    }),
+  ).toBeVisible();
 });
 
 test("a missing forecast leaves the rest of the report readable", async ({

@@ -15,18 +15,16 @@ type Item = { page: Page; label: string; icon: IconName };
 const supervisorItems: Item[] = [
   { page: "sites", label: "Sites", icon: "tower" },
   { page: "alerts", label: "Alerts", icon: "bell" },
-  { page: "briefing", label: "Next-day briefing", icon: "brief" },
+  { page: "daily-safety", label: "Daily safety", icon: "brief" },
   { page: "crew", label: "Crew", icon: "paw" },
   { page: "reports", label: "Reports", icon: "camera" },
-  { page: "next-day-report", label: "Next-day report", icon: "brief" },
 ];
 
 const crewItems: Item[] = [
   { page: "site", label: "My site", icon: "tower" },
   { page: "alerts", label: "Alerts", icon: "bell" },
-  { page: "briefing", label: "Tomorrow's briefing", icon: "brief" },
+  { page: "daily-safety", label: "Daily safety", icon: "brief" },
   { page: "reports", label: "Reports", icon: "camera" },
-  { page: "next-day-report", label: "Next-day report", icon: "brief" },
 ];
 
 type Props = {

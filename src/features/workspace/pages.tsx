@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { ErrorBoundary } from "../../components/ErrorBoundary";
+import { NextDayReport } from "../nextday/NextDayReport";
 import {
   type AlertRow,
   type CrewMember,
@@ -69,18 +71,46 @@ export function AlertsPage({
   );
 }
 
-export function BriefingPage({ site, role }: Base) {
+export function DailySafetyPage({ site, role }: Base) {
+  const [reportOpened, setReportOpened] = useState(
+    () => window.location.hash === "#/next-day-report",
+  );
   const supervisor = role === "supervisor";
   return (
     <div className={dashboard.stack}>
-      <PageTitle
-        title={supervisor ? "Next-day briefing" : "Tomorrow's briefing"}
-        icon="brief"
-        hint={site.name}
-      />
-      {supervisor ? <BriefingPanel siteId={site.id} /> : null}
-      {supervisor ? null : <CrewPlanCard siteId={site.id} />}
+      <PageTitle title="Daily safety" icon="brief" hint={site.name} />
       <SafetyPanel site={site} role={role} />
+      {supervisor ? (
+        <BriefingPanel siteId={site.id} />
+      ) : (
+        <CrewPlanCard siteId={site.id} />
+      )}
+      <details
+        className={styles.forecast}
+        open={reportOpened || undefined}
+        onToggle={(event) => setReportOpened(event.currentTarget.open)}
+      >
+        <summary>View detailed forecast &amp; sources</summary>
+        {reportOpened ? (
+          <div className={styles.forecastBody}>
+            <p className={styles.hint}>
+              Check the dates: this forecast may cover a different day from the
+              checklist or work plan. Its data gaps and freshness are shown
+              below.
+            </p>
+            <ErrorBoundary
+              fallback={
+                <p role="alert">
+                  The detailed forecast could not load. Reload the page to try
+                  again.
+                </p>
+              }
+            >
+              <NextDayReport site={site} />
+            </ErrorBoundary>
+          </div>
+        ) : null}
+      </details>
     </div>
   );
 }

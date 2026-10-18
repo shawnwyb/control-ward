@@ -52,7 +52,7 @@ test("plan draft generates, shows blocked hours and can be approved", async ({
   page,
 }) => {
   await signIn(page, "supervisor@planit.local");
-  await go(page, "Next-day briefing");
+  await go(page, "Daily safety");
   await page.getByRole("button", { name: "Draft now" }).click();
   await expect(page.locator("#briefing-plan")).toBeVisible({ timeout: 15000 });
   await expect(page.getByText(/Blocked hours: 13:00 to 16:00/)).toBeVisible();

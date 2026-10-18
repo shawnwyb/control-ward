@@ -18,9 +18,16 @@ test("crew retains access to the full next-day report through the sidebar", asyn
   page,
 }) => {
   await signIn(page, "crew@planit.local");
-  await go(page, "Next-day report");
-  await expect(page).toHaveURL(/#\/next-day-report$/);
-  await expect(page.getByText("no EIA plant id")).toBeVisible();
+  await go(page, "Daily safety");
+  await page
+    .getByText("View detailed forecast & sources", { exact: true })
+    .click();
+  await expect(page).toHaveURL(/#\/daily-safety$/);
+  await expect(
+    page.getByText("A detailed forecast is not available for this site.", {
+      exact: false,
+    }),
+  ).toBeVisible();
   await expect(
     page
       .getByRole("navigation", { name: "Pages" })
