@@ -29,7 +29,18 @@ export async function runWorker({
       body: JSON.stringify(body),
       signal,
     });
-    if (!response.ok) throw new Error(`server_http_${response.status}`);
+    if (!response.ok) {
+      let category;
+      if (path.startsWith("/functions/")) {
+        try {
+          const body = await response.json();
+          if (/^[a-z_0-9]{1,80}$/.test(body.error)) category = body.error;
+        } catch {
+          /* status fallback */
+        }
+      }
+      throw new Error(category ?? `server_http_${response.status}`);
+    }
     const text = await response.text();
     return text ? JSON.parse(text) : null;
   };

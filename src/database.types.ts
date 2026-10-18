@@ -2194,6 +2194,10 @@ export type Database = {
         }
         Returns: Json
       }
+      settle_codeact_model_call: {
+        Args: { p_lease_token: string; p_run_id: string; p_tokens: number }
+        Returns: undefined
+      }
       stage_safety_source: {
         Args: {
           p_document: string

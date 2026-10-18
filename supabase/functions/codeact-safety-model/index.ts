@@ -55,8 +55,27 @@ Deno.serve(async (req) => {
       },
     );
     if (!reservation.ok) {
-      await reservation.body?.cancel();
-      return json({ error: "unauthorized_or_inactive_lease" }, 403);
+      let failure: { message?: string; code?: string } = {};
+      try {
+        failure = JSON.parse(
+          await readBounded(new Response(reservation.body), 5000),
+        );
+      } catch {
+        /* bounded diagnostics only */
+      }
+      const category = failure.message?.includes("Inactive CodeAct lease")
+        ? "inactive_codeact_lease"
+        : failure.message?.includes("CodeAct resource limit")
+          ? "resource_limit"
+          : failure.message?.includes("Invalid budget")
+            ? "invalid_budget"
+            : "broker_authorization_failed";
+      console.error(
+        "codeact-reservation",
+        reservation.status,
+        /^[A-Z0-9]{5}$/.test(failure.code ?? "") ? failure.code : "unknown",
+      );
+      return json({ error: category }, 403);
     }
     const snapshot = JSON.parse(
       await readBounded(reservation, 100000),
@@ -64,14 +83,32 @@ Deno.serve(async (req) => {
     const model = Deno.env.get("SAFETY_MODEL") ?? "";
     if (snapshot.model !== model)
       throw new Error("model_configuration_changed");
-    return json(
-      await geminiResearch(
-        Deno.env.get("GEMINI_API_KEY") ?? "",
-        model,
-        fetch,
-        "codeact",
-      ).ask(body.prompt, body.search, AbortSignal.timeout(80000)),
+    const result = await geminiResearch(
+      Deno.env.get("GEMINI_API_KEY") ?? "",
+      model,
+      fetch,
+      "codeact",
+    ).ask(body.prompt, body.search, AbortSignal.timeout(80000));
+    const settled = await fetch(
+      `${Deno.env.get("SUPABASE_URL")}/rest/v1/rpc/settle_codeact_model_call`,
+      {
+        method: "POST",
+        headers: {
+          authorization,
+          apikey: apiKey,
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          p_run_id: body.run_id,
+          p_lease_token: body.lease_token,
+          p_tokens: result.tokens,
+        }),
+        signal: AbortSignal.timeout(10000),
+      },
     );
+    await settled.body?.cancel();
+    if (!settled.ok) return json({ error: "resource_limit" }, 403);
+    return json(result);
   } catch (error) {
     // Raw provider/REST errors may contain confidential context. Keep them server-side.
     console.error(

@@ -59,6 +59,28 @@ test("CodeAct leases, broker budgets, private traces and expiring caches preserv
       /resource limit/,
     );
     await q("rollback to budget");
+    await q("select public.settle_codeact_model_call($1,$2,100)", [
+      codeactId,
+      codeact.lease_token,
+    ]);
+    assert.equal(
+      (
+        await q(
+          "select reserved_tokens,pending_tokens from private.safety_codeact_attempts where run_id=$1",
+          [codeactId],
+        )
+      )[0].reserved_tokens,
+      100,
+    );
+    await q("select public.reserve_codeact_model_call($1,$2,100,8)", [
+      codeactId,
+      codeact.lease_token,
+    ]);
+    await q("select public.settle_codeact_model_call($1,$2,100)", [
+      codeactId,
+      codeact.lease_token,
+    ]);
+
     await q(
       'select public.save_codeact_trace($1,$2,\'[{"type":"action","code":"print(1)"}]\')',
       [codeactId, codeact.lease_token],
