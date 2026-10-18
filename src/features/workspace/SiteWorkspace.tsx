@@ -276,7 +276,6 @@ export function SiteWorkspace({
         onSelectSite={sites ? onSiteChange : undefined}
         stopWork={lightning.data.status === "stop_work"}
         fitStopWork
-        variant="fill"
         onPin={placePin}
       />
     </ErrorBoundary>

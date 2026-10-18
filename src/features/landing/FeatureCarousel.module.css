@@ -33,11 +33,11 @@
   border-radius: 16px;
   background: var(--sidebar);
   padding: 14px;
-  transition: transform 0.3s var(--ease-out);
+  transition: transform 0.2s var(--ease-out);
 }
 
 .slide:hover {
-  transform: translateY(-3px);
+  transform: translateY(-2px);
 }
 
 .pic {

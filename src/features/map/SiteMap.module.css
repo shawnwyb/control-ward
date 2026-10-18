@@ -1,24 +1,29 @@
 .placeholder {
   display: grid;
   place-items: center;
-  aspect-ratio: 3 / 2;
-  min-height: 18rem;
+  height: 100%;
+  min-height: 12rem;
   padding: var(--space-4);
-  border: var(--rule-width) dashed var(--rule-strong);
-  background: var(--map-ground);
-  color: var(--ink-muted);
+  border: var(--rule-width) dashed var(--line-strong);
+  background: var(--fill);
+  color: var(--ink-2);
   text-align: center;
 }
 
+/* The legend is a small popover above its chip. */
 .legend {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
   gap: var(--space-2) var(--space-4);
-  margin: var(--space-3) 0 0;
-  padding: 0;
+  width: min(18rem, 80vw);
+  margin: 0;
+  padding: var(--space-3);
   list-style: none;
   font-size: var(--text-sm);
+  border-radius: var(--radius-card);
+  background: var(--bg);
+  box-shadow: var(--shadow-float);
 }
 
 .legend li {
@@ -28,15 +33,15 @@
 }
 
 .note {
-  color: var(--ink-muted);
+  color: var(--ink-2);
 }
 
 .pinSample {
   width: 0.875rem;
   height: 0.875rem;
   border-radius: 50%;
-  background: var(--brand);
-  box-shadow: 0 0 0 3px var(--brand-soft);
+  background: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
 }
 
 .crewSample {
@@ -46,23 +51,11 @@
   background: var(--ink);
 }
 
-@media (max-width: 40rem) {
-  .placeholder {
-    aspect-ratio: 4 / 3;
-    min-height: 20rem;
-  }
-}
-
 /* Keyboard hint only where a keyboard is likely. */
 @media (hover: none) {
   .keyboardHint {
     display: none;
   }
-}
-
-/* The map with its floating weather chips. */
-.stage {
-  position: relative;
 }
 
 .chips {
@@ -124,7 +117,7 @@
 }
 
 .chip:focus-visible {
-  outline: 2px solid var(--focus);
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
 
@@ -147,14 +140,22 @@
   border-radius: 50%;
 }
 
+/* The weather scrubber floats over the bottom of the map. */
 .weather {
+  position: absolute;
+  left: var(--space-3);
+  right: calc(var(--tap-min) + var(--space-5));
+  bottom: 4.75rem;
   display: grid;
   gap: var(--space-2);
-  margin-top: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-card);
+  background: var(--bg);
+  box-shadow: var(--shadow-float);
 }
 
 .weatherNote {
-  color: var(--ink-muted);
+  color: var(--ink-2);
   font-size: var(--text-sm);
 }
 
@@ -164,7 +165,7 @@
   align-items: center;
   gap: var(--space-2);
   font-size: var(--text-sm);
-  color: var(--ink-muted);
+  color: var(--ink-2);
 }
 
 .ramp {
@@ -177,8 +178,7 @@
   margin-left: auto;
 }
 
-/* variant="fill": edge to edge, with the weather scrubber and legend floating on the map. */
-.fillPanel {
+.panel {
   position: relative;
   height: 100%;
   min-height: 22rem;
@@ -186,21 +186,10 @@
   overflow: hidden;
 }
 
-.stageFill {
+/* The map with its floating weather chips. */
+.stage {
   position: absolute;
   inset: 0;
-}
-
-.weatherFloat {
-  position: absolute;
-  left: var(--space-3);
-  right: calc(var(--tap-min) + var(--space-5));
-  bottom: 4.75rem;
-  margin: 0;
-  padding: var(--space-2) var(--space-3);
-  border-radius: var(--radius-card);
-  background: var(--bg);
-  box-shadow: var(--shadow-float);
 }
 
 .legendBox {
@@ -210,17 +199,6 @@
   display: grid;
   gap: var(--space-2);
   justify-items: start;
-}
-
-.legendPop {
-  margin: 0;
-  padding: var(--space-3);
-  width: min(18rem, 80vw);
-  flex-direction: column;
-  align-items: flex-start;
-  border-radius: var(--radius-card);
-  background: var(--bg);
-  box-shadow: var(--shadow-float);
 }
 
 .legendBox [hidden] {

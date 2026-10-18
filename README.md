@@ -144,6 +144,8 @@ Edge Functions are not part of the local start script, so the live feeds run onl
 
 **Design-only mode (no Docker or Supabase):** `npm run dev:design` runs the UI against an in-browser mock backend with seeded demo data. Sign in with any demo account and `CrewDemo123!`. Add `?latency=1500` to slow responses or `?fail` to make writes fail, to design busy and error states. State resets on reload, and the mock is excluded from production builds.
 
+**The app:** the landing page is at `/`. Pages use hash routes such as `#/sites`, `#/alerts` and `#/site` (crew's My site), with the sidebar as navigation. `npm run test:frontend` runs the pure-logic tests (routes, ranking, countdowns, design tokens). The UI tests for the redesign run against the mock backend with `PLAYWRIGHT_MODE=design npx playwright test`.
+
 The site map uses MapLibre GL with the free OpenFreeMap "liberty" basemap (no API key; needs internet). Set `VITE_MAP_STYLE_URL` to use a different MapLibre style. If the basemap can't load, the map falls back to a plain ground with the site ring and hazard markers.
 
 **Weather overlays** (Off / Rain / Wind / Temp, with an hourly scrubber) are off by default and request nothing until you turn one on. Turning one on frames the whole forecast area (about 300 km) and restores your view when you turn it off.

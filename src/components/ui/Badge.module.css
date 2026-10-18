@@ -52,7 +52,8 @@
   font-weight: 600;
   line-height: 1.5;
   font-variant-numeric: tabular-nums;
-  white-space: nowrap;
+  /* Keeps the space before the band word now that the number is its own element. */
+  white-space: pre;
   transition:
     background-color var(--duration) var(--ease-out),
     color var(--duration) var(--ease-out);
@@ -76,4 +77,27 @@
 .index-none {
   background: var(--tag-gray-bg);
   color: var(--tag-gray-fg);
+}
+
+/* A changed value ticks in from just below. */
+.tick {
+  display: inline-block;
+  animation: tick var(--duration) var(--ease-out);
+}
+
+@keyframes tick {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .index {
+    transition: none;
+  }
+
+  .tick {
+    animation: none;
+  }
 }

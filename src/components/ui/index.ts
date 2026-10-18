@@ -8,7 +8,6 @@ export { Notice } from "./Notice";
 export { Panel, PanelHeader } from "./Panel";
 export { RadioCard } from "./RadioCard";
 export { Segmented } from "./Segmented";
-export { SeverityMark, severityMarkup, severityShape } from "./SeverityMark";
-export { Stat } from "./Stat";
+export { SeverityMark, severityMarkup } from "./SeverityMark";
 export { StatusDot } from "./StatusDot";
 export { TimeSlider } from "./TimeSlider";

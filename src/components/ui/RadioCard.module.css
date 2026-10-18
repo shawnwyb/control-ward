@@ -59,18 +59,18 @@
 }
 
 .card[data-tone="1"] .input:checked + .face {
-  border-color: var(--sev-1);
-  background: var(--sev-1-bg);
+  border-color: var(--severity-1);
+  background: var(--severity-1-bg);
 }
 
 .card[data-tone="2"] .input:checked + .face {
-  border-color: var(--sev-2);
-  background: var(--sev-2-bg);
+  border-color: var(--severity-2);
+  background: var(--severity-2-bg);
 }
 
 .card[data-tone="3"] .input:checked + .face {
-  border-color: var(--sev-3);
-  background: var(--sev-3-bg);
+  border-color: var(--severity-3);
+  background: var(--severity-3-bg);
 }
 
 .input:focus-visible + .face {

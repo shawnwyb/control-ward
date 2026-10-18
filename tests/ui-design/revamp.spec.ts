@@ -1048,3 +1048,49 @@ test("report: after denial, placing the pin by hand updates the hint", async ({
   await page.locator("#pin-map").click({ position: { x: 120, y: 200 } });
   await expect(drawer.getByText(/Pin placed on the map/)).toBeVisible();
 });
+
+const transformOf = (page: import("@playwright/test").Page) =>
+  page.evaluate(() => {
+    const card = document.querySelector("section li[class*='card']")!;
+    return getComputedStyle(card).transform;
+  });
+
+test("motion: landing cards lift 2px on hover", async ({ page }) => {
+  await page.goto("/");
+  const card = page.locator("section li[class*='card']").first();
+  await card.scrollIntoViewIfNeeded();
+  await card.hover();
+  await page.waitForTimeout(400);
+  expect(await transformOf(page)).toBe("matrix(1, 0, 0, 1, 0, -2)");
+});
+
+test("motion: reduced motion disables hover lift and animation", async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  const card = page.locator("section li[class*='card']").first();
+  await card.scrollIntoViewIfNeeded();
+  await card.hover();
+  await page.waitForTimeout(100);
+  expect(await transformOf(page)).toBe("none");
+});
+
+test("motion: reduced motion disables animation", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await signIn(page, "supervisor@planit.local");
+  await expect(page.getByRole("region", { name: "Sites" })).toBeVisible();
+  const long = await page.evaluate(() => {
+    const seconds = (v: string) =>
+      v.split(",").map((part) => parseFloat(part.trim()) || 0);
+    const bad: string[] = [];
+    for (const el of document.querySelectorAll("*")) {
+      const cs = getComputedStyle(el);
+      for (const prop of [cs.animationDuration, cs.transitionDuration])
+        if (seconds(prop).some((s) => s > 0.01))
+          bad.push(`${el.tagName}.${el.className}: ${prop}`);
+    }
+    return bad;
+  });
+  expect(long).toEqual([]);
+});

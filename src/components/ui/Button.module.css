@@ -58,14 +58,14 @@
 
 /* Only for confirming something that cannot be undone from the screen. */
 .danger {
-  background: var(--danger);
-  border-color: var(--danger);
+  background: var(--risk-high);
+  border-color: var(--risk-high);
   color: #fff;
 }
 
 .danger:not(:disabled):hover {
-  background: color-mix(in srgb, var(--danger) 82%, #000);
-  border-color: color-mix(in srgb, var(--danger) 82%, #000);
+  background: color-mix(in srgb, var(--risk-high) 82%, #000);
+  border-color: color-mix(in srgb, var(--risk-high) 82%, #000);
 }
 
 .secondary {

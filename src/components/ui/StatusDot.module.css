@@ -8,8 +8,8 @@
 }
 
 .live {
-  background: var(--ok);
-  border-color: var(--ok);
+  background: var(--risk-low);
+  border-color: var(--risk-low);
 }
 
 .pending {

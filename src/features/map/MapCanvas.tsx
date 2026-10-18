@@ -64,8 +64,6 @@ export type MapCanvasProps = {
   stopWork?: boolean;
   /** Frame the whole 10-mile ring once each time the site enters stop-work. */
   fitStopWork?: boolean;
-  /** Fill the container's height instead of the card's 3:2 box. */
-  fill?: boolean;
   onPin: (latitude: number, longitude: number) => void;
   onUnavailable: () => void;
 };
@@ -110,7 +108,6 @@ export default function MapCanvas({
   onSelectSite,
   stopWork = false,
   fitStopWork = false,
-  fill = false,
   onPin,
   onUnavailable,
 }: MapCanvasProps) {
@@ -807,7 +804,7 @@ export default function MapCanvas({
     <div
       ref={container}
       id="pin-map"
-      className={fill ? `${styles.map} ${styles.fill}` : styles.map}
+      className={styles.map}
       role="application"
       tabIndex={0}
       aria-label="Site pin map. Click to place a pin, or use arrow keys to move it."

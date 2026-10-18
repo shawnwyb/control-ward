@@ -8,11 +8,9 @@ import {
   useState,
 } from "react";
 import {
-  Badge,
   Button,
   Icon,
   Panel,
-  PanelHeader,
   SeverityMark,
   cx,
   TimeSlider,
@@ -91,11 +89,6 @@ type Props = {
   stopWork?: boolean;
   /** Frame the whole stop-work ring once per stop-work episode. */
   fitStopWork?: boolean;
-  /**
-   * "card" (default): titled panel with the legend below. "fill": the map fills its
-   * container edge to edge, with the legend in a small popover.
-   */
-  variant?: "card" | "fill";
   onPin: (latitude: number, longitude: number) => void;
 };
 
@@ -160,7 +153,6 @@ export function SiteMap({
   onSelectSite,
   stopWork = false,
   fitStopWork = false,
-  variant = "card",
   onPin,
 }: Props) {
   const [unavailable, setUnavailable] = useState(false);
@@ -191,7 +183,6 @@ export function SiteMap({
       document.removeEventListener("pointerdown", onDown);
     };
   }, [legendOpen]);
-  const fill = variant === "fill";
 
   const radarOn = overlay === "rain" && rainSource === "radar";
   const forecastOn = overlay !== "off" && !radarOn;
@@ -255,7 +246,7 @@ export function SiteMap({
   const weatherEl = (
     <>
       {source ? (
-        <div className={cx(styles.weather, fill && styles.weatherFloat)}>
+        <div className={styles.weather}>
           {source.status === "loading" ? (
             <p className={styles.weatherNote}>
               Loading {sourceName.toLowerCase()}…
@@ -310,10 +301,7 @@ export function SiteMap({
     </>
   );
   const legendEl = (
-    <ul
-      id={fill ? legendId : undefined}
-      className={cx(styles.legend, fill && styles.legendPop)}
-    >
+    <ul id={legendId} className={styles.legend}>
       <li>
         <span className={styles.pinSample} aria-hidden="true" />
         Your pin
@@ -352,24 +340,16 @@ export function SiteMap({
   return (
     <Panel
       id="site-map"
-      className={cx(className, fill && styles.fillPanel)}
-      aria-labelledby={fill ? undefined : "map-title"}
-      aria-label={fill ? `${site.name} map` : undefined}
+      className={cx(className, styles.panel)}
+      aria-label={`${site.name} map`}
     >
-      {fill ? null : (
-        <PanelHeader
-          title={site.name}
-          titleId="map-title"
-          aside={<Badge>1200 m × 800 m</Badge>}
-        />
-      )}
       {unavailable ? (
         <div className={styles.placeholder}>
           The map isn’t available on this device. You can still send a report
           from your location with “Report hazard”.
         </div>
       ) : (
-        <div className={cx(styles.stage, fill && styles.stageFill)}>
+        <div className={styles.stage}>
           <Suspense
             fallback={<div className={styles.placeholder}>Loading map…</div>}
           >
@@ -389,7 +369,6 @@ export function SiteMap({
               onSelectSite={onSelectSite}
               stopWork={stopWork}
               fitStopWork={fitStopWork}
-              fill={fill}
               onPin={onPin}
               onUnavailable={() => setUnavailable(true)}
             />
@@ -437,31 +416,21 @@ export function SiteMap({
               </div>
             ) : null}
           </div>
-          {fill ? (
-            <>
-              {weatherEl}
-              <div ref={legendBox} className={styles.legendBox}>
-                <div hidden={!legendOpen}>{legendEl}</div>
-                <button
-                  type="button"
-                  className={styles.chip}
-                  ref={legendButton}
-                  aria-expanded={legendOpen}
-                  aria-controls={legendId}
-                  onClick={() => setLegendOpen(!legendOpen)}
-                >
-                  Legend
-                </button>
-              </div>
-            </>
-          ) : null}
-        </div>
-      )}
-      {fill ? null : (
-        <>
           {weatherEl}
-          {legendEl}
-        </>
+          <div ref={legendBox} className={styles.legendBox}>
+            <div hidden={!legendOpen}>{legendEl}</div>
+            <button
+              type="button"
+              className={styles.chip}
+              ref={legendButton}
+              aria-expanded={legendOpen}
+              aria-controls={legendId}
+              onClick={() => setLegendOpen(!legendOpen)}
+            >
+              Legend
+            </button>
+          </div>
+        </div>
       )}
     </Panel>
   );

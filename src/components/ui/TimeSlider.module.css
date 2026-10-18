@@ -39,19 +39,19 @@
   width: 1.5rem;
   height: 1.5rem;
   margin-top: calc((4px - 1.5rem) / 2);
-  border: 3px solid var(--surface);
+  border: 3px solid var(--bg);
   border-radius: 50%;
-  background: var(--brand);
-  box-shadow: 0 0 0 1px var(--brand);
+  background: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
 }
 
 .range::-moz-range-thumb {
   width: 1.5rem;
   height: 1.5rem;
-  border: 3px solid var(--surface);
+  border: 3px solid var(--bg);
   border-radius: 50%;
-  background: var(--brand);
-  box-shadow: 0 0 0 1px var(--brand);
+  background: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
 }
 
 .range:focus-visible {

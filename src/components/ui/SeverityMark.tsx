@@ -27,8 +27,8 @@ export function severityMarkup(
   const half = outlined ? 12 : 9;
   const shape = severityShape(severity, outlined ? 8 : 6.5);
   const paint = outlined
-    ? `fill:var(--sev-${severity});stroke:var(--surface);stroke-width:2.5;paint-order:stroke`
-    : `fill:var(--sev-${severity})`;
+    ? `fill:var(--severity-${severity});stroke:var(--bg);stroke-width:2.5;paint-order:stroke`
+    : `fill:var(--severity-${severity})`;
   return `<svg viewBox="${-half} ${-half} ${half * 2} ${half * 2}" width="${size}" height="${size}" aria-hidden="true" focusable="false">${
     shape.kind === "circle"
       ? `<circle r="${shape.radius}" style="${paint}"/>`

@@ -179,6 +179,11 @@
   border-radius: 10px;
   background: var(--sidebar);
   font-size: var(--text-sm);
+  transition: transform 0.2s var(--ease-out);
+}
+
+.card:hover {
+  transform: translateY(-2px);
 }
 
 .card svg {
@@ -233,5 +238,15 @@
 
   .section {
     padding: 40px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    transition: none;
+  }
+
+  .card:hover {
+    transform: none;
   }
 }

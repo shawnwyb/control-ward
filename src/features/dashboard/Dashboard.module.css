@@ -42,26 +42,26 @@
 
 .scoreValue small {
   font-size: var(--text-sm);
-  color: var(--ink-muted);
+  color: var(--ink-2);
   margin-left: var(--space-1);
 }
 
 .tone_ok {
-  color: var(--ok);
+  color: var(--risk-low);
 }
 .tone_caution {
-  color: var(--sev-2);
+  color: var(--severity-2);
 }
 .tone_danger {
-  color: var(--danger);
+  color: var(--risk-high);
 }
 .tone_unknown {
-  color: var(--ink-muted);
+  color: var(--ink-2);
 }
 
 .driver {
   margin: var(--space-3) 0 0;
-  color: var(--ink-muted);
+  color: var(--ink-2);
   font-size: var(--text-sm);
 }
 
@@ -84,7 +84,7 @@
 
 .subName {
   font-size: var(--text-xs);
-  color: var(--ink-muted);
+  color: var(--ink-2);
 }
 
 .bar {
@@ -138,7 +138,7 @@
 }
 
 .muted {
-  color: var(--ink-muted);
+  color: var(--ink-2);
   font-size: var(--text-sm);
   margin: 0;
 }
@@ -176,7 +176,7 @@
 .personMeta {
   display: block;
   font-size: var(--text-xs);
-  color: var(--ink-muted);
+  color: var(--ink-2);
   font-weight: 400;
 }
 
@@ -201,7 +201,7 @@
 
 .audience {
   font-size: var(--text-sm);
-  color: var(--ink-muted);
+  color: var(--ink-2);
   margin: 0;
 }
 

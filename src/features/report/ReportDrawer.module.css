@@ -127,7 +127,7 @@
 }
 
 .dot.warn {
-  background: var(--sev-2, #d9730d);
+  background: var(--risk-elevated);
 }
 
 /* The site name is context for screen readers only. */

@@ -7,8 +7,6 @@
  *  - Hazard severity uses the tag palette and is always paired with a number
  *    (and a word where space allows), never colour alone.
  *  - Structure comes from fills, hairline dividers and whitespace.
- *  - Old Field Ledger names (--paper, --brand, --rule ...) remain below as
- *    aliases until the last stylesheet using them is migrated.
  */
 :root {
   /* Surfaces */
@@ -110,31 +108,13 @@
   --page-max: 80rem;
   --page-gutter: var(--space-4);
 
-  /* ---- Aliases for stylesheets not yet migrated (removed in Task 10) ---- */
-  --paper: var(--bg);
-  --surface: var(--bg);
-  --surface-sunken: var(--fill);
-  --ink-muted: var(--ink-2);
-  --ink-faint: var(--ink-3);
-  --rule: var(--line);
-  --rule-strong: var(--line-strong);
-  --brand: var(--accent);
-  --brand-hover: var(--accent-hover);
-  --brand-pressed: #0a5cab;
-  --brand-soft: var(--accent-soft);
-  --brand-ink: #ffffff;
-  --sev-1: var(--tag-yellow-fg);
-  --sev-1-bg: var(--tag-yellow-bg);
-  --sev-2: var(--tag-orange-fg);
-  --sev-2-bg: var(--tag-orange-bg);
-  --sev-3: var(--tag-red-fg);
-  --sev-3-bg: var(--tag-red-bg);
-  --ok: #448361;
-  --ok-bg: var(--tag-green-bg);
-  --danger: #e03e3e;
-  --danger-bg: var(--tag-red-bg);
-  --focus: var(--accent);
-  --map-ground: var(--fill);
+  /* Report severity (Low / Moderate / High): tag palette; always with a shape */
+  --severity-1: var(--tag-yellow-fg);
+  --severity-1-bg: var(--tag-yellow-bg);
+  --severity-2: var(--tag-orange-fg);
+  --severity-2-bg: var(--tag-orange-bg);
+  --severity-3: var(--tag-red-fg);
+  --severity-3-bg: var(--tag-red-bg);
 }
 
 @media (pointer: coarse) {

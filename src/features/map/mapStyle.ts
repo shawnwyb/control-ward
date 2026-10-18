@@ -14,8 +14,8 @@ export const basemapStyle: string =
 export function offlineStyle(): StyleSpecification {
   const ground =
     getComputedStyle(document.documentElement)
-      .getPropertyValue("--map-ground")
-      .trim() || "#ece9de";
+      .getPropertyValue("--fill")
+      .trim() || "#f1f1ef";
   return {
     version: 8,
     sources: {},
