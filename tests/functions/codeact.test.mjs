@@ -172,3 +172,30 @@ test("concise publication rejects fabricated evidence, numbers and excessive ins
     /unsupported_quote/,
   );
 });
+
+test("CodeAct provider output has a bounded allowance and distinguishes truncation", async () => {
+  const { geminiResearch } =
+    await import("../../supabase/functions/_shared/automatic-safety/agent.ts");
+  const model = geminiResearch(
+    "fixture-key",
+    "gemini-test",
+    async (_url, init) => {
+      const request = JSON.parse(init.body);
+      assert.equal(request.generationConfig.maxOutputTokens, 8192);
+      return Response.json({
+        candidates: [
+          {
+            finishReason: "MAX_TOKENS",
+            content: { parts: [{ text: '{"type":' }] },
+          },
+        ],
+        usageMetadata: { totalTokenCount: 8192 },
+      });
+    },
+    "codeact",
+  );
+  await assert.rejects(
+    () => model.ask("fixture", false, AbortSignal.timeout(1000)),
+    /model_output_truncated/,
+  );
+});

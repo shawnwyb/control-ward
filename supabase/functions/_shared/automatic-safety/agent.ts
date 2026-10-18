@@ -272,7 +272,7 @@ export function geminiResearch(
             ...(search ? { tools: [{ google_search: {} }] } : {}),
             generationConfig: {
               temperature: 0.1,
-              maxOutputTokens: 4096,
+              maxOutputTokens: mode === "codeact" ? 8192 : 4096,
               responseMimeType: "application/json",
               thinkingConfig: {
                 includeThoughts: false,
@@ -288,6 +288,8 @@ export function geminiResearch(
         );
       const body = JSON.parse(await readBounded(response, 1500000));
       const candidate = body.candidates?.[0];
+      if (candidate?.finishReason === "MAX_TOKENS")
+        throw new Error("model_output_truncated");
       const answer =
         candidate?.content?.parts
           ?.filter((p: { thought?: boolean }) => !p.thought)

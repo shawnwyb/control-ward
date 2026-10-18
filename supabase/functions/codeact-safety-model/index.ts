@@ -48,7 +48,11 @@ Deno.serve(async (req) => {
         body: JSON.stringify({
           p_run_id: body.run_id,
           p_lease_token: body.lease_token,
-          p_prompt_bytes: new TextEncoder().encode(body.prompt).byteLength,
+          // SQL reserves 4096 output tokens; add the other 4096 for the
+          // CodeAct adapter's 8192-token output/thinking allowance.
+          p_prompt_bytes:
+            new TextEncoder().encode(body.prompt).byteLength +
+            (body.search ? 0 : 4096),
           p_max_calls: Math.min(8, Math.floor(maximum / reserve)),
         }),
         signal: AbortSignal.timeout(10000),
@@ -120,6 +124,7 @@ Deno.serve(async (req) => {
       "provider_failed",
       "provider_rate_limited",
       "invalid_model_json",
+      "model_output_truncated",
       "invalid_usage",
       "model_configuration_changed",
     ];
