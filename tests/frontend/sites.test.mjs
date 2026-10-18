@@ -67,3 +67,36 @@ test("nextOverviewState: success clears the error; later failure keeps the last 
   assert.equal(failed.sites, list);
   assert.equal(failed.error, "x");
 });
+
+import { siteSummaryFromRow, sitePinLabel } from "../../src/lib/sites.ts";
+
+test("siteSummaryFromRow keeps missing coordinates as null", () => {
+  const summary = siteSummaryFromRow({
+    site_id: "s1",
+    name: "A",
+    lat: null,
+    lon: null,
+    risk_now: null,
+    lightning: { status: "stop_work", last_strike_at: "x" },
+  });
+  assert.equal(summary.latitude, null);
+  assert.equal(summary.longitude, null);
+  assert.equal(summary.lightning.status, "stop_work");
+  assert.equal(summary.activeAlerts, 0);
+  assert.equal(siteSummaryFromRow({ site_id: null }), null);
+  const placed = siteSummaryFromRow({ site_id: "s2", lat: 0, lon: 12.5 });
+  assert.equal(placed.latitude, 0);
+  assert.equal(placed.longitude, 12.5);
+});
+
+test("sitePinLabel names the site and its index, or says there is no score", () => {
+  assert.equal(
+    sitePinLabel({ name: "North", riskNow: 5.2 }),
+    "North, hazard index 5.2",
+  );
+  assert.equal(sitePinLabel({ name: "N", riskNow: 7 }), "N, hazard index 7.0");
+  assert.equal(
+    sitePinLabel({ name: "E", riskNow: null }),
+    "E, hazard index no score",
+  );
+});

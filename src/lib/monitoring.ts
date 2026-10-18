@@ -1,7 +1,12 @@
 import type { Json } from "../database.types";
 import { supabase } from "./supabase";
 import { riskLevel, riskTone } from "./risk";
-import { rankSites, topHazards, type SiteSummary } from "./sites";
+import {
+  rankSites,
+  siteSummaryFromRow,
+  topHazards,
+  type SiteSummary,
+} from "./sites";
 
 export { riskLevel, riskTone, rankSites, topHazards };
 export type { SiteSummary };
@@ -126,32 +131,8 @@ export async function fetchSiteOverviews(): Promise<SiteSummary[]> {
   const { data, error } = await supabase.from("site_overview").select("*");
   if (error) throw error;
   return data.flatMap((row) => {
-    if (!row.site_id) return [];
-    const lightning = (row.lightning ?? {}) as Record<string, unknown>;
-    return [
-      {
-        siteId: row.site_id,
-        name: row.name ?? "",
-        latitude: row.lat ?? 0,
-        longitude: row.lon ?? 0,
-        riskNow: row.risk_now ?? null,
-        riskTomorrow: row.risk_tomorrow ?? null,
-        topDriver: row.top_driver ?? null,
-        subscores: (row.subscores ?? {}) as Subscores,
-        activeAlerts: Number(row.active_alert_count ?? 0),
-        lightning: {
-          status: lightning.status === "stop_work" ? "stop_work" : "clear",
-          lastStrikeAt:
-            typeof lightning.last_strike_at === "string"
-              ? lightning.last_strike_at
-              : null,
-          lastStrikeDistanceM:
-            typeof lightning.last_strike_distance_m === "number"
-              ? lightning.last_strike_distance_m
-              : null,
-        },
-      },
-    ];
+    const summary = siteSummaryFromRow(row);
+    return summary ? [summary] : [];
   });
 }
 
