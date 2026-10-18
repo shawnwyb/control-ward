@@ -228,6 +228,50 @@
   font-size: var(--text-sm);
 }
 
+/* Color bar for the mud routes: under 4 in isn't drawn, 4 to 8 in is inspect, 8 in and up is hold. */
+.mudKey {
+  display: grid;
+  gap: var(--space-1);
+  width: min(16rem, 100%);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-card);
+  background: var(--bg);
+  box-shadow: var(--shadow-float);
+  color: var(--ink-2);
+  font-size: var(--text-sm);
+}
+
+.mudKeyTitle {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.mudBar {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  height: 0.5rem;
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+}
+
+.mudBarOk {
+  background: var(--line);
+}
+
+.mudBarInspect {
+  background: var(--risk-elevated);
+}
+
+.mudBarHold {
+  background: var(--risk-high);
+}
+
+.mudTicks {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  font-size: var(--text-xs);
+}
+
 .holdSample {
   width: 1.5rem;
   height: 0;
