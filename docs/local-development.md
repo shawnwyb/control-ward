@@ -6,7 +6,7 @@ All shell commands assume macOS, Linux, or a Linux shell in WSL, and start in th
 
 ## 1. Get the code
 
-Install Git, Node.js 22+ and npm. Then:
+Install Git, Node.js 22+ and npm. Node 22.12 was verified; the repository's test and agent commands explicitly enable TypeScript stripping for that version. Then:
 
 ```sh
 git clone https://github.com/shawnwyb/swamphacks2026.git
@@ -20,10 +20,16 @@ Choose the setup you need:
 | ----------------------------------------------------------------------------- | --------- | -------------------------------------------------------------- |
 | Show the real app and existing results from the team's database               | Section 2 | Project's public connection settings and an assigned account   |
 | Generate real safety checklists from your computer using an isolated database | Section 3 | Running Docker, Supabase CLI and your own Gemini configuration |
-| Calculate real Hazard Index and mud predictions locally                       | Section 4 | Python 3.11 and internet access                                |
+| Calculate real Hazard Index and mud predictions locally                       | Section 4 | Python 3.12 and internet access                                |
 | Work on the UI without any backend                                            | Section 6 | None                                                           |
 
 Running the frontend does not start the agent or prediction jobs. Sections 3 and 4 start those separately. You do not need to retrain models to use the committed Hazard Index model.
+
+### Verification status
+
+The October 18, 2026 check used macOS, Node 22.12, Python 3.12 and the team's hosted Supabase database. Both assigned roles could sign in and open the checklist and full report without browser errors. One real CodeAct run published four actions backed by two independently fetched sources. Hazard Index scoring, mud preparation/forecast/map generation and a West County full report also completed. The report's 62 Python tests, 19 frontend report tests, 28 frontend tests, 61 function tests and 50 mud tests passed. Both model/report parity runners initially failed on Node 22 because they omitted TypeScript stripping; that is fixed in the repository, and the affected tests passed on rerun.
+
+The complete isolated setup in section 3 was **not rerun from a fresh database** during that check. The hosted agent used an authorized server credential and already deployed functions; it did not prove that cloning the repository supplies provider credentials or starts the local Edge server. A published checklist still had unavailable-source coverage notes and a stale forecast input. Check those separately from the checklist's overall current/stale state.
 
 ## 2. Real app with the team's hosted database
 
@@ -52,6 +58,18 @@ Open <http://127.0.0.1:5173>, choose **Sign in** (or open <http://127.0.0.1:5173
 This uses the hosted project's existing ingestion, saved predictions and checklist generation. It does not enable CodeAct or start a model job. The project owner must separately keep the CodeAct executor running and activate its queue mode; see [safety operations](safety-operations.md#start-against-the-real-database). A local frontend does not need Docker for this path.
 
 If there are no assigned sites, ask the owner to add your account to the worksite. If a checklist is stale, follow live alerts and inspect generation status; do not present it as current. Demo-login credentials from the fictional preview are not a promise that those accounts exist on the hosted project.
+
+For a connection check, run `npm run check:connection`. To also check an assigned account's login, membership and screen queries without embedding its password in shell history:
+
+```sh
+read -r CHECK_EMAIL
+read -rs CHECK_PASSWORD
+export CHECK_EMAIL CHECK_PASSWORD
+npm run check:connection
+unset CHECK_EMAIL CHECK_PASSWORD
+```
+
+Enter the email after the first command and password after the second; password input is hidden. These commands work in Bash and Zsh.
 
 ## 3. Real CodeAct agent with an isolated local database
 
@@ -199,10 +217,10 @@ SAFETY_LOCAL_DIR=/tmp/planit-local npm run safety:local:stop
 
 These jobs are independent of the safety checklist. They calculate predictions and write local artifacts. Running them does not automatically put their new outputs into the browser's database.
 
-From the repository root, install Python 3.11 and create the environment once:
+From the repository root, install Python 3.12 and create the environment once. This version was verified with the current dependencies and committed model; the older Python 3.11 instructions were not exercised in that check. If `.venv` already exists, check `.venv/bin/python --version` before reusing it.
 
 ```sh
-python3.11 -m venv .venv
+python3.12 -m venv .venv
 .venv/bin/python -m pip install -r requirements.txt
 ```
 
@@ -230,11 +248,33 @@ Preparation downloads and caches soils, terrain and route data. It can take long
 
 To publish model results, follow the explicit project-selection/preview/apply steps in the [Hazard Index README](../models/hazard-index/README.md) and [mud runbook](../models/mud-trafficability/RUNBOOK.md). Their production apply commands target a linked hosted project; they are not part of the isolated local setup. In particular, `models/mud-trafficability/run_daily.sh` includes a production apply step, so do not use it merely to preview local predictions.
 
+### Generate the full report shown in the app
+
+After both models finish, run from the repository root:
+
+```sh
+reports/next-day/run.sh build --site 56407 --for today
+```
+
+This writes `public/reports/56407/<date>/report.json` and updates `public/reports/index.json`. Reload **Next-day report** for West County. Use `--for tomorrow` for the following day's report. External data fetches can take several minutes; inspect the report's gaps and input timestamps when it finishes. This report is independent of the automatic safety checklist in the briefing page.
+
+If the report files are absent, the app shows **No report yet** even when database predictions or a safety checklist exist. Generated reports are local static files: a hosted frontend only includes files present when it builds. Generation also changes caches, output pointers and report indexes; inspect `git status` and select intended artifacts before committing. Model scores still require the separate database publishing steps above.
+
+To check the report code:
+
+```sh
+npm run test:nextday
+```
+
+This runs both Node and Python tests and requires the repository `.venv`. Custom commands that import TypeScript on Node 22.12 must include `--experimental-strip-types`.
+
 ## 5. Prepare a real demonstration
 
 Use section 2 for the app, or section 3 when demonstrating local generation. Calculate any model predictions ahead of the presentation and publish them through the model runbooks if the app should display them. Verify the selected worksite, output dates, ingestion timestamps, checklist freshness and source coverage before presenting.
 
 Showing a previously generated real result is valid if you identify its timestamp and cache status. A fresh generation can show the research/execution loop, but it depends on network services and can fail or return limited evidence. Keep an earlier real result available with its timestamp; label any fictional UI fallback explicitly.
+
+A worker launched in a terminal runs only while that process, Docker and the computer remain available. For continuous hosted operation, use a worker host with a restart policy as described in [safety operations](safety-operations.md#start-against-the-real-database). Hosting the frontend alone does not keep the agent or prediction jobs running.
 
 ## 6. Optional fictional UI preview
 
@@ -246,16 +286,19 @@ Open <http://127.0.0.1:5173/#/sign-in>. Sign in as `supervisor@planit.local` or 
 
 ## Troubleshooting
 
-| Symptom                                            | Check                                                                                                                                     |
-| -------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| Frontend shows fictional content                   | Use `npm run dev` for the hosted database or `npm run safety:dev` for the local database; `dev:design` always uses fixtures.              |
-| No sites assigned                                  | Confirm membership in the database the frontend actually uses, then reload.                                                               |
-| Local temporary links belong to another checkout   | Pick a new `/tmp/...` path and use it consistently with `SAFETY_LOCAL_DIR` and `supabase status --workdir`.                               |
-| Worker waits silently                              | Check queued `execution_mode='codeact'` jobs, enabled/model settings and `available_at`; pipeline jobs are handled by a different worker. |
-| Broker authorization error                         | Match `.env.codeact.local` URL/key to the local stack and keep the local Edge server running. An anon key cannot run the executor.        |
-| Provider/model/budget failure                      | Check local Edge configuration, matching SQL model ID, provider access and per-run budgets. The worker records bounded errors/retries.    |
-| Checklist stale or acknowledge disabled            | Refresh recorded conditions and let the worker generate a replacement; never bypass freshness checks.                                     |
-| Models run but new scores do not appear in the app | Scoring writes local files; publishing is a separate explicit step.                                                                       |
-| Port 5173 already used                             | Stop the other frontend or add `-- --port 5174 --strictPort` to the frontend npm command and open that port.                              |
+| Symptom                                            | Check                                                                                                                                                       |
+| -------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Frontend shows fictional content                   | Use `npm run dev` for the hosted database or `npm run safety:dev` for the local database; `dev:design` always uses fixtures.                                |
+| No sites assigned                                  | Confirm membership in the database the frontend actually uses, then reload.                                                                                 |
+| Local temporary links belong to another checkout   | Pick a new `/tmp/...` path and use it consistently with `SAFETY_LOCAL_DIR` and `supabase status --workdir`.                                                 |
+| Worker waits silently                              | Check queued `execution_mode='codeact'` jobs, enabled/model settings and `available_at`; pipeline jobs are handled by a different worker.                   |
+| Broker authorization error                         | Match `.env.codeact.local` URL/key to the local stack and keep the local Edge server running. An anon key cannot run the executor.                          |
+| Provider/model/budget failure                      | Check local Edge configuration, matching SQL model ID, provider access and per-run budgets. The worker records bounded errors/retries.                      |
+| Checklist stale or acknowledge disabled            | Refresh recorded conditions and let the worker generate a replacement; never bypass freshness checks.                                                       |
+| Models run but new scores do not appear in the app | Scoring writes local files; publishing is a separate explicit step.                                                                                         |
+| Full report says No report yet                     | Generate the selected site's report using section 4; include the report and index in a hosted build.                                                        |
+| Tests fail with unknown file extension `.ts`       | Pull the parity-runner fixes; use the documented npm commands or explicitly enable Node TypeScript stripping.                                               |
+| Checklist is current but an input says STALE       | Inspect that input's timestamp and source coverage. Refresh ingestion and inspect replacement runs; overall current status does not make every input fresh. |
+| Port 5173 already used                             | Stop the other frontend or add `-- --port 5174 --strictPort` to the frontend npm command and open that port.                                                |
 
 For implementation, verification and production operation details, see [safety operations](safety-operations.md), [Hazard Index](../models/hazard-index/README.md) and [mud operations](../models/mud-trafficability/RUNBOOK.md).
