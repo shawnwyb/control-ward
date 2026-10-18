@@ -491,6 +491,8 @@ test("instruction extraction remains a bounded non-search model call", async () 
   assert.deepEqual(result.value, items);
   assert.equal(request.tools, undefined);
   assert.equal(request.generationConfig.maxOutputTokens, 4096);
+  assert.equal(request.generationConfig.responseMimeType, "application/json");
+  assert.equal(request.generationConfig.thinkingConfig.thinkingLevel, "low");
   assert.equal(request.generationConfig.thinkingConfig.includeThoughts, false);
 });
 

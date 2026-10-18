@@ -269,7 +269,11 @@ export function geminiResearch(
             generationConfig: {
               temperature: 0.1,
               maxOutputTokens: 4096,
-              thinkingConfig: { includeThoughts: false },
+              responseMimeType: "application/json",
+              thinkingConfig: {
+                includeThoughts: false,
+                ...(/^gemini-3/.test(model) ? { thinkingLevel: "low" } : {}),
+              },
             },
           }),
         },
