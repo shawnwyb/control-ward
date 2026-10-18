@@ -32,24 +32,9 @@
   line-height: var(--leading-body);
 }
 
-.reading {
-  margin: 0 0 var(--space-4);
-  color: var(--ink-2);
-  font-size: var(--text-xl);
-  font-weight: 600;
-  text-align: center;
-}
-
-.reading strong {
-  margin-right: 6px;
-  color: #a8612a;
-  font-size: 2.75rem;
-  font-weight: 800;
-  line-height: 1;
-}
-
 .chip {
   display: block;
+  margin-top: var(--space-3);
   padding: 10px 12px;
   border-radius: 8px;
   background: var(--fill);

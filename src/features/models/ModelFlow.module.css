@@ -1,0 +1,457 @@
+.flow {
+  --amber: #d6a24c;
+
+  width: 100%;
+  max-width: 360px;
+  margin: var(--space-3) auto 0;
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.caption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-top: var(--space-1);
+  color: var(--ink-3);
+  font-size: var(--text-xs);
+}
+
+/* With reduced motion there is nothing to replay. */
+@media (prefers-reduced-motion: reduce) {
+  .replay {
+    display: none;
+  }
+}
+
+/* ---- Shapes. These are the finished diagram; the animations below only lead up to it. */
+.heading,
+.panelTitle,
+.limitText {
+  fill: var(--ink-2);
+  font-size: 10.5px;
+}
+
+.chip {
+  fill: var(--fill);
+  stroke: var(--line-strong);
+}
+
+.chipText,
+.nodeName,
+.nodeSub,
+.tick,
+.value,
+.pillTop,
+.pillBottom,
+.flagText {
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
+.chipText {
+  fill: var(--ink);
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.line {
+  fill: none;
+  stroke: var(--line-strong);
+  stroke-width: 1.5;
+}
+
+.lineHot {
+  fill: none;
+  stroke: var(--amber);
+  stroke-width: 2;
+}
+
+.dot {
+  fill: var(--accent);
+  opacity: 0;
+}
+
+.node {
+  fill: var(--bg);
+  stroke: var(--line-strong);
+  stroke-width: 1.5;
+}
+
+.nodeName {
+  fill: var(--ink);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.nodeSub {
+  fill: var(--ink-2);
+  font-size: 10.5px;
+}
+
+.track {
+  fill: var(--fill);
+}
+
+.bar {
+  fill: var(--ink-3);
+}
+
+.bar.win {
+  fill: var(--amber);
+}
+
+.lose {
+  opacity: 0.4;
+}
+
+.pill {
+  fill: var(--fill);
+  stroke: var(--line-strong);
+}
+
+.pillTop {
+  fill: var(--ink);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.pillBottom {
+  fill: var(--ink-2);
+  font-size: 10.5px;
+}
+
+.low {
+  fill: var(--risk-low);
+}
+
+.mid {
+  fill: var(--amber);
+}
+
+.high {
+  fill: var(--risk-high);
+}
+
+.tick {
+  fill: var(--ink-2);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+}
+
+.marker {
+  fill: var(--ink);
+}
+
+.value {
+  fill: var(--ink);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+/* Mud: rut cross-sections */
+.sky {
+  fill: var(--fill);
+}
+
+.ground {
+  fill: var(--tag-brown-bg);
+}
+
+.limit {
+  stroke: var(--ink-3);
+  stroke-dasharray: 3 3;
+}
+
+.rut {
+  fill: var(--tag-brown-fg);
+  fill-opacity: 0.3;
+}
+
+.tyre {
+  fill: var(--bg);
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+
+.hub {
+  fill: var(--ink);
+}
+
+.flagText {
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.flag_ok {
+  fill: var(--tag-green-bg);
+}
+
+.flag_inspect {
+  fill: var(--tag-yellow-bg);
+}
+
+.flag_hold {
+  fill: var(--tag-red-bg);
+}
+
+.flagText_ok {
+  fill: var(--tag-green-fg);
+}
+
+.flagText_inspect {
+  fill: var(--tag-yellow-fg);
+}
+
+.flagText_hold {
+  fill: var(--tag-red-fg);
+}
+
+/* Mud: the route */
+.segment {
+  fill: none;
+  stroke-width: 6;
+  stroke-linejoin: round;
+}
+
+.segment_ok {
+  stroke: var(--risk-low);
+}
+
+.segment_inspect {
+  stroke: var(--amber);
+}
+
+.segment_hold {
+  stroke: var(--risk-high);
+}
+
+.truck {
+  opacity: 0;
+}
+
+.truckBody {
+  fill: #233a35;
+  stroke: var(--bg);
+  stroke-width: 1.5;
+}
+
+.wheel {
+  fill: var(--ink);
+}
+
+/* ---- Rest positions that the animations start away from. */
+.draw {
+  stroke-dasharray: 1;
+}
+
+.pop,
+.grow,
+.dig {
+  transform-box: fill-box;
+}
+
+.pop {
+  transform-origin: 50% 50%;
+}
+
+.grow {
+  transform-origin: 50% 100%;
+}
+
+.dig {
+  transform-origin: 50% 0;
+}
+
+.sink {
+  transform: translateY(var(--sink, 0px));
+}
+
+.sweep {
+  transform: translateX(var(--tx, 0px));
+}
+
+/* ---- Motion. Every element waits at its first frame until the figure is on screen. */
+@media (prefers-reduced-motion: no-preference) {
+  .rise,
+  .pop,
+  .draw,
+  .grow,
+  .dig,
+  .sink,
+  .dot,
+  .flash,
+  .lose,
+  .sweep,
+  .recolor {
+    animation-duration: var(--dur, 0.32s);
+    animation-delay: var(--d, 0s);
+    animation-timing-function: var(--ease-out);
+    animation-fill-mode: both;
+    animation-play-state: paused;
+  }
+
+  .flow[data-playing]
+    :is(
+      .rise,
+      .pop,
+      .draw,
+      .grow,
+      .dig,
+      .sink,
+      .dot,
+      .flash,
+      .lose,
+      .sweep,
+      .recolor
+    ) {
+    animation-play-state: running;
+  }
+
+  .rise {
+    animation-name: rise;
+  }
+
+  .pop {
+    animation-name: pop;
+    animation-timing-function: var(--ease-spring);
+  }
+
+  .draw {
+    --dur: 0.26s;
+
+    animation-name: draw;
+  }
+
+  .grow {
+    --dur: 0.55s;
+
+    animation-name: grow;
+  }
+
+  .dig {
+    --dur: 0.7s;
+
+    animation-name: grow;
+    animation-timing-function: var(--ease);
+  }
+
+  .sink {
+    --dur: 0.7s;
+
+    animation-name: sink;
+    animation-timing-function: var(--ease);
+  }
+
+  .dot {
+    --dur: 0.4s;
+
+    animation-name: travel;
+    animation-timing-function: linear;
+  }
+
+  .flash {
+    --dur: 0.7s;
+
+    animation-name: flash;
+  }
+
+  .lose {
+    --dur: 0.4s;
+
+    animation-name: dim;
+  }
+
+  .sweep {
+    --dur: 0.9s;
+
+    animation-name: sweep;
+  }
+
+  .recolor {
+    --dur: 0.25s;
+
+    animation-name: recolor;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+}
+
+@keyframes draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+}
+
+@keyframes grow {
+  from {
+    transform: scaleY(0);
+  }
+}
+
+@keyframes sink {
+  from {
+    transform: translateY(0);
+  }
+}
+
+/* A dot runs from where it sits to (--dx, --dy), then disappears. */
+@keyframes travel {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0);
+  }
+
+  15%,
+  85% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(var(--dx), var(--dy));
+  }
+}
+
+/* A model lights up as the forecast reaches it. */
+@keyframes flash {
+  35% {
+    fill: var(--select-tint);
+    stroke: var(--accent);
+  }
+}
+
+@keyframes dim {
+  from {
+    opacity: 1;
+  }
+}
+
+@keyframes sweep {
+  from {
+    transform: translateX(0);
+  }
+}
+
+@keyframes recolor {
+  from {
+    stroke: var(--tag-gray-bg);
+  }
+}
