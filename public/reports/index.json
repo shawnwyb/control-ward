@@ -1,0 +1,40 @@
+{
+ "schema_version": 1,
+ "sites": [
+  {
+   "eia": "6113",
+   "name": "Gibson",
+   "for_date": "2026-10-19",
+   "generated_at": "2026-10-18T06:01:37Z",
+   "verdict": "go"
+  },
+  {
+   "eia": "6163",
+   "name": "Grand Coulee",
+   "for_date": "2026-10-18",
+   "generated_at": "2026-10-18T06:01:37Z",
+   "verdict": "limits"
+  },
+  {
+   "eia": "1403",
+   "name": "Nine Mile Point",
+   "for_date": "2026-10-19",
+   "generated_at": "2026-10-18T06:01:37Z",
+   "verdict": "limits"
+  },
+  {
+   "eia": "6008",
+   "name": "Palo Verde",
+   "for_date": "2026-10-18",
+   "generated_at": "2026-10-18T06:01:37Z",
+   "verdict": "limits"
+  },
+  {
+   "eia": "621",
+   "name": "Turkey Point",
+   "for_date": "2026-10-19",
+   "generated_at": "2026-10-18T06:01:37Z",
+   "verdict": "limits"
+  }
+ ]
+}

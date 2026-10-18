@@ -84,7 +84,7 @@ echo "$VR_OUT" | grep -q "ALL RULE CHECKS PASSED" || die "verify:rules did not r
 
 log "site_risk, now (next evaluate-all-sites run is within 5 min; re-run this block later to see it update)"
 supabase db query --linked --workdir "$REPO" --output-format json \
-  "select horizon, count(*) filter (where top_driver like 'ML hazard index%')::int as ml_driven, count(*)::int as n
+  "select horizon, count(*) filter (where top_driver like 'ML mud trafficability%')::int as ml_driven, count(*)::int as n
    from public.site_risk group by horizon order by horizon" \
   2>/dev/null | python3 -c '
 import json, sys

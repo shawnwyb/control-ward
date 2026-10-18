@@ -96,7 +96,9 @@ The database keeps one active alert for each kind and site. Its `dedup_key` is `
 - Tomorrow: `base` is the largest of the ML score, the forecast heat, flood and weather scores, and the current wildfire and soil scores.
 - `crew` is `crew_risk_term`, with a maximum of 2.
 
-The result is stored in `site_risk` for the horizons `now` and `tomorrow`. No ML scores exist yet, so the ML score counts as 0.
+The result is stored in `site_risk` for the horizons `now` and `tomorrow`.
+
+The ML score is the highest fresh row in `ml_scores` for that site and horizon. `ml_scores` holds one row per site, horizon and `model` (`mud`: rutting forecast, `models/mud-trafficability`; `hazard_index`: `models/hazard-index`). A row counts only while `computed_at` is less than 36 hours old (`now`) or 48 hours old (`tomorrow`); older rows are ignored, not deleted. With no fresh row the ML score counts as 0. When the ML score sets `base`, `top_driver` names the model: `ML mud trafficability <score>`, `ML hazard index <score>`, or `ML <model> <score>` for another model.
 
 ### Lightning
 
@@ -141,7 +143,7 @@ Only the service role can call these.
 | `ingest_readings(p_batch)`                                            | `[{ site_id, hazard, value, unit, observed_at, forecast_for?, source? }]`, at most 10000. If a batch repeats a reading, the last one is kept. | `{ inserted, updated }`                                                                                  |
 | `evaluate_site(p_site_id)`, `evaluate_all_sites()`                    | none                                                                                                                                          | `{ site_id, top_driver, risk }`, `{ evaluated, failed }`                                                 |
 | `compute_site_risk(p_site_id, p_tomorrow_worst?, p_tomorrow_driver?)` | none                                                                                                                                          | `{ site_id, risk: [{ horizon, risk }] }`                                                                 |
-| `upsert_ml_scores(p_batch)`                                           | `[{ site_id, horizon, score, model_version }]`                                                                                                | `{ upserted }`. Reserved for the ML work.                                                                |
+| `upsert_ml_scores(p_batch)`                                           | `[{ site_id, horizon, score, model_version, model? }]`. `model` defaults to the `model_version` prefix (`stram` → `mud`, `hazidx` → `hazard_index`). | `{ upserted }`. One row per site, horizon and model; a model only overwrites its own rows.               |
 | `generate_due_briefings()`                                            | none                                                                                                                                          | `{ sites, briefing_ids }`                                                                                |
 | `sweep_lightning()`, `prune_monitoring_data()`                        | none                                                                                                                                          | Counts of rows changed.                                                                                  |
 

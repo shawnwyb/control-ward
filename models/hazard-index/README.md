@@ -1,6 +1,6 @@
 # Hazard Index (0–10): offline ML prototype
 
-One calibrated model per hazard family predicts the probability that NOAA Storm Events records an event of that family near a plant on a local day. Each probability is multiplied by an OSHA severity weight, the largest product `R = max_h(s_h × p_h)` is kept, and `R` is mapped to 0–10 on the rule-subscore scale (about 3 watch, 7.5 warning, 10 stop work). `dryrun.py` scores today and tomorrow for the 60 plants from the live forecast and writes a CSV and an `upsert_ml_scores`-shaped payload. **Nothing here writes to a database, and nothing in `supabase/` or `src/` imports it.**
+One calibrated model per hazard family predicts the probability that NOAA Storm Events records an event of that family near a plant on a local day. Each probability is multiplied by an OSHA severity weight, the largest product `R = max_h(s_h × p_h)` is kept, and `R` is mapped to 0–10 on the rule-subscore scale (about 3 watch, 7.5 warning, 10 stop work). `dryrun.py` scores today and tomorrow for the 60 plants from the live forecast and writes a CSV and an `upsert_ml_scores`-shaped payload. **Nothing here writes to a database except `run.sh push --apply`, which asks for the project ref to be typed; nothing in `supabase/` or `src/` imports it.**
 
 Brief: `docs/PROJECT_BRIEF.md`. Results: `notebooks/results.ipynb` and `artifacts/models/<version>/metrics.json`.
 
@@ -22,6 +22,8 @@ models/hazard-index/run.sh all                      # fetch -> train -> score
 models/hazard-index/run.sh test                     # unit tests
 models/hazard-index/run.sh notebook                 # re-execute notebooks/results.ipynb
 ```
+
+**Uploading to production.** `run.sh push` writes `<csv>.push.sql` for the newest scores CSV; `run.sh push --apply` checks the linked project, refuses if `ml_scores` lacks the `model` column (migration `20261018020000_ml_scores_per_model`) or the scores are over 24 h old, previews the change (including the other models' rows), asks for the project ref to be typed, applies, reads back, and writes `<csv>.applied.json`. The rows go in as model `hazard_index` next to the rutting model's `mud` rows; live risk uses the higher fresh score, and a score stops counting after 36 h (now) or 48 h (tomorrow). `run.sh push --clear --apply` removes only the Hazard Index rows.
 
 ## Run order
 

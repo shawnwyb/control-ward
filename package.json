@@ -21,6 +21,7 @@
     "verify:monitoring": "supabase db query --linked -f tests/monitoring.verify.sql",
     "verify:rules": "supabase db query --linked -f tests/rules.verify.sql",
     "verify:crew-assignment": "supabase db query --linked -f tests/crew-assignment.verify.sql",
+    "test:nextday": "node --test tests/nextday/*.test.mjs && reports/next-day/run.sh test",
     "test:functions": "node --experimental-strip-types --test tests/functions/*.test.mjs",
     "safety:local:start": "node scripts/safety/local-stack.mjs start",
     "safety:local:stop": "node scripts/safety/local-stack.mjs stop",

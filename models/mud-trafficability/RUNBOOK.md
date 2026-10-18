@@ -12,7 +12,7 @@ shows a preview and then reads a typed project ref from the terminal. Section 1�
 Running the full procedure writes one score per site per horizon (`now`, `tomorrow`) to production `public.ml_scores`.
 That score:
 - raises that site's live risk to `max(ML score, hazard subscores) + crew term`, for every crew at the site;
-- becomes the risk driver ("ML hazard index `<score>`") wherever it is the largest input;
+- becomes the risk driver ("ML mud trafficability `<score>`") wherever it is the largest input;
 - feeds the 6 PM local briefing's `predicted_risk` through the `tomorrow` row;
 - raises no alerts;
 - **never expires** — it stays in effect until overwritten by a fresh run or removed with `--clear`.
@@ -101,7 +101,8 @@ trio (Vogtle 649, West County 56407, Palo Verde 6008) West County shows far more
 ## 5. Before applying (read-only, no changes)
 
 **(a) Check what is already in `ml_scores`**, so you know whether another model's rows would be overwritten
-(`ml_scores` holds one row per site and horizon — a push only touches rows with this model's `model_version`):
+(`ml_scores` holds one row per site, horizon and model, primary-keyed on `(site_id, horizon, model)` — a push only
+touches rows with this model's `model_version`, which maps to model `mud`):
 
 ```sh
 cd <repo root>
@@ -172,7 +173,7 @@ After the next `evaluate-all-sites` run (every 5 minutes), confirm `site_risk` p
 
 ```sh
 supabase db query --linked --workdir "$PWD" --output-format json \
-  "select horizon, count(*) filter (where top_driver like 'ML hazard index%'), count(*) \
+  "select horizon, count(*) filter (where top_driver like 'ML mud trafficability%'), count(*) \
    from public.site_risk group by horizon order by horizon"
 ```
 
@@ -190,7 +191,7 @@ cd models/mud-trafficability
 ```
 
 Same preview/confirm/read-back flow, deleting this model's rows from `ml_scores`. Site risk falls back to the
-hazard subscores within 5 minutes. Re-check with the section 7 query (expect 0 `ML hazard index%` rows).
+hazard subscores within 5 minutes. Re-check with the section 7 query (expect 0 `ML mud trafficability%` rows).
 
 ## 10. Troubleshooting
 
