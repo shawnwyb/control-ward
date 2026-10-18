@@ -2,18 +2,95 @@
  "schema_version": 1,
  "sites": [
   {
+   "eia": "3",
+   "name": "Barry",
+   "for_date": "2026-10-19",
+   "generated_at": "2026-10-18T07:44:28Z",
+   "verdict": "go"
+  },
+  {
+   "eia": "6167",
+   "name": "Bath County",
+   "for_date": "2026-10-19",
+   "generated_at": "2026-10-18T07:44:28Z",
+   "verdict": "limits"
+  },
+  {
+   "eia": "703",
+   "name": "Bowen",
+   "for_date": "2026-10-19",
+   "generated_at": "2026-10-18T07:44:28Z",
+   "verdict": "limits"
+  },
+  {
+   "eia": "46",
+   "name": "Browns Ferry",
+   "for_date": "2026-10-19",
+   "generated_at": "2026-10-18T07:44:28Z",
+   "verdict": "go"
+  },
+  {
+   "eia": "628",
+   "name": "Crystal River",
+   "for_date": "2026-10-19",
+   "generated_at": "2026-10-18T07:44:28Z",
+   "verdict": "limits"
+  },
+  {
+   "eia": "3399",
+   "name": "Cumberland (TN)",
+   "for_date": "2026-10-19",
+   "generated_at": "2026-10-18T07:44:28Z",
+   "verdict": "limits"
+  },
+  {
+   "eia": "612",
+   "name": "Fort Myers",
+   "for_date": "2026-10-19",
+   "generated_at": "2026-10-18T07:44:28Z",
+   "verdict": "limits"
+  },
+  {
+   "eia": "8102",
+   "name": "Gavin Power, LLC",
+   "for_date": "2026-10-19",
+   "generated_at": "2026-10-18T07:44:28Z",
+   "verdict": "limits"
+  },
+  {
    "eia": "6113",
    "name": "Gibson",
    "for_date": "2026-10-19",
-   "generated_at": "2026-10-18T06:44:43Z",
+   "generated_at": "2026-10-18T07:44:28Z",
    "verdict": "go"
   },
   {
    "eia": "6163",
    "name": "Grand Coulee",
-   "for_date": "2026-10-18",
-   "generated_at": "2026-10-18T06:44:43Z",
+   "for_date": "2026-10-19",
+   "generated_at": "2026-10-18T07:44:28Z",
    "verdict": "limits"
+  },
+  {
+   "eia": "3935",
+   "name": "John E Amos",
+   "for_date": "2026-10-19",
+   "generated_at": "2026-10-18T07:44:28Z",
+   "verdict": "limits"
+  },
+  {
+   "eia": "6042",
+   "name": "Manatee",
+   "for_date": "2026-10-19",
+   "generated_at": "2026-10-18T07:44:28Z",
+   "verdict": "go"
+  },
+  {
+   "eia": "1733",
+   "name": "Monroe (MI)",
+   "for_date": "2026-10-19",
+   "generated_at": "2026-10-18T07:44:28Z",
+   "verdict": "go"
   },
   {
    "eia": "1403",
@@ -23,17 +100,73 @@
    "verdict": "limits"
   },
   {
+   "eia": "3265",
+   "name": "Oconee",
+   "for_date": "2026-10-19",
+   "generated_at": "2026-10-18T07:44:28Z",
+   "verdict": "limits"
+  },
+  {
    "eia": "6008",
    "name": "Palo Verde",
-   "for_date": "2026-10-18",
-   "generated_at": "2026-10-18T06:44:43Z",
+   "for_date": "2026-10-19",
+   "generated_at": "2026-10-18T07:44:28Z",
+   "verdict": "limits"
+  },
+  {
+   "eia": "3166",
+   "name": "Peach Bottom",
+   "for_date": "2026-10-19",
+   "generated_at": "2026-10-18T07:44:28Z",
+   "verdict": "limits"
+  },
+  {
+   "eia": "6166",
+   "name": "Rockport",
+   "for_date": "2026-10-19",
+   "generated_at": "2026-10-18T07:44:28Z",
+   "verdict": "limits"
+  },
+  {
+   "eia": "6251",
+   "name": "South Texas Project",
+   "for_date": "2026-10-19",
+   "generated_at": "2026-10-18T07:44:28Z",
+   "verdict": "go"
+  },
+  {
+   "eia": "6071",
+   "name": "Trimble County",
+   "for_date": "2026-10-19",
+   "generated_at": "2026-10-18T07:44:28Z",
    "verdict": "limits"
   },
   {
    "eia": "621",
    "name": "Turkey Point",
    "for_date": "2026-10-19",
-   "generated_at": "2026-10-18T06:44:43Z",
+   "generated_at": "2026-10-18T07:44:28Z",
+   "verdict": "limits"
+  },
+  {
+   "eia": "649",
+   "name": "Vogtle",
+   "for_date": "2026-10-19",
+   "generated_at": "2026-10-18T07:44:28Z",
+   "verdict": "limits"
+  },
+  {
+   "eia": "3470",
+   "name": "W A Parish",
+   "for_date": "2026-10-19",
+   "generated_at": "2026-10-18T07:44:28Z",
+   "verdict": "go"
+  },
+  {
+   "eia": "56407",
+   "name": "West County Energy Center",
+   "for_date": "2026-10-19",
+   "generated_at": "2026-10-18T07:44:28Z",
    "verdict": "limits"
   }
  ]

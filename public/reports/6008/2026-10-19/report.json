@@ -1,0 +1,2244 @@
+{
+ "schema_version": 1,
+ "meta": {
+  "site": {
+   "eia": "6008",
+   "name": "Palo Verde",
+   "latitude": 33.3881,
+   "longitude": -112.8617,
+   "timezone": "America/Phoenix",
+   "utility": "Arizona Public Service Co",
+   "plant_type": "Nuclear"
+  },
+  "for_date": "2026-10-19",
+  "kind": "evening",
+  "generated_at": "2026-10-18T07:44:28Z",
+  "snapshot": "20261018T074428Z",
+  "sources": {
+   "nifc_fires": {
+    "url": "https://services3.arcgis.com/T4QMspbfLg3qTGWY/arcgis/rest/services/WFIGS_Incident_Locations_Current/FeatureServer/0/query?where=IncidentTypeCategory%3D%27WF%27+AND+%28PercentContained+IS+NULL+OR+PercentContained%3C100%29&outFields=IncidentName%2CIncidentSize%2CPercentContained&outSR=4326&f=json&resultRecordCount=2000",
+    "fetched_at": "2026-10-18T07:44:28Z"
+   },
+   "openmeteo_hourly_6163": {
+    "url": "https://api.open-meteo.com/v1/forecast?latitude=47.9575%2C47.9575%2C48.1131%2C48.1131%2C47.9575%2C47.8019%2C47.8019&longitude=-118.9773%2C-118.7090%2C-118.8432%2C-119.1114%2C-119.2456%2C-119.1114%2C-118.8432&hourly=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cwind_speed_10m%2Cwind_gusts_10m%2Cshortwave_radiation%2Cprecipitation%2Cprecipitation_probability%2Ccape%2Cuv_index&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=mm&timezone=UTC&past_days=1&forecast_days=4",
+    "fetched_at": "2026-10-18T07:44:29Z"
+   },
+   "openmeteo_sun_6163": {
+    "url": "https://api.open-meteo.com/v1/forecast?latitude=47.9575&longitude=-118.9773&daily=sunrise%2Csunset&timezone=America%2FLos_Angeles&forecast_days=4",
+    "fetched_at": "2026-10-18T07:44:29Z"
+   },
+   "nws_alerts_6163": {
+    "url": "https://api.weather.gov/alerts/active?point=47.9575%2C-118.9773",
+    "fetched_at": "2026-10-18T07:44:29Z"
+   },
+   "nws_point_6163": {
+    "url": "https://api.weather.gov/points/47.9575,-118.9773",
+    "fetched_at": "2026-10-18T07:44:29Z"
+   },
+   "nws_forecast_6163": {
+    "url": "https://api.weather.gov/gridpoints/OTX/94,112/forecast",
+    "fetched_at": "2026-10-18T07:44:29Z"
+   },
+   "openmeteo_air_6163": {
+    "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=47.9575&longitude=-118.9773&hourly=us_aqi%2Cpm2_5%2Cpm10&timezone=UTC&forecast_days=4&past_days=1",
+    "fetched_at": "2026-10-18T07:44:30Z"
+   },
+   "nld_6163_leveed_areas": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (leveed_areas)",
+    "fetched_at": "2026-10-18T07:44:30Z"
+   },
+   "nld_6163_alignment_lines": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (alignment_lines)",
+    "fetched_at": "2026-10-18T07:44:30Z"
+   },
+   "nld_6163_floodwalls": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (floodwalls)",
+    "fetched_at": "2026-10-18T07:44:31Z"
+   },
+   "nld_6163_closure_structures": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (closure_structures)",
+    "fetched_at": "2026-10-18T07:44:31Z"
+   },
+   "nld_6163_pump_stations": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (pump_stations)",
+    "fetched_at": "2026-10-18T07:44:31Z"
+   },
+   "nld2_inspection_rating": {
+    "url": "https://levees.sec.usace.army.mil/api-local/system-categories/inspection-rating",
+    "fetched_at": "2026-10-18T07:47:08Z"
+   },
+   "overpass_roads_6163": {
+    "url": "https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A60%5D%3Bway%28around%3A2500%2C47.95751%2C-118.97730%29%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%7Cunclassified%7Cresidential%7Cservice%7Ctrack%7Croad%7Cliving_street%7Cmotorway_link%7Ctrunk_link%7Cprimary_link%7Csecondary_link%7Ctertiary_link%29%24%22%5D%5B%22access%22%21~%22%5E%28no%29%24%22%5D%3Bout+geom%3B",
+    "fetched_at": "2026-10-18T07:45:19Z"
+   },
+   "inat_taxon_Alligator mississippiensis": {
+    "url": "https://api.inaturalist.org/v1/taxa?q=Alligator+mississippiensis&per_page=5&is_active=true",
+    "fetched_at": "2026-10-18T07:47:37Z"
+   },
+   "inat_taxon_Crocodylus acutus": {
+    "url": "https://api.inaturalist.org/v1/taxa?q=Crocodylus+acutus&per_page=5&is_active=true",
+    "fetched_at": "2026-10-18T07:47:37Z"
+   },
+   "inat_taxon_Crotalus": {
+    "url": "https://api.inaturalist.org/v1/taxa?q=Crotalus&per_page=5&is_active=true",
+    "fetched_at": "2026-10-18T07:47:37Z"
+   },
+   "inat_taxon_Agkistrodon": {
+    "url": "https://api.inaturalist.org/v1/taxa?q=Agkistrodon&per_page=5&is_active=true",
+    "fetched_at": "2026-10-18T07:47:37Z"
+   },
+   "inat_taxon_Micrurus": {
+    "url": "https://api.inaturalist.org/v1/taxa?q=Micrurus&per_page=5&is_active=true",
+    "fetched_at": "2026-10-18T07:47:37Z"
+   },
+   "inat_taxon_Sistrurus": {
+    "url": "https://api.inaturalist.org/v1/taxa?q=Sistrurus&per_page=5&is_active=true",
+    "fetched_at": "2026-10-18T07:47:37Z"
+   },
+   "inat_taxon_Ursus americanus": {
+    "url": "https://api.inaturalist.org/v1/taxa?q=Ursus+americanus&per_page=5&is_active=true",
+    "fetched_at": "2026-10-18T07:47:37Z"
+   },
+   "inat_recent_6163": {
+    "url": "https://api.inaturalist.org/v1/observations?lat=47.957511&lng=-118.9773&radius=10&taxon_id=26159%2C26085%2C30692%2C30668%2C30493%2C30979%2C41638&quality_grade=research&d1=2026-09-18&per_page=200&order_by=observed_on&order=desc",
+    "fetched_at": "2026-10-18T07:45:20Z"
+   },
+   "inat_season_6163_alligator": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=47.957511&lng=-118.9773&radius=25&taxon_id=26159&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T07:45:21Z"
+   },
+   "inat_season_6163_crocodile": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=47.957511&lng=-118.9773&radius=25&taxon_id=26085&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T07:45:22Z"
+   },
+   "inat_season_6163_snakes": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=47.957511&lng=-118.9773&radius=25&taxon_id=30692%2C30668%2C30493%2C30979&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T07:45:23Z"
+   },
+   "inat_season_6163_bear": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=47.957511&lng=-118.9773&radius=25&taxon_id=41638&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T07:45:23Z"
+   },
+   "openmeteo_hourly_649": {
+    "url": "https://api.open-meteo.com/v1/forecast?latitude=33.1427%2C33.1427%2C33.2983%2C33.2983%2C33.1427%2C32.9871%2C32.9871&longitude=-81.7625%2C-81.5479%2C-81.6552%2C-81.8698%2C-81.9771%2C-81.8698%2C-81.6552&hourly=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cwind_speed_10m%2Cwind_gusts_10m%2Cshortwave_radiation%2Cprecipitation%2Cprecipitation_probability%2Ccape%2Cuv_index&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=mm&timezone=UTC&past_days=1&forecast_days=4",
+    "fetched_at": "2026-10-18T07:45:24Z"
+   },
+   "openmeteo_sun_649": {
+    "url": "https://api.open-meteo.com/v1/forecast?latitude=33.1427&longitude=-81.7625&daily=sunrise%2Csunset&timezone=America%2FNew_York&forecast_days=4",
+    "fetched_at": "2026-10-18T07:45:24Z"
+   },
+   "nws_alerts_649": {
+    "url": "https://api.weather.gov/alerts/active?point=33.1427%2C-81.7625",
+    "fetched_at": "2026-10-18T07:45:24Z"
+   },
+   "nws_point_649": {
+    "url": "https://api.weather.gov/points/33.1427,-81.7625",
+    "fetched_at": "2026-10-18T07:45:24Z"
+   },
+   "nws_forecast_649": {
+    "url": "https://api.weather.gov/gridpoints/CAE/42,21/forecast",
+    "fetched_at": "2026-10-18T07:45:24Z"
+   },
+   "openmeteo_air_649": {
+    "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=33.1427&longitude=-81.7625&hourly=us_aqi%2Cpm2_5%2Cpm10&timezone=UTC&forecast_days=4&past_days=1",
+    "fetched_at": "2026-10-18T07:45:25Z"
+   },
+   "nld_649_leveed_areas": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (leveed_areas)",
+    "fetched_at": "2026-10-18T07:45:25Z"
+   },
+   "nld_649_alignment_lines": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (alignment_lines)",
+    "fetched_at": "2026-10-18T07:45:25Z"
+   },
+   "nld_649_floodwalls": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (floodwalls)",
+    "fetched_at": "2026-10-18T07:45:26Z"
+   },
+   "nld_649_closure_structures": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (closure_structures)",
+    "fetched_at": "2026-10-18T07:45:26Z"
+   },
+   "nld_649_pump_stations": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (pump_stations)",
+    "fetched_at": "2026-10-18T07:45:26Z"
+   },
+   "overpass_roads_649": {
+    "url": "https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A60%5D%3Bway%28around%3A2500%2C33.14270%2C-81.76250%29%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%7Cunclassified%7Cresidential%7Cservice%7Ctrack%7Croad%7Cliving_street%7Cmotorway_link%7Ctrunk_link%7Cprimary_link%7Csecondary_link%7Ctertiary_link%29%24%22%5D%5B%22access%22%21~%22%5E%28no%29%24%22%5D%3Bout+geom%3B",
+    "fetched_at": "2026-10-18T07:46:10Z"
+   },
+   "inat_recent_649": {
+    "url": "https://api.inaturalist.org/v1/observations?lat=33.1427&lng=-81.7625&radius=10&taxon_id=26159%2C26085%2C30692%2C30668%2C30493%2C30979%2C41638&quality_grade=research&d1=2026-09-18&per_page=200&order_by=observed_on&order=desc",
+    "fetched_at": "2026-10-18T07:46:11Z"
+   },
+   "inat_season_649_alligator": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=33.1427&lng=-81.7625&radius=25&taxon_id=26159&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T07:46:12Z"
+   },
+   "inat_season_649_crocodile": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=33.1427&lng=-81.7625&radius=25&taxon_id=26085&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T07:46:12Z"
+   },
+   "inat_season_649_snakes": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=33.1427&lng=-81.7625&radius=25&taxon_id=30692%2C30668%2C30493%2C30979&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T07:46:13Z"
+   },
+   "inat_season_649_bear": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=33.1427&lng=-81.7625&radius=25&taxon_id=41638&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T07:46:14Z"
+   },
+   "openmeteo_hourly_56407": {
+    "url": "https://api.open-meteo.com/v1/forecast?latitude=26.6986%2C26.6986%2C26.8542%2C26.8542%2C26.6986%2C26.5430%2C26.5430&longitude=-80.3747%2C-80.1736%2C-80.2741%2C-80.4753%2C-80.5758%2C-80.4753%2C-80.2741&hourly=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cwind_speed_10m%2Cwind_gusts_10m%2Cshortwave_radiation%2Cprecipitation%2Cprecipitation_probability%2Ccape%2Cuv_index&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=mm&timezone=UTC&past_days=1&forecast_days=4",
+    "fetched_at": "2026-10-18T07:46:14Z"
+   },
+   "openmeteo_sun_56407": {
+    "url": "https://api.open-meteo.com/v1/forecast?latitude=26.6986&longitude=-80.3747&daily=sunrise%2Csunset&timezone=America%2FNew_York&forecast_days=4",
+    "fetched_at": "2026-10-18T07:46:14Z"
+   },
+   "nws_alerts_56407": {
+    "url": "https://api.weather.gov/alerts/active?point=26.6986%2C-80.3747",
+    "fetched_at": "2026-10-18T07:46:15Z"
+   },
+   "nws_point_56407": {
+    "url": "https://api.weather.gov/points/26.6986,-80.3747",
+    "fetched_at": "2026-10-18T07:46:15Z"
+   },
+   "nws_forecast_56407": {
+    "url": "https://api.weather.gov/gridpoints/MFL/98,90/forecast",
+    "fetched_at": "2026-10-18T07:46:15Z"
+   },
+   "openmeteo_air_56407": {
+    "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=26.6986&longitude=-80.3747&hourly=us_aqi%2Cpm2_5%2Cpm10&timezone=UTC&forecast_days=4&past_days=1",
+    "fetched_at": "2026-10-18T07:46:15Z"
+   },
+   "nld_56407_leveed_areas": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (leveed_areas)",
+    "fetched_at": "2026-10-18T07:46:16Z"
+   },
+   "nld_56407_alignment_lines": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (alignment_lines)",
+    "fetched_at": "2026-10-18T07:46:16Z"
+   },
+   "nld_56407_floodwalls": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (floodwalls)",
+    "fetched_at": "2026-10-18T07:46:17Z"
+   },
+   "nld_56407_closure_structures": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (closure_structures)",
+    "fetched_at": "2026-10-18T07:46:17Z"
+   },
+   "nld_56407_pump_stations": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (pump_stations)",
+    "fetched_at": "2026-10-18T07:46:17Z"
+   },
+   "overpass_roads_56407": {
+    "url": "https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A60%5D%3Bway%28around%3A2500%2C26.69860%2C-80.37470%29%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%7Cunclassified%7Cresidential%7Cservice%7Ctrack%7Croad%7Cliving_street%7Cmotorway_link%7Ctrunk_link%7Cprimary_link%7Csecondary_link%7Ctertiary_link%29%24%22%5D%5B%22access%22%21~%22%5E%28no%29%24%22%5D%3Bout+geom%3B",
+    "fetched_at": "2026-10-18T07:47:01Z"
+   },
+   "inat_recent_56407": {
+    "url": "https://api.inaturalist.org/v1/observations?lat=26.6986&lng=-80.3747&radius=10&taxon_id=26159%2C26085%2C30692%2C30668%2C30493%2C30979%2C41638&quality_grade=research&d1=2026-09-18&per_page=200&order_by=observed_on&order=desc",
+    "fetched_at": "2026-10-18T07:47:02Z"
+   },
+   "inat_season_56407_alligator": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=26.6986&lng=-80.3747&radius=25&taxon_id=26159&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T07:47:03Z"
+   },
+   "inat_season_56407_crocodile": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=26.6986&lng=-80.3747&radius=25&taxon_id=26085&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T07:47:04Z"
+   },
+   "inat_season_56407_snakes": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=26.6986&lng=-80.3747&radius=25&taxon_id=30692%2C30668%2C30493%2C30979&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T07:47:04Z"
+   },
+   "inat_season_56407_bear": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=26.6986&lng=-80.3747&radius=25&taxon_id=41638&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T07:47:05Z"
+   },
+   "openmeteo_hourly_6008": {
+    "url": "https://api.open-meteo.com/v1/forecast?latitude=33.3881%2C33.3881%2C33.5437%2C33.5437%2C33.3881%2C33.2325%2C33.2325&longitude=-112.8617%2C-112.6465%2C-112.7541%2C-112.9693%2C-113.0769%2C-112.9693%2C-112.7541&hourly=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cwind_speed_10m%2Cwind_gusts_10m%2Cshortwave_radiation%2Cprecipitation%2Cprecipitation_probability%2Ccape%2Cuv_index&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=mm&timezone=UTC&past_days=1&forecast_days=4",
+    "fetched_at": "2026-10-18T07:47:06Z"
+   },
+   "openmeteo_sun_6008": {
+    "url": "https://api.open-meteo.com/v1/forecast?latitude=33.3881&longitude=-112.8617&daily=sunrise%2Csunset&timezone=America%2FPhoenix&forecast_days=4",
+    "fetched_at": "2026-10-18T07:47:06Z"
+   },
+   "nws_alerts_6008": {
+    "url": "https://api.weather.gov/alerts/active?point=33.3881%2C-112.8617",
+    "fetched_at": "2026-10-18T07:47:06Z"
+   },
+   "nws_point_6008": {
+    "url": "https://api.weather.gov/points/33.3881,-112.8617",
+    "fetched_at": "2026-10-18T07:47:06Z"
+   },
+   "nws_forecast_6008": {
+    "url": "https://api.weather.gov/gridpoints/PSR/130,59/forecast",
+    "fetched_at": "2026-10-18T07:47:06Z"
+   },
+   "openmeteo_air_6008": {
+    "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=33.3881&longitude=-112.8617&hourly=us_aqi%2Cpm2_5%2Cpm10&timezone=UTC&forecast_days=4&past_days=1",
+    "fetched_at": "2026-10-18T07:47:07Z"
+   },
+   "nld_6008_leveed_areas": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (leveed_areas)",
+    "fetched_at": "2026-10-18T07:47:07Z"
+   },
+   "nld_6008_alignment_lines": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (alignment_lines)",
+    "fetched_at": "2026-10-18T07:47:07Z"
+   },
+   "nld_6008_floodwalls": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (floodwalls)",
+    "fetched_at": "2026-10-18T07:47:07Z"
+   },
+   "nld_6008_closure_structures": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (closure_structures)",
+    "fetched_at": "2026-10-18T07:47:07Z"
+   },
+   "nld_6008_pump_stations": {
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NLD/Public/FeatureServer (pump_stations)",
+    "fetched_at": "2026-10-18T07:47:07Z"
+   },
+   "overpass_roads_6008": {
+    "url": "https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A60%5D%3Bway%28around%3A2500%2C33.38810%2C-112.86170%29%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%7Cunclassified%7Cresidential%7Cservice%7Ctrack%7Croad%7Cliving_street%7Cmotorway_link%7Ctrunk_link%7Cprimary_link%7Csecondary_link%7Ctertiary_link%29%24%22%5D%5B%22access%22%21~%22%5E%28no%29%24%22%5D%3Bout+geom%3B",
+    "fetched_at": "2026-10-18T07:47:36Z"
+   },
+   "inat_recent_6008": {
+    "url": "https://api.inaturalist.org/v1/observations?lat=33.3881&lng=-112.8617&radius=10&taxon_id=26159%2C26085%2C30692%2C30668%2C30493%2C30979%2C41638&quality_grade=research&d1=2026-09-18&per_page=200&order_by=observed_on&order=desc",
+    "fetched_at": "2026-10-18T07:47:37Z"
+   },
+   "inat_season_6008_alligator": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=33.3881&lng=-112.8617&radius=25&taxon_id=26159&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T07:47:38Z"
+   },
+   "inat_season_6008_crocodile": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=33.3881&lng=-112.8617&radius=25&taxon_id=26085&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T07:47:39Z"
+   },
+   "inat_season_6008_snakes": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=33.3881&lng=-112.8617&radius=25&taxon_id=30692%2C30668%2C30493%2C30979&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T07:47:39Z"
+   },
+   "inat_season_6008_bear": {
+    "url": "https://api.inaturalist.org/v1/observations/histogram?lat=33.3881&lng=-112.8617&radius=25&taxon_id=41638&quality_grade=research&date_field=observed&interval=month_of_year",
+    "fetched_at": "2026-10-18T07:47:40Z"
+   }
+  },
+  "label": "Decision support from forecasts and models. It does not clear any task, route or crossing as safe."
+ },
+ "weather": {
+  "status": "ok",
+  "hours": [
+   {
+    "hour": 0,
+    "pop": 2,
+    "cape": 210,
+    "gust": 13,
+    "mm": 0.0
+   },
+   {
+    "hour": 1,
+    "pop": 1,
+    "cape": 100,
+    "gust": 14,
+    "mm": 0.0
+   },
+   {
+    "hour": 2,
+    "pop": 2,
+    "cape": 70,
+    "gust": 14,
+    "mm": 0.0
+   },
+   {
+    "hour": 3,
+    "pop": 2,
+    "cape": 60,
+    "gust": 12,
+    "mm": 0.0
+   },
+   {
+    "hour": 4,
+    "pop": 2,
+    "cape": 40,
+    "gust": 12,
+    "mm": 0.0
+   },
+   {
+    "hour": 5,
+    "pop": 2,
+    "cape": 20,
+    "gust": 13,
+    "mm": 0.0
+   },
+   {
+    "hour": 6,
+    "pop": 3,
+    "cape": 0,
+    "gust": 13,
+    "mm": 0.0
+   },
+   {
+    "hour": 7,
+    "pop": 4,
+    "cape": 10,
+    "gust": 15,
+    "mm": 0.0
+   },
+   {
+    "hour": 8,
+    "pop": 4,
+    "cape": 0,
+    "gust": 17,
+    "mm": 0.0
+   },
+   {
+    "hour": 9,
+    "pop": 6,
+    "cape": 90,
+    "gust": 15,
+    "mm": 0.0
+   },
+   {
+    "hour": 10,
+    "pop": 5,
+    "cape": 150,
+    "gust": 16,
+    "mm": 0.0
+   },
+   {
+    "hour": 11,
+    "pop": 4,
+    "cape": 250,
+    "gust": 13,
+    "mm": 0.0
+   },
+   {
+    "hour": 12,
+    "pop": 1,
+    "cape": 330,
+    "gust": 9,
+    "mm": 0.0
+   },
+   {
+    "hour": 13,
+    "pop": 1,
+    "cape": 390,
+    "gust": 8,
+    "mm": 0.0
+   },
+   {
+    "hour": 14,
+    "pop": 1,
+    "cape": 360,
+    "gust": 7,
+    "mm": 0.0
+   },
+   {
+    "hour": 15,
+    "pop": 1,
+    "cape": 258,
+    "gust": 9,
+    "mm": 0.0
+   },
+   {
+    "hour": 16,
+    "pop": 1,
+    "cape": 205,
+    "gust": 9,
+    "mm": 0.0
+   },
+   {
+    "hour": 17,
+    "pop": 1,
+    "cape": 165,
+    "gust": 7,
+    "mm": 0.0
+   },
+   {
+    "hour": 18,
+    "pop": 3,
+    "cape": 90,
+    "gust": 5,
+    "mm": 0.0
+   },
+   {
+    "hour": 19,
+    "pop": 3,
+    "cape": 40,
+    "gust": 5,
+    "mm": 0.0
+   },
+   {
+    "hour": 20,
+    "pop": 3,
+    "cape": 10,
+    "gust": 3,
+    "mm": 0.0
+   },
+   {
+    "hour": 21,
+    "pop": 3,
+    "cape": 0,
+    "gust": 2,
+    "mm": 0.0
+   },
+   {
+    "hour": 22,
+    "pop": 3,
+    "cape": 0,
+    "gust": 1,
+    "mm": 0.0
+   },
+   {
+    "hour": 23,
+    "pop": 3,
+    "cape": 0,
+    "gust": 3,
+    "mm": 0.0
+   }
+  ],
+  "limits": {
+   "wbgt": 88,
+   "gust": 40,
+   "pop": 60,
+   "mm": 1
+  },
+  "work_window": {
+   "start": "06:00",
+   "end": "19:00"
+  },
+  "blocked_runs": [],
+  "alerts": [],
+  "alerts_status": "ok",
+  "alerts_reason": null,
+  "text": [
+   {
+    "name": "Sunday Night",
+    "daytime": false,
+    "starts": "2026-10-18T18:00:00-07:00",
+    "temperature_f": 64,
+    "short": "Mostly Clear",
+    "detail": "Mostly clear, with a low around 64. North northeast wind 0 to 5 mph."
+   },
+   {
+    "name": "Monday",
+    "daytime": true,
+    "starts": "2026-10-19T06:00:00-07:00",
+    "temperature_f": 84,
+    "short": "Sunny",
+    "detail": "Sunny, with a high near 84. East southeast wind 0 to 10 mph."
+   },
+   {
+    "name": "Monday Night",
+    "daytime": false,
+    "starts": "2026-10-19T18:00:00-07:00",
+    "temperature_f": 66,
+    "short": "Mostly Clear",
+    "detail": "Mostly clear, with a low around 66. North northeast wind around 0 mph."
+   }
+  ],
+  "text_reason": null,
+  "sun": {
+   "sunrise": "06:39",
+   "sunset": "17:52"
+  }
+ },
+ "heat": {
+  "status": "ok",
+  "source": {
+   "table": "National Weather Service heat index categories",
+   "url": "https://www.weather.gov/safety/heat-index",
+   "retrieved": "2026-10-18",
+   "verified": "Chart read by hand: the chart is an image and could not be machine-read. Confirm the boundaries and wording against the NWS chart before relying on them.",
+   "osha": [
+    "https://www.osha.gov/heat-exposure/hazards",
+    "https://www.osha.gov/emergency-preparedness/guides/heat-stress"
+   ]
+  },
+  "bands": [
+   {
+    "id": "low",
+    "name": "Below caution",
+    "min": null,
+    "water_every_min": null,
+    "rest": null,
+    "effects": null,
+    "action": "Below the heat index of 80 F where OSHA's extra heat precautions start. Drink water as usual."
+   },
+   {
+    "id": "caution",
+    "name": "Caution",
+    "min": 80,
+    "water_every_min": 15,
+    "rest": "Rest breaks in the shade.",
+    "effects": "Fatigue is possible with long exposure or activity.",
+    "action": "Extra heat precautions apply from 80 F (OSHA). Drink water about every 15 minutes. Take rest breaks in the shade."
+   },
+   {
+    "id": "extreme_caution",
+    "name": "Extreme caution",
+    "min": 91,
+    "water_every_min": 15,
+    "rest": "Frequent rest breaks in the shade.",
+    "effects": "Heat cramps, heat exhaustion or heat stroke are possible with long exposure or activity.",
+    "action": "Drink water about every 15 minutes. Take frequent rest breaks in the shade. Watch the crew for heat illness signs."
+   },
+   {
+    "id": "danger",
+    "name": "Danger",
+    "min": 103,
+    "water_every_min": 15,
+    "rest": "Frequent rest breaks in the shade.",
+    "effects": "Heat cramps and heat exhaustion are likely. Heat stroke is probable with continued activity.",
+    "action": "Drink water about every 15 minutes. Take frequent rest breaks in the shade. Do the heaviest work in the cooler hours."
+   },
+   {
+    "id": "extreme_danger",
+    "name": "Extreme danger",
+    "min": 125,
+    "water_every_min": 15,
+    "rest": "Frequent rest breaks in the shade.",
+    "effects": "Heat stroke is highly likely.",
+    "action": "Move work out of these hours where you can. Where you cannot, drink water about every 15 minutes and take frequent rest breaks in the shade."
+   }
+  ],
+  "wbgt_tiers": [
+   {
+    "min": 90,
+    "name": "stop heavy work"
+   },
+   {
+    "min": 88,
+    "name": "danger, limit heavy work"
+   },
+   {
+    "min": 85,
+    "name": "scheduled rest breaks"
+   },
+   {
+    "min": 82,
+    "name": "caution"
+   }
+  ],
+  "hours": [
+   {
+    "hour": 0,
+    "hi": 69.8,
+    "feels": 69.3,
+    "temp": 70.0,
+    "rh": 70,
+    "wbgt": 63.6,
+    "band": "low",
+    "band_full_sun_max": "caution",
+    "hi_full_sun_max": 85,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 1,
+    "hi": 69.6,
+    "feels": 67.9,
+    "temp": 69.9,
+    "rh": 71,
+    "wbgt": 62.8,
+    "band": "low",
+    "band_full_sun_max": "caution",
+    "hi_full_sun_max": 85,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 2,
+    "hi": 68.5,
+    "feels": 67.5,
+    "temp": 68.8,
+    "rh": 70,
+    "wbgt": 62.1,
+    "band": "low",
+    "band_full_sun_max": "caution",
+    "hi_full_sun_max": 84,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 3,
+    "hi": 67.0,
+    "feels": 65.5,
+    "temp": 67.5,
+    "rh": 70,
+    "wbgt": 61.4,
+    "band": "low",
+    "band_full_sun_max": "caution",
+    "hi_full_sun_max": 82,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 4,
+    "hi": 66.5,
+    "feels": 64.7,
+    "temp": 67.0,
+    "rh": 73,
+    "wbgt": 60.3,
+    "band": "low",
+    "band_full_sun_max": "caution",
+    "hi_full_sun_max": 82,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 5,
+    "hi": 66.6,
+    "feels": 64.6,
+    "temp": 67.1,
+    "rh": 72,
+    "wbgt": 60.2,
+    "band": "low",
+    "band_full_sun_max": "caution",
+    "hi_full_sun_max": 82,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 6,
+    "hi": 65.6,
+    "feels": 63.5,
+    "temp": 66.1,
+    "rh": 72,
+    "wbgt": 59.3,
+    "band": "low",
+    "band_full_sun_max": "caution",
+    "hi_full_sun_max": 81,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 7,
+    "hi": 65.2,
+    "feels": 62.6,
+    "temp": 65.7,
+    "rh": 74,
+    "wbgt": 58.9,
+    "band": "low",
+    "band_full_sun_max": "caution",
+    "hi_full_sun_max": 80,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 8,
+    "hi": 70.5,
+    "feels": 69.0,
+    "temp": 70.8,
+    "rh": 72,
+    "wbgt": 64.1,
+    "band": "low",
+    "band_full_sun_max": "caution",
+    "hi_full_sun_max": 86,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 9,
+    "hi": 75.1,
+    "feels": 75.1,
+    "temp": 75.3,
+    "rh": 66,
+    "wbgt": 68.8,
+    "band": "low",
+    "band_full_sun_max": "caution",
+    "hi_full_sun_max": 90,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 10,
+    "hi": 79.0,
+    "feels": 77.6,
+    "temp": 79.1,
+    "rh": 58,
+    "wbgt": 71.6,
+    "band": "low",
+    "band_full_sun_max": "extreme_caution",
+    "hi_full_sun_max": 94,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 11,
+    "hi": 82.3,
+    "feels": 82.9,
+    "temp": 82.2,
+    "rh": 50,
+    "wbgt": 74.9,
+    "band": "caution",
+    "band_full_sun_max": "extreme_caution",
+    "hi_full_sun_max": 97,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 12,
+    "hi": 84.8,
+    "feels": 88.3,
+    "temp": 85.3,
+    "rh": 44,
+    "wbgt": 77.6,
+    "band": "caution",
+    "band_full_sun_max": "extreme_caution",
+    "hi_full_sun_max": 100,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 13,
+    "hi": 86.3,
+    "feels": 90.9,
+    "temp": 87.3,
+    "rh": 39,
+    "wbgt": 78.8,
+    "band": "caution",
+    "band_full_sun_max": "extreme_caution",
+    "hi_full_sun_max": 101,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 14,
+    "hi": 86.7,
+    "feels": 91.3,
+    "temp": 88.4,
+    "rh": 36,
+    "wbgt": 78.9,
+    "band": "caution",
+    "band_full_sun_max": "extreme_caution",
+    "hi_full_sun_max": 102,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 15,
+    "hi": 86.0,
+    "feels": 88.3,
+    "temp": 88.1,
+    "rh": 34,
+    "wbgt": 76.9,
+    "band": "caution",
+    "band_full_sun_max": "extreme_caution",
+    "hi_full_sun_max": 101,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 16,
+    "hi": 84.9,
+    "feels": 86.6,
+    "temp": 87.2,
+    "rh": 34,
+    "wbgt": 74.9,
+    "band": "caution",
+    "band_full_sun_max": "extreme_caution",
+    "hi_full_sun_max": 100,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 17,
+    "hi": 83.3,
+    "feels": 84.0,
+    "temp": 85.4,
+    "rh": 34,
+    "wbgt": 72.4,
+    "band": "caution",
+    "band_full_sun_max": "extreme_caution",
+    "hi_full_sun_max": 98,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 18,
+    "hi": 80.8,
+    "feels": 80.6,
+    "temp": 81.6,
+    "rh": 40,
+    "wbgt": 69.7,
+    "band": "caution",
+    "band_full_sun_max": "extreme_caution",
+    "hi_full_sun_max": 96,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 19,
+    "hi": 79.8,
+    "feels": 79.6,
+    "temp": 80.0,
+    "rh": 42,
+    "wbgt": 68.8,
+    "band": "caution",
+    "band_full_sun_max": "extreme_caution",
+    "hi_full_sun_max": 95,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 20,
+    "hi": 78.7,
+    "feels": 79.0,
+    "temp": 78.9,
+    "rh": 44,
+    "wbgt": 68.2,
+    "band": "low",
+    "band_full_sun_max": "extreme_caution",
+    "hi_full_sun_max": 94,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 21,
+    "hi": 77.8,
+    "feels": 78.8,
+    "temp": 78.0,
+    "rh": 45,
+    "wbgt": 67.9,
+    "band": "low",
+    "band_full_sun_max": "extreme_caution",
+    "hi_full_sun_max": 93,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 22,
+    "hi": 76.9,
+    "feels": 77.8,
+    "temp": 77.1,
+    "rh": 47,
+    "wbgt": 67.3,
+    "band": "low",
+    "band_full_sun_max": "extreme_caution",
+    "hi_full_sun_max": 92,
+    "wbgt_tier": "below caution"
+   },
+   {
+    "hour": 23,
+    "hi": 76.2,
+    "feels": 76.5,
+    "temp": 76.5,
+    "rh": 48,
+    "wbgt": 66.7,
+    "band": "low",
+    "band_full_sun_max": "extreme_caution",
+    "hi_full_sun_max": 91,
+    "wbgt_tier": "below caution"
+   }
+  ],
+  "peak": {
+   "hour": 14,
+   "hi": 86.7,
+   "band": "caution",
+   "wbgt": 78.9,
+   "hi_full_sun_max": 102
+  },
+  "hottest_window": {
+   "start": "12:00",
+   "end": "17:00"
+  },
+  "workday_hours_by_band": {
+   "low": 5,
+   "caution": 8
+  },
+  "water_plan": [
+   {
+    "start": "06:00",
+    "end": "11:00",
+    "band": "low",
+    "name": "Below caution",
+    "water_every_min": null,
+    "rest": null,
+    "action": "Below the heat index of 80 F where OSHA's extra heat precautions start. Drink water as usual."
+   },
+   {
+    "start": "11:00",
+    "end": "19:00",
+    "band": "caution",
+    "name": "Caution",
+    "water_every_min": 15,
+    "rest": "Rest breaks in the shade.",
+    "action": "Extra heat precautions apply from 80 F (OSHA). Drink water about every 15 minutes. Take rest breaks in the shade."
+   }
+  ],
+  "acclimatization": {
+   "source": {
+    "urls": [
+     "https://www.cdc.gov/niosh/heat-stress/recommendations/acclimatization.html",
+     "https://www.osha.gov/heat-exposure/protecting-new-workers",
+     "https://www.osha.gov/heat-exposure/hazards"
+    ],
+    "retrieved": "2026-10-18",
+    "verified": "Taken from NIOSH and OSHA pages as summarised by a search tool on 2026-10-18. Confirm against the pages before relying on it."
+   },
+   "who": "OSHA treats workers as unacclimatized when they have been on the job less than 1 to 2 weeks. NIOSH treats workers back after an absence of more than a week as new.",
+   "new": {
+    "label": "New workers",
+    "unit": "percent of the usual time in the heat",
+    "schedule": [
+     {
+      "day": 1,
+      "max_percent": 20
+     },
+     {
+      "day": 2,
+      "max_percent": 40
+     },
+     {
+      "day": 3,
+      "max_percent": 60
+     },
+     {
+      "day": 4,
+      "max_percent": 80
+     },
+     {
+      "day": 5,
+      "max_percent": 100
+     }
+    ]
+   },
+   "experienced": {
+    "label": "Experienced workers, first days back",
+    "unit": "percent of the usual time in the heat",
+    "schedule": [
+     {
+      "day": 1,
+      "max_percent": 50
+     },
+     {
+      "day": 2,
+      "max_percent": 60
+     },
+     {
+      "day": 3,
+      "max_percent": 80
+     },
+     {
+      "day": 4,
+      "max_percent": 100
+     }
+    ]
+   },
+   "notes": [
+    "New workers start at no more than 20% of the usual time in the heat on day 1 and add no more than 20% each day.",
+    "Supervise new workers closely for the first 14 days or until they are fully acclimatized.",
+    "In a sudden heat wave, even experienced workers start the first hot day at 50% of the usual time.",
+    "For intense work, take frequent rest breaks and do the work in the cooler part of the day (OSHA)."
+   ]
+  },
+  "notes": [
+   "The heat index assumes shade. In full sun it can be up to 15 F higher (NWS), so the sun column shows the upper case.",
+   "Hourly values are the highest of seven forecast points within 20 km of the site.",
+   "WBGT is an approximation and its tiers are not verified against TB MED 507.",
+   "OSHA treats workers as unacclimatized when they have been on the job less than 1 to 2 weeks. Use the acclimatization switch."
+  ]
+ },
+ "hazard_index": {
+  "status": "ok",
+  "score": 0.5,
+  "tier": "low",
+  "top_driver": "fire",
+  "top_driver_text": "wildfire or dense smoke",
+  "probabilities": {
+   "heat": 0.0002,
+   "storm": 0.0004,
+   "flood": 0.0009,
+   "fire": 0.0063
+  },
+  "risk_preview": 0.5,
+  "rule_max_forecast": 0.0,
+  "drift_flags": [],
+  "inputs": {
+   "wbgt_max_f": 77.9,
+   "heat_index_max_f": 85.2,
+   "gust_max_mph": 12.8,
+   "rain_24h_mm": 0.0,
+   "rain_prev_7d_mm": 0.0
+  },
+  "model_version": "hazidx-0.1.0+2018-2022.23ed6848",
+  "forecast_model": "best_match",
+  "run_at_utc": "2026-10-18T04:24:29Z",
+  "horizon": "tomorrow",
+  "source_file": "ml_scores_20261018T042429Z_for20261018.csv",
+  "caveats": [
+   "The score is the chance that NOAA records a severe event of that kind near the plant, weighted by how often OSHA injuries follow. It is not a count of injuries.",
+   "The model was trained on 60 power plants and on reanalysis weather, then scored on live forecasts.",
+   "In tests the fire model did not beat a simple seasonal average. Do not act on a fire driver alone."
+  ]
+ },
+ "mud": {
+  "status": "ok",
+  "label": "STRAM-inspired, uncalibrated. Prioritizes inspection; does not certify a crossing is safe.",
+  "model_version": "stram-inspired-nrcs-0.1",
+  "generated_at": "2026-10-18T03:27:22+00:00",
+  "horizon": {
+   "key": "d2",
+   "date": "2026-10-19",
+   "label": "Mon Oct 19",
+   "rain_in": 0.043,
+   "soil_moisture": 0.126
+  },
+  "passes": 1,
+  "default_equipment": "road_truck",
+  "thresholds_in": {
+   "inspect": 4.0,
+   "hold": 8.0
+  },
+  "equipment": [
+   {
+    "key": "road_truck",
+    "label": "Road trucks: bucket/line, dump, lowboy",
+    "score": 6.5,
+    "score_p90": 3.1,
+    "worst_flag": "hold",
+    "worst_segment": "1503906279-491",
+    "flagged_route_ft": 481,
+    "route_ft": 149739,
+    "inspect_acres": 370.7,
+    "hold_acres": 3.3
+   },
+   {
+    "key": "excavator",
+    "label": "Tracked excavator (30 t)",
+    "score": 0.0,
+    "score_p90": 0.0,
+    "worst_flag": "ok",
+    "worst_segment": "5688170-0",
+    "flagged_route_ft": 0,
+    "route_ft": 149739,
+    "inspect_acres": 0.0,
+    "hold_acres": 0.0
+   },
+   {
+    "key": "crawler_crane",
+    "label": "Crawler crane (100 t)",
+    "score": 0.0,
+    "score_p90": 0.0,
+    "worst_flag": "ok",
+    "worst_segment": "5688170-0",
+    "flagged_route_ft": 0,
+    "route_ft": 149739,
+    "inspect_acres": 0.0,
+    "hold_acres": 0.0
+   }
+  ],
+  "segment_counts": {
+   "ok": 503,
+   "inspect": 0,
+   "hold": 3
+  },
+  "locally_validated": false,
+  "routes_file": "2026-10-19/mud_routes.geojson",
+  "caveats": [
+   "STRAM-inspired, uncalibrated. Prioritizes inspection; does not certify a crossing is safe.",
+   "1 pass is below the study's observed range (2-80 passes): mild extrapolation of Eq 5 (Z = a/NCI_adj).",
+   "Only unpaved ways in OpenStreetMap are rated. Paved roads and private haul roads are not."
+  ]
+ },
+ "air": {
+  "status": "ok",
+  "hours": [
+   {
+    "hour": 0,
+    "us_aqi": 48,
+    "pm2_5": 9.0,
+    "pm10": 16.1
+   },
+   {
+    "hour": 1,
+    "us_aqi": 49,
+    "pm2_5": 8.8,
+    "pm10": 15.3
+   },
+   {
+    "hour": 2,
+    "us_aqi": 49,
+    "pm2_5": 8.6,
+    "pm10": 14.5
+   },
+   {
+    "hour": 3,
+    "us_aqi": 49,
+    "pm2_5": 8.6,
+    "pm10": 14.0
+   },
+   {
+    "hour": 4,
+    "us_aqi": 49,
+    "pm2_5": 8.7,
+    "pm10": 13.9
+   },
+   {
+    "hour": 5,
+    "us_aqi": 49,
+    "pm2_5": 8.8,
+    "pm10": 13.7
+   },
+   {
+    "hour": 6,
+    "us_aqi": 49,
+    "pm2_5": 9.1,
+    "pm10": 13.9
+   },
+   {
+    "hour": 7,
+    "us_aqi": 50,
+    "pm2_5": 9.5,
+    "pm10": 14.4
+   },
+   {
+    "hour": 8,
+    "us_aqi": 50,
+    "pm2_5": 9.2,
+    "pm10": 13.0
+   },
+   {
+    "hour": 9,
+    "us_aqi": 51,
+    "pm2_5": 10.0,
+    "pm10": 15.0
+   },
+   {
+    "hour": 10,
+    "us_aqi": 51,
+    "pm2_5": 10.3,
+    "pm10": 15.8
+   },
+   {
+    "hour": 11,
+    "us_aqi": 51,
+    "pm2_5": 10.4,
+    "pm10": 16.1
+   },
+   {
+    "hour": 12,
+    "us_aqi": 51,
+    "pm2_5": 10.4,
+    "pm10": 16.1
+   },
+   {
+    "hour": 13,
+    "us_aqi": 52,
+    "pm2_5": 10.0,
+    "pm10": 16.3
+   },
+   {
+    "hour": 14,
+    "us_aqi": 52,
+    "pm2_5": 9.2,
+    "pm10": 15.6
+   },
+   {
+    "hour": 15,
+    "us_aqi": 51,
+    "pm2_5": 8.4,
+    "pm10": 14.7
+   },
+   {
+    "hour": 16,
+    "us_aqi": 51,
+    "pm2_5": 7.7,
+    "pm10": 13.9
+   },
+   {
+    "hour": 17,
+    "us_aqi": 51,
+    "pm2_5": 7.2,
+    "pm10": 13.4
+   },
+   {
+    "hour": 18,
+    "us_aqi": 51,
+    "pm2_5": 6.8,
+    "pm10": 12.5
+   },
+   {
+    "hour": 19,
+    "us_aqi": 50,
+    "pm2_5": 7.1,
+    "pm10": 12.9
+   },
+   {
+    "hour": 20,
+    "us_aqi": 50,
+    "pm2_5": 7.6,
+    "pm10": 13.3
+   },
+   {
+    "hour": 21,
+    "us_aqi": 50,
+    "pm2_5": 8.3,
+    "pm10": 14.1
+   },
+   {
+    "hour": 22,
+    "us_aqi": 49,
+    "pm2_5": 9.2,
+    "pm10": 15.0
+   },
+   {
+    "hour": 23,
+    "us_aqi": 49,
+    "pm2_5": 10.4,
+    "pm10": 16.1
+   }
+  ],
+  "peak": {
+   "hour": 13,
+   "us_aqi": 52,
+   "pm2_5": 10.0,
+   "band": {
+    "min": 51,
+    "name": "Moderate",
+    "meaning": "Air quality is acceptable. Some people who are unusually sensitive may be affected."
+   }
+  },
+  "bands": [
+   {
+    "min": 0,
+    "name": "Good",
+    "meaning": "Air quality is satisfactory."
+   },
+   {
+    "min": 51,
+    "name": "Moderate",
+    "meaning": "Air quality is acceptable. Some people who are unusually sensitive may be affected."
+   },
+   {
+    "min": 101,
+    "name": "Unhealthy for sensitive groups",
+    "meaning": "People with lung or heart disease, older adults and children are the most at risk."
+   },
+   {
+    "min": 151,
+    "name": "Unhealthy",
+    "meaning": "Everyone may begin to have health effects. Sensitive groups may have more serious effects."
+   },
+   {
+    "min": 201,
+    "name": "Very unhealthy",
+    "meaning": "Everyone may have health effects. Sensitive groups may have serious effects."
+   },
+   {
+    "min": 301,
+    "name": "Hazardous",
+    "meaning": "Everyone may have serious health effects."
+   }
+  ],
+  "alerts": [],
+  "wildfire": {
+   "nearest_mi": 241.2,
+   "nearest_name": "MILKY",
+   "within_25_mi": 0
+  },
+  "hazard_index_fire_probability": 0.0063,
+  "notes": [
+   "Air quality is a model forecast, not a sensor reading."
+  ],
+  "source": {
+   "name": "Open-Meteo air quality (CAMS) and the AirNow AQI scale",
+   "url": "https://open-meteo.com/en/docs/air-quality-api"
+  }
+ },
+ "routing": {
+  "status": "ok",
+  "graph_file": "2026-10-19/road_graph.json",
+  "edges": 2455,
+  "rated_edges": 869,
+  "radius_m": 2500,
+  "tide_wet_edges": 0,
+  "caveats": [
+   "Roads come from OpenStreetMap. Private haul roads, gates, closures, weight limits and truck heights are often missing.",
+   "Only unpaved ways are rated by the mud model. A detour can use paved roads that are not rated.",
+   "A detour is a suggestion from map data. Check it on the ground."
+  ],
+  "source": {
+   "name": "OpenStreetMap contributors",
+   "url": "https://www.openstreetmap.org/copyright"
+  }
+ },
+ "wildlife": {
+  "status": "ok",
+  "radius_km": 10,
+  "days": 30,
+  "season_radius_km": 25,
+  "recent_total": 0,
+  "recent_shown": 0,
+  "obscured_not_drawn": 0,
+  "groups": [
+   {
+    "id": "alligator",
+    "label": "American alligator",
+    "recent": 0,
+    "season": {
+     "label": "too few records",
+     "month": 10,
+     "this_month": 0,
+     "year_total": 0,
+     "months": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   {
+    "id": "crocodile",
+    "label": "American crocodile",
+    "recent": 0,
+    "season": {
+     "label": "too few records",
+     "month": 10,
+     "this_month": 0,
+     "year_total": 0,
+     "months": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   {
+    "id": "snakes",
+    "label": "Venomous snakes",
+    "recent": 0,
+    "season": {
+     "label": "few reports",
+     "month": 10,
+     "this_month": 2,
+     "year_total": 147,
+     "months": [
+      0,
+      1,
+      11,
+      30,
+      8,
+      4,
+      30,
+      38,
+      22,
+      2,
+      1,
+      0
+     ]
+    }
+   },
+   {
+    "id": "bear",
+    "label": "American black bear",
+    "recent": 0,
+    "season": {
+     "label": "too few records",
+     "month": 10,
+     "this_month": 0,
+     "year_total": 0,
+     "months": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   }
+  ],
+  "caveats": [
+   "Sightings are reported by volunteers and are denser near towns and trails. A month with few sightings can mean few observers.",
+   "No sightings does not mean no animals. Plan for wildlife on every wet or vegetated site.",
+   "The species list is a starter list and needs confirming for the region."
+  ],
+  "source": {
+   "name": "iNaturalist community observations",
+   "url": "https://www.inaturalist.org/",
+   "note": "Research-grade records with public coordinates. No photos are used."
+  }
+ },
+ "flood": {
+  "status": "ok",
+  "river": {
+   "status": "not_applicable",
+   "reason": "No NWS river forecast point within 25 km of the site."
+  },
+  "levees": {
+   "status": "ok",
+   "inside_leveed_area": false,
+   "nearest_levee_km": 12.91,
+   "systems": [
+    {
+     "id": "1905064044",
+     "name": "Maricopa County Levee 59",
+     "inside": false,
+     "nearest_km": 12.91,
+     "inspection_rating": "Not Rated"
+    },
+    {
+     "id": "1905064033",
+     "name": "Maricopa County Levee 71",
+     "inside": false,
+     "nearest_km": 13.61,
+     "inspection_rating": "Not Rated"
+    }
+   ],
+   "closure_structures": 0,
+   "pump_stations": 0,
+   "inspection_rating_known": true,
+   "caveats": [
+    "The National Levee Database maps levees. It does not say whether a levee will hold on the report day.",
+    "Local or non-USACE levees can be missing from the database.",
+    "'Not rated' means USACE has no inspection rating for the system. It does not mean the levee is sound.",
+    "Tide and flood shading in this report ignores levees on purpose. Treat a leveed area as able to flood."
+   ],
+   "source": {
+    "name": "USACE National Levee Database",
+    "url": "https://levees.sec.usace.army.mil/"
+   }
+  },
+  "tide": {
+   "status": "not_applicable",
+   "reason": "Not a tidal site. The nearest NOAA tide station is 404.8 km away (South San Diego Bay)."
+  }
+ },
+ "verdict": {
+  "level": "limits",
+  "label": "Go with limits",
+  "reasons": [
+   {
+    "level": "limits",
+    "code": "mud",
+    "text": "3 rated route segments are at 'hold' for road trucks. See the routes to avoid."
+   }
+  ],
+  "disclaimer": "This verdict is decision support built from forecasts and models. It does not clear any task, route or crossing as safe. The site safety lead decides.",
+  "work_window": {
+   "start": "06:00",
+   "end": "19:00"
+  }
+ },
+ "hourly": [
+  {
+   "hour": 0,
+   "safe": true,
+   "blocked_by": [],
+   "hi": 69.8,
+   "wbgt": 63.6,
+   "gust": 13,
+   "pop": 2,
+   "mm": 0.0,
+   "cape": 210,
+   "uv": 0.0,
+   "temp": 70.0,
+   "feels": 69.3,
+   "rh": 70,
+   "have_data": true,
+   "band": "low",
+   "aqi": 48,
+   "tide_near_high": false
+  },
+  {
+   "hour": 1,
+   "safe": true,
+   "blocked_by": [],
+   "hi": 69.6,
+   "wbgt": 62.8,
+   "gust": 14,
+   "pop": 1,
+   "mm": 0.0,
+   "cape": 100,
+   "uv": 0.0,
+   "temp": 69.9,
+   "feels": 67.9,
+   "rh": 71,
+   "have_data": true,
+   "band": "low",
+   "aqi": 49,
+   "tide_near_high": false
+  },
+  {
+   "hour": 2,
+   "safe": true,
+   "blocked_by": [],
+   "hi": 68.5,
+   "wbgt": 62.1,
+   "gust": 14,
+   "pop": 2,
+   "mm": 0.0,
+   "cape": 70,
+   "uv": 0.0,
+   "temp": 68.8,
+   "feels": 67.5,
+   "rh": 70,
+   "have_data": true,
+   "band": "low",
+   "aqi": 49,
+   "tide_near_high": false
+  },
+  {
+   "hour": 3,
+   "safe": true,
+   "blocked_by": [],
+   "hi": 67.0,
+   "wbgt": 61.4,
+   "gust": 12,
+   "pop": 2,
+   "mm": 0.0,
+   "cape": 60,
+   "uv": 0.0,
+   "temp": 67.5,
+   "feels": 65.5,
+   "rh": 70,
+   "have_data": true,
+   "band": "low",
+   "aqi": 49,
+   "tide_near_high": false
+  },
+  {
+   "hour": 4,
+   "safe": true,
+   "blocked_by": [],
+   "hi": 66.5,
+   "wbgt": 60.3,
+   "gust": 12,
+   "pop": 2,
+   "mm": 0.0,
+   "cape": 40,
+   "uv": 0.0,
+   "temp": 67.0,
+   "feels": 64.7,
+   "rh": 73,
+   "have_data": true,
+   "band": "low",
+   "aqi": 49,
+   "tide_near_high": false
+  },
+  {
+   "hour": 5,
+   "safe": true,
+   "blocked_by": [],
+   "hi": 66.6,
+   "wbgt": 60.2,
+   "gust": 13,
+   "pop": 2,
+   "mm": 0.0,
+   "cape": 20,
+   "uv": 0.0,
+   "temp": 67.1,
+   "feels": 64.6,
+   "rh": 72,
+   "have_data": true,
+   "band": "low",
+   "aqi": 49,
+   "tide_near_high": false
+  },
+  {
+   "hour": 6,
+   "safe": true,
+   "blocked_by": [],
+   "hi": 65.6,
+   "wbgt": 59.3,
+   "gust": 13,
+   "pop": 3,
+   "mm": 0.0,
+   "cape": 0,
+   "uv": 0.0,
+   "temp": 66.1,
+   "feels": 63.5,
+   "rh": 72,
+   "have_data": true,
+   "band": "low",
+   "aqi": 49,
+   "tide_near_high": false
+  },
+  {
+   "hour": 7,
+   "safe": true,
+   "blocked_by": [],
+   "hi": 65.2,
+   "wbgt": 58.9,
+   "gust": 15,
+   "pop": 4,
+   "mm": 0.0,
+   "cape": 10,
+   "uv": 0.0,
+   "temp": 65.7,
+   "feels": 62.6,
+   "rh": 74,
+   "have_data": true,
+   "band": "low",
+   "aqi": 50,
+   "tide_near_high": false
+  },
+  {
+   "hour": 8,
+   "safe": true,
+   "blocked_by": [],
+   "hi": 70.5,
+   "wbgt": 64.1,
+   "gust": 17,
+   "pop": 4,
+   "mm": 0.0,
+   "cape": 0,
+   "uv": 0.6,
+   "temp": 70.8,
+   "feels": 69.0,
+   "rh": 72,
+   "have_data": true,
+   "band": "low",
+   "aqi": 50,
+   "tide_near_high": false
+  },
+  {
+   "hour": 9,
+   "safe": true,
+   "blocked_by": [],
+   "hi": 75.1,
+   "wbgt": 68.8,
+   "gust": 15,
+   "pop": 6,
+   "mm": 0.0,
+   "cape": 90,
+   "uv": 2.0,
+   "temp": 75.3,
+   "feels": 75.1,
+   "rh": 66,
+   "have_data": true,
+   "band": "low",
+   "aqi": 51,
+   "tide_near_high": false
+  },
+  {
+   "hour": 10,
+   "safe": true,
+   "blocked_by": [],
+   "hi": 79.0,
+   "wbgt": 71.6,
+   "gust": 16,
+   "pop": 5,
+   "mm": 0.0,
+   "cape": 150,
+   "uv": 3.6,
+   "temp": 79.1,
+   "feels": 77.6,
+   "rh": 58,
+   "have_data": true,
+   "band": "low",
+   "aqi": 51,
+   "tide_near_high": false
+  },
+  {
+   "hour": 11,
+   "safe": true,
+   "blocked_by": [],
+   "hi": 82.3,
+   "wbgt": 74.9,
+   "gust": 13,
+   "pop": 4,
+   "mm": 0.0,
+   "cape": 250,
+   "uv": 4.9,
+   "temp": 82.2,
+   "feels": 82.9,
+   "rh": 50,
+   "have_data": true,
+   "band": "caution",
+   "aqi": 51,
+   "tide_near_high": false
+  },
+  {
+   "hour": 12,
+   "safe": true,
+   "blocked_by": [],
+   "hi": 84.8,
+   "wbgt": 77.6,
+   "gust": 9,
+   "pop": 1,
+   "mm": 0.0,
+   "cape": 330,
+   "uv": 5.7,
+   "temp": 85.3,
+   "feels": 88.3,
+   "rh": 44,
+   "have_data": true,
+   "band": "caution",
+   "aqi": 51,
+   "tide_near_high": false
+  },
+  {
+   "hour": 13,
+   "safe": true,
+   "blocked_by": [],
+   "hi": 86.3,
+   "wbgt": 78.8,
+   "gust": 8,
+   "pop": 1,
+   "mm": 0.0,
+   "cape": 390,
+   "uv": 5.5,
+   "temp": 87.3,
+   "feels": 90.9,
+   "rh": 39,
+   "have_data": true,
+   "band": "caution",
+   "aqi": 52,
+   "tide_near_high": false
+  },
+  {
+   "hour": 14,
+   "safe": true,
+   "blocked_by": [],
+   "hi": 86.7,
+   "wbgt": 78.9,
+   "gust": 7,
+   "pop": 1,
+   "mm": 0.0,
+   "cape": 360,
+   "uv": 5.4,
+   "temp": 88.4,
+   "feels": 91.3,
+   "rh": 36,
+   "have_data": true,
+   "band": "caution",
+   "aqi": 52,
+   "tide_near_high": false
+  },
+  {
+   "hour": 15,
+   "safe": true,
+   "blocked_by": [],
+   "hi": 86.0,
+   "wbgt": 76.9,
+   "gust": 9,
+   "pop": 1,
+   "mm": 0.0,
+   "cape": 258,
+   "uv": 4.3,
+   "temp": 88.1,
+   "feels": 88.3,
+   "rh": 34,
+   "have_data": true,
+   "band": "caution",
+   "aqi": 51,
+   "tide_near_high": false
+  },
+  {
+   "hour": 16,
+   "safe": true,
+   "blocked_by": [],
+   "hi": 84.9,
+   "wbgt": 74.9,
+   "gust": 9,
+   "pop": 1,
+   "mm": 0.0,
+   "cape": 205,
+   "uv": 2.8,
+   "temp": 87.2,
+   "feels": 86.6,
+   "rh": 34,
+   "have_data": true,
+   "band": "caution",
+   "aqi": 51,
+   "tide_near_high": false
+  },
+  {
+   "hour": 17,
+   "safe": true,
+   "blocked_by": [],
+   "hi": 83.3,
+   "wbgt": 72.4,
+   "gust": 7,
+   "pop": 1,
+   "mm": 0.0,
+   "cape": 165,
+   "uv": 1.3,
+   "temp": 85.4,
+   "feels": 84.0,
+   "rh": 34,
+   "have_data": true,
+   "band": "caution",
+   "aqi": 51,
+   "tide_near_high": false
+  },
+  {
+   "hour": 18,
+   "safe": true,
+   "blocked_by": [],
+   "hi": 80.8,
+   "wbgt": 69.7,
+   "gust": 5,
+   "pop": 3,
+   "mm": 0.0,
+   "cape": 90,
+   "uv": 0.2,
+   "temp": 81.6,
+   "feels": 80.6,
+   "rh": 40,
+   "have_data": true,
+   "band": "caution",
+   "aqi": 51,
+   "tide_near_high": false
+  },
+  {
+   "hour": 19,
+   "safe": true,
+   "blocked_by": [],
+   "hi": 79.8,
+   "wbgt": 68.8,
+   "gust": 5,
+   "pop": 3,
+   "mm": 0.0,
+   "cape": 40,
+   "uv": 0.0,
+   "temp": 80.0,
+   "feels": 79.6,
+   "rh": 42,
+   "have_data": true,
+   "band": "caution",
+   "aqi": 50,
+   "tide_near_high": false
+  },
+  {
+   "hour": 20,
+   "safe": true,
+   "blocked_by": [],
+   "hi": 78.7,
+   "wbgt": 68.2,
+   "gust": 3,
+   "pop": 3,
+   "mm": 0.0,
+   "cape": 10,
+   "uv": 0.0,
+   "temp": 78.9,
+   "feels": 79.0,
+   "rh": 44,
+   "have_data": true,
+   "band": "low",
+   "aqi": 50,
+   "tide_near_high": false
+  },
+  {
+   "hour": 21,
+   "safe": true,
+   "blocked_by": [],
+   "hi": 77.8,
+   "wbgt": 67.9,
+   "gust": 2,
+   "pop": 3,
+   "mm": 0.0,
+   "cape": 0,
+   "uv": 0.0,
+   "temp": 78.0,
+   "feels": 78.8,
+   "rh": 45,
+   "have_data": true,
+   "band": "low",
+   "aqi": 50,
+   "tide_near_high": false
+  },
+  {
+   "hour": 22,
+   "safe": true,
+   "blocked_by": [],
+   "hi": 76.9,
+   "wbgt": 67.3,
+   "gust": 1,
+   "pop": 3,
+   "mm": 0.0,
+   "cape": 0,
+   "uv": 0.0,
+   "temp": 77.1,
+   "feels": 77.8,
+   "rh": 47,
+   "have_data": true,
+   "band": "low",
+   "aqi": 49,
+   "tide_near_high": false
+  },
+  {
+   "hour": 23,
+   "safe": true,
+   "blocked_by": [],
+   "hi": 76.2,
+   "wbgt": 66.7,
+   "gust": 3,
+   "pop": 3,
+   "mm": 0.0,
+   "cape": 0,
+   "uv": 0.0,
+   "temp": 76.5,
+   "feels": 76.5,
+   "rh": 48,
+   "have_data": true,
+   "band": "low",
+   "aqi": 49,
+   "tide_near_high": false
+  }
+ ],
+ "tasks": {
+  "status": "ok",
+  "profiles": [
+   {
+    "id": "heavy_equipment",
+    "label": "Heavy equipment moves",
+    "description": "Trucks, excavators and cranes moving on site roads.",
+    "blockers": [
+     {
+      "id": "wbgt",
+      "kind": "hour",
+      "factor": "wbgt",
+      "limit": 88,
+      "label": "Heat (WBGT)",
+      "unit": "F",
+      "source": "Alert rules (briefing.ts)",
+      "needs_confirmation": false
+     },
+     {
+      "id": "gust",
+      "kind": "hour",
+      "factor": "gust",
+      "limit": 40,
+      "label": "Wind gusts",
+      "unit": "mph",
+      "source": "Alert rules (briefing.ts)",
+      "needs_confirmation": false
+     },
+     {
+      "id": "pop",
+      "kind": "hour",
+      "factor": "pop",
+      "limit": 60,
+      "label": "Storm chance",
+      "unit": "%",
+      "source": "Alert rules (briefing.ts)",
+      "needs_confirmation": false
+     },
+     {
+      "id": "mm",
+      "kind": "hour",
+      "factor": "mm",
+      "limit": 1,
+      "label": "Rain",
+      "unit": "mm per hour",
+      "source": "Alert rules (briefing.ts)",
+      "needs_confirmation": false
+     },
+     {
+      "id": "mud",
+      "kind": "site",
+      "flag": "mud",
+      "values": [
+       "hold"
+      ],
+      "label": "Routes at hold (mud)",
+      "source": "Mud model, uncalibrated",
+      "needs_confirmation": true
+     }
+    ]
+   },
+   {
+    "id": "aerial_line",
+    "label": "Aerial or line work",
+    "description": "Bucket trucks, lifts and work at height.",
+    "blockers": [
+     {
+      "id": "wbgt",
+      "kind": "hour",
+      "factor": "wbgt",
+      "limit": 88,
+      "label": "Heat (WBGT)",
+      "unit": "F",
+      "source": "Alert rules (briefing.ts)",
+      "needs_confirmation": false
+     },
+     {
+      "id": "gust",
+      "kind": "hour",
+      "factor": "gust",
+      "limit": 40,
+      "label": "Wind gusts",
+      "unit": "mph",
+      "source": "Default from the alert rules. Lift and crane manuals often set a lower limit. Use your equipment manual.",
+      "needs_confirmation": true
+     },
+     {
+      "id": "pop",
+      "kind": "hour",
+      "factor": "pop",
+      "limit": 60,
+      "label": "Storm chance",
+      "unit": "%",
+      "source": "Alert rules (briefing.ts)",
+      "needs_confirmation": false
+     },
+     {
+      "id": "mm",
+      "kind": "hour",
+      "factor": "mm",
+      "limit": 1,
+      "label": "Rain",
+      "unit": "mm per hour",
+      "source": "Alert rules (briefing.ts)",
+      "needs_confirmation": false
+     }
+    ]
+   },
+   {
+    "id": "trenching",
+    "label": "Trenching and excavation",
+    "description": "Open trenches and pits.",
+    "blockers": [
+     {
+      "id": "wbgt",
+      "kind": "hour",
+      "factor": "wbgt",
+      "limit": 88,
+      "label": "Heat (WBGT)",
+      "unit": "F",
+      "source": "Alert rules (briefing.ts)",
+      "needs_confirmation": false
+     },
+     {
+      "id": "pop",
+      "kind": "hour",
+      "factor": "pop",
+      "limit": 60,
+      "label": "Storm chance",
+      "unit": "%",
+      "source": "Alert rules (briefing.ts)",
+      "needs_confirmation": false
+     },
+     {
+      "id": "mm",
+      "kind": "hour",
+      "factor": "mm",
+      "limit": 1,
+      "label": "Rain",
+      "unit": "mm per hour",
+      "source": "Alert rules (briefing.ts)",
+      "needs_confirmation": false
+     },
+     {
+      "id": "tide",
+      "kind": "hour",
+      "factor": "tide_near_high",
+      "limit": 1,
+      "label": "Within one hour of high tide (low ground)",
+      "unit": "",
+      "source": "Tide predictions",
+      "needs_confirmation": true,
+      "only_if": "tide_shading"
+     },
+     {
+      "id": "river",
+      "kind": "site",
+      "flag": "river",
+      "values": [
+       "minor",
+       "moderate",
+       "major"
+      ],
+      "label": "River forecast at flood stage",
+      "source": "NWS river forecast",
+      "needs_confirmation": true
+     }
+    ]
+   },
+   {
+    "id": "brush_swamp",
+    "label": "Brush clearing and swamp work on foot",
+    "description": "Work on foot in vegetation, wet ground or near water.",
+    "blockers": [
+     {
+      "id": "wbgt",
+      "kind": "hour",
+      "factor": "wbgt",
+      "limit": 88,
+      "label": "Heat (WBGT)",
+      "unit": "F",
+      "source": "Alert rules (briefing.ts)",
+      "needs_confirmation": false
+     },
+     {
+      "id": "hi",
+      "kind": "hour",
+      "factor": "hi",
+      "limit": 103,
+      "label": "Heat index (Danger band)",
+      "unit": "F",
+      "source": "NWS heat index categories",
+      "needs_confirmation": true
+     },
+     {
+      "id": "pop",
+      "kind": "hour",
+      "factor": "pop",
+      "limit": 60,
+      "label": "Storm chance",
+      "unit": "%",
+      "source": "Alert rules (briefing.ts)",
+      "needs_confirmation": false
+     },
+     {
+      "id": "aqi",
+      "kind": "hour",
+      "factor": "aqi",
+      "limit": 151,
+      "label": "Air quality index (Unhealthy)",
+      "unit": "AQI",
+      "source": "AirNow AQI categories",
+      "needs_confirmation": true
+     },
+     {
+      "id": "tide",
+      "kind": "hour",
+      "factor": "tide_near_high",
+      "limit": 1,
+      "label": "Within one hour of high tide (low ground)",
+      "unit": "",
+      "source": "Tide predictions",
+      "needs_confirmation": true,
+      "only_if": "tide_shading"
+     }
+    ]
+   }
+  ],
+  "site_flags": {
+   "mud": "hold",
+   "river": null,
+   "tide_shading": false
+  },
+  "note": "Limits marked 'confirm' are defaults. Replace them with the limit in your equipment manual or site safety plan."
+ },
+ "limits": [
+  "Storm chance is the forecast chance of rain. There is no lightning forecast. Live lightning stops work through the site alerts.",
+  "Hourly values are the highest of seven forecast points within 20 km of the site.",
+  "A forecast can change. Check the report again in the morning."
+ ],
+ "changes": {
+  "status": "ok",
+  "since": "2026-10-18T07:38:21Z",
+  "since_kind": "evening",
+  "items": []
+ },
+ "gaps": [
+  {
+   "section": "flood.river",
+   "status": "not_applicable",
+   "reason": "No NWS river forecast point within 25 km of the site."
+  },
+  {
+   "section": "flood.tide",
+   "status": "not_applicable",
+   "reason": "Not a tidal site. The nearest NOAA tide station is 404.8 km away (South San Diego Bay)."
+  }
+ ]
+}

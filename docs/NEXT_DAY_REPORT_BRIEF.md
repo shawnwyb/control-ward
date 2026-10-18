@@ -65,7 +65,10 @@ Out of scope:
 - Colour is never the only signal. Every band, flag and verdict also has a word or symbol.
 - The page works at phone width and prints to a short PDF.
 - Map layers can be switched on and off. The map has a text alternative: the same facts in lists.
-- Report text follows Standard Technical English: short sentences, concrete verbs, terms defined at first use.
+- The detour planner works with the keyboard: arrow keys move a crosshair, Enter picks the point, Escape cancels. "Start at the plant" fills in the start.
+- Routes to avoid are also listed in words, worst first, so the answer does not depend on the map.
+- On phones, sticky links jump to each panel. Source notes are folded under "About this data" and open when the page prints. Caveats that change a decision stay visible.
+- Report text follows Standard Technical English: short sentences, concrete verbs, terms defined at first use (WBGT, CAPE, MLLW and NAVD88 carry their long form).
 
 ## Technical constraints and integrations
 
