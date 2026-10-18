@@ -91,7 +91,10 @@ test(
           };
         }
         assert.match(prompt, /'valid': True/);
-        return { value: { type: "finish", items: [item] }, tokens: 100 };
+        return {
+          value: { type: "finish", proposal_id: "proposal-1" },
+          tokens: 100,
+        };
       },
     });
     assert.equal(output.content.items.length, 1);
