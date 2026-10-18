@@ -1,4 +1,5 @@
 import type { Json } from "../database.types";
+import { READINGS_WINDOW_MS, type Reading } from "./explain";
 import { supabase } from "./supabase";
 import { riskLevel, riskTone } from "./risk";
 import {
@@ -144,6 +145,21 @@ export async function fetchSiteRisk(siteId: string): Promise<SiteRiskView> {
     subscores: (data?.subscores ?? {}) as Subscores,
     activeAlerts: data?.active_alert_count ?? 0,
   };
+}
+
+/** Live readings (not forecasts) from the window the rules engine looks at, newest first. */
+export async function fetchReadings(siteId: string): Promise<Reading[]> {
+  const since = new Date(Date.now() - READINGS_WINDOW_MS).toISOString();
+  const { data, error } = await supabase
+    .from("readings")
+    .select("hazard, unit, value, observed_at, forecast_for")
+    .eq("site_id", siteId)
+    .eq("forecast_for", "-infinity")
+    .gte("observed_at", since)
+    .order("observed_at", { ascending: false })
+    .limit(500);
+  if (error) throw error;
+  return data as Reading[];
 }
 
 /** One summary per site the caller can see (row-level security scopes the view). */

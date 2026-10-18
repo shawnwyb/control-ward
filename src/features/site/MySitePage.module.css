@@ -41,6 +41,17 @@
   box-shadow: var(--shadow-float);
 }
 
+.card {
+  flex-wrap: wrap;
+}
+
+.why {
+  flex-basis: 100%;
+  margin: 0;
+  color: var(--ink-2);
+  font-size: var(--text-xs);
+}
+
 .name {
   min-width: 0;
   overflow: hidden;
@@ -103,8 +114,9 @@
   border-radius: var(--radius-card);
   background: var(--bg);
   box-shadow: var(--shadow-float);
-  max-height: calc(100dvh - 22rem);
-  overflow: auto;
+  max-height: calc(100dvh - 24rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 .body[hidden] {

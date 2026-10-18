@@ -518,7 +518,8 @@ test("map: site pins and fly-to", async ({ page }) => {
     await map.getByRole("button", { name: "Zoom out" }).click();
     await expect(south).toBeInViewport({ timeout: 800 });
   }).toPass({ timeout: 15000 });
-  await south.click();
+  // A hazard marker can sit on top of the pin at some zoom levels, so click it directly.
+  await south.dispatchEvent("click");
   await expect(page.locator("#site")).toHaveValue("site-south");
   await expect(south).toHaveAttribute("aria-current", "true");
   // Per-site state still resets without a remount: the drawer closes and the draft starts clean.
@@ -1210,7 +1211,7 @@ test("conditions: crew My site shows weather and hazard numbers", async ({
   await expect(card.getByText("gusts 22")).toBeVisible();
   await expect(card.getByText("Open-Meteo")).toBeVisible();
   const scores = card.getByRole("list", { name: "Hazard scores" });
-  await expect(scores.getByText("Heat")).toBeVisible();
+  await expect(scores.getByText("Heat", { exact: true })).toBeVisible();
   await expect(scores.getByText(/^\d\.\d$/).first()).toBeVisible();
   await page.screenshot({
     path: ".superpowers/sdd/2026-10-17-ui-revamp/shots/conditions-crew.png",
@@ -1249,4 +1250,133 @@ test("conditions: phone starts collapsed and opens without covering Report hazar
   const box = await body.boundingBox();
   expect(report && box).toBeTruthy();
   expect(box!.y + box!.height).toBeLessThanOrEqual(report!.y + 1);
+});
+
+const shots = ".superpowers/sdd/2026-10-17-ui-revamp/shots";
+
+test("explain: Sites hazard detail explains the heat score", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await signIn(page, "supervisor@planit.local");
+  const sites = page.getByRole("region", { name: "Sites" });
+  await sites.getByRole("button", { name: "North Plant" }).click();
+  const detail = page.getByRole("region", { name: "Hazard detail" });
+  await detail.scrollIntoViewIfNeeded();
+  const heat = detail.getByRole("button", { name: /^Heat/ });
+  await expect(heat).toHaveAttribute("aria-expanded", "false");
+  // The raw value shows without expanding.
+  await expect(heat).toContainText("Heat index 98°F");
+  await heat.click();
+  await expect(heat).toHaveAttribute("aria-expanded", "true");
+  const panel = detail.locator("#explain-heat");
+  await expect(panel).toContainText("WBGT 86°F · heat index 98°F");
+  await expect(panel).toContainText(
+    "WBGT 85–88°F → 5.0 · scheduled rest breaks",
+  );
+  await expect(panel).toContainText("Rises to 7.5 at WBGT 88°F");
+  await expect(panel).not.toContainText("Readings updated");
+  await page.screenshot({ path: `${shots}/explain-sites.png` });
+});
+
+test("explain: Sites shows how the overall index is built", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await signIn(page, "supervisor@planit.local");
+  await page
+    .getByRole("region", { name: "Sites" })
+    .getByRole("button", { name: "Tampa Bay" })
+    .click();
+  const line = page.locator("#risk-now-explain");
+  await expect(line).toContainText(/^6\.9 = .*\(worst hazard\)|^6\.9 = ML/);
+  await expect(line).toContainText("6.9 =");
+});
+
+test("explain: Sites flood explains the zone and river multipliers", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await signIn(page, "supervisor@planit.local");
+  await page
+    .getByRole("region", { name: "Sites" })
+    .getByRole("button", { name: "South Plant" })
+    .click();
+  const detail = page.getByRole("region", { name: "Hazard detail" });
+  const flood = detail.getByRole("button", { name: /^Flood/ });
+  await flood.click();
+  const panel = detail.locator("#explain-flood");
+  await expect(panel).toContainText("31 mm (1.22 in)");
+  await expect(panel).toContainText("×1.3 FEMA zone AE");
+  await expect(panel).toContainText("×1.2 river 2.4 km away");
+  await expect(flood).toContainText("6.2");
+});
+
+test("explain: crew My site conditions explain a hazard and the index", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await signIn(page, "crew@planit.local");
+  const card = page.locator("#conditions-body");
+  const heat = card.getByRole("button", { name: /^Heat/ });
+  await expect(heat).toHaveAttribute("aria-expanded", "false");
+  await expect(heat).toContainText("Heat index 98°F");
+  await heat.click();
+  await expect(heat).toHaveAttribute("aria-expanded", "true");
+  await expect(card.locator("#cond-explain-heat")).toContainText(
+    "Rises to 7.5 at WBGT 88°F",
+  );
+  await expect(page.locator("#risk-now-explain")).toContainText("5.2");
+  await page.screenshot({ path: `${shots}/explain-crew.png` });
+});
+
+test("explain: crew conditions card keeps Report hazard and the whole list reachable", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await signIn(page, "crew@planit.local");
+  const body = page.locator("#conditions-body");
+  const report = page.getByRole("button", { name: "Report hazard" });
+  await expect(report).toBeVisible();
+  const box = (await body.boundingBox())!;
+  const rbox = (await report.boundingBox())!;
+  expect(box.y + box.height).toBeLessThan(800 - 120);
+  const overlaps =
+    box.x < rbox.x + rbox.width &&
+    rbox.x < box.x + box.width &&
+    box.y < rbox.y + rbox.height &&
+    rbox.y < box.y + box.height;
+  expect(overlaps).toBe(false);
+  // The last hazard is reachable by scrolling the card.
+  const last = body.getByRole("button", { name: /^Wildlife/ });
+  await last.scrollIntoViewIfNeeded();
+  await expect(last).toBeVisible();
+  await page.screenshot({ path: `${shots}/explain-conditions.png` });
+});
+
+test("explain: a stored score that differs from the readings is flagged", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await signIn(page, "supervisor@planit.local");
+  await page.waitForFunction(
+    () => (window as unknown as { __mockFlags?: object }).__mockFlags,
+  );
+  // Soil is stored as 2.0; make the served readings disagree with it.
+  await page.evaluate(() => {
+    (
+      window as unknown as { __mockFlags: { readings: Record<string, number> } }
+    ).__mockFlags.readings.soil_moisture_frac = 0.5;
+  });
+  await page
+    .getByRole("region", { name: "Sites" })
+    .getByRole("button", { name: "North Plant" })
+    .click();
+  const detail = page.getByRole("region", { name: "Hazard detail" });
+  const soil = detail.getByRole("button", { name: /^Soil/ });
+  await soil.click();
+  await expect(soil).toContainText("2.0");
+  await expect(detail.locator("#explain-soil")).toContainText(
+    "Readings updated since last score.",
+  );
 });

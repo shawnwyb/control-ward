@@ -350,6 +350,7 @@ export function SiteWorkspace({
             overlay={reportLayer}
             location={location}
             alertCount={alertCount}
+            crewTerm={feed.metrics.crewRisk}
           />
         ) : null}
         {page === "alerts" ? (

@@ -1,5 +1,8 @@
+import { useState } from "react";
 import type { Site } from "../../lib/types";
-import { Icon, IndexTag, type IconName } from "../../components/ui";
+import { ExplainPanel } from "../risk/ExplainPanel";
+import { useExplain } from "../risk/useExplain";
+import { Icon, IndexTag, cx, type IconName } from "../../components/ui";
 import { useConditions } from "../../hooks/useConditions";
 import { useNow } from "../../hooks/useNow";
 import {
@@ -30,6 +33,7 @@ function Tile({
   unit,
   note,
   id,
+  wide,
 }: {
   icon: IconName;
   label: string;
@@ -37,9 +41,10 @@ function Tile({
   unit?: string;
   note?: string;
   id: string;
+  wide?: boolean;
 }) {
   return (
-    <div className={styles.tile} id={id}>
+    <div className={cx(styles.tile, wide && styles.wide)} id={id}>
       <span className={styles.label}>
         <Icon name={icon} size={16} />
         {label}
@@ -63,7 +68,8 @@ export function ConditionsCard({
   subscores,
   subscoresLoaded = true,
 }: {
-  site: Pick<Site, "id" | "latitude" | "longitude">;
+  site: Pick<Site, "id" | "latitude" | "longitude"> &
+    Partial<Pick<Site, "fema_flood_zone" | "river_distance_m">>;
   lightning: LightningView;
   /** When given, the hazard scores show below the weather tiles. */
   subscores?: Subscores;
@@ -71,6 +77,8 @@ export function ConditionsCard({
 }) {
   const { conditions: c, loaded, error, updatedAt } = useConditions(site);
   const now = useNow(updatedAt > 0);
+  const explain = useExplain(site, lightning, subscores ?? {});
+  const [open, setOpen] = useState<string | null>(null);
   const strike =
     lightning.status === "stop_work" && lightning.lastStrikeDistanceM !== null
       ? `${metersToMiles(lightning.lastStrikeDistanceM)} mi`
@@ -110,6 +118,7 @@ export function ConditionsCard({
             label="Lightning"
             value={strike ?? "None nearby"}
             note={strike ? "last strike" : undefined}
+            wide
           />
         </div>
       ) : loaded ? (
@@ -124,11 +133,41 @@ export function ConditionsCard({
       {subscores ? (
         <ul className={styles.scores} aria-label="Hazard scores">
           {order.map((key) => {
-            const v = subscoresLoaded ? subscores[key] : undefined;
+            const view = subscoresLoaded ? explain(key) : null;
+            const isOpen = open === key;
             return (
               <li key={key} className={styles.score}>
-                <span>{hazardInfo[key].name}</span>
-                <IndexTag value={typeof v === "number" ? v : null} />
+                <button
+                  type="button"
+                  className={styles.scoreBtn}
+                  aria-expanded={isOpen}
+                  aria-controls={`cond-explain-${key}`}
+                  disabled={!view}
+                  onClick={() => setOpen(isOpen ? null : key)}
+                >
+                  <span className={styles.scoreName}>
+                    {hazardInfo[key].name}
+                    {view?.explanation ? (
+                      <span className={styles.headline}>
+                        {view.explanation.headline}
+                      </span>
+                    ) : null}
+                  </span>
+                  <IndexTag value={view ? view.stored : null} />
+                  <Icon
+                    name="chevron"
+                    size={14}
+                    className={isOpen ? styles.chevOpen : styles.chev}
+                  />
+                </button>
+                {view ? (
+                  <ExplainPanel
+                    id={`cond-explain-${key}`}
+                    open={isOpen}
+                    explanation={view.explanation}
+                    stale={view.stale}
+                  />
+                ) : null}
               </li>
             );
           })}

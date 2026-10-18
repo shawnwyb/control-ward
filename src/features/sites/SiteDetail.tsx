@@ -30,6 +30,8 @@ export function SiteDetail({
       <h3 className={styles.sub}>Conditions</h3>
       <ConditionsCard site={site} lightning={lightning} />
       <RiskPanel
+        site={site}
+        lightning={lightning}
         siteId={site.id}
         risk={risk}
         loaded={loaded}
