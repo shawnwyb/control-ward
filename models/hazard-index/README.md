@@ -4,6 +4,24 @@ One calibrated model per hazard family predicts the probability that NOAA Storm 
 
 Brief: `docs/PROJECT_BRIEF.md`. Results: `notebooks/results.ipynb` and `artifacts/models/<version>/metrics.json`.
 
+**Where the model lives.** The trained model is `artifacts/models/<model_version>/bundle.joblib` (about 0.7 MB: the four family models and their past-data-only twins, Platt calibrators, severity weights, the 0–10 map, per-plant monthly normals and drift ranges). `artifacts/models/latest.json` names the current version; `train.load_bundle()` loads it. It runs only on this machine; nothing is deployed to Supabase.
+
+## Quick start: `run.sh`
+
+`run.sh` wraps the scripts below and works from any directory (`./run.sh help` for all options):
+
+```sh
+models/hazard-index/run.sh                          # live scores for today and tomorrow (~220 Open-Meteo calls)
+models/hazard-index/run.sh replay 2024-08-14 56407  # a past day from the ERA5 cache, offline
+models/hazard-index/run.sh rescore 20261018T001527Z # saved live responses with the current model, offline
+models/hazard-index/run.sh status                   # download coverage, current model, test metrics, latest scores
+models/hazard-index/run.sh fetch 5000               # download what is missing (exit 3 = daily quota; run again after 00:00 UTC)
+models/hazard-index/run.sh train                    # build_dataset -> compute_severity -> train -> evaluate
+models/hazard-index/run.sh all                      # fetch -> train -> score
+models/hazard-index/run.sh test                     # unit tests
+models/hazard-index/run.sh notebook                 # re-execute notebooks/results.ipynb
+```
+
 ## Run order
 
 Run from anywhere; every script finds its files relative to `models/hazard-index/`. Use the repository venv (`.venv/bin/python`, Python 3.11) after `pip install -r requirements.txt`.

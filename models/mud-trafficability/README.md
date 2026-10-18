@@ -4,6 +4,7 @@ Forecasts potential ground rutting and highlights access-route segments that nee
 mobilization, for the 60 power plants on the hosted project. It is **uncalibrated** and **not** a crossing clearance.
 
 - `PROJECT_BRIEF.md`: the agreed spec, every assumption, and the decisions made while building it.
+- `RUNBOOK.md`: step-by-step setup and the forecast-to-production procedure (`run_daily.sh` automates it).
 - `plan.md`: methodology notes and the validation pilot.
 - `soil_trafficability_forecasting.md`: Jones & Arp (2019), the source study.
 - `example_stram_usa_converter.py`: the SI/US equation reference. `stram/equations.py` is ported from it, and the tests check the port.
@@ -52,8 +53,9 @@ any weather. See `PROJECT_BRIEF.md` → *Decisions*.
 
 ## Pushing to the production `ml_scores`
 
-`push` writes `ml_scores_push.sql` (p90 score by default; `--metric max` for the worst segment). `push --apply` sends it
-to the linked production project, in this order:
+See `RUNBOOK.md` for the full step-by-step procedure (one-time setup, preflight checks, troubleshooting) and
+`run_daily.sh` to automate it. Short version: `push` writes `ml_scores_push.sql` (p90 score by default; `--metric max`
+for the worst segment). `push --apply` sends it to the linked production project, in this order:
 
 1. **Preflight:** the Supabase CLI is on PATH, the checkout is linked (`supabase/.temp/project-ref`), the run is under
    24 h old (`--allow-stale` to override), and all sites exist in production `public.sites`.
