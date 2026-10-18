@@ -28,6 +28,7 @@ const bodies = {
   close: '<path d="M6 6l12 12M18 6L6 18"/>',
   alert: '<path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18v.5"/>',
   play: '<path d="M8 5l11 7-11 7z"/>',
+  menu: '<path d="M4 6h16M4 12h16M4 18h16"/>',
   pause: '<path d="M8 5v14M16 5v14"/>',
   // Hazard and navigation set
   bolt,

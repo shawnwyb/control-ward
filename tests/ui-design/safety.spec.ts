@@ -1,9 +1,12 @@
 import { test, expect, type Page } from "@playwright/test";
-async function login(page: Page, email: string, navigate = true) {
-  if (navigate) await page.goto("/");
+import { go, signIn } from "./helpers";
+// `navigate` false signs in on the sign-in page already showing (after Sign out).
+async function login(page: Page, email: string, navigate = true, query = "") {
+  if (navigate) return signIn(page, email, query);
   await page.getByLabel("Email").fill(email);
   await page.getByLabel("Password").fill("CrewDemo123!");
   await page.getByRole("button", { name: /sign in/i }).click();
+  await expect(page.locator("#sidebar")).toBeAttached();
 }
 async function saveWork(page: Page) {
   const panel = page.locator("#safety-checklist");
@@ -23,6 +26,7 @@ test("supervisor drafts, edits, publishes; crew sees only publication and exact 
   page.on("pageerror", (e) => errors.push(e.message));
   await login(page, "supervisor@planit.local");
   await page.locator("#site").selectOption("site-north");
+  await go(page, "Next-day briefing");
   const panel = await saveWork(page);
   await panel
     .getByRole("button", { name: "Generate safety draft", exact: true })
@@ -51,6 +55,7 @@ test("supervisor drafts, edits, publishes; crew sees only publication and exact 
   await panel.screenshot({ path: "test-results/safety-supervisor.png" });
   await page.getByRole("button", { name: "Sign out" }).click();
   await login(page, "crew@planit.local", false);
+  await go(page, "Tomorrow's briefing");
   await expect(
     panel.getByRole("button", { name: "Acknowledge this revision" }),
   ).toBeEnabled();
@@ -79,8 +84,8 @@ test("supervisor drafts, edits, publishes; crew sees only publication and exact 
 test("stale guidance is visible and cannot be acknowledged; crew alerts remain", async ({
   page,
 }) => {
-  await page.goto("/?safety=stale");
-  await login(page, "crew@planit.local", false);
+  await login(page, "crew@planit.local", true, "?safety=stale");
+  await go(page, "Tomorrow's briefing");
   const panel = page.locator("#safety-checklist");
   await expect(
     panel.getByText("Needs supervisor review", { exact: true }),
@@ -91,6 +96,7 @@ test("stale guidance is visible and cannot be acknowledged; crew alerts remain",
   await expect(
     panel.getByText(/Hazard feed is missing or stale/),
   ).toBeVisible();
+  await go(page, "Alerts");
   await expect(
     page.getByRole("alert").filter({ hasText: "Stop work" }),
   ).toBeVisible();
@@ -98,8 +104,8 @@ test("stale guidance is visible and cannot be acknowledged; crew alerts remain",
 test("pending/retry states preserve published checklist and display attempt status", async ({
   page,
 }) => {
-  await page.goto("/?safety=retry");
-  await login(page, "supervisor@planit.local", false);
+  await login(page, "supervisor@planit.local", true, "?safety=retry");
+  await go(page, "Next-day briefing");
   const panel = await saveWork(page);
   await panel
     .getByRole("button", { name: "Generate safety draft", exact: true })
@@ -113,6 +119,7 @@ test("site change clears private draft; date changes clear prior checklist", asy
   page,
 }) => {
   await login(page, "supervisor@planit.local");
+  await go(page, "Next-day briefing");
   const panel = await saveWork(page);
   await panel
     .getByRole("button", { name: "Generate safety draft", exact: true })
