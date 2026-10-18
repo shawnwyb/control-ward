@@ -17,6 +17,7 @@ import {
 } from "../../lib/monitoring";
 import { homeFor, type Page } from "../../lib/route";
 import { checkinRequestId, completeCheckin } from "../../lib/submission";
+import type { SiteSummary } from "../../lib/sites";
 import type { Site } from "../../lib/types";
 import { SiteMap } from "../map/SiteMap";
 import { ReportForm } from "../report/ReportForm";
@@ -38,10 +39,22 @@ const noLightning: LightningView = {
   lastStrikeDistanceM: null,
 };
 
+const freshDraft = (site: Site): ReportDraft => ({
+  type: "debris",
+  severity: 2,
+  latitude: site.latitude.toFixed(6),
+  longitude: site.longitude.toFixed(6),
+});
+
+/** Pages that show the map. They are not remounted on a site switch, so the map can fly. */
+const mapPages: Page[] = ["sites", "site"];
+
 /**
- * Everything for one site, shown one page at a time. Remounted per site, so form
- * and feed state reset on switch. State that must outlive a page change (the draft
- * report, the crew roster, map focus) lives here, above the pages.
+ * Everything for the selected site, shown one page at a time. It stays mounted when
+ * the site changes (so the map can fly to the new site) and resets its per-site state
+ * itself: the draft report, ticked crew, map focus and hover. Pages without the map
+ * are keyed by site, so their own state starts clean too. State that must outlive a
+ * page change (the draft report, the crew roster, map focus) lives here, above the pages.
  */
 export function SiteWorkspace({
   site,
@@ -49,6 +62,7 @@ export function SiteWorkspace({
   userId,
   page,
   onNavigate,
+  onSiteChange,
   feed,
   onAlertCount,
 }: {
@@ -57,6 +71,8 @@ export function SiteWorkspace({
   userId: string;
   page: Page;
   onNavigate: (page: Page) => void;
+  /** Select another site (a pin on the map). */
+  onSiteChange: (siteId: string) => void;
   feed: ReturnType<typeof useSiteFeed>;
   /** Tells the sidebar how many alerts are active here. */
   onAlertCount: (count: number) => void;
@@ -90,12 +106,7 @@ export function SiteWorkspace({
   const roster = useCrewRoster(site.id, supervisor, onError);
   const [selectedCrew, setSelectedCrew] = useState<Set<string>>(new Set());
   const [crewFocus, setCrewFocus] = useState<{ id: string; nonce: number }>();
-  const [draft, setDraft] = useState<ReportDraft>({
-    type: "debris",
-    severity: 2,
-    latitude: site.latitude.toFixed(6),
-    longitude: site.longitude.toFixed(6),
-  });
+  const [draft, setDraft] = useState<ReportDraft>(() => freshDraft(site));
   const patch = useCallback(
     (changes: Partial<ReportDraft>) =>
       setDraft((current) => ({ ...current, ...changes })),
@@ -111,6 +122,16 @@ export function SiteWorkspace({
     id: string;
     nonce: number;
   }>();
+  // A different site starts clean (adjusting state during render, so no stale frame).
+  const [stateSite, setStateSite] = useState(site.id);
+  if (stateSite !== site.id) {
+    setStateSite(site.id);
+    setDraft(freshDraft(site));
+    setSelectedCrew(new Set());
+    setCrewFocus(undefined);
+    setHoveredId(null);
+    setFocusRequest(undefined);
+  }
   const clearFile = useCallback(() => patch({ file: undefined }), [patch]);
   const submit = useReportSubmit(site, feed.refresh, clearFile);
 
@@ -152,7 +173,7 @@ export function SiteWorkspace({
     }
   }
 
-  const mapAndForm = (
+  const mapAndForm = (overview?: { sites: SiteSummary[] }) => (
     <div className={styles.grid}>
       <ReportForm
         className={styles.form}
@@ -186,6 +207,9 @@ export function SiteWorkspace({
           disabled={busy}
           highlightId={hoveredId}
           focusRequest={focusRequest}
+          sites={overview?.sites}
+          onSelectSite={overview ? onSiteChange : undefined}
+          stopWork={lightning.data.status === "stop_work"}
           onPin={setPin}
         />
       </ErrorBoundary>
@@ -195,19 +219,22 @@ export function SiteWorkspace({
   const base = { site, role, userId };
   return (
     <div id="site-workspace" className={styles.workspace}>
-      {/* Only this wrapper is keyed by page, so state above it survives page changes. */}
-      <div key={page} className={styles.pageIn}>
+      {/* Only this wrapper is keyed (by page, and by site off the map pages), so state above it survives. */}
+      <div
+        key={mapPages.includes(page) ? page : `${page}:${site.id}`}
+        className={styles.pageIn}
+      >
         {page === "sites" ? (
           <SitesPage
             {...base}
             reports={feed.reports}
             crewTerm={feed.metrics.crewRisk}
           >
-            {mapAndForm}
+            {(sites) => mapAndForm({ sites })}
           </SitesPage>
         ) : null}
         {page === "site" ? (
-          <MySitePage {...base}>{mapAndForm}</MySitePage>
+          <MySitePage {...base}>{mapAndForm()}</MySitePage>
         ) : null}
         {page === "alerts" ? (
           <AlertsPage {...base} alerts={alerts} lightning={lightning} />

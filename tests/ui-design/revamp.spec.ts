@@ -342,3 +342,100 @@ test("landing: see it running shows the final state under reduced motion", async
   await expect(first).toContainText("8.6", { timeout: 1000 });
   await expect(demo.locator("[data-demo-banner]")).toContainText("Stop work");
 });
+
+test("map: site pins and fly-to", async ({ page }) => {
+  await signIn(page, "supervisor@planit.local");
+  await page.locator("#site").selectOption("site-north");
+  const map = page.locator("#site-map");
+  // One score pin per site with coordinates (the mock's six), the selected one marked.
+  const pins = map.locator('[aria-label*="hazard index"]');
+  await expect(pins).toHaveCount(6);
+  await expect(
+    map.getByRole("button", { name: "North Plant · Demo, hazard index 5.2" }),
+  ).toHaveAttribute("aria-current", "true");
+  await expect(
+    map.getByRole("button", {
+      name: "Port Everglades Tank Farm · Demo, hazard index no score",
+    }),
+  ).toBeAttached();
+
+  const canvas = await page.locator(".maplibregl-map").elementHandle();
+  // A moved report pin belongs to this site only.
+  await page.locator("#latitude").fill("29.6600");
+  // The other plant is a few km away: zoom out until its pin is on screen.
+  const south = map.getByRole("button", {
+    name: "South Plant · Demo, hazard index 8.6",
+  });
+  await expect(async () => {
+    await map.getByRole("button", { name: "Zoom out" }).click();
+    await expect(south).toBeInViewport({ timeout: 800 });
+  }).toPass({ timeout: 15000 });
+  await south.click();
+  await expect(page.locator("#site")).toHaveValue("site-south");
+  await expect(south).toHaveAttribute("aria-current", "true");
+  // Per-site state still resets without a remount: the draft starts at the new site.
+  await expect(page.locator("#latitude")).toHaveValue("29.629600");
+  // Same map element: the site switch flew the map instead of remounting it.
+  expect(await canvas!.evaluate((node) => node.isConnected)).toBe(true);
+  await expect(page.locator(".maplibregl-map")).toHaveCount(1);
+
+  // Pins are buttons: the keyboard selects a site too.
+  await map
+    .getByRole("button", { name: "North Plant · Demo, hazard index 5.2" })
+    .press("Enter");
+  await expect(page.locator("#site")).toHaveValue("site-north");
+  expect(await canvas!.evaluate((node) => node.isConnected)).toBe(true);
+});
+
+test("map: stop-work draws the lightning ring marker for the selected site", async ({
+  page,
+}) => {
+  await signIn(page, "supervisor@planit.local");
+  await page.locator("#site").selectOption("site-north");
+  const bolt = page.locator("#site-map .stop-work-marker");
+  await expect(bolt).toHaveCount(1);
+  await page.locator("#site").selectOption("site-south");
+  await expect(bolt).toHaveCount(0);
+});
+
+test("map: Show on map opens the worker's card on the map page", async ({
+  page,
+}) => {
+  await signIn(page, "supervisor@planit.local");
+  await page.locator("#site").selectOption("site-north");
+  await go(page, "Crew");
+  await page
+    .locator("#crew-roster li", { hasText: "Jordan Lee" })
+    .getByRole("button", { name: "Show on map" })
+    .click();
+  await expect(page.getByRole("heading", { name: "Sites" })).toBeVisible();
+  await expect(
+    page.locator("#site-map .maplibregl-popup", { hasText: "Jordan Lee" }),
+  ).toBeVisible();
+});
+
+test("map: weather layers are floating chips", async ({ page }) => {
+  await signIn(page, "supervisor@planit.local");
+  const chips = page.getByRole("group", { name: "Weather layers" });
+  for (const name of ["Rain", "Wind", "Temperature"])
+    await expect(chips.getByRole("button", { name })).toHaveAttribute(
+      "aria-pressed",
+      "false",
+    );
+  await chips.getByRole("button", { name: "Rain" }).click();
+  await expect(chips.getByRole("button", { name: "Rain" })).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
+  const source = page.getByRole("group", { name: "Rain data" });
+  await expect(
+    source.getByRole("button", { name: "Radar, past 2 hours" }),
+  ).toHaveAttribute("aria-pressed", "true");
+  await source.getByRole("button", { name: "Forecast, next 12 hours" }).click();
+  await expect(
+    source.getByRole("button", { name: "Forecast, next 12 hours" }),
+  ).toHaveAttribute("aria-pressed", "true");
+  // Pressing the active layer again turns the overlay off.
+  await chips.getByRole("button", { name: "Rain" }).click();
+  await expect(source).toHaveCount(0);
+});

@@ -2,14 +2,16 @@ import { lazy, Suspense, useMemo, useState } from "react";
 import {
   Badge,
   Button,
+  Icon,
   Panel,
   PanelHeader,
-  Segmented,
   SeverityMark,
   TimeSlider,
+  type IconName,
 } from "../../components/ui";
 import { SITE_RADIUS_M } from "../../lib/geo";
 import type { CrewMember } from "../../lib/monitoring";
+import type { SiteSummary } from "../../lib/sites";
 import type { Report, Severity, Site } from "../../lib/types";
 import { renderFieldFrames } from "./weather/field";
 import {
@@ -43,6 +45,24 @@ const MapCanvas = lazy(() => import("./MapCanvas"));
 type Overlay = "off" | "rain" | "wind" | "temperature";
 type RainSource = "radar" | "forecast";
 
+const layerChips: {
+  value: Exclude<Overlay, "off">;
+  label: string;
+  icon: IconName;
+}[] = [
+  { value: "rain", label: "Rain", icon: "rain" },
+  { value: "wind", label: "Wind", icon: "wind" },
+  { value: "temperature", label: "Temperature", icon: "heat" },
+];
+const sourceChips: { value: RainSource; label: string; ariaLabel: string }[] = [
+  { value: "radar", label: "Radar", ariaLabel: "Radar, past 2 hours" },
+  {
+    value: "forecast",
+    label: "Forecast",
+    ariaLabel: "Forecast, next 12 hours",
+  },
+];
+
 type Props = {
   site: Site;
   reports: Report[];
@@ -53,6 +73,11 @@ type Props = {
   className?: string;
   highlightId?: string | null;
   focusRequest?: { id: string; nonce: number };
+  /** Supervisors' Sites page: every site as a score pin; clicking one selects it. */
+  sites?: SiteSummary[];
+  onSelectSite?: (siteId: string) => void;
+  /** The selected site is in lightning stop-work. */
+  stopWork?: boolean;
   onPin: (latitude: number, longitude: number) => void;
 };
 
@@ -112,6 +137,9 @@ export function SiteMap({
   className,
   highlightId,
   focusRequest,
+  sites,
+  onSelectSite,
+  stopWork = false,
   onPin,
 }: Props) {
   const [unavailable, setUnavailable] = useState(false);
@@ -184,66 +212,78 @@ export function SiteMap({
         titleId="map-title"
         aside={<Badge>1200 m × 800 m</Badge>}
       />
-      <div className={styles.overlayRow}>
-        <span className={styles.overlayLabel}>Weather</span>
-        <Segmented<Overlay>
-          label="Weather overlay"
-          name="weather-overlay"
-          value={overlay}
-          options={[
-            { value: "off", label: "Off" },
-            { value: "rain", label: "Rain" },
-            { value: "wind", label: "Wind" },
-            { value: "temperature", label: "Temp", ariaLabel: "Temperature" },
-          ]}
-          onChange={setOverlay}
-        />
-        {overlay === "rain" ? (
-          <Segmented<RainSource>
-            label="Rain data"
-            name="rain-source"
-            value={rainSource}
-            options={[
-              {
-                value: "radar",
-                label: "Radar",
-                ariaLabel: "Radar, past 2 hours",
-              },
-              {
-                value: "forecast",
-                label: "Forecast",
-                ariaLabel: "Forecast, next 12 hours",
-              },
-            ]}
-            onChange={setRainSource}
-          />
-        ) : null}
-      </div>
       {unavailable ? (
         <div className={styles.placeholder}>
           The map isn’t available on this device. Use “Use my location” or enter
           coordinates.
         </div>
       ) : (
-        <Suspense
-          fallback={<div className={styles.placeholder}>Loading map…</div>}
-        >
-          <MapCanvas
-            key={site.id}
-            site={site}
-            reports={reports}
-            crew={crew}
-            crewFocus={crewFocus}
-            pin={pin}
-            disabled={disabled}
-            highlightId={highlightId}
-            focusRequest={focusRequest}
-            weather={weather}
-            regional={overlay !== "off"}
-            onPin={onPin}
-            onUnavailable={() => setUnavailable(true)}
-          />
-        </Suspense>
+        <div className={styles.stage}>
+          <Suspense
+            fallback={<div className={styles.placeholder}>Loading map…</div>}
+          >
+            <MapCanvas
+              site={site}
+              reports={reports}
+              crew={crew}
+              crewFocus={crewFocus}
+              pin={pin}
+              disabled={disabled}
+              highlightId={highlightId}
+              focusRequest={focusRequest}
+              weather={weather}
+              regional={overlay !== "off"}
+              sites={sites}
+              onSelectSite={onSelectSite}
+              stopWork={stopWork}
+              onPin={onPin}
+              onUnavailable={() => setUnavailable(true)}
+            />
+          </Suspense>
+          {/* Weather layers float over the map as chips; pressing the active one turns it off. */}
+          <div className={styles.chips}>
+            <div
+              role="group"
+              aria-label="Weather layers"
+              className={styles.chipGroup}
+            >
+              {layerChips.map((chip) => (
+                <button
+                  key={chip.value}
+                  type="button"
+                  className={styles.chip}
+                  aria-pressed={overlay === chip.value}
+                  onClick={() =>
+                    setOverlay(overlay === chip.value ? "off" : chip.value)
+                  }
+                >
+                  <Icon name={chip.icon} size={14} />
+                  {chip.label}
+                </button>
+              ))}
+            </div>
+            {overlay === "rain" ? (
+              <div
+                role="group"
+                aria-label="Rain data"
+                className={styles.chipGroup}
+              >
+                {sourceChips.map((chip) => (
+                  <button
+                    key={chip.value}
+                    type="button"
+                    className={styles.chip}
+                    aria-pressed={rainSource === chip.value}
+                    aria-label={chip.ariaLabel}
+                    onClick={() => setRainSource(chip.value)}
+                  >
+                    {chip.label}
+                  </button>
+                ))}
+              </div>
+            ) : null}
+          </div>
+        </div>
       )}
       {source ? (
         <div className={styles.weather}>
@@ -318,6 +358,17 @@ export function SiteMap({
         <li className={styles.note}>
           Dashed ring: {SITE_RADIUS_M} m from site center
         </li>
+        {sites ? (
+          <li className={styles.note}>
+            Pins: each site’s hazard index, 0 to 10
+          </li>
+        ) : null}
+        {stopWork ? (
+          <li className={styles.note}>
+            <span className={styles.stormSample} aria-hidden="true" />
+            Orange ring: lightning stop-work, 10 miles
+          </li>
+        ) : null}
         <li className={`${styles.note} ${styles.keyboardHint}`}>
           With the map focused, arrow keys move the pin (Shift for 100 m).
         </li>

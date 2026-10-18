@@ -60,16 +60,90 @@
   }
 }
 
-.overlayRow {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  margin-bottom: var(--space-3);
+/* The map with its floating weather chips. */
+.stage {
+  position: relative;
 }
 
-.overlayLabel {
-  font-size: var(--text-sm);
-  font-weight: 600;
+.chips {
+  position: absolute;
+  top: var(--space-3);
+  left: var(--space-3);
+  /* Clear of the zoom buttons on the right. */
+  right: calc(var(--tap-min) + var(--space-5));
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  pointer-events: none;
+}
+
+.chipGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 1.75rem;
+  padding: 0 var(--space-3);
+  border: var(--rule-width) solid var(--line);
+  border-radius: 999px;
+  background: var(--bg);
+  color: var(--ink);
+  font: inherit;
+  font-size: var(--text-xs);
+  font-weight: 500;
+  box-shadow: 0 1px 3px rgba(15, 15, 15, 0.12);
+  cursor: pointer;
+  pointer-events: auto;
+  transition:
+    background-color var(--duration-fast) var(--ease),
+    color var(--duration-fast) var(--ease);
+}
+
+.chip svg {
+  color: var(--icon);
+}
+
+.chip:hover {
+  background: #f7f7f5;
+}
+
+.chip[aria-pressed="true"] {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: #fff;
+}
+
+.chip[aria-pressed="true"] svg {
+  color: #fff;
+}
+
+.chip:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+@media (pointer: coarse) {
+  .chip {
+    min-height: 2.25rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chip {
+    transition: none;
+  }
+}
+
+.stormSample {
+  width: 0.875rem;
+  height: 0.875rem;
+  border: 1.5px dashed var(--risk-elevated);
+  border-radius: 50%;
 }
 
 .weather {

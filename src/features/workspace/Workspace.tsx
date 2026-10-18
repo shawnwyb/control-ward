@@ -110,10 +110,13 @@ export function Workspace({
     >
       {sites && sites.length === 0 ? <NoSites /> : null}
       {site && role ? (
+        // Not keyed by site: the map stays mounted and flies between sites, and
+        // SiteWorkspace resets its per-site state itself. A role change remounts it.
         <SiteWorkspace
-          key={site.id}
+          key={role}
           site={site}
           role={role}
+          onSiteChange={(id) => void changeSite(id)}
           userId={userId}
           page={page}
           onNavigate={setRoute}

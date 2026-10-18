@@ -1,6 +1,7 @@
 import { useEffect, useRef, type KeyboardEvent } from "react";
 import {
   AttributionControl,
+  type GeoJSONSource,
   Marker,
   MapLibreMap,
   NavigationControl,
@@ -12,10 +13,12 @@ import {
   extentCorners,
   extentPolygon,
   nudge,
+  offsetPoint,
   ringPolygon,
 } from "../../lib/geo";
 import { type Report, type Site } from "../../lib/types";
 import type { CrewMember } from "../../lib/monitoring";
+import type { SiteSummary } from "../../lib/sites";
 import { timeAgo } from "../../lib/format";
 import { basemapStyle, offlineStyle } from "./mapStyle";
 import {
@@ -24,6 +27,9 @@ import {
   crewMarkerElement,
   hazardMarkerElement,
   pinMarkerElement,
+  setSitePinSelected,
+  sitePinElement,
+  stopWorkMarkerElement,
 } from "./markers";
 import { forecastBounds } from "./weather/forecast";
 import type { WeatherView } from "./weather/types";
@@ -48,13 +54,39 @@ export type MapCanvasProps = {
   weather?: WeatherView | null;
   /** Weather is on: frame the whole forecast area instead of the site. */
   regional?: boolean;
+  /** Every site the user can see, drawn as score pins (sites without coordinates are skipped). */
+  sites?: SiteSummary[];
+  /** A site pin was clicked or pressed. */
+  onSelectSite?: (siteId: string) => void;
+  /** The site is in lightning stop-work: draw the 10-mile ring and a bolt. */
+  stopWork?: boolean;
   onPin: (latitude: number, longitude: number) => void;
   onUnavailable: () => void;
 };
 
+/** Lightning stop-work radius: 10 miles. */
+export const STOP_WORK_RADIUS_M = 16093;
+
 const arrowKeys = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"];
 const cssColor = (name: string) =>
   getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+const reducedMotion = () =>
+  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/** The camera that frames a site's 1200 m × 800 m extent. */
+function siteBounds(site: Site): [[number, number], [number, number]] {
+  const { southWest, northEast } = extentCorners(site);
+  return [
+    [southWest.longitude, southWest.latitude],
+    [northEast.longitude, northEast.latitude],
+  ];
+}
+
+/** Where the bolt sits: on the stop-work ring, due east of the site (clear of the chips and controls). */
+function boltPoint(site: Site): [number, number] {
+  const point = offsetPoint(site, 0, STOP_WORK_RADIUS_M);
+  return [point.longitude, point.latitude];
+}
 
 export default function MapCanvas({
   site,
@@ -67,6 +99,9 @@ export default function MapCanvas({
   focusRequest,
   weather,
   regional,
+  sites,
+  onSelectSite,
+  stopWork = false,
   onPin,
   onUnavailable,
 }: MapCanvasProps) {
@@ -79,15 +114,42 @@ export default function MapCanvas({
   const crewMarkers = useRef(
     new Map<string, { marker: Marker; key: string }>(),
   );
+  const sitePins = useRef(new Map<string, { marker: Marker; key: string }>());
+  const centerMarker = useRef<Marker | null>(null);
+  const boltMarker = useRef<Marker | null>(null);
   const popup = useRef<Popup | null>(null);
   const openCard = useRef<string | null>(null);
+  // Focus asked for before its marker exists (a freshly mounted map, a roster still loading).
+  const pendingCrew = useRef<string | null>(null);
+  const pendingHazard = useRef<string | null>(null);
   // Handlers read the latest props without re-creating the map.
-  const latest = useRef({ disabled, onPin, pin, weather });
+  const latest = useRef({
+    disabled,
+    onPin,
+    pin,
+    weather,
+    site,
+    stopWork,
+    onSelectSite,
+  });
   useEffect(() => {
-    latest.current = { disabled, onPin, pin, weather };
+    latest.current = {
+      disabled,
+      onPin,
+      pin,
+      weather,
+      site,
+      stopWork,
+      onSelectSite,
+    };
   });
   // The basemap style is (re)loaded asynchronously; overlays wait for it.
   const styleLoaded = useRef(false);
+  const wind = useRef<WindParticles | null>(null);
+  // Where to return when the regional weather view is turned off.
+  const savedCamera = useRef<{ center: [number, number]; zoom: number } | null>(
+    null,
+  );
 
   // One shared hover card, filled from the latest copy of the report.
   function showCard(id: string) {
@@ -105,19 +167,16 @@ export default function MapCanvas({
     popup.current?.remove();
   }
 
+  // Created once and kept across site switches: a new site flies the camera instead.
   useEffect(() => {
     const node = container.current;
     if (!node) return;
     let instance: MapLibreMap;
     try {
-      const { southWest, northEast } = extentCorners(site);
       instance = new MapLibreMap({
         container: node,
         style: basemapStyle,
-        bounds: [
-          [southWest.longitude, southWest.latitude],
-          [northEast.longitude, northEast.latitude],
-        ],
+        bounds: siteBounds(latest.current.site),
         fitBoundsOptions: { padding: 24 },
         // Low enough to zoom out to weather scale (a few hundred km).
         minZoom: 5,
@@ -154,18 +213,30 @@ export default function MapCanvas({
       attribution?.classList.remove("maplibregl-compact-show");
     });
 
-    // Site area: dashed 300 m ring and the 1200 m × 800 m extent.
+    // A focused off-screen marker makes the browser scroll the map's box; keep it still.
+    const unscroll = () => {
+      node.scrollTop = 0;
+      node.scrollLeft = 0;
+    };
+    node.addEventListener("scroll", unscroll);
+
+    // Site area: dashed 300 m ring and the 1200 m × 800 m extent, plus the
+    // 10-mile lightning ring (hidden unless the site is in stop-work).
     const addOverlays = () => {
       const ink = cssColor("--ink");
-      // Quiet the basemap's labels so they never compete with hazard markers.
+      const storm = cssColor("--risk-elevated") || "#d9730d";
+      const current = latest.current.site;
+      // Calm the basemap's labels a little so hazard markers stay loudest, but
+      // keep place, road and water names readable.
       for (const layer of instance.getStyle().layers)
         if (layer.type === "symbol") {
-          instance.setPaintProperty(layer.id, "text-opacity", 0.55);
-          instance.setPaintProperty(layer.id, "icon-opacity", 0.55);
+          instance.setPaintProperty(layer.id, "text-opacity", 0.8);
+          instance.setPaintProperty(layer.id, "icon-opacity", 0.6);
         }
       const sources: [string, ReturnType<typeof ringPolygon>][] = [
-        ["site-extent", extentPolygon(site)],
-        ["site-ring", ringPolygon(site)],
+        ["site-extent", extentPolygon(current)],
+        ["site-ring", ringPolygon(current)],
+        ["stop-work", ringPolygon(current, STOP_WORK_RADIUS_M, 180)],
       ];
       for (const [id, data] of sources)
         if (!instance.getSource(id))
@@ -187,6 +258,27 @@ export default function MapCanvas({
             "line-color": ink,
             "line-width": 2,
             "line-dasharray": [2, 2],
+          },
+        });
+      const visibility = latest.current.stopWork ? "visible" : "none";
+      if (!instance.getLayer("stop-work-fill"))
+        instance.addLayer({
+          id: "stop-work-fill",
+          type: "fill",
+          source: "stop-work",
+          layout: { visibility },
+          paint: { "fill-color": storm, "fill-opacity": 0.06 },
+        });
+      if (!instance.getLayer("stop-work-ring"))
+        instance.addLayer({
+          id: "stop-work-ring",
+          type: "line",
+          source: "stop-work",
+          layout: { visibility },
+          paint: {
+            "line-color": storm,
+            "line-width": 1.75,
+            "line-dasharray": [3, 2],
           },
         });
     };
@@ -229,8 +321,8 @@ export default function MapCanvas({
       latest.current.onPin(event.lngLat.lat, event.lngLat.lng);
     });
 
-    new Marker({ element: centerMarkerElement() })
-      .setLngLat([site.longitude, site.latitude])
+    centerMarker.current = new Marker({ element: centerMarkerElement() })
+      .setLngLat([latest.current.site.longitude, latest.current.site.latitude])
       .addTo(instance);
 
     const marker = new Marker({ element: pinMarkerElement(), draggable: true })
@@ -243,8 +335,11 @@ export default function MapCanvas({
     pinMarker.current = marker;
 
     const markers = hazardMarkers.current;
+    const workers = crewMarkers.current;
+    const pins = sitePins.current;
     return () => {
       clearTimeout(timeout);
+      node.removeEventListener("scroll", unscroll);
       styleLoaded.current = false;
       wind.current?.destroy();
       wind.current = null;
@@ -253,14 +348,62 @@ export default function MapCanvas({
       popup.current = null;
       openCard.current = null;
       markers.clear();
+      workers.clear();
+      pins.clear();
       pinMarker.current = null;
+      centerMarker.current = null;
+      boltMarker.current = null;
       map.current = null;
       instance.remove();
     };
-    // The map is created once per site (SiteMap is keyed by site).
-  }, [site.id]);
+  }, []);
+
+  // Another site was chosen: move the site overlays and fly there (instant under reduced motion).
+  const shownSite = useRef(site.id);
+  useEffect(() => {
+    const instance = map.current;
+    if (!instance || shownSite.current === site.id) return;
+    shownSite.current = site.id;
+    pendingCrew.current = null;
+    pendingHazard.current = null;
+    hideCard();
+    centerMarker.current?.setLngLat([site.longitude, site.latitude]);
+    boltMarker.current?.setLngLat(boltPoint(site));
+    const data: [string, ReturnType<typeof ringPolygon>][] = [
+      ["site-extent", extentPolygon(site)],
+      ["site-ring", ringPolygon(site)],
+      ["stop-work", ringPolygon(site, STOP_WORK_RADIUS_M, 180)],
+    ];
+    for (const [id, feature] of data)
+      instance.getSource<GeoJSONSource>(id)?.setData(feature);
+    const reduce = reducedMotion();
+    const target = instance.cameraForBounds(siteBounds(site), { padding: 24 });
+    if (savedCamera.current) {
+      // Weather is on: frame the new site's forecast area, and come back to the site after.
+      savedCamera.current = {
+        center: [site.longitude, site.latitude],
+        zoom: target?.zoom ?? instance.getZoom(),
+      };
+      const { west, south, east, north } = forecastBounds(site);
+      instance.fitBounds(
+        [
+          [west, south],
+          [east, north],
+        ],
+        { padding: 8, duration: reduce ? 0 : 1200 },
+      );
+      return;
+    }
+    const camera = {
+      center: [site.longitude, site.latitude] as [number, number],
+      zoom: target?.zoom ?? instance.getZoom(),
+    };
+    if (reduce) instance.jumpTo(camera);
+    else instance.flyTo({ ...camera, duration: 1200 });
+  }, [site]);
 
   // Keep the pin marker in step with the coordinate inputs.
+  const pinSite = useRef(site.id);
   useEffect(() => {
     const marker = pinMarker.current;
     const instance = map.current;
@@ -269,9 +412,77 @@ export default function MapCanvas({
       return;
     marker.setLngLat([pin.longitude, pin.latitude]);
     marker.setDraggable(!disabled);
+    // A site switch resets the pin to the new site; the fly-to already brings it into view.
+    if (pinSite.current !== site.id) {
+      pinSite.current = site.id;
+      return;
+    }
     if (!instance.getBounds().contains([pin.longitude, pin.latitude]))
       instance.easeTo({ center: [pin.longitude, pin.latitude] });
-  }, [pin.latitude, pin.longitude, disabled]);
+  }, [pin.latitude, pin.longitude, disabled, site.id]);
+
+  // Score pins for every site; clicking one selects that site.
+  useEffect(() => {
+    const instance = map.current;
+    if (!instance) return;
+    const pins = sitePins.current;
+    const placed = (sites ?? []).filter(
+      (summary) => summary.latitude !== null && summary.longitude !== null,
+    );
+    const live = new Set(placed.map((summary) => summary.siteId));
+    for (const [id, entry] of pins)
+      if (!live.has(id)) {
+        entry.marker.remove();
+        pins.delete(id);
+      }
+    for (const summary of placed) {
+      const selected = summary.siteId === site.id;
+      const key = `${summary.name}:${summary.riskNow}:${summary.latitude}:${summary.longitude}`;
+      const existing = pins.get(summary.siteId);
+      if (existing?.key === key) {
+        setSitePinSelected(existing.marker.getElement(), selected);
+        continue;
+      }
+      existing?.marker.remove();
+      const lngLat: [number, number] = [summary.longitude!, summary.latitude!];
+      const element = sitePinElement(summary, selected);
+      element.addEventListener("click", (event) => {
+        event.stopPropagation(); // choosing a site must not move the report pin
+        latest.current.onSelectSite?.(summary.siteId);
+      });
+      // Tabbing to a pin that is off screen brings it into view.
+      element.addEventListener("focus", () => {
+        if (!instance.getBounds().contains(lngLat))
+          instance.panTo(lngLat, { duration: reducedMotion() ? 0 : 300 });
+      });
+      const marker = new Marker({ element, anchor: "bottom" })
+        .setLngLat(lngLat)
+        .addTo(instance);
+      pins.set(summary.siteId, { marker, key });
+    }
+  }, [sites, site.id]);
+
+  // Lightning stop-work: show the 10-mile ring and its bolt.
+  useEffect(() => {
+    const instance = map.current;
+    if (!instance) return;
+    if (styleLoaded.current)
+      for (const id of ["stop-work-fill", "stop-work-ring"])
+        if (instance.getLayer(id))
+          instance.setLayoutProperty(
+            id,
+            "visibility",
+            stopWork ? "visible" : "none",
+          );
+    if (stopWork && !boltMarker.current)
+      boltMarker.current = new Marker({ element: stopWorkMarkerElement() })
+        .setLngLat(boltPoint(latest.current.site))
+        .addTo(instance);
+    else if (!stopWork && boltMarker.current) {
+      boltMarker.current.remove();
+      boltMarker.current = null;
+    }
+  }, [stopWork]);
 
   // Weather overlay: raster layers follow the frames and the scrubber.
   useEffect(() => {
@@ -281,7 +492,6 @@ export default function MapCanvas({
   }, [weather]);
 
   // Wind is a canvas of moving streaks, not a raster layer.
-  const wind = useRef<WindParticles | null>(null);
   useEffect(() => {
     const instance = map.current;
     if (!instance || weather?.kind !== "wind") {
@@ -290,31 +500,22 @@ export default function MapCanvas({
       return;
     }
     if (!wind.current)
-      wind.current = new WindParticles(
-        instance,
-        window.matchMedia("(prefers-reduced-motion: reduce)").matches,
-      );
+      wind.current = new WindParticles(instance, reducedMotion());
     wind.current.setField(weather.grid, weather.index);
   }, [weather]);
 
   // Weather is regional: zoom out to the forecast area, and back when it's turned off.
-  const savedCamera = useRef<{ center: [number, number]; zoom: number } | null>(
-    null,
-  );
   useEffect(() => {
     const instance = map.current;
     if (!instance) return;
-    const duration = window.matchMedia("(prefers-reduced-motion: reduce)")
-      .matches
-      ? 0
-      : 700;
+    const duration = reducedMotion() ? 0 : 700;
     if (regional && !savedCamera.current) {
       const center = instance.getCenter();
       savedCamera.current = {
         center: [center.lng, center.lat],
         zoom: instance.getZoom(),
       };
-      const { west, south, east, north } = forecastBounds(site);
+      const { west, south, east, north } = forecastBounds(latest.current.site);
       instance.fitBounds(
         [
           [west, south],
@@ -326,7 +527,7 @@ export default function MapCanvas({
       instance.easeTo({ ...savedCamera.current, duration });
       savedCamera.current = null;
     }
-  }, [regional, site]);
+  }, [regional]);
 
   // Active hazards as shape markers.
   useEffect(() => {
@@ -369,6 +570,7 @@ export default function MapCanvas({
       markers.set(report.id, { marker, key, report });
       if (openCard.current === report.id) showCard(report.id);
     }
+    applyHazardFocus();
   }, [reports]);
 
   // Last known worker positions (supervisors only).
@@ -408,18 +610,27 @@ export default function MapCanvas({
         .addTo(instance);
       markers.set(member.user_id, { marker, key });
     }
+    applyCrewFocus();
   }, [crew]);
 
-  useEffect(() => {
-    if (!crewFocus) return;
-    const entry = crewMarkers.current.get(crewFocus.id);
+  // Pan to a worker and open their card, now or as soon as their marker exists.
+  function applyCrewFocus() {
+    const id = pendingCrew.current;
+    const entry = id ? crewMarkers.current.get(id) : undefined;
     const instance = map.current;
     if (!entry || !instance) return;
+    pendingCrew.current = null;
     instance.easeTo({
       center: entry.marker.getLngLat(),
       zoom: Math.max(instance.getZoom(), 15),
+      duration: reducedMotion() ? 0 : 500,
     });
     if (!entry.marker.getPopup()?.isOpen()) entry.marker.togglePopup();
+  }
+  useEffect(() => {
+    if (!crewFocus) return;
+    pendingCrew.current = crewFocus.id;
+    applyCrewFocus();
   }, [crewFocus]);
 
   // A hovered feed row rings its marker and opens the same card as hovering the marker.
@@ -439,19 +650,28 @@ export default function MapCanvas({
     }
   }, [highlightId, reports]);
 
-  // A clicked feed row brings its marker to the middle of the map.
+  // A clicked feed row brings its marker to the middle of the map, now or once it exists.
+  function applyHazardFocus() {
+    const id = pendingHazard.current;
+    const entry = id ? hazardMarkers.current.get(id) : undefined;
+    const instance = map.current;
+    if (!entry || !instance) return;
+    pendingHazard.current = null;
+    instance.easeTo({
+      center: [entry.report.longitude, entry.report.latitude],
+      duration: reducedMotion() ? 0 : 350,
+    });
+  }
   useEffect(() => {
     if (!focusRequest) return;
-    const entry = hazardMarkers.current.get(focusRequest.id);
-    if (!entry) return;
-    map.current?.easeTo({
-      center: [entry.report.longitude, entry.report.latitude],
-      duration: 350,
-    });
+    pendingHazard.current = focusRequest.id;
+    applyHazardFocus();
   }, [focusRequest]);
 
   function move(event: KeyboardEvent<HTMLDivElement>) {
     if (event.key === "Escape") return hideCard();
+    // Arrow keys move the pin only while the map itself has focus (not a site pin).
+    if (event.target !== event.currentTarget) return;
     if (disabled || !arrowKeys.includes(event.key)) return;
     event.preventDefault();
     const distance = event.shiftKey ? 100 : 10;
