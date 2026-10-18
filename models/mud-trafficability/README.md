@@ -17,7 +17,7 @@ From this directory, using the repo's virtualenv (`pip install -r ../../requirem
 ../../.venv/bin/python -m stram prepare                # cache SSURGO, 3DEP terrain/DTW, OSM routes (~1-2 min per site)
 ../../.venv/bin/python -m stram forecast               # one Open-Meteo call, then all sites in seconds
 ../../.venv/bin/python -m stram map                    # output/run_<stamp>/map.html and map/<eia>.html
-../../.venv/bin/python -m stram push                   # writes SQL only; see below
+../../.venv/bin/python -m stram push                   # writes SQL only; add --apply to send it (see below)
 ```
 
 Add `--eia 649,56407,6008` to `prepare` or `forecast` to work on a few sites. Vogtle, West County and Palo Verde are the
@@ -50,9 +50,20 @@ any weather. See `PROJECT_BRIEF.md` → *Decisions*.
   validation.
 - `map.html` and `map/<eia>.html`: open from disk.
 
-## Pushing to the hosted `ml_scores`
+## Pushing to the production `ml_scores`
 
-`push` writes `ml_scores_push.sql` and prints the command. It never runs it. Applying it changes **live** site risk:
-`compute_site_risk` takes max(ML score, subscores) and does not check how old a score is. Use `--metric p90` for the
-route-length-weighted score instead of the worst segment. Use `push --clear` to write the SQL that removes this model's
-scores.
+`push` writes `ml_scores_push.sql` (p90 score by default; `--metric max` for the worst segment). `push --apply` sends it
+to the linked production project, in this order:
+
+1. **Preflight:** the Supabase CLI is on PATH, the checkout is linked (`supabase/.temp/project-ref`), the run is under
+   24 h old (`--allow-stale` to override), and all sites exist in production `public.sites`.
+2. **Preview:** project ref, run, metric, row count, score spread, the highest sites, and the production effects.
+3. **Confirmation:** type the project ref when asked, or pass `--confirm <ref>`. Anything else applies nothing.
+4. **Apply and read back:** `supabase db query --linked -f ml_scores_push.sql`, then a count per horizon. The result is
+   recorded in `applied.json` in the run folder.
+
+One-time setup, from the repo root: install the Supabase CLI, `supabase login`, `supabase link --project-ref <ref>`.
+
+Applying changes **live** site risk: `compute_site_risk` takes max(ML score, subscores), the `tomorrow` score feeds the
+6 PM briefing, and scores never expire. Re-run `forecast` and `push --apply` to refresh, and `push --clear --apply` to
+remove this model's scores.

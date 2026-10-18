@@ -60,6 +60,23 @@ artifacts/                small committed results: sites_nws.json, labels_report
 
 **Dry-run** (`dryrun.py`). One forecast request for all 60 plants (default model, 31 past days, 3 forecast days) plus the ECMWF endpoint for the 0–7 and 7–28 cm soil layers the archive has. `forecast_hours` counts the target-day hours still to come; `drift_flags` lists inputs outside the 0.5–99.5 percentile range of the training data; `rule_max_fc` is the highest heat/gust/rain/soil rule from the same forecast and `risk_preview = max(score, rule_max_fc)` (no crew term, NWS alerts, gauges, lightning or fire distance).
 
+## Results (Version 1, `hazidx-0.1.0+2018-2022.23ed6848`)
+
+Training years 2018–2022 (2018: 59 of 60 plants), 2023 for settings only, test years 2024–2025 (43,800 plant-days). Full tables and figures: `notebooks/results.ipynb`, `artifacts/models/<version>/metrics.json`.
+
+| Family | Test events | PR-AUC model | past-data only | climatology | rule | ROC-AUC model | rule | Brier skill (vs climatology) | Weight s |
+|---|---|---|---|---|---|---|---|---|---|
+| heat | 327 | 0.291 | 0.102 | 0.175 | 0.150 | 0.957 | 0.930 | 0.104 | 1.00 |
+| storm | 599 | 0.145 | 0.024 | 0.038 | 0.027 | 0.908 | 0.617 | 0.065 | 0.83 |
+| flood | 488 | 0.088 | 0.069 | 0.058 | 0.052 | 0.858 | 0.718 | 0.030 | 0.75 |
+| fire | 196 | 0.063 | 0.048 | 0.177 | – | 0.863 | – | −0.093 | 0.86 |
+
+- Heat, storm and flood meet acceptance criterion 3; fire does not (its records cluster at a few plants, and climatology knows the plant while the model may not).
+- Combined index: ROC-AUC for "any event" 0.830 against 0.733 for the rule maximum. On the 7,862 days when the index is more than 2 points above the rule maximum, events happen on 8.7% of days, against 1.7% on other days at the same rule tier.
+- Skill mostly needs the same-day forecast; flood keeps the most from past data alone (forecast-dependent share 0.62).
+- West County Energy Center replays: 14 Aug 2024 scores 4.7 (heat) under the heat rule's 7.5, so live risk stays 7.5; 9 Aug 2024 scores 7.3 (storm) above the rule maximum of 5.0.
+- Not yet done: training years 2015–2017 (about 4,700 weighted calls: `fetch_weather.py run --budget 5000` after 00:00 UTC) and the Version 2 retrain (`build_dataset.py`, `train.py`, `evaluate.py`, `dryrun.py`); Open-Meteo's daily counter resets at 00:00 UTC.
+
 ## Limitations
 
 - Training data is reanalysis (weather that happened); live scoring uses forecasts. Offline scores are an upper limit on live skill, most of all for storm. Because live risk is `max(ML, rules)`, a forecast error can add false alarms but cannot hide a rule alert.
