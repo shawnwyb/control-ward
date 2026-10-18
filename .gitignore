@@ -14,3 +14,5 @@ models/hazard-index/cache/
 __pycache__
 **/__pycache__/
 CLAUDE.md
+reports/next-day/cache/
+public/reports/**/report.prev.json

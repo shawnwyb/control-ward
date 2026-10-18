@@ -1,0 +1,127 @@
+# Project brief: 6 PM next-day safety report
+
+Status: plan approved in the design interview. Built in `reports/next-day/` (generator) and `src/features/nextday/` (app tab). Commands and run order: `reports/next-day/README.md`.
+
+## Problem and intended outcome
+
+The SwampHacks brief (`docs/PlanIT_Control_SwampHacks_Brief.docx`) requires that the platform send a next-day safety report every evening at 6 PM local time. Today the repo drafts a 6 PM work plan (`briefing_drafts`, `BriefingPanel.tsx`). That plan has a work window and hourly blocked hours. It has no tide, mud route, hazard index, heat-index timeline, levee, river forecast, air quality or wildlife data.
+
+Intended outcome: one report per site, for the next local day, that a project or site manager can use to decide:
+
+- when to do the work,
+- when to schedule water breaks, with the heat-index peak shown,
+- which routes to avoid (mud), and where to detour,
+- which severe weather, tide, river and levee conditions affect the day, and
+- which tasks fit which hours.
+
+The report is decision support. It does not certify that work, a route or a crossing is safe.
+
+## Target users and main use cases
+
+- Project or site manager: reads the report at 6 PM, plans the next day, prints or shows it at the morning briefing.
+- Supervisor: reviews the report next to the existing next-day plan.
+- Crew member: does not use the report. Crew mud and wildlife reports feed it.
+
+## Scope
+
+In scope:
+
+- A generator script (`reports/next-day/run.sh`) that writes one JSON report per site.
+- A new tab in the app that shows the report.
+- Sections: verdict, changes since the last report, hazard index, heat and water breaks, weather and severe-weather outlook, air quality and smoke, flood (river forecast, levees, tide), mud routes and detours, wildlife, task planner, data gaps.
+- Sample output for 3 to 5 sites.
+- One schema change: a new crew hazard type, `mud` (Phase C only).
+
+Out of scope:
+
+- Sending the report by PDF, email or SMS, and read receipts.
+- Outcome feedback ("worked" / "stopped") to check the verdicts.
+- A scheduled hosted job. The generator is run by hand. The README says how to schedule it later.
+- Changes to the supervisor review/send flow, `ml_scores`, or any hosted database.
+
+## Functional requirements
+
+1. **Dates and time zones.** The report date is the site-local date plus one day (`--for today` for the 5 AM refresh). All times are site-local.
+2. **Hazard index.** Show the 0-10 score for the report date, the top driver, the four family probabilities and the model caveats. Read the newest dry-run CSV. Refuse a CSV older than 24 hours.
+3. **Heat and water breaks.** Show hourly heat index and WBGT (wet bulb globe temperature), the band for each hour, the peak hour and a water-break timeline. Use one pinned, cited heat-index table. Do not invent work/rest minute ratios.
+4. **Weather.** Show the hourly storm strip (probability, CAPE, gusts, rain), active NWS alerts that overlap the day, the best work window and a three-level day verdict (go, go with limits, reschedule) with its reasons.
+5. **Air quality.** Show hourly US AQI and PM2.5, smoke or air-quality alerts, and the hazard index fire probability.
+6. **Flood.** Show:
+   - the nearest river gauge: observed trend, forecast crest and flood category, or "no forecast published";
+   - the National Levee Database (NLD) levees near the site: leveed-area membership, system name, FEMA accreditation, closure structures and pump stations, with the levee lines on the map;
+   - for tidal sites: high and low tide times, rising windows, and ground below the predicted high-tide level shaded on the map where NOAA publishes the NAVD88 (North American Vertical Datum of 1988) offset.
+7. **Mud routes.** Show route segments flagged `inspect` or `hold` for the next day, by equipment class. Keep the model label: uncalibrated, not a crossing clearance.
+8. **Detours.** Let the user click two points and get a path that avoids `hold` (or `hold` and `inspect`) segments. Say when the path uses roads the mud model does not rate.
+9. **Wildlife.** Show recent public sightings of listed species near the site and a seasonal activity label for the month. Overlay crew wildlife reports.
+10. **Task planner.** Let the user pick task types and see the hours each task is blocked, and why. Limits that have no source are marked "needs confirmation".
+11. **Acclimatization toggle.** For workers new to the job or back after a break, show the gradual-exposure guidance.
+12. **Changes.** On a refresh, list what changed since the previous report for the same date.
+13. **Gaps.** Every missing, stale or not-applicable input appears in the report with the reason. Nothing is dropped silently.
+14. **Mud calibration.** A command compares crew `mud` reports with the flagged segments and writes hit and miss counts. It does not change `locally_validated`.
+
+## UX and accessibility requirements
+
+- The tab opens from a view switch in the workspace header ("Live site" / "Next-day report").
+- Colour is never the only signal. Every band, flag and verdict also has a word or symbol.
+- The page works at phone width and prints to a short PDF.
+- Map layers can be switched on and off. The map has a text alternative: the same facts in lists.
+- Report text follows Standard Technical English: short sentences, concrete verbs, terms defined at first use.
+
+## Technical constraints and integrations
+
+- Data path: static JSON files in `public/reports/<eia>/`. The app reads them. No database write.
+- Python generator reuses `hazidx.heat`, `hazidx.localtime`, `hazidx.sites` and `nld_fetch.NLDClient` through `PYTHONPATH`. No copies of the formulas.
+- Blocked-hours rules mirror `supabase/functions/_shared/briefing.ts`. A Node parity test checks them.
+- External sources, all without a key: Open-Meteo forecast and air quality, NWS (`api.weather.gov`), NOAA CO-OPS tides and `mdapi` datums, NOAA NWPS river gauges, USACE NLD, iNaturalist, OSM (Overpass). Responses are saved as dated snapshots so a sample report can be rebuilt offline.
+- Inputs from the offline models: `models/hazard-index/artifacts/dryrun/`, `models/mud-trafficability/output/LATEST`, `models/mud-trafficability/cache/`.
+- Schema change (Phase C): `supabase/migrations/20261018030000_hazard_type_mud.sql`. Apply to the local stack only. Do not push it to the hosted project without the user's go-ahead.
+
+## Data, privacy and security considerations
+
+- No personal data enters the report. Crew reports are shown as map points and counts only.
+- iNaturalist: use public coordinates, counts and dates only. No photos. Skip obscured records. Credit iNaturalist.
+- The generator never writes to a database and never calls `push --apply`.
+- Every outbound request sets a descriptive `User-Agent`, retries with back-off, and respects the free-tier limits.
+
+## Acceptance criteria
+
+1. `reports/next-day/run.sh test` passes with no network.
+2. `run.sh build --site 621` writes `public/reports/621/latest.json` that validates against `schema_version: 1`. Each section has a status of `ok`, `stale`, `not_applicable` or `missing`.
+3. The Turkey Point report shows tide times, high-tide shading with its label, levee data (or "none within range"), mud routes, the hourly heat strip with a water-break timeline, and the hazard index.
+4. An inland site shows "not applicable" for tide with the reason.
+5. A site with no report, a stale report and an empty river forecast each show a clear message in the tab.
+6. `npm run build` and the Playwright spec for the tab pass.
+7. Nothing wrote to a hosted database.
+
+## Data gaps found
+
+1. `data/` has no weather forecast. The hourly forecast is not stored in the database (only inside `briefing_drafts.content.hourly`, without heat index). The stored daily forecast covers day +1 and +2 at local noon only.
+2. Tide: no data, no station mapping, no per-site flood threshold, empty `coast_distance_m`. About 13 of 60 plants are tidal. Predictions exclude storm surge and river level. The 10 m ground model has vertical error that matters at decimetre tide heights.
+3. Levees: the NLD map service has no inspection-rating field. The NLD2 API may have it, but its query parameters are unverified and some routes need an account. Levee data does not say whether a levee holds on the day. Local, unlisted and non-USACE levees may be missing.
+4. River: NWPS publishes no forecast at many gauges. The nearest gauge may be on another river.
+5. Mud: only OSM unpaved ways are modelled. On-site haul roads and paved crossings are missing or unrated. The model is uncalibrated. `now` depends on run time. Crew reports have no mud type until the migration lands.
+6. Detours: the paved network is not rated. Private roads are missing from OSM. There is no gate, closure or truck-height data.
+7. Heat: WBGT is an approximation (not Liljegren). The tiers are not verified against TB MED 507. Published heat-index bands disagree. There is no workload input. The heat index assumes shade. No work/rest schedule is encoded.
+8. Hazard index: 60 plants only. Trained on ERA5 reanalysis, scored on forecasts. Fire has negative skill. Heat skill is low (Brier skill 0.10). No hourly values. No per-site uncertainty. `docs/ML_SCORES_BRIEF.md` and `push.py` disagree on the model key name (`hazard_index` and `hazidx`).
+9. Weather not ingested today: CAPE, UV, sunrise and sunset, apparent temperature, visibility, wind direction. There is no lightning forecast, only rain probability as a proxy.
+10. Air and wildlife: Open-Meteo air quality is a model, not a sensor. iNaturalist holds opportunistic sightings. "No sightings" does not mean "no animals".
+11. Task limits: wind and other limits per task need equipment-manual or site-safety-plan values. None are in the repo.
+
+## Assumptions, dependencies and risks
+
+- Assumption: the default mud profile is `road_truck`, 1 pass, horizon `d1`. The tab offers the other two equipment classes at 1 pass.
+- Assumption: sample output covers Turkey Point (621), a leveed inland site, a site with no mud segments or a stale hazard index, and a heat-heavy site.
+- Assumption: the verdict thresholds live in one table and the user may change them.
+- Dependency: the hazard-index `score` run and the mud-trafficability daily run must finish before `build`. Run per time-zone group at about 17:30 local.
+- Risk: heat-index sources conflict. The generator pins one table with its URL and retrieval date. If sources still conflict at build time, stop and ask.
+- Risk: tide shading can mislead. It ignores surge, river level, drains, levees and ground-model error. The label says so next to the layer.
+- Risk: levee data can look reassuring. The report never uses a levee to remove tide or flood shading.
+- Risk: a person may read "go" as clearance. Every verdict carries the decision-support label.
+
+## Open questions
+
+1. Task list and real limits (wind, rain, ground condition) for each task type.
+2. Wildlife species list for the sighting and season layer.
+3. Go-ahead before the `mud` hazard-type migration is pushed to the hosted project.
+4. Which heat-index source to pin if the sources still conflict at build time.
+5. Human check of the tide-station mapping, mainly Haynes and the inland candidates.

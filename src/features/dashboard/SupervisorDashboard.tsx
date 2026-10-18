@@ -102,6 +102,7 @@ export function SupervisorDashboard({
     <div className={styles.stack} id="supervisor-dashboard">
       <SectionNav />
       <RiskPanel
+        siteId={siteId}
         risk={risk.data}
         loaded={risk.loaded}
         openHazards={reports.filter((r) => r.is_active).length}

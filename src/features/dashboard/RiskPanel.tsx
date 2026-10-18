@@ -1,6 +1,12 @@
 import { Panel, PanelHeader } from "../../components/ui";
 import { cx } from "../../components/ui";
-import { riskLevel, type SiteRiskView } from "../../lib/monitoring";
+import { useLive } from "../../hooks/useLive";
+import {
+  fetchHazardEvidence,
+  riskLevel,
+  type HazardEvidenceView,
+  type SiteRiskView,
+} from "../../lib/monitoring";
 import styles from "./Dashboard.module.css";
 
 const names: Record<string, string> = {
@@ -26,13 +32,24 @@ export function RiskPanel({
   loaded,
   openHazards,
   crewTerm,
+  siteId,
 }: {
   risk: SiteRiskView;
   loaded: boolean;
   openHazards: number;
   /** Points the crew-reported hazards add to the score, out of 2. */
   crewTerm: number;
+  siteId?: string;
 }) {
+  const { data: evidence } = useLive<HazardEvidenceView[]>(
+    siteId ?? "",
+    ["hazard_evidence"],
+    fetchHazardEvidence,
+    [],
+  );
+  const activeEvidence =
+    evidence.find((e) => e.horizon === "now") ?? evidence[0] ?? null;
+
   const now = riskLevel(risk.riskNow);
   const tomorrow = riskLevel(risk.riskTomorrow);
   const entries = Object.entries(risk.subscores).filter(
@@ -78,6 +95,39 @@ export function RiskPanel({
       </div>
       {risk.topDriver ? (
         <p className={styles.driver}>Main driver: {risk.topDriver}</p>
+      ) : null}
+      {activeEvidence ? (
+        <div className={styles.evidenceCard} id="hazard-evidence">
+          <div className={styles.evidenceHeader}>
+            <span className={styles.evidenceTitle}>
+              Backing Evidence: {activeEvidence.driver.toUpperCase()}
+            </span>
+            <span className={styles.evidenceBadge}>Ground Truth</span>
+          </div>
+          <p className={styles.evidenceSummary}>{activeEvidence.summary}</p>
+          {activeEvidence.articles.length > 0 ? (
+            <ul className={styles.evidenceArticles}>
+              {activeEvidence.articles.map((art, idx) => (
+                <li key={idx} className={styles.articleItem}>
+                  <a
+                    href={art.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.articleLink}
+                  >
+                    <span>{art.title}</span>
+                    <span className={styles.articleSource}>
+                      ({art.source}) ↗
+                    </span>
+                  </a>
+                  {art.snippet ? (
+                    <p className={styles.articleSnippet}>{art.snippet}</p>
+                  ) : null}
+                </li>
+              ))}
+            </ul>
+          ) : null}
+        </div>
       ) : null}
       {entries.length ? (
         <ul className={styles.subscores}>

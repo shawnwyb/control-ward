@@ -12,6 +12,7 @@
 #   ./run.sh status               download coverage, current model, test metrics
 #   ./run.sh test                 unit tests (node needed for the TypeScript parity test)
 #   ./run.sh notebook             execute notebooks/results.ipynb in place
+#   ./run.sh evidence [CSV]       query news articles & evidence for elevated hazard index sites
 #   ./run.sh push [CSV] [--apply] upload scores to production ml_scores as model 'hazidx' (asks for the project ref);
 #                                 without --apply only writes the SQL; --clear --apply removes the hazidx rows
 #
@@ -162,6 +163,7 @@ main() {
     status)   cmd_status ;;
     test)     "$PY" -m unittest discover -s tests -t . ;;
     notebook) "$PY" -m jupyter nbconvert --to notebook --execute --inplace notebooks/results.ipynb ;;
+    evidence) "$PY" fetch_evidence.py "$@" ;;
     push)     "$PY" push.py "$@" ;;
     *) echo "unknown command: $cmd" >&2; usage >&2; exit 1 ;;
   esac

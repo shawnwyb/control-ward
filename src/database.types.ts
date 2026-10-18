@@ -419,6 +419,50 @@ export type Database = {
           },
         ]
       }
+      hazard_evidence: {
+        Row: {
+          articles: Json
+          driver: string
+          hazard_score: number
+          horizon: string
+          id: string
+          model_version: string
+          queried_at: string
+          site_id: string
+          summary: string
+        }
+        Insert: {
+          articles?: Json
+          driver: string
+          hazard_score: number
+          horizon: string
+          id?: string
+          model_version: string
+          queried_at?: string
+          site_id: string
+          summary: string
+        }
+        Update: {
+          articles?: Json
+          driver?: string
+          hazard_score?: number
+          horizon?: string
+          id?: string
+          model_version?: string
+          queried_at?: string
+          site_id?: string
+          summary?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hazard_evidence_site_id_fkey"
+            columns: ["site_id"]
+            isOneToOne: false
+            referencedRelation: "sites"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       hazard_checkin_tasks: {
         Row: {
           completed_at: string | null

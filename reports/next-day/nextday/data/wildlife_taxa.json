@@ -1,0 +1,9 @@
+{
+  "_comment": "Starter species list for the wildlife sightings layer. It needs confirming by the safety lead for each region. Names are scientific names looked up in iNaturalist at build time. A genus covers all its species.",
+  "groups": [
+    {"id": "alligator", "label": "American alligator", "names": ["Alligator mississippiensis"]},
+    {"id": "crocodile", "label": "American crocodile", "names": ["Crocodylus acutus"]},
+    {"id": "snakes", "label": "Venomous snakes", "names": ["Crotalus", "Agkistrodon", "Micrurus", "Sistrurus"]},
+    {"id": "bear", "label": "American black bear", "names": ["Ursus americanus"]}
+  ]
+}

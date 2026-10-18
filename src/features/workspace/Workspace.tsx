@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Field, Select } from "../../components/ui";
+import { Field, Segmented, Select } from "../../components/ui";
 import { useBusy } from "../../hooks/busy";
 import { useNotice } from "../../hooks/notice";
 import { fetchSites } from "../../lib/api";
@@ -8,6 +8,7 @@ import { errorMessage } from "../../lib/format";
 import { discardPhoto } from "../../lib/submission";
 import type { Site } from "../../lib/types";
 import { NoSites } from "../auth/NoSites";
+import { NextDayReport } from "../nextday/NextDayReport";
 import { PageHeader } from "../shell/PageHeader";
 import { SiteWorkspace } from "./SiteWorkspace";
 
@@ -18,6 +19,7 @@ export function Workspace({ userId }: { userId: string }) {
   const [sites, setSites] = useState<Site[]>();
   const [roles, setRoles] = useState<Record<string, Role>>({});
   const [siteId, setSiteId] = useState<string>();
+  const [view, setView] = useState<"live" | "report">("live");
 
   useEffect(() => {
     let cancelled = false;
@@ -42,40 +44,63 @@ export function Workspace({ userId }: { userId: string }) {
     setSiteId(id);
   }
 
+  async function changeView(next: "live" | "report") {
+    if (isBusy()) return;
+    if (next === "report") await discardPhoto();
+    setView(next);
+  }
+
   return (
     <section id="workspace">
       <PageHeader
         title={
-          site && roles[site.id] === "supervisor"
-            ? "Site control"
-            : "Crew reporting"
+          view === "report"
+            ? "Next-day report"
+            : site && roles[site.id] === "supervisor"
+              ? "Site control"
+              : "Crew reporting"
         }
         actions={
           sites?.length ? (
-            <Field
-              id="site"
-              label={
-                site && roles[site.id] === "supervisor" ? "Site" : "Your site"
-              }
-            >
-              <Select
+            <>
+              <Segmented
+                label="View"
+                name="workspace-view"
+                value={view}
+                options={[
+                  { value: "live", label: "Live site" },
+                  { value: "report", label: "Next-day report" },
+                ]}
+                onChange={(next) => void changeView(next)}
+              />
+              <Field
                 id="site"
-                value={siteId ?? ""}
-                disabled={busy}
-                onChange={(event) => void changeSite(event.target.value)}
+                label={
+                  site && roles[site.id] === "supervisor" ? "Site" : "Your site"
+                }
               >
-                {sites.map((candidate) => (
-                  <option key={candidate.id} value={candidate.id}>
-                    {candidate.name}
-                  </option>
-                ))}
-              </Select>
-            </Field>
+                <Select
+                  id="site"
+                  value={siteId ?? ""}
+                  disabled={busy}
+                  onChange={(event) => void changeSite(event.target.value)}
+                >
+                  {sites.map((candidate) => (
+                    <option key={candidate.id} value={candidate.id}>
+                      {candidate.name}
+                    </option>
+                  ))}
+                </Select>
+              </Field>
+            </>
           ) : undefined
         }
       />
       {sites && sites.length === 0 ? <NoSites /> : null}
-      {site ? (
+      {site && view === "report" ? (
+        <NextDayReport key={site.id} site={site} />
+      ) : null}
+      {site && view === "live" ? (
         <SiteWorkspace
           key={site.id}
           site={site}
