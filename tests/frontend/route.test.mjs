@@ -4,7 +4,7 @@ import { allowedPage, homeFor, parseRoute } from "../../src/lib/route.ts";
 
 test("parseRoute reads the hash and falls back to landing", () => {
   assert.equal(parseRoute("#/alerts"), "alerts");
-  assert.equal(parseRoute("#/next-day-report"), "daily-safety");
+  assert.equal(parseRoute("#/next-day-report"), "next-day-report");
   assert.equal(parseRoute("#/briefing"), "daily-safety");
   assert.equal(parseRoute("#/daily-safety"), "daily-safety");
   assert.equal(parseRoute("#/sign-in"), "sign-in");

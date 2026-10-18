@@ -143,7 +143,7 @@ Full reports are static files under `public/reports/`: generate and include thei
 
 ## Supervisor dashboard, web push and reviewed briefings
 
-The reviewed daily work plan described here is separate from the automatic safety checklist. The checklist needs no supervisor input or approval; the detailed forecast is independently generated and available under **View detailed forecast & sources** on **Daily safety**.
+The reviewed daily work plan described here is separate from the automatic safety checklist. The checklist needs no supervisor input or approval; the detailed forecast is independently generated on its own **Next-day report** page, linked from **Daily safety**.
 
 The UI follows the signed-in user's role at the selected site (`site_memberships.role`). Supervisors get risk, alerts with the lightning countdown, the crew roster with last known locations (also on the map), a push composer and the next-day plan review. Crew get live alerts, the approved plan, and opt-ins for push and location sharing.
 
@@ -172,7 +172,7 @@ Edge Functions are not part of this local start script, so it does not fetch liv
 
 **Design-only mode (no Docker or Supabase):** `npm run dev:design` runs the UI against an in-browser mock backend with seeded demo data. Sign in with any demo account and `CrewDemo123!`. Add `?latency=1500` to slow responses or `?fail` to make writes fail, to design busy and error states. State resets on reload, and the mock is excluded from production builds.
 
-**The app:** the landing page is at `/`. Pages use hash routes such as `#/sites`, `#/alerts`, `#/site` (crew's My site) and `#/daily-safety` (checklist, work plan and expandable forecast), with the sidebar as navigation. Existing `#/briefing` and `#/next-day-report` bookmarks still open **Daily safety**; the latter opens the forecast automatically. `npm run test:frontend` runs the pure-logic tests (routes, ranking, countdowns, design tokens). The UI tests for the redesign run against the mock backend with `PLAYWRIGHT_MODE=design npx playwright test`.
+**The app:** the landing page is at `/`. Pages use hash routes such as `#/sites`, `#/alerts`, `#/site` (crew's My site) and `#/daily-safety` (checklist and work plan) plus `#/next-day-report` (the full model report), with the sidebar as navigation. Existing `#/briefing` bookmarks still open **Daily safety**. `npm run test:frontend` runs the pure-logic tests (routes, ranking, countdowns, design tokens). The UI tests for the redesign run against the mock backend with `PLAYWRIGHT_MODE=design npx playwright test`.
 
 The site map uses MapLibre GL with the free OpenFreeMap "liberty" basemap (no API key; needs internet). Set `VITE_MAP_STYLE_URL` to use a different MapLibre style. If the basemap can't load, the map falls back to a plain ground with the site ring and hazard markers.
 
@@ -283,7 +283,7 @@ Request and response shapes are in [the monitoring contract](docs/api-contract.m
 
 ## Automatic worker safety checklists
 
-The agent uses each assigned registry worksite's coordinates to resolve its state, county and city, research official safety regulations/guidance, and generate a cited worker checklist from local conditions such as heat. It refreshes and publishes automatically. Supervisors do not enter job plans, approve sources or publish checklists. Both roles read the checklist and acknowledge its exact version. Open **Daily safety** in the sidebar for the checklist; the full model forecast expands below the checklist and work plan under **View detailed forecast & sources**.
+The agent uses each assigned registry worksite's coordinates to resolve its state, county and city, research official safety regulations/guidance, and generate a cited worker checklist from local conditions such as heat. It refreshes and publishes automatically. Supervisors do not enter job plans, approve sources or publish checklists. Both roles read the checklist and acknowledge its exact version. Open **Daily safety** in the sidebar for the checklist and work plan; the full model forecast is on the **Next-day report** page.
 
 Missing sources, unknown applicability and stale conditions are shown as gaps. Existing weather briefings, risk, live alerts and stop-work rules remain independent. Fresh database deployments default generation off until the server model, credentials and schedules are configured. The hosted project's enabled state is operational configuration, not a repository default.
 

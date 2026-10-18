@@ -26,7 +26,14 @@ test("theme: Notion surfaces and fonts", async ({ page }) => {
 test("shell: sidebar pages and role guard", async ({ page }) => {
   await signIn(page, "supervisor@planit.local");
   const nav = page.getByRole("navigation", { name: "Pages" });
-  for (const name of ["Sites", "Alerts", "Daily safety", "Crew", "Reports"])
+  for (const name of [
+    "Sites",
+    "Alerts",
+    "Daily safety",
+    "Next-day report",
+    "Crew",
+    "Reports",
+  ])
     await expect(nav.getByRole("link", { name })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Sites" })).toBeVisible();
   await go(page, "Crew");
@@ -44,7 +51,13 @@ test("shell: sidebar pages and role guard", async ({ page }) => {
 test("shell: crew cannot open supervisor pages", async ({ page }) => {
   await signIn(page, "crew@planit.local");
   const nav = page.getByRole("navigation", { name: "Pages" });
-  for (const name of ["My site", "Alerts", "Daily safety", "Reports"])
+  for (const name of [
+    "My site",
+    "Alerts",
+    "Daily safety",
+    "Next-day report",
+    "Reports",
+  ])
     await expect(nav.getByRole("link", { name })).toBeVisible();
   await expect(nav.getByRole("link", { name: "Crew" })).toHaveCount(0);
   await page.evaluate(() => (location.hash = "#/crew"));
@@ -75,6 +88,7 @@ test("crew: my site is the map with report button", async ({ page }) => {
   const titles: [string, string][] = [
     ["Alerts", "Alerts"],
     ["Daily safety", "Daily safety"],
+    ["Next-day report", "Next-day report"],
     ["Reports", "Reports"],
   ];
   for (const [link, heading] of titles) {
@@ -87,7 +101,13 @@ test("crew: my site is the map with report button", async ({ page }) => {
 
 test("supervisor: each page renders its title", async ({ page }) => {
   await signIn(page, "supervisor@planit.local");
-  for (const name of ["Alerts", "Daily safety", "Crew", "Reports"]) {
+  for (const name of [
+    "Alerts",
+    "Daily safety",
+    "Next-day report",
+    "Crew",
+    "Reports",
+  ]) {
     await go(page, name);
     await expect(page.getByRole("heading", { level: 1, name })).toBeVisible();
   }
