@@ -12,6 +12,8 @@
 #   ./run.sh status               download coverage, current model, test metrics
 #   ./run.sh test                 unit tests (node needed for the TypeScript parity test)
 #   ./run.sh notebook             execute notebooks/results.ipynb in place
+#   ./run.sh push [CSV] [--apply] upload scores to production ml_scores as model 'hazidx' (asks for the project ref);
+#                                 without --apply only writes the SQL; --clear --apply removes the hazidx rows
 #
 # Exit codes are the scripts' own: 0 ok, 1 error, 2 blocked by network policy, 3 API quota used up.
 # Set PYTHON to use another interpreter (default: the repository's .venv).
@@ -21,9 +23,10 @@ HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SELF="$HERE/$(basename "${BASH_SOURCE[0]}")"
 REPO="$(cd "$HERE/../.." && pwd)"
 PY="${PYTHON:-$REPO/.venv/bin/python}"
+export HAZIDX_CALLER_PWD="$PWD"   # so relative paths given to push/--site-map still resolve after the cd
 cd "$HERE"
 
-usage() { sed -n '2,17p' "$SELF" | sed 's/^# \{0,1\}//'; }
+usage() { sed -n '2,19p' "$SELF" | sed 's/^# \{0,1\}//'; }
 
 need_python() {
   if [ ! -x "$PY" ]; then
@@ -159,6 +162,7 @@ main() {
     status)   cmd_status ;;
     test)     "$PY" -m unittest discover -s tests -t . ;;
     notebook) "$PY" -m jupyter nbconvert --to notebook --execute --inplace notebooks/results.ipynb ;;
+    push)     "$PY" push.py "$@" ;;
     *) echo "unknown command: $cmd" >&2; usage >&2; exit 1 ;;
   esac
 }

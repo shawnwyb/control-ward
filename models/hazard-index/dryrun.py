@@ -241,7 +241,7 @@ def main(argv: list[str] | None = None, client: Client | None = None, now: datet
         sites = load_sites()
         if args.plants:
             sites = [s for s in sites if s.eia_plant_id in set(args.plants)]
-        site_map = read_site_map(args.site_map) if args.site_map else None
+        site_map = read_site_map(paths.user_path(args.site_map)) if args.site_map else None
         run_at_dt = now or datetime.now(timezone.utc)
         run_at = run_at_dt.strftime("%Y-%m-%dT%H:%M:%SZ")
         print(f"model {version}   run {run_at}")

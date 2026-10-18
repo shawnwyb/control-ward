@@ -40,5 +40,29 @@ begin
   perform public.upsert_ml_scores('[{"site_id":"99999999-9999-4999-8999-999999999999","horizon":"now","score":9.0,"model_version":"t"}]'::jsonb);
   perform public.compute_site_risk(s);
   assert (select risk from public.site_risk where site_id=s and horizon='now')=9.0, 'ml dominates base';
+  -- several models: one row each (without `model`, the model_version prefix decides); the highest fresh score wins
+  perform public.upsert_ml_scores('[{"site_id":"99999999-9999-4999-8999-999999999999","horizon":"now","score":5.0,"model_version":"stram-x"},
+    {"site_id":"99999999-9999-4999-8999-999999999999","horizon":"now","score":9.4,"model_version":"v2","model":"hazard_index"}]'::jsonb);
+  perform public.upsert_ml_scores('[{"site_id":"99999999-9999-4999-8999-999999999999","horizon":"now","score":9.5,"model_version":"v3","model":"hazard_index"}]'::jsonb);
+  select count(*) into n from public.ml_scores where site_id=s and horizon='now';
+  assert n=3, 'one row per model (t, mud, hazard_index), got '||n;
+  assert exists(select 1 from public.ml_scores where site_id=s and model='mud' and score=5.0), 'stram prefix maps to mud';
+  perform public.compute_site_risk(s);
+  assert (select risk from public.site_risk where site_id=s and horizon='now')=9.5, 'highest model wins';
+  assert (select top_driver from public.site_risk where site_id=s and horizon='now')='ML hazard index 9.5', 'driver names the model';
+  -- stale rows stop counting: older than 36 h for now, 48 h for tomorrow
+  update public.ml_scores set computed_at=now()-interval '37 hours' where site_id=s and horizon='now' and model<>'mud';
+  perform public.upsert_ml_scores('[{"site_id":"99999999-9999-4999-8999-999999999999","horizon":"tomorrow","score":8.0,"model_version":"v3","model":"hazard_index"}]'::jsonb);
+  update public.ml_scores set computed_at=now()-interval '40 hours' where site_id=s and horizon='tomorrow';
+  perform public.compute_site_risk(s);
+  assert (select risk from public.site_risk where site_id=s and horizon='now')=7.5, 'stale now scores ignored, heat subscore wins';
+  assert (select risk from public.site_risk where site_id=s and horizon='tomorrow')=8.0, 'a 40 h old tomorrow score still counts';
+  update public.ml_scores set computed_at=now()-interval '49 hours' where site_id=s and horizon='tomorrow';
+  perform public.compute_site_risk(s);
+  assert (select risk from public.site_risk where site_id=s and horizon='tomorrow')=0, 'stale tomorrow score ignored';
+  update public.ml_scores set computed_at=now() where site_id=s and horizon='now' and model='mud';
+  update public.site_subscores set heat=0 where site_id=s;
+  perform public.compute_site_risk(s);
+  assert (select top_driver from public.site_risk where site_id=s and horizon='now')='ML mud trafficability 5.0', 'mud label';
   raise exception 'ALL CHECKS PASSED (%)',log;
 end $$;

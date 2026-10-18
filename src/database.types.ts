@@ -796,6 +796,7 @@ export type Database = {
         Row: {
           computed_at: string
           horizon: string
+          model: string
           model_version: string
           score: number
           site_id: string
@@ -803,6 +804,7 @@ export type Database = {
         Insert: {
           computed_at?: string
           horizon: string
+          model: string
           model_version: string
           score: number
           site_id: string
@@ -810,6 +812,7 @@ export type Database = {
         Update: {
           computed_at?: string
           horizon?: string
+          model?: string
           model_version?: string
           score?: number
           site_id?: string
