@@ -37,6 +37,7 @@ import {
   mudPopupElement,
   type MudRoutes,
 } from "./mud/mudLayer";
+import { applySatellite } from "./satelliteLayer";
 import { forecastBounds } from "./weather/forecast";
 import type { WeatherView } from "./weather/types";
 import { applyWeather } from "./weather/weatherLayer";
@@ -63,6 +64,8 @@ export type MapCanvasProps = {
   regional?: boolean;
   /** Flagged mud routes to draw for one equipment class; null or absent means none. */
   mud?: MudRoutes | null;
+  /** Show satellite imagery under the overlays. */
+  satellite?: boolean;
   /** Every site the user can see, drawn as score pins (sites without coordinates are skipped). */
   sites?: SiteSummary[];
   /** A site pin was clicked or pressed. */
@@ -111,6 +114,7 @@ export default function MapCanvas({
   weather,
   regional,
   mud,
+  satellite = false,
   sites,
   onSelectSite,
   stopWork = false,
@@ -147,6 +151,7 @@ export default function MapCanvas({
     stopWork,
     onSelectSite,
     mud,
+    satellite,
   });
   useEffect(() => {
     latest.current = {
@@ -159,6 +164,7 @@ export default function MapCanvas({
       stopWork,
       onSelectSite,
       mud,
+      satellite,
     };
   });
   // The basemap style is (re)loaded asynchronously; overlays wait for it.
@@ -321,6 +327,7 @@ export default function MapCanvas({
       // A new style (e.g. the offline fallback) drops our sources: put weather back.
       applyWeather(instance, latest.current.weather ?? null);
       applyMud(instance, latest.current.mud ?? null);
+      applySatellite(instance, latest.current.satellite);
     });
     // Basemap unreachable: keep the overlays on a plain ground instead of a blank box.
     instance.on("error", () => {
@@ -645,6 +652,14 @@ export default function MapCanvas({
     if (instance && styleLoaded.current)
       applyWeather(instance, weather ?? null);
   }, [weather]);
+
+  // Satellite imagery: a raster layer under labels and overlays.
+  useEffect(() => {
+    const instance = map.current;
+    if (container.current)
+      container.current.dataset.satellite = satellite ? "on" : "off";
+    if (instance && styleLoaded.current) applySatellite(instance, satellite);
+  }, [satellite]);
 
   // Mud routes: drawn under the markers and framed when they appear.
   useEffect(() => {

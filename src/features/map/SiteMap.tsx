@@ -185,6 +185,7 @@ export function SiteMap({
   }, [legendOpen]);
 
   // Flagged unpaved routes from the mud forecast: every site in the newest model run has a layer.
+  const [satellite, setSatellite] = useState(false);
   const [mudOn, setMudOn] = useState(false);
   const [mudEquipment, setMudEquipment] = useState<string | null>(null);
   const eia = site.eia_plant_id;
@@ -397,6 +398,7 @@ export function SiteMap({
               weather={weather}
               regional={overlay !== "off"}
               mud={mud}
+              satellite={satellite}
               sites={sites}
               onSelectSite={onSelectSite}
               stopWork={stopWork}
@@ -427,12 +429,21 @@ export function SiteMap({
                 </button>
               ))}
             </div>
-            {hasMud ? (
-              <div
-                role="group"
-                aria-label="Ground layers"
-                className={styles.chipGroup}
+            <div
+              role="group"
+              aria-label="Ground layers"
+              className={styles.chipGroup}
+            >
+              <button
+                type="button"
+                className={styles.chip}
+                aria-pressed={satellite}
+                onClick={() => setSatellite(!satellite)}
               >
+                <Icon name="globe" size={14} />
+                Satellite
+              </button>
+              {hasMud ? (
                 <button
                   type="button"
                   className={styles.chip}
@@ -442,8 +453,8 @@ export function SiteMap({
                   <Icon name="mud" size={14} />
                   Mud
                 </button>
-              </div>
-            ) : null}
+              ) : null}
+            </div>
             {overlay === "rain" ? (
               <div
                 role="group"

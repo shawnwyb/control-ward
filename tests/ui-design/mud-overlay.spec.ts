@@ -34,3 +34,22 @@ test("a site with no plant id has no mud chip", async ({ page }) => {
   await expect(page.getByRole("button", { name: "Rain" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Mud" })).toHaveCount(0);
 });
+
+test("satellite imagery can be turned on and off, with mud on top", async ({
+  page,
+}) => {
+  await signIn(page, "supervisor@planit.local");
+  await page
+    .locator("#site")
+    .selectOption({ label: "Turkey Point · Report demo" });
+  const map = page.locator("[data-satellite]");
+  await expect(map).toHaveAttribute("data-satellite", "off");
+  const chip = page.getByRole("button", { name: "Satellite" });
+  await chip.click();
+  await expect(chip).toHaveAttribute("aria-pressed", "true");
+  await expect(map).toHaveAttribute("data-satellite", "on");
+  await page.getByRole("button", { name: "Mud" }).click();
+  await expect(page.getByText(/\d+ to hold, \d+ to inspect/)).toBeVisible();
+  await chip.click();
+  await expect(map).toHaveAttribute("data-satellite", "off");
+});
