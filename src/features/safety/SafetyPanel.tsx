@@ -1,5 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Button, Field, Input, Panel, PanelHeader } from "../../components/ui";
+import {
+  Button,
+  Field,
+  Icon,
+  type IconName,
+  Input,
+  Panel,
+  PanelHeader,
+} from "../../components/ui";
 import { errorMessage } from "../../lib/format";
 import type { Role } from "../../lib/monitoring";
 import type { Site } from "../../lib/types";
@@ -30,6 +38,27 @@ const units: Record<string, string> = {
   heat_index_f: "Heat index (F)",
   F: "Heat reading (F)",
 };
+/*
+ * Readings carry no sky condition, so each card's symbol follows the reading
+ * type (heat index -> sun) rather than actual cloud cover.
+ */
+const cardTitles: Record<string, string> = {
+  heat_index_f: "Feels like",
+  wbgt_f: "Heat stress (WBGT)",
+  F: "Heat reading",
+};
+const hazardIcons: Record<string, IconName> = {
+  rain: "rain",
+  wind: "wind",
+  lightning: "bolt",
+  flood: "flood",
+  fire: "fire",
+};
+function conditionIcon(r: Reading): IconName {
+  if (r.unit === "heat_index_f") return "sun";
+  if (r.unit === "wbgt_f" || r.hazard === "heat") return "heat";
+  return hazardIcons[r.hazard] ?? "alert";
+}
 function conditionRows(readings: Reading[]) {
   const grouped = new Map<string, Reading>();
   for (const reading of readings) {
@@ -190,21 +219,33 @@ function AutomaticChecklist({
               className={styles.conditions}
               aria-label="Priority local conditions"
             >
-              {readings.slice(0, 3).map((r) => (
-                <li key={`${r.hazard}:${r.unit}:${r.forecast_for}`}>
-                  <strong>
-                    {units[r.unit] ?? `${r.hazard} (${r.unit})`}:{" "}
-                    {Number(r.value.toFixed(1))}
-                  </strong>
-                  <span className={styles.muted}>
-                    {" "}
-                    · {r.forecast_for === "-infinity" ? "Observed" : "Forecast"}
-                    {Date.now() - Date.parse(r.observed_at) > 7200000
-                      ? " · STALE"
-                      : ""}
-                  </span>
-                </li>
-              ))}
+              {readings.slice(0, 3).map((r) => {
+                const stale = Date.now() - Date.parse(r.observed_at) > 7200000;
+                return (
+                  <li
+                    key={`${r.hazard}:${r.unit}:${r.forecast_for}`}
+                    className={styles.card}
+                  >
+                    <span className={styles.cardTitle}>
+                      {cardTitles[r.unit] ?? `${r.hazard} (${r.unit})`}
+                    </span>
+                    <Icon
+                      name={conditionIcon(r)}
+                      size={32}
+                      className={styles.cardIcon}
+                    />
+                    <strong className={styles.cardValue}>
+                      {Math.round(r.value)}°F
+                    </strong>
+                    <span className={styles.cardMeta}>
+                      {r.forecast_for === "-infinity" ? "Observed" : "Forecast"}
+                      {stale ? (
+                        <span className={styles.stale}> · STALE</span>
+                      ) : null}
+                    </span>
+                  </li>
+                );
+              })}
             </ul>
           ) : (
             <p className={styles.warning}>

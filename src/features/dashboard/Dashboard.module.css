@@ -131,6 +131,13 @@
   display: block;
 }
 
+.alertActions {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  flex-shrink: 0;
+}
+
 .countdown {
   font-family: var(--font-mono);
   font-size: var(--text-xl);

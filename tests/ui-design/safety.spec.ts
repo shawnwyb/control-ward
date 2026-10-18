@@ -21,9 +21,11 @@ test("a checklist appears automatically for supervisor and worker, with no plann
   await expect(
     panel.getByRole("region", { name: "Automatic worker checklist" }),
   ).toBeVisible({ timeout: 12000 });
-  await expect(
-    panel.getByText("Heat index (F): 92", { exact: true }),
-  ).toBeVisible();
+  const conditions = panel.getByRole("list", {
+    name: "Priority local conditions",
+  });
+  await expect(conditions.getByText("Feels like")).toBeVisible();
+  await expect(conditions.getByText("92°F")).toBeVisible();
   await expect(panel.getByRole("blockquote")).not.toBeVisible();
   await panel.getByText(/Research details ·/).click();
   await expect(
