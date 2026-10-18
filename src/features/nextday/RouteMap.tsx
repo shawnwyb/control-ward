@@ -48,6 +48,8 @@ type Props = {
   onCancel: () => void;
   endpoints: { a: LngLat | null; b: LngLat | null };
   paths: { direct: LngLat[] | null; detour: LngLat[] | null };
+  /** The road (OpenStreetMap way) picked in the route table: drawn on top, and the map zooms to it. */
+  selectedWay: number | null;
   onUnavailable: () => void;
 };
 
@@ -70,6 +72,7 @@ function flatten(
       return {
         ...f,
         properties: {
+          osm_id: f.properties?.osm_id,
           highway: f.properties?.highway,
           name: f.properties?.name,
           length_ft: f.properties?.length_ft,
@@ -83,6 +86,37 @@ function flatten(
 }
 
 const EMPTY: FeatureCollection = { type: "FeatureCollection", features: [] };
+
+/** South-west and north-east corners around some line features, or null when there are none. */
+function boundsOf(
+  features: Feature[],
+): [[number, number], [number, number]] | null {
+  let minX = 180,
+    minY = 90,
+    maxX = -180,
+    maxY = -90;
+  let any = false;
+  for (const f of features) {
+    const coords = (f.geometry as { coordinates?: number[][] } | null)
+      ?.coordinates;
+    for (const [x, y] of coords ?? []) {
+      any = true;
+      minX = Math.min(minX, x);
+      maxX = Math.max(maxX, x);
+      minY = Math.min(minY, y);
+      maxY = Math.max(maxY, y);
+    }
+  }
+  return any
+    ? [
+        [minX, minY],
+        [maxX, maxY],
+      ]
+    : null;
+}
+
+const reducedMotion = () =>
+  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 function popupContent(lines: string[]): HTMLElement {
   const box = document.createElement("div");
@@ -110,6 +144,7 @@ export default function RouteMap({
   onCancel,
   endpoints,
   paths,
+  selectedWay,
   onUnavailable,
 }: Props) {
   const node = useRef<HTMLDivElement>(null);
@@ -126,6 +161,7 @@ export default function RouteMap({
     picking,
     onPick,
     paths,
+    selectedWay,
   });
   useEffect(() => {
     latest.current = {
@@ -139,6 +175,7 @@ export default function RouteMap({
       picking,
       onPick,
       paths,
+      selectedWay,
     };
   });
   const pins = useRef<{ a: Marker | null; b: Marker | null }>({
@@ -158,6 +195,7 @@ export default function RouteMap({
       equipment: e,
       show: s,
       paths: p,
+      selectedWay: way,
     } = latest.current;
     const set = (id: string, data: FeatureCollection | null) => {
       const src = m.getSource(id) as
@@ -294,6 +332,26 @@ export default function RouteMap({
       paint: { "line-color": sev3, "line-width": 5 },
       layout: { "line-cap": "round" },
     });
+    // The road picked in the route table: an ink halo with the result colour on top. The filter follows selectedWay.
+    add({
+      id: "mud-select-halo",
+      type: "line",
+      source: "nd-routes",
+      filter: ["==", ["get", "osm_id"], way ?? -1],
+      paint: { "line-color": ink, "line-width": 13 },
+      layout: { "line-cap": "round", "line-join": "round" },
+    });
+    add({
+      id: "mud-select",
+      type: "line",
+      source: "nd-routes",
+      filter: ["==", ["get", "osm_id"], way ?? -1],
+      paint: {
+        "line-color": ["case", ["==", ["get", "flag"], 2], sev3, sev2],
+        "line-width": 7,
+      },
+      layout: { "line-cap": "round", "line-join": "round" },
+    });
     add({
       id: "wild-point",
       type: "circle",
@@ -342,7 +400,16 @@ export default function RouteMap({
           m.getLayer(id) &&
           m.setLayoutProperty(id, "visibility", on ? "visible" : "none"),
       );
-    vis(["mud-casing", "mud-inspect", "mud-hold"], s.routes);
+    vis(
+      [
+        "mud-casing",
+        "mud-inspect",
+        "mud-hold",
+        "mud-select-halo",
+        "mud-select",
+      ],
+      s.routes,
+    );
     vis(["tide-wet", "tide-marginal", "tide-low"], s.tide);
     vis(
       [
@@ -444,7 +511,7 @@ export default function RouteMap({
           popupContent([
             `${FLAGS[Number(p.flag)] ?? "ok"} · ${p.highway ?? "unpaved way"}${p.name ? ` · ${p.name}` : ""}`,
             p.rut !== null && p.rut !== undefined
-              ? `Predicted rut depth about ${Number(p.rut).toFixed(1)} in (inspect at 4 in, hold at 8 in).`
+              ? `Predicted rut depth about ${Number(p.rut).toFixed(1)} in. Inspect starts at 4 in and hold at 8 in; a soil rating or wet ground can set a higher result.`
               : "Rut depth not available for this equipment.",
             `Score ${p.score ?? "n/a"} of 10 · ${p.length_ft} ft long.`,
           ]),
@@ -483,6 +550,29 @@ export default function RouteMap({
     show,
     paths,
   ]);
+
+  // Highlight the picked road and zoom to it.
+  useEffect(() => {
+    const m = map.current;
+    if (!m || !ready.current) return;
+    const filter: ["==", ["get", string], number] = [
+      "==",
+      ["get", "osm_id"],
+      selectedWay ?? -1,
+    ];
+    for (const id of ["mud-select-halo", "mud-select"])
+      if (m.getLayer(id)) m.setFilter(id, filter);
+    if (selectedWay === null || !routes) return;
+    const box = boundsOf(
+      routes.features.filter((f) => f.properties?.osm_id === selectedWay),
+    );
+    if (box)
+      m.fitBounds(box, {
+        padding: 70,
+        maxZoom: 17,
+        duration: reducedMotion() ? 0 : 500,
+      });
+  }, [selectedWay, routes]);
 
   const crosshair = useRef<Marker | null>(null);
   const cancelRef = useRef(onCancel);
@@ -571,26 +661,8 @@ export default function RouteMap({
   useEffect(() => {
     const m = map.current;
     if (!m || !routes?.features.length) return;
-    let minX = 180,
-      minY = 90,
-      maxX = -180,
-      maxY = -90;
-    for (const f of routes.features) {
-      const coords = (f.geometry as { coordinates: number[][] }).coordinates;
-      for (const [x, y] of coords) {
-        minX = Math.min(minX, x);
-        maxX = Math.max(maxX, x);
-        minY = Math.min(minY, y);
-        maxY = Math.max(maxY, y);
-      }
-    }
-    m.fitBounds(
-      [
-        [minX, minY],
-        [maxX, maxY],
-      ],
-      { padding: 40, maxZoom: 15, duration: 0 },
-    );
+    const box = boundsOf(routes.features);
+    if (box) m.fitBounds(box, { padding: 40, maxZoom: 15, duration: 0 });
   }, [routes]);
 
   return (

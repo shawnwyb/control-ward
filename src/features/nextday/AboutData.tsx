@@ -8,9 +8,11 @@ import styles from "./NextDayReport.module.css";
 export function AboutData({
   children,
   label = "About this data",
+  className,
 }: {
   children: ReactNode;
   label?: string;
+  className?: string;
 }) {
   const ref = useRef<HTMLDetailsElement>(null);
   useEffect(() => {
@@ -30,7 +32,10 @@ export function AboutData({
     };
   }, []);
   return (
-    <details ref={ref} className={styles.about}>
+    <details
+      ref={ref}
+      className={className ? `${styles.about} ${className}` : styles.about}
+    >
       <summary>{label}</summary>
       <div>{children}</div>
     </details>

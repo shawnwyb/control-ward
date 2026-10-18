@@ -61,7 +61,7 @@ Out of scope:
 
 ## UX and accessibility requirements
 
-- The tab opens from a view switch in the workspace header ("Live site" / "Next-day report").
+- The report opens from the sidebar page "Next-day report" (`#/next-day-report`, mounted in `SiteWorkspace.tsx`). Revision 1 below corrected this line.
 - Colour is never the only signal. Every band, flag and verdict also has a word or symbol.
 - The page works at phone width and prints to a short PDF.
 - Map layers can be switched on and off. The map has a text alternative: the same facts in lists.
@@ -128,3 +128,42 @@ Out of scope:
 3. Go-ahead before the `mud` hazard-type migration is pushed to the hosted project.
 4. Which heat-index source to pin if the sources still conflict at build time.
 5. Human check of the tide-station mapping, mainly Haynes and the inland candidates.
+
+## Revision 1: field-briefing layout (2026-10-18)
+
+The first layout read like a debug log. A supervisor at 5:30 AM scrolled four hourly grids, NWS text, a heat-band dictionary and model strings to learn when crews can work and which roads are on hold. Revision 1 changes the layout and the copy. It does not change the data: no generator, JSON or `schema_version` change, and no report is rebuilt.
+
+### Layout
+
+1. **Hero row (three cards).**
+   - Verdict: level word and shape, best window ("weather limits only"), at most three short action lines built from the verdict's reason codes, the decision-support line, and a fold with the full reasons, the weather-only note and "Changed since the last report".
+   - Hazard index: half-circle gauge (green to 3, amber to 7.5, red to 10, the hazard index's own tiers), the score and tier, the top driver, four pills (heat, storm, flood, fire), and a "Model details" fold (version, drift flags, first two caveats). The later caveats (the fire and heat skill warnings) stay visible.
+   - Mud trafficability: score and flag word, flagged miles of rated miles, a slope split into ok, inspect and hold by share of rated route length, the maximum predicted rut when one exists, and the uncalibrated label.
+2. **Work schedule (one table, one time axis).** Weather, each selected task, the heat index, and the air quality row only on a day that reaches an AQI of 101. Picking an hour (mouse, keyboard focus or tap) shows its gusts, rain chance, rain, CAPE and heat index. Folds hold the band dictionary, task limits and sources, and the hourly table with the National Weather Service text. National Weather Service alerts show as a banner when there are any.
+3. **Routes.** The map and a "Flagged routes" table side by side. Picking a row highlights that road on the map and zooms to it. The planner and its keyboard path are unchanged.
+4. **Tiles.** Tide and flood, air and smoke, wildlife. The footer fold "Model and data disclaimers" holds the data gaps, the limits that always apply, and the model and source notes.
+
+### Decisions
+
+- Caveats that change a decision stay visible as one-liners: the decision-support line, the mud "uncalibrated, does not certify" line, the heat chart "read by hand, confirm" line, the tide "ignores storm surge, ground not shaded is not guaranteed dry" line, the levee "treat a leveed area as able to flood" line, and the wildlife "no sightings does not mean no animals" line. Everything else is folded.
+- "Hold" is not a rut depth. The flag is the worse of the ground-index flag and the NRCS soil rating, so a segment can be at hold with a predicted rut under 8 in, or with no rut value. The route table shows "-" when there is none. The card and the map key say that soil rating can set hold. For Turkey Point, 98 of 304 hold segments have no rut value.
+- The window is weather only. Mud holds and task limits are not in it. The verdict card says so.
+- "Storm chance" in the old hourly table was rain probability. It is now labelled "Rain chance". The hazard index percentages are the chance that NOAA records an event of that kind near the plant that day.
+- The truck on the mud slope marks the equipment class. It does not mark a place on the slope.
+- The tide window keeps the report's wording, "within one hour of high water". It is not called flood risk.
+- Short action lines are built in the browser (`briefing.ts`). The Python generator is unchanged.
+- Not built: a wind tile and a rip-current tile. The report has no rip-current data. A rip current statement appears only when the National Weather Service issues one, as an alert.
+
+### Measured (Turkey Point, 1280 px wide, folds closed, screen-reader text excluded)
+
+| | Before | After |
+| --- | --- | --- |
+| Visible words | 1,975 | 881 |
+| Page height, desktop | 5,320 px | 3,318 px |
+| Page height, phone (390 px) | 9,602 px | 6,186 px |
+
+The aim was a cut of about 75 % of the text. The page reached 55 %. What remains is mostly the schedule, the map controls and key, the detour planner and the caveats above.
+
+### Tests
+
+`tests/ui-design/next-day-report.spec.ts` was rewritten for the new layout. `tests/nextday/briefing.test.mjs` covers the pure helpers (`briefing.ts`, `maxPredictedRut` in `routesList.ts`).

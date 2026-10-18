@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useMemo, useState } from "react";
+import { lazy, Suspense, useMemo, useRef, useState } from "react";
 import type { FeatureCollection } from "geojson";
 import {
   Badge,
@@ -7,7 +7,7 @@ import {
   PanelHeader,
   Segmented,
 } from "../../components/ui";
-import { reportFileUrl, type NextDayReport } from "../../lib/nextDayReport";
+import type { NextDayReport } from "../../lib/nextDayReport";
 import type { Report } from "../../lib/types";
 import {
   planDetour,
@@ -16,13 +16,9 @@ import {
   type RouteResult,
 } from "./route";
 import type { CrewPoint, Layers, LngLat } from "./RouteMap";
-import { AboutData } from "./AboutData";
-import {
-  flaggedRoutes,
-  milesText,
-  routeLabel,
-  type RouteFeature,
-} from "./routesList";
+import { FlaggedRoutes } from "./FlaggedRoutes";
+import type { FlaggedRoute } from "./routesList";
+import { useJson } from "./useJson";
 import styles from "./NextDayReport.module.css";
 
 const RouteMap = lazy(() => import("./RouteMap"));
@@ -37,29 +33,6 @@ const SHORT: Record<string, string> = {
 const MILES_PER_METER = 1 / 1609.344;
 const miles = (m: number) =>
   `${(m * MILES_PER_METER).toFixed(m * MILES_PER_METER < 10 ? 2 : 1)} mi`;
-
-function useJson<T>(
-  eia: string,
-  rel: string | null | undefined,
-): { data: T | null; failed: boolean } {
-  const [state, setState] = useState<{ data: T | null; failed: boolean }>({
-    data: null,
-    failed: false,
-  });
-  useEffect(() => {
-    setState({ data: null, failed: false });
-    if (!rel) return;
-    const ctl = new AbortController();
-    fetch(reportFileUrl(eia, rel), { signal: ctl.signal })
-      .then((r) => (r.ok ? (r.json() as Promise<T>) : Promise.reject(r.status)))
-      .then((data) => !ctl.signal.aborted && setState({ data, failed: false }))
-      .catch(
-        () => !ctl.signal.aborted && setState({ data: null, failed: true }),
-      );
-    return () => ctl.abort();
-  }, [eia, rel]);
-  return state;
-}
 
 function describe(
   label: string,
@@ -88,13 +61,20 @@ function describe(
 export function RoutePanel({
   report,
   crewReports,
+  routesJson,
+  flagged,
+  equipment,
+  onEquipment,
 }: {
   report: NextDayReport;
   crewReports: Report[];
+  routesJson: { data: FeatureCollection | null; failed: boolean };
+  flagged: FlaggedRoute[] | null;
+  equipment: string;
+  onEquipment: (key: string) => void;
 }) {
   const eia = report.meta.site.eia;
   const { mud, flood } = report;
-  const routesJson = useJson<FeatureCollection>(eia, mud.routes_file);
   const tideJson = useJson<FeatureCollection>(eia, flood.tide.shading_file);
   const leveesJson = useJson<FeatureCollection>(eia, flood.levees.map_file);
   const wildlifeJson = useJson<FeatureCollection>(
@@ -114,11 +94,24 @@ export function RoutePanel({
     wildlifeJson.failed && "sightings",
     graphJson.failed && "road data for detours",
   ].filter(Boolean) as string[];
-  const [showAllRoutes, setShowAllRoutes] = useState(false);
   const equipmentList = mud.equipment ?? [];
-  const [equipment, setEquipment] = useState(
-    mud.default_equipment ?? "road_truck",
-  );
+  const [selectedWay, setSelectedWay] = useState<number | null>(null);
+  const mapCol = useRef<HTMLDivElement>(null);
+  // Picking a road, or a detour point, needs the map on screen. The table and the detour buttons sit below it.
+  const showMap = (smooth: boolean) =>
+    mapCol.current?.scrollIntoView({
+      behavior:
+        smooth && !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+          ? "smooth"
+          : "auto",
+      block: "nearest",
+    });
+  const selectWay = (osmId: number | null) => {
+    setSelectedWay(osmId);
+    // Side by side on a wide screen the map is already in view.
+    if (osmId !== null && !window.matchMedia("(min-width: 64rem)").matches)
+      showMap(true);
+  };
   const [show, setShow] = useState<Layers>({
     routes: true,
     tide: true,
@@ -184,6 +177,7 @@ export function RoutePanel({
     setA([report.meta.site.longitude, report.meta.site.latitude]);
     setB(null);
     setPicking(true);
+    showMap(false);
   };
 
   // Each layer, and why it is missing when it is.
@@ -230,141 +224,150 @@ export function RoutePanel({
     },
   ] as const;
   const missingLayers = layerList.filter((l) => !l.has);
-  const flagged = useMemo(
-    () =>
-      routes
-        ? flaggedRoutes(routes.features as unknown as RouteFeature[], equipment)
-        : [],
-    [routes, equipment],
-  );
-  const shownRoutes = showAllRoutes ? flagged : flagged.slice(0, 5);
 
   return (
     <Panel id="routes" aria-labelledby="routes-title">
       <PanelHeader
-        title="Routes to avoid, tide and levees"
+        title="Routes to avoid"
         titleId="routes-title"
-        description="Unpaved routes near the site, ranked by predicted rutting for the report day. This map also shows ground the tide can reach, mapped levees, wildlife sightings and crew reports."
+        description="Unpaved routes for the report day, with tide, levee, sighting and crew layers."
         aside={mud.horizon ? <Badge>{mud.horizon.label}</Badge> : null}
       />
       {mud.status === "missing" || mud.status === "not_applicable" ? (
         <p className={styles.muted}>Routes: {mud.reason}</p>
       ) : null}
-      {mud.status === "stale" ? (
-        <p className={styles.banner}>{mud.reason}</p>
-      ) : null}
-      {equipmentList.length ? (
-        <div className={`${styles.controls} ${styles.noPrint}`}>
-          <Segmented
-            label="Equipment"
-            name="route-equipment"
-            value={equipment}
-            options={equipmentList.map((e) => ({
-              value: e.key,
-              label: SHORT[e.key] ?? e.label.split(":")[0],
-              ariaLabel: e.label,
-            }))}
-            onChange={setEquipment}
-          />
-          {layerList.map(({ key, label, has }) => (
-            <label key={key} className={styles.check}>
-              <input
-                type="checkbox"
-                checked={show[key] && has}
-                disabled={!has}
-                onChange={(e) => setShow({ ...show, [key]: e.target.checked })}
+      <div className={styles.zone3}>
+        <div ref={mapCol} className={styles.mapCol}>
+          {equipmentList.length ? (
+            <div className={`${styles.controls} ${styles.noPrint}`}>
+              <Segmented
+                label="Equipment"
+                name="route-equipment"
+                value={equipment}
+                options={equipmentList.map((e) => ({
+                  value: e.key,
+                  label: SHORT[e.key] ?? e.label.split(":")[0],
+                  ariaLabel: e.label,
+                }))}
+                onChange={onEquipment}
+              />
+              {layerList.map(({ key, label, has }) => (
+                <label key={key} className={styles.check}>
+                  <input
+                    type="checkbox"
+                    checked={show[key] && has}
+                    disabled={!has}
+                    onChange={(e) =>
+                      setShow({ ...show, [key]: e.target.checked })
+                    }
+                  />{" "}
+                  {label}
+                </label>
+              ))}
+            </div>
+          ) : null}
+          {missingLayers.length ? (
+            <p className={`${styles.small} ${styles.noPrint}`}>
+              Not shown:{" "}
+              {missingLayers.map((l) => `${l.label} (${l.why})`).join("; ")}.
+            </p>
+          ) : null}
+          {failedLayers.length ? (
+            <p className={styles.banner} role="alert">
+              Could not load: {failedLayers.join(", ")}. Reload the page to try
+              again.
+            </p>
+          ) : null}
+          {anyLayer && !noMap ? (
+            <Suspense
+              fallback={<p className={styles.muted}>Loading the map…</p>}
+            >
+              <RouteMap
+                key={eia}
+                center={{
+                  latitude: report.meta.site.latitude,
+                  longitude: report.meta.site.longitude,
+                }}
+                routes={routes}
+                tide={tide}
+                levees={levees}
+                wildlife={wildlife}
+                crew={crew}
+                equipment={equipment}
+                show={show}
+                picking={picking}
+                onPick={onPick}
+                onCancel={() => setPicking(false)}
+                endpoints={{ a, b }}
+                paths={{
+                  direct: plan?.direct?.coordinates ?? null,
+                  detour: plan?.detour?.coordinates ?? null,
+                }}
+                selectedWay={selectedWay}
+                onUnavailable={() => setNoMap(true)}
+              />
+            </Suspense>
+          ) : (
+            <p className={styles.muted}>
+              {noMap
+                ? "The map could not start on this device. The lists below have the same facts."
+                : "No map layers apply to this site and day."}
+            </p>
+          )}
+          <ul className={styles.legend} aria-label="Map key">
+            <li>
+              <span
+                className={styles.swatch}
+                style={{ background: "var(--severity-3)" }}
               />{" "}
-              {label}
-            </label>
-          ))}
+              Hold: predicted rut 8 in or more, or a poor soil rating (thick
+              line)
+            </li>
+            <li>
+              <span
+                className={styles.swatch}
+                style={{ background: "var(--severity-2)" }}
+              />{" "}
+              Inspect: predicted rut 4 to 8 in, a fair soil rating or wet ground
+              (dashed line)
+            </li>
+            <li>
+              <span
+                className={styles.swatch}
+                style={{ background: "var(--accent)", opacity: 0.5 }}
+              />{" "}
+              Tide can reach this ground (dark blue)
+            </li>
+            <li>
+              <span
+                className={styles.swatch}
+                style={{ background: "var(--accent)", opacity: 0.2 }}
+              />{" "}
+              Within 0.3 m of the high-tide level (light blue)
+            </li>
+            <li>
+              <span
+                className={styles.swatch}
+                style={{ background: "var(--ink)" }}
+              />{" "}
+              Levee or floodwall; circles are closures and pumps
+            </li>
+            <li>
+              Hollow circle: iNaturalist sighting. Orange dot: crew mud report.
+              Dark dot: crew wildlife report.
+            </li>
+          </ul>
         </div>
-      ) : null}
-      {missingLayers.length ? (
-        <p className={`${styles.small} ${styles.noPrint}`}>
-          Not shown:{" "}
-          {missingLayers.map((l) => `${l.label} (${l.why})`).join("; ")}.
-        </p>
-      ) : null}
-      {failedLayers.length ? (
-        <p className={styles.banner} role="alert">
-          Could not load: {failedLayers.join(", ")}. Reload the page to try
-          again.
-        </p>
-      ) : null}
-      {anyLayer && !noMap ? (
-        <Suspense fallback={<p className={styles.muted}>Loading the map…</p>}>
-          <RouteMap
-            key={eia}
-            center={{
-              latitude: report.meta.site.latitude,
-              longitude: report.meta.site.longitude,
-            }}
-            routes={routes}
-            tide={tide}
-            levees={levees}
-            wildlife={wildlife}
-            crew={crew}
-            equipment={equipment}
-            show={show}
-            picking={picking}
-            onPick={onPick}
-            onCancel={() => setPicking(false)}
-            endpoints={{ a, b }}
-            paths={{
-              direct: plan?.direct?.coordinates ?? null,
-              detour: plan?.detour?.coordinates ?? null,
-            }}
-            onUnavailable={() => setNoMap(true)}
+        {mud.routes_file && equipmentList.length ? (
+          <FlaggedRoutes
+            routes={routesJson.failed ? null : flagged}
+            failed={routesJson.failed}
+            equipmentName={equipmentName}
+            selected={selectedWay}
+            onSelect={selectWay}
           />
-        </Suspense>
-      ) : (
-        <p className={styles.muted}>
-          {noMap
-            ? "The map could not start on this device. The lists below have the same facts."
-            : "No map layers apply to this site and day."}
-        </p>
-      )}
-      <ul className={styles.legend} aria-label="Map key">
-        <li>
-          <span
-            className={styles.swatch}
-            style={{ background: "var(--severity-3)" }}
-          />{" "}
-          Hold: predicted rut 8 in or more (thick line)
-        </li>
-        <li>
-          <span
-            className={styles.swatch}
-            style={{ background: "var(--severity-2)" }}
-          />{" "}
-          Inspect: predicted rut 4 to 8 in (dashed line)
-        </li>
-        <li>
-          <span
-            className={styles.swatch}
-            style={{ background: "var(--accent)", opacity: 0.5 }}
-          />{" "}
-          Tide can reach this ground (dark blue)
-        </li>
-        <li>
-          <span
-            className={styles.swatch}
-            style={{ background: "var(--accent)", opacity: 0.2 }}
-          />{" "}
-          Within 0.3 m of the high-tide level (light blue)
-        </li>
-        <li>
-          <span
-            className={styles.swatch}
-            style={{ background: "var(--ink)" }}
-          />{" "}
-          Levee or floodwall; circles are closures and pumps
-        </li>
-        <li>
-          Hollow circle: iNaturalist sighting. Orange dot: crew mud report. Dark
-          dot: crew wildlife report.
-        </li>
-      </ul>
+        ) : null}
+      </div>
 
       {graph && report.routing?.status === "ok" ? (
         <section aria-labelledby="detour-title" className={styles.noPrint}>
@@ -379,7 +382,9 @@ export function RoutePanel({
           <div className={styles.controls}>
             <Button
               onClick={() =>
-                picking ? setPicking(false) : (clearPlan(), setPicking(true))
+                picking
+                  ? setPicking(false)
+                  : (clearPlan(), setPicking(true), showMap(false))
               }
             >
               {picking
@@ -472,90 +477,9 @@ export function RoutePanel({
           <p className={styles.muted}>
             {(report.routing.caveats ?? []).at(-1)}
           </p>
-          <AboutData label="About the road data">
-            <ul className={styles.list}>
-              {(report.routing.caveats ?? []).slice(0, -1).map((c) => (
-                <li key={c} className={styles.muted}>
-                  {c}
-                </li>
-              ))}
-            </ul>
-          </AboutData>
         </section>
       ) : report.routing && report.routing.status !== "ok" ? (
         <p className={styles.muted}>Detours: {report.routing.reason}</p>
-      ) : null}
-
-      {current && mud.segment_counts ? (
-        <>
-          <h3 className={styles.sub}>Routes to avoid, in words</h3>
-          <p>
-            For <strong>{current.label}</strong> ({mud.passes} pass): worst
-            result <strong>{current.worst_flag}</strong>, score{" "}
-            {current.score.toFixed(1)} of 10.{" "}
-            {Math.round((current.flagged_route_ft / 5280) * 10) / 10} of{" "}
-            {Math.round((current.route_ft / 5280) * 10) / 10} miles of rated
-            route are flagged.
-          </p>
-          <p className={styles.muted}>
-            For road trucks, {mud.segment_counts.hold} segments are at hold,{" "}
-            {mud.segment_counts.inspect} at inspect and {mud.segment_counts.ok}{" "}
-            are ok. Soil moisture {mud.horizon?.soil_moisture}, forecast rain{" "}
-            {mud.horizon?.rain_in.toFixed(1)} in.
-          </p>
-          {mud.routes_file ? (
-            <>
-              <h3 className={styles.sub}>Worst routes for {equipmentName}</h3>
-              {routesJson.failed ? null : routes === null ? (
-                <p className={styles.muted}>Loading the route list…</p>
-              ) : flagged.length ? (
-                <>
-                  <p className={styles.muted}>
-                    {flagged.length} routes are flagged, longest flagged stretch
-                    first, hold before inspect. Each route is one road from
-                    OpenStreetMap.
-                  </p>
-                  <ol className={styles.plain} aria-label="Flagged routes">
-                    {shownRoutes.map((r) => (
-                      <li key={r.osmId}>
-                        <strong>{routeLabel(r)}</strong>:{" "}
-                        {milesText(r.flaggedFeet)} flagged, worst result{" "}
-                        <strong>
-                          {r.worstFlag === 2 ? "hold" : "inspect"}
-                        </strong>
-                        {r.worstRutIn !== null
-                          ? `, predicted rut up to ${r.worstRutIn.toFixed(1)} in`
-                          : ""}
-                        .
-                      </li>
-                    ))}
-                  </ol>
-                  {flagged.length > 5 ? (
-                    <Button onClick={() => setShowAllRoutes(!showAllRoutes)}>
-                      {showAllRoutes
-                        ? "Show the worst 5 only"
-                        : `Show all ${flagged.length} routes`}
-                    </Button>
-                  ) : null}
-                </>
-              ) : (
-                <p className={styles.muted}>
-                  No route is flagged for {equipmentName}.
-                </p>
-              )}
-            </>
-          ) : null}
-          <p className={styles.muted}>{(mud.caveats ?? [])[0]}</p>
-          <AboutData label="About the mud ratings">
-            <ul className={styles.list}>
-              {(mud.caveats ?? []).slice(1).map((c) => (
-                <li key={c} className={styles.muted}>
-                  {c}
-                </li>
-              ))}
-            </ul>
-          </AboutData>
-        </>
       ) : null}
     </Panel>
   );
