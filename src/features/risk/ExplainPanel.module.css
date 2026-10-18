@@ -1,0 +1,31 @@
+.panel {
+  padding: 2px 0 var(--space-2) 1.5rem;
+  font-size: var(--text-sm);
+}
+
+.panel[hidden] {
+  display: none;
+}
+
+.list {
+  display: grid;
+  grid-template-columns: 3.5rem minmax(0, 1fr);
+  gap: 2px var(--space-2);
+  margin: 0;
+}
+
+.list dt {
+  color: var(--ink-3);
+}
+
+.list dd {
+  margin: 0;
+  color: var(--ink-2);
+  overflow-wrap: anywhere;
+}
+
+.note {
+  margin: 2px 0 0;
+  color: var(--ink-3);
+  font-size: var(--text-xs);
+}

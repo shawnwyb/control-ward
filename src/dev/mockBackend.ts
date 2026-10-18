@@ -7,6 +7,7 @@
  * ?fail makes report submissions and check-ins fail (to design error states).
  */
 
+import { explainHazard } from "../lib/explain";
 import { offsetPoint } from "../lib/geo";
 import { handleSafety } from "./mockSafety";
 
@@ -26,6 +27,8 @@ const sites = [
     name: "South Plant · Demo",
     latitude: 29.6296,
     longitude: -82.3498,
+    fema_flood_zone: "AE",
+    river_distance_m: 2400,
   },
   {
     id: "site-tampa",
@@ -38,6 +41,8 @@ const sites = [
     name: "Jacksonville Terminal · Demo",
     latitude: 30.356,
     longitude: -81.629,
+    fema_flood_zone: "X",
+    river_distance_m: 30000,
   },
   {
     id: "site-manatee",
@@ -52,6 +57,61 @@ const sites = [
     longitude: -80.127,
   },
 ];
+/**
+ * Live readings per site (hazard, unit, value). The mock subscores are computed from
+ * these with explainHazard, so each score and its explanation agree exactly.
+ */
+const siteReadings: Record<string, [string, string, number][]> = {
+  // Heat 5.0 (WBGT 85-88), flood 2.0 (rain 10-25 mm), weather 3.0, soil 2.0.
+  "site-north": [
+    ["heat", "wbgt_f", 86],
+    ["heat", "heat_index_f", 98],
+    ["flood", "precip_mm_24h", 12],
+    ["weather", "wind_gust_mph", 34],
+    ["soil", "soil_moisture_frac", 0.31],
+    ["wildfire", "nearest_fire_mi", 120],
+  ],
+  // Flood 6.2 = rain 31 mm (4.0) x 1.3 FEMA AE x 1.2 river 2.4 km.
+  "site-south": [
+    ["heat", "wbgt_f", 88.5],
+    ["heat", "heat_index_f", 108],
+    ["flood", "precip_mm_24h", 31],
+    ["weather", "wind_gust_mph", 45],
+    ["soil", "soil_moisture_frac", 0.41],
+  ],
+  "site-tampa": [
+    ["heat", "wbgt_f", 87],
+    ["heat", "heat_index_f", 104],
+    ["wildfire", "nearest_fire_mi", 18.4],
+    ["wildfire", "fires_within_25mi", 2],
+    ["weather", "wind_gust_mph", 34],
+    ["soil", "soil_moisture_frac", 0.31],
+  ],
+  "site-jax": [
+    ["heat", "wbgt_f", 83],
+    ["heat", "heat_index_f", 95],
+    ["flood", "precip_mm_24h", 12],
+    ["weather", "wind_gust_mph", 12],
+  ],
+  "site-manatee": [
+    ["heat", "wbgt_f", 80],
+    ["heat", "heat_index_f", 85],
+    ["soil", "soil_moisture_frac", 0.31],
+    ["weather", "wind_gust_mph", 8],
+  ],
+  "site-everglades": [],
+};
+const mockReadings = (siteId: string) =>
+  (siteReadings[siteId] ?? []).map(([hazard, unit, value], i) => ({
+    site_id: siteId,
+    hazard,
+    unit,
+    value,
+    observed_at: new Date(Date.now() - (10 + i) * 60000).toISOString(),
+    forecast_for: "-infinity",
+    source: "mock",
+  }));
+
 const accounts: Record<string, string[]> = {
   "crew@planit.local": ["site-north"],
   "other@planit.local": ["site-south"],
@@ -214,6 +274,8 @@ type Flags = {
   breakCrew: boolean;
   /** window.__mockFlags.scores = { "site-jax": 9 } overrides a site's index in the site list (tests re-ranking). */
   scores: Record<string, number | null>;
+  /** window.__mockFlags.readings = { soil_moisture_frac: 0.5 } changes served readings only, not the stored scores. */
+  readings: Record<string, number>;
 };
 function flags(): Flags {
   const w = window as unknown as { __mockFlags?: Flags };
@@ -222,6 +284,7 @@ function flags(): Flags {
     // ?break=crew pretends the crew-assignment migration has not been applied.
     breakCrew: params.get("break") === "crew",
     scores: {},
+    readings: {},
   });
 }
 
@@ -957,15 +1020,20 @@ async function handle(
       subscores:
         risk === null
           ? {}
-          : {
-              heat: Math.min(10, Math.round(risk)),
-              weather: 3,
-              lightning: struck ? 6 : 0,
-              flood: 1.5,
-              wildfire: 0,
-              soil: 2,
-              wildlife: 2,
-            },
+          : (() => {
+              const rows = mockReadings(site.id);
+              const score = (k: Parameters<typeof explainHazard>[0]) =>
+                explainHazard(k, rows, site, {}).score;
+              return {
+                heat: score("heat"),
+                weather: score("weather"),
+                lightning: struck ? 10 : 0,
+                flood: score("flood"),
+                wildfire: score("wildfire"),
+                soil: score("soil"),
+                wildlife: 2,
+              };
+            })(),
       lightning: {
         status: struck ? "stop_work" : "clear",
         last_strike_at: struck
@@ -976,6 +1044,15 @@ async function handle(
       },
     };
   };
+  if (path === "/rest/v1/readings")
+    return respond(
+      memberOf
+        ? mockReadings(siteParam).map((r) => ({
+            ...r,
+            value: flags().readings[r.unit] ?? r.value,
+          }))
+        : [],
+    );
   if (path === "/rest/v1/site_overview" && !siteParam) {
     return respond(
       sites

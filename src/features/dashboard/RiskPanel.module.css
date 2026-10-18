@@ -31,11 +31,28 @@
   list-style: none;
 }
 
+.item {
+  min-width: 0;
+}
+
 .bar {
   display: grid;
-  grid-template-columns: 1rem 7.5rem minmax(0, 1fr) 2rem;
+  grid-template-columns: 1rem minmax(0, 11rem) minmax(2.5rem, 1fr) 2rem 1rem;
   align-items: center;
   gap: var(--space-2);
+  width: 100%;
+  padding: 4px 0;
+  border: 0;
+  border-radius: var(--radius-card);
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.bar:hover {
+  background: var(--fill);
 }
 
 .bar svg {
@@ -45,6 +62,36 @@
 .bar strong {
   font-variant-numeric: tabular-nums;
   text-align: right;
+}
+
+.name {
+  display: grid;
+  min-width: 0;
+}
+
+.headline {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--ink-3);
+  font-size: var(--text-xs);
+}
+
+.chevOpen {
+  transform: rotate(180deg);
+}
+
+.why {
+  display: block;
+  color: var(--ink-2);
+  font-size: var(--text-xs);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .chevOpen,
+  .chev {
+    transition: transform 0.15s ease;
+  }
 }
 
 .track {
