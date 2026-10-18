@@ -14,7 +14,7 @@ Scores run 0 to 10, 7+ is High, 4+ is Elevated, the rest is Low. We always show 
 
 Utility crews mobilize at 6:45 AM in the Everglades in August. By noon the heat index passes 110. Afternoon storms build to the west, a week of rain has trucks stuck in the muck, and the gator by the swamp lives in one person's texts. Every one of those hazards is knowable ahead of time.
 
-The data is public but scattered across a dozen apps and agencies: Open-Meteo and NWS for weather and heat, lightning and NIFC for fire, USGS gauges and NOAA tides for water, USACE for levees, EIA-860M for plant locations, OSHA for what hurt people before. Nobody turns it into a decision, so go or no go gets called on instinct the morning of.
+The data is public but scattered across a dozen apps and agencies: Open-Meteo and NWS for weather and heat, lightning and NIFC for fire, USGS gauges and NOAA tides for water, USACE for levees, EIA-860M for plant locations, OSHA for what hurt people before. At the Sperry tech talk, that fragmentation was the throughline: every hazard has an owner and a feed, but nobody turns it into a decision, so go or no go gets called on instinct the morning of.
 
 ControlWard builds that screen. It gives a supervisor a rank worth checking tonight for tomorrow. It does not clear a site or promise safety.
 
