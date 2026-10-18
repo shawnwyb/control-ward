@@ -12,6 +12,10 @@ const sample = (eia: string) =>
 async function openReport(page: Page, siteName = "Turkey Point · Report demo") {
   await signIn(page, "supervisor@planit.local");
   const nav = page.getByRole("navigation", { name: "Pages" });
+  await nav
+    .or(page.getByRole("button", { name: /Menu/ }))
+    .first()
+    .waitFor();
   if (!(await nav.isVisible()))
     await page.getByRole("button", { name: /Menu/ }).click();
   await page.locator("#site").selectOption({ label: siteName });

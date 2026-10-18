@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ErrorBoundary } from "../../components/ErrorBoundary";
 import { NextDayReport } from "../nextday/NextDayReport";
 import {
@@ -75,6 +75,13 @@ export function DailySafetyPage({ site, role }: Base) {
   const [reportOpened, setReportOpened] = useState(
     () => window.location.hash === "#/next-day-report",
   );
+  useEffect(() => {
+    const openLegacyReport = () => {
+      if (window.location.hash === "#/next-day-report") setReportOpened(true);
+    };
+    window.addEventListener("hashchange", openLegacyReport);
+    return () => window.removeEventListener("hashchange", openLegacyReport);
+  }, []);
   const supervisor = role === "supervisor";
   return (
     <div className={dashboard.stack}>

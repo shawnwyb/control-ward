@@ -91,4 +91,13 @@ test("old briefing and full-report bookmarks still reach daily safety", async ({
     page.getByRole("heading", { name: "Daily safety", exact: true }),
   ).toBeVisible();
   await expect(page.locator("#next-day-report")).toBeVisible();
+  await page.getByText(details, { exact: true }).click();
+  await page.evaluate(() => {
+    location.hash = "#/daily-safety";
+  });
+  await expect(page.locator("#next-day-report")).toHaveCount(0);
+  await page.evaluate(() => {
+    location.hash = "#/next-day-report";
+  });
+  await expect(page.locator("#next-day-report")).toBeVisible();
 });
