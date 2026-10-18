@@ -1,26 +1,12 @@
 .stack {
   display: grid;
-  /* minmax(0, ...) lets wide children (the section links, tables, strips) scroll inside the column instead of widening the page. */
+  /* minmax(0, ...) lets wide children (the section links, tables, the schedule) scroll inside the column instead of widening the page. */
   grid-template-columns: minmax(0, 1fr);
   gap: var(--space-5);
 }
 
-.cols {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: var(--space-5);
-}
-
-@media (min-width: 64rem) {
-  .cols {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    align-items: start;
-  }
-}
-
-/* Panels that the section links jump to must clear the sticky links on phones. */
-.stack section[id],
-.cols section[id] {
+/* Cards that the section links jump to must clear the sticky links on phones. */
+.stack [id] {
   /* Clear both the mobile app bar and the report section links. */
   scroll-margin-top: 7rem;
 }
@@ -35,15 +21,17 @@
   color: var(--ink-2);
 }
 
-.row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-3);
-  align-items: center;
-}
-
 .sub {
   margin: var(--space-5) 0 var(--space-2);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+.subFirst {
+  margin: 0;
   font-size: var(--text-sm);
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -66,29 +54,66 @@
   gap: var(--space-3);
 }
 
-/* ---- verdict banner */
-.verdict {
-  border: var(--rule-width) solid var(--line);
-  border-left: var(--heavy-rule) solid var(--risk-low);
-  background: var(--bg);
-  padding: var(--space-4) var(--space-5);
+.banner {
+  border: var(--rule-width) solid var(--severity-2);
+  background: var(--severity-2-bg);
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-sm);
+}
+
+/* ---- zone 1: verdict, hazard index, mud */
+.hero {
   display: grid;
-  gap: var(--space-3);
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-5);
 }
 
-.verdict[data-level="limits"] {
-  border-left-color: var(--severity-2);
+@media (min-width: 48rem) {
+  .hero {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .hero > :first-child {
+    grid-column: 1 / -1;
+  }
 }
 
-.verdict[data-level="reschedule"] {
-  border-left-color: var(--severity-3);
+@media (min-width: 80rem) {
+  .hero {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .hero > :first-child {
+    grid-column: auto;
+  }
 }
 
-.verdictHead {
+.heroCard {
   display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-3) var(--space-6);
-  align-items: baseline;
+  flex-direction: column;
+  gap: var(--space-3);
+  align-items: flex-start;
+}
+
+.heroCard > header {
+  align-self: stretch;
+  margin-bottom: 0;
+}
+
+/* The left stripe carries the verdict level; the word and the shape beside it carry it too. */
+.heroCard.verdict {
+  --tone: var(--risk-low);
+  box-shadow:
+    inset var(--heavy-rule) 0 0 var(--tone),
+    0 0 0 1px var(--line);
+}
+
+.heroCard.verdict[data-level="limits"] {
+  --tone: var(--severity-2);
+}
+
+.heroCard.verdict[data-level="reschedule"] {
+  --tone: var(--severity-3);
 }
 
 .verdictLabel {
@@ -100,81 +125,392 @@
   margin: 0;
 }
 
-.banner {
-  border: var(--rule-width) solid var(--severity-2);
-  background: var(--severity-2-bg);
-  padding: var(--space-3) var(--space-4);
-  font-size: var(--text-sm);
+.window {
+  font-size: var(--text-lg);
 }
 
-/* ---- hour strip */
-.strip {
+.bullets {
+  margin: 0;
+  padding-left: var(--space-5);
   display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: minmax(2.4rem, 1fr);
-  overflow-x: auto;
-  border: var(--rule-width) solid var(--line);
+  gap: var(--space-2);
+}
+
+/* Cards in the hero row put their fold at the bottom, so the three cards end level. */
+.heroCard > details {
+  margin-top: auto;
+  align-self: stretch;
+}
+
+.gauge {
+  display: block;
+  width: 100%;
+  max-width: 20rem;
+  align-self: center;
+}
+
+.gauge path {
+  fill: none;
+  stroke-width: 28;
+}
+
+.arcLow {
+  stroke: var(--risk-low);
+}
+
+.arcMid {
+  stroke: var(--risk-elevated);
+}
+
+.arcHigh {
+  stroke: var(--risk-high);
+}
+
+.needle {
+  transition: transform 600ms var(--ease-out);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .needle {
+    transition: none;
+  }
+}
+
+.needleLine {
+  stroke: var(--ink);
+  stroke-width: 8;
+  stroke-linecap: round;
+}
+
+.hub {
+  fill: var(--ink);
+}
+
+.gaugeEnd {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  font-weight: 600;
+  fill: var(--ink-2);
+}
+
+.gaugeReadout {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2) var(--space-3);
+  align-self: center;
+}
+
+.scoreValue {
+  font-family: var(--font-mono);
+  font-size: var(--text-3xl);
+  font-weight: 600;
+  line-height: 1;
+}
+
+.tier {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+  font-size: var(--text-lg);
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.driver {
+  align-self: center;
+  text-align: center;
+}
+
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-2);
+  align-self: center;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.cell {
-  /* The cell is the positioning context for its screen-reader text, so the scrolling strip clips it. */
-  position: relative;
-  display: grid;
+.pills li {
+  display: inline-flex;
   gap: var(--space-1);
-  justify-items: center;
-  padding: var(--space-2) var(--space-1);
-  border-left: var(--rule-width) solid var(--line);
+  align-items: center;
+  padding: var(--space-1) var(--space-3);
+  border-radius: 999px;
+  background: var(--fill);
   font-size: var(--text-xs);
-  background: var(--bg);
 }
 
-.cell:first-child {
-  border-left: 0;
-}
-
-/* "10 AM" must stay on one line in the narrowest cells. */
-.cell > span:first-child {
-  white-space: nowrap;
-  font-size: 0.6875rem;
-}
-
-.cell b {
-  font-family: var(--font-mono);
-  font-size: var(--text-base);
+.pills li[data-top="true"] {
+  background: var(--select-tint);
+  box-shadow: 0 0 0 1px var(--accent);
   font-weight: 600;
 }
 
-.cell[data-band="caution"] {
-  background: var(--severity-1-bg);
+.slope {
+  display: block;
+  width: 100%;
+  align-self: center;
 }
 
-.cell[data-band="extreme_caution"] {
-  background: var(--severity-2-bg);
+.slope polyline {
+  fill: none;
+  stroke-width: 16;
+  stroke-linejoin: round;
 }
 
-.cell[data-band="danger"],
-.cell[data-band="extreme_danger"] {
-  background: var(--severity-3-bg);
+.slopeTrack {
+  stroke: var(--fill);
+  stroke-linecap: round;
 }
 
-.cell[data-band="extreme_danger"] {
-  outline: 2px solid var(--severity-3);
-  outline-offset: -2px;
+.slopeOk {
+  stroke: var(--risk-low);
 }
 
-.cell[data-peak="true"] {
-  box-shadow: inset 0 3px 0 var(--ink);
+.slopeInspect {
+  stroke: var(--severity-2);
 }
 
-.cell[data-blocked="true"] {
+.slopeHold {
+  stroke: var(--severity-3);
+}
+
+.truck {
+  color: var(--ink);
+}
+
+.slopeKey {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--text-xs);
+}
+
+.slopeKey li::before {
+  content: "";
+  display: inline-block;
+  width: 0.75rem;
+  height: 0.75rem;
+  margin-right: var(--space-1);
+  border-radius: 2px;
+  background: var(--key);
+  vertical-align: -1px;
+}
+
+.slopeKey li[data-flag="ok"] {
+  --key: var(--risk-low);
+}
+
+.slopeKey li[data-flag="inspect"] {
+  --key: var(--severity-2);
+}
+
+.slopeKey li[data-flag="hold"] {
+  --key: var(--severity-3);
+}
+
+/* ---- zone 2: schedule */
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3) var(--space-5);
+  align-items: center;
+  margin-bottom: var(--space-3);
+}
+
+.banner + .controls {
+  margin-top: var(--space-3);
+}
+
+.taskControls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--space-5);
+}
+
+.fieldset {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.check {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+  min-height: var(--tap-min);
+  font-size: var(--text-sm);
+}
+
+.matrixWrap {
+  overflow-x: auto;
+  border: var(--rule-width) solid var(--line);
+  border-radius: var(--radius);
+}
+
+.matrix {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+}
+
+.matrix th,
+.matrix td {
+  padding: 0;
+  border-top: var(--rule-width) solid var(--line);
+  border-left: var(--rule-width) solid var(--line);
+  text-align: center;
+}
+
+.matrix thead th {
+  border-top: 0;
+}
+
+.matrix .rowHead {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  min-width: 7rem;
+  max-width: 9rem;
+  padding: var(--space-2) var(--space-3);
+  border-left: 0;
+  background: var(--bg);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  text-align: left;
+}
+
+.matrix td {
+  position: relative;
+  min-width: 2.6rem;
+  height: 2.5rem;
+  vertical-align: middle;
+}
+
+.cellBox {
+  display: grid;
+  gap: 2px;
+  justify-items: center;
+}
+
+.cellText {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 600;
+}
+
+.matrix td[data-state="ok"] {
+  background: var(--tag-green-bg);
+  color: var(--tag-green-fg);
+}
+
+.matrix td[data-state="stop"] {
+  background-color: var(--tag-red-bg);
   background-image: repeating-linear-gradient(
     135deg,
     transparent 0 5px,
     color-mix(in srgb, var(--ink) 14%, transparent) 5px 6px
   );
+  color: var(--tag-red-fg);
+}
+
+.matrix td[data-state="none"] {
+  color: var(--ink-3);
+}
+
+.matrix td[data-band="caution"] {
+  background: var(--severity-1-bg);
+}
+
+.matrix td[data-band="extreme_caution"] {
+  background: var(--severity-2-bg);
+}
+
+.matrix td[data-band="danger"],
+.matrix td[data-band="extreme_danger"] {
+  background: var(--severity-3-bg);
+}
+
+.matrix td[data-band="extreme_danger"] {
+  outline: 2px solid var(--severity-3);
+  outline-offset: -2px;
+}
+
+.matrix td[data-peak="true"] {
+  box-shadow: inset 0 3px 0 var(--ink);
+}
+
+.matrix [data-selected="true"] {
+  box-shadow:
+    inset 2px 0 0 var(--accent),
+    inset -2px 0 0 var(--accent);
+}
+
+.matrix td[data-peak="true"][data-selected="true"] {
+  box-shadow:
+    inset 0 3px 0 var(--ink),
+    inset 2px 0 0 var(--accent),
+    inset -2px 0 0 var(--accent);
+}
+
+.hourBtn {
+  width: 100%;
+  min-height: var(--tap-min);
+  padding: 0 var(--space-1);
+  border: 0;
+  background: transparent;
+  color: var(--ink-2);
+  font-size: 0.6875rem;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.hourBtn:hover {
+  background: var(--hover);
+}
+
+.hourBtn[aria-pressed="true"] {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.hourBtn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+.hourDetail {
+  min-height: 1.5em;
+  margin: var(--space-3) 0;
+  font-size: var(--text-sm);
+}
+
+.heat {
+  display: grid;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius);
+  background: var(--fill);
+}
+
+.waterStep {
+  display: flex;
+  gap: var(--space-2);
+  align-items: baseline;
+}
+
+.time {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  white-space: nowrap;
 }
 
 /* ---- tables */
@@ -204,7 +540,7 @@
   background: var(--bg);
 }
 
-/* A table that wraps instead of scrolling: short text columns in a half-width panel. */
+/* A table that wraps instead of scrolling: short text columns in a narrow card. */
 .table.wrap th,
 .table.wrap td {
   white-space: normal;
@@ -231,94 +567,71 @@
   background: var(--severity-2-bg);
 }
 
+.table tr[data-selected="true"] > * {
+  background: var(--select-tint);
+}
+
 .mono {
   font-family: var(--font-mono);
 }
 
-/* ---- timeline of water breaks */
-.timeline {
-  margin: 0;
-  padding: 0;
-  list-style: none;
+/* ---- zone 3: map and flagged routes */
+.zone3 {
   display: grid;
-  gap: 0;
-  border: var(--rule-width) solid var(--line);
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-5);
 }
 
-.step {
-  display: grid;
-  grid-template-columns: 11.5rem minmax(0, 1fr);
-  gap: var(--space-3);
-  padding: var(--space-3) var(--space-4);
-  border-top: var(--rule-width) solid var(--line);
-}
-
-.step:first-child {
-  border-top: 0;
-}
-
-.step h4 {
-  margin: 0;
-  display: inline-flex;
-  gap: var(--space-2);
-  align-items: center;
-  font-size: var(--text-sm);
-}
-
-.step p {
-  margin: var(--space-1) 0 0;
-  font-size: var(--text-sm);
-}
-
-.time {
-  font-family: var(--font-mono);
-  font-size: var(--text-sm);
-  white-space: nowrap;
-}
-
-@media (max-width: 36rem) {
-  .step {
-    grid-template-columns: minmax(0, 1fr);
-    gap: var(--space-1);
+@media (min-width: 64rem) {
+  .zone3 {
+    /* About 65 % map, 35 % route table. */
+    grid-template-columns: minmax(0, 13fr) minmax(0, 7fr);
+    align-items: start;
   }
 }
 
-/* ---- score */
-.score {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2) var(--space-6);
-  align-items: flex-end;
+.mapCol {
+  min-width: 0;
 }
 
-.scoreValue {
-  font-family: var(--font-mono);
-  font-size: var(--text-3xl);
-  font-weight: 600;
-  line-height: 1;
-}
-
-.bars {
+.flagged {
   display: grid;
   gap: var(--space-2);
-  margin: var(--space-3) 0;
+  align-content: start;
+  min-width: 0;
 }
 
-.bar {
-  display: grid;
-  grid-template-columns: 4rem minmax(0, 1fr) 4.5rem;
-  gap: var(--space-3);
-  align-items: center;
-  font-size: var(--text-sm);
+.routeTableWrap {
+  max-height: 26rem;
+  overflow: auto;
+  border: var(--rule-width) solid var(--line);
+  border-radius: var(--radius);
 }
 
-.bar meter,
-.bar progress {
-  width: 100%;
-  height: 0.75rem;
+.routeTableWrap thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--bg);
 }
 
-/* ---- map */
+.routeBtn {
+  min-height: var(--tap-min);
+  padding: var(--space-1) 0;
+  border: 0;
+  background: none;
+  font-weight: 600;
+  text-align: left;
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.routeBtn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
 .mapBox {
   position: relative;
   height: 26rem;
@@ -349,41 +662,6 @@
     color-mix(in srgb, var(--bg) 55%, transparent);
 }
 
-/* "About this data": folded notes. */
-.about {
-  margin-top: var(--space-3);
-  font-size: var(--text-sm);
-}
-
-.about summary {
-  display: flex;
-  align-items: center;
-  min-height: var(--tap-min);
-  cursor: pointer;
-  color: var(--ink-2);
-  font-weight: 500;
-}
-
-/* display: flex removes the browser's arrow, so draw one: it tells the reader the line opens. */
-.about summary::before {
-  content: "\25B8";
-  display: inline-block;
-  width: 1.25rem;
-}
-
-.about[open] summary::before {
-  content: "\25BE";
-}
-
-.about > div {
-  padding-bottom: var(--space-2);
-}
-
-.limitInput {
-  width: 5rem;
-  min-height: var(--tap-min);
-}
-
 .legend {
   display: flex;
   flex-wrap: wrap;
@@ -407,19 +685,118 @@
   border: 1px solid var(--ink);
 }
 
-.controls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-3) var(--space-5);
-  align-items: center;
-  margin-bottom: var(--space-3);
+.limitInput {
+  width: 5rem;
+  min-height: var(--tap-min);
 }
 
-.check {
-  display: inline-flex;
+/* ---- zone 4: tiles */
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+  gap: var(--space-5);
+  align-items: start;
+}
+
+.tile {
+  display: grid;
+  gap: var(--space-3);
+  align-content: start;
+}
+
+.tile > header {
+  margin-bottom: 0;
+}
+
+/* The tiles are narrow: tables inside them get tighter cells so the last column needs no sideways scroll. */
+.tile .table th,
+.tile .table td {
+  padding: var(--space-2) var(--space-1);
+  font-size: var(--text-xs);
+}
+
+.tileHead {
+  font-size: var(--text-base);
+}
+
+.tileAction {
+  display: flex;
   gap: var(--space-2);
+  align-items: flex-start;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  background: var(--severity-2-bg);
+  font-size: var(--text-sm);
+}
+
+.tileAction svg {
+  flex: none;
+  margin-top: 2px;
+}
+
+.tileLines {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0;
+  padding-left: var(--space-5);
+  color: var(--ink-2);
+  font-size: var(--text-sm);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chips li {
+  padding: var(--space-1) var(--space-3);
+  border-radius: 999px;
+  background: var(--fill);
+  font-size: var(--text-sm);
+}
+
+/* Folded notes: "Model details", "Tide, river and levee details", the footer. */
+.about {
+  margin-top: var(--space-3);
+  font-size: var(--text-sm);
+}
+
+.about summary {
+  display: flex;
   align-items: center;
   min-height: var(--tap-min);
+  cursor: pointer;
+  color: var(--ink-2);
+  font-weight: 500;
+}
+
+/* display: flex removes the browser's arrow, so draw one: it tells the reader the line opens. */
+.about summary::before {
+  content: "\25B8";
+  display: inline-block;
+  flex: none;
+  width: 1.25rem;
+}
+
+.about[open] summary::before {
+  content: "\25BE";
+}
+
+.about > div {
+  padding-bottom: var(--space-2);
+}
+
+.footer {
+  margin-top: 0;
+  padding-top: var(--space-2);
+  border-top: var(--rule-width) solid var(--line);
+}
+
+.footer summary {
   font-size: var(--text-sm);
 }
 
@@ -435,12 +812,21 @@
     display: none !important;
   }
 
-  .stack section,
-  .verdict {
+  .stack section {
     break-inside: avoid;
   }
 
   .mapBox {
     height: 18rem;
+  }
+
+  .matrixWrap,
+  .routeTableWrap {
+    max-height: none;
+    overflow: visible;
+  }
+
+  .needle {
+    transition: none;
   }
 }

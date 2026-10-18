@@ -5,6 +5,10 @@ import { go, signIn } from "./helpers";
 // Runs against the mock backend: PLAYWRIGHT_MODE=design npx playwright test tests/ui-design/next-day-report.spec.ts
 // The mock has a demo site mapped to Turkey Point (EIA 621). Its report is public/reports/621/latest.json,
 // written by reports/next-day/run.sh build. Other states are made by answering that request with other files.
+//
+// Layout (docs/NEXT_DAY_REPORT_BRIEF.md, "Revision: field-briefing layout"): zone 1 verdict, hazard index and mud cards;
+// zone 2 the work schedule (#weather, with #heat and #tasks inside); zone 3 map and flagged routes (#routes);
+// zone 4 tide, air and wildlife tiles; and one footer fold (#gaps). Source notes sit in folds that open when printing.
 
 const sample = (eia: string) =>
   JSON.parse(readFileSync(`public/reports/${eia}/latest.json`, "utf8"));
@@ -22,9 +26,16 @@ async function openReport(page: Page, siteName = "Turkey Point · Report demo") 
   await go(page, "Next-day report");
 }
 
-test("shows the verdict, heat timeline, map, flood and gaps for a site with a report", async ({
+async function serve(page: Page, report: unknown) {
+  await page.route("**/reports/621/latest.json", (route) =>
+    route.fulfill({ json: report }),
+  );
+}
+
+test("shows the verdict, hazard index, mud, schedule, map, tiles and notes in four zones", async ({
   page,
 }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
   await openReport(page);
   const report = page.locator("#next-day-report");
   await expect(report).toBeVisible();
@@ -35,25 +46,100 @@ test("shows the verdict, heat timeline, map, flood and gaps for a site with a re
     page.getByText("decision support", { exact: false }).first(),
   ).toBeVisible();
 
-  const heat = page.locator("#heat");
-  await expect(heat).toContainText("Peak heat index");
+  // Let the map and the route table finish loading: they change the page height. Then measure everything at once.
   await expect(
-    heat.getByRole("list", { name: "Water and rest timeline" }),
+    page.locator("#routes").getByRole("table", { name: /Flagged routes/ }),
   ).toBeVisible();
-  await expect(heat).toContainText("Chart read by hand");
+  const y = await page.evaluate(() =>
+    Object.fromEntries(
+      [
+        "verdict",
+        "hazard-index",
+        "mud",
+        "weather",
+        "routes",
+        "flood",
+        "air",
+        "gaps",
+      ].map((id) => [
+        id,
+        document.getElementById(id)!.getBoundingClientRect().top,
+      ]),
+    ),
+  );
+  // zone 1: three cards side by side; then zones 2, 3 and 4 and the notes, in that order
+  expect(Math.abs(y.verdict - y["hazard-index"])).toBeLessThan(2);
+  expect(Math.abs(y.verdict - y.mud)).toBeLessThan(2);
+  expect(y.verdict).toBeLessThan(y.weather);
+  expect(y.weather).toBeLessThan(y.routes);
+  expect(y.routes).toBeLessThan(y.flood);
+  expect(Math.abs(y.flood - y.air)).toBeLessThan(2);
+  expect(y.flood).toBeLessThan(y.gaps);
 
+  await expect(
+    page.getByRole("img", { name: /Hazard index \d+\.\d of 10/ }),
+  ).toBeVisible();
+  await expect(page.locator("#hazard-index")).toContainText("Top driver");
+  await expect(page.locator("#mud")).toContainText(
+    "does not certify a crossing is safe",
+  );
+  await expect(page.locator("#heat")).toContainText("Peak heat index");
+  await expect(
+    page
+      .locator("#heat")
+      .getByRole("list", { name: "Water and rest timeline" }),
+  ).toBeVisible();
+  await expect(page.locator("#heat")).toContainText("Chart read by hand");
   await expect(
     page.getByRole("region", { name: /Map of flagged routes/ }),
   ).toBeVisible();
-  await expect(page.locator("#routes")).toContainText(
-    "does not certify a crossing is safe",
-  );
+  await expect(page.locator("#flood")).toContainText("High tide:");
   await expect(page.locator("#flood")).toContainText("Highest tide");
   await expect(page.locator("#flood")).toContainText(
     "Levees (National Levee Database)",
   );
-  await expect(page.locator("#hazard-index")).toContainText("of 10");
   await expect(page.locator("#gaps")).toContainText("Limits that always apply");
+});
+
+test("the page has no emoji", async ({ page }) => {
+  await openReport(page);
+  const text = await page
+    .locator("#next-day-report")
+    .evaluate((el) => el.textContent ?? "");
+  expect(text).not.toMatch(/\p{Extended_Pictographic}/u);
+});
+
+test("the hero cards state the facts: window, short actions, score, share of route", async ({
+  page,
+}) => {
+  const rep = sample("621");
+  await openReport(page);
+  const verdict = page.locator("#verdict");
+  await expect(verdict).toContainText("Best window");
+  const bullets = verdict.getByRole("list").first().getByRole("listitem");
+  expect(await bullets.count()).toBeLessThanOrEqual(3);
+  await expect(verdict).toContainText(
+    "Heavy equipment: hold until routes are inspected",
+  );
+  await expect(verdict).toContainText("Low ground can flood near high tide");
+  const mud = page.locator("#mud");
+  const eq = rep.mud.equipment[0];
+  await expect(mud).toContainText(`${eq.score.toFixed(1)}`);
+  await expect(mud).toContainText(
+    `${(eq.flagged_route_ft / 5280).toFixed(1)} of ${(eq.route_ft / 5280).toFixed(1)} mi`,
+  );
+  await expect(mud).toContainText("Hold");
+  const pills = page.locator("#hazard-index").getByRole("list", {
+    name: /Chance of a recorded event/,
+  });
+  await expect(pills.getByRole("listitem")).toHaveCount(4);
+  await expect(pills.getByRole("listitem", { name: /top driver/ })).toHaveCount(
+    1,
+  );
+  // model strings are folded
+  const details = page.locator("#hazard-index details");
+  await expect(details).not.toHaveAttribute("open", "");
+  await expect(details).toContainText(rep.hazard_index.model_version);
 });
 
 test("the equipment switch changes the rated result and the layers can be turned off", async ({
@@ -64,6 +150,8 @@ test("the equipment switch changes the rated result and the layers can be turned
   await expect(routes).toContainText("Road trucks");
   await routes.locator("label", { hasText: "Excavator" }).click();
   await expect(routes).toContainText("Tracked excavator");
+  // the mud card follows the same switch
+  await expect(page.locator("#mud")).toContainText("Tracked excavator");
   const tide = routes.getByRole("checkbox", { name: "Tide shading" });
   await expect(tide).toBeChecked();
   await tide.uncheck();
@@ -73,10 +161,7 @@ test("the equipment switch changes the rated result and the layers can be turned
 test("an inland site shows tide as not applicable and an empty river forecast in words", async ({
   page,
 }) => {
-  const inland = sample("6113");
-  await page.route("**/reports/621/latest.json", (route) =>
-    route.fulfill({ json: inland }),
-  );
+  await serve(page, sample("6113"));
   await openReport(page);
   await expect(page.locator("#flood")).toContainText("Not a tidal site");
   await expect(page.locator("#gaps")).toContainText("Not applicable");
@@ -85,9 +170,7 @@ test("an inland site shows tide as not applicable and an empty river forecast in
 test("a report older than 24 hours says so", async ({ page }) => {
   const old = sample("621");
   old.meta.generated_at = "2026-01-01T00:00:00Z";
-  await page.route("**/reports/621/latest.json", (route) =>
-    route.fulfill({ json: old }),
-  );
+  await serve(page, old);
   await openReport(page);
   await expect(
     page.getByRole("status").filter({ hasText: "more than 24 hours old" }),
@@ -110,9 +193,7 @@ test("a report in a newer format is refused with a clear message", async ({
 }) => {
   const future = sample("621");
   future.schema_version = 99;
-  await page.route("**/reports/621/latest.json", (route) =>
-    route.fulfill({ json: future }),
-  );
+  await serve(page, future);
   await openReport(page);
   await expect(page.getByRole("alert")).toContainText("format 99");
 });
@@ -142,17 +223,31 @@ test("a missing forecast leaves the rest of the report readable", async ({
     alerts: [],
   };
   broken.hourly = [];
-  await page.route("**/reports/621/latest.json", (route) =>
-    route.fulfill({ json: broken }),
-  );
+  await serve(page, broken);
   await openReport(page);
-  await expect(page.locator("#heat")).toContainText(
+  await expect(page.locator("#weather")).toContainText(
     "The forecast has no temperature",
   );
   await expect(page.locator("#flood")).toContainText("Highest tide");
+  await expect(page.locator("#verdict")).toBeVisible();
 });
 
-test("the task planner blocks hours per task, shows why and lets a manager change a limit", async ({
+test("a missing heat forecast alone is explained inside the schedule", async ({
+  page,
+}) => {
+  const rep = sample("621");
+  rep.heat = { status: "missing", reason: "No heat forecast for this test." };
+  await serve(page, rep);
+  await openReport(page);
+  await expect(page.locator("#heat")).toContainText(
+    "No heat forecast for this test.",
+  );
+  await expect(
+    page.getByRole("table", { name: /Hourly work schedule/ }),
+  ).toBeVisible();
+});
+
+test("the schedule blocks hours per task, shows why and lets a manager change a limit", async ({
   page,
 }) => {
   const rep = sample("621");
@@ -161,48 +256,116 @@ test("the task planner blocks hours per task, shows why and lets a manager chang
     h.hour === 13 ? { ...h, gust: 55 } : { ...h, gust: 10 },
   );
   rep.tasks.site_flags.mud = null;
-  await page.route("**/reports/621/latest.json", (route) =>
-    route.fulfill({ json: rep }),
-  );
+  await serve(page, rep);
   await openReport(page);
-  const planner = page.locator("#tasks");
-  await expect(planner).toContainText("Heavy equipment moves");
-  await planner.getByLabel("Aerial or line work").check();
+  const schedule = page.locator("#weather");
+  const table = schedule.getByRole("table");
   await expect(
-    planner.getByRole("region", { name: "Aerial or line work" }),
-  ).toContainText("Wind gusts 55 mph (limit 40)");
-  await expect(planner.getByText("All selected tasks together")).toBeVisible();
-  // raise the aerial-work wind limit above the gust: the block goes away for that task
-  await planner
-    .getByRole("region", { name: "Aerial or line work" })
-    .getByText("Limits for this task")
-    .click();
-  await planner
+    table.getByRole("rowheader", { name: "Heavy equipment moves" }),
+  ).toBeVisible();
+  await schedule.getByLabel("Aerial or line work", { exact: true }).check();
+  await expect(
+    table.getByRole("rowheader", { name: "Aerial or line work" }),
+  ).toBeVisible();
+  const notes = schedule.getByRole("list", { name: "Selected tasks" });
+  const aerial = notes
+    .getByRole("listitem")
+    .filter({ hasText: /^Aerial or line work:/ });
+  await expect(aerial).toContainText("Wind gusts 55 mph (limit 40)");
+  await expect(
+    table.getByRole("rowheader", { name: "All selected tasks together" }),
+  ).toBeVisible();
+  // raise the aerial-work wind limit above the gust: the block goes away for that task only
+  await schedule.getByText("Task limits and sources").click();
+  await schedule
     .getByLabel("Aerial or line work: limit for Wind gusts")
     .fill("60");
+  await expect(aerial).not.toContainText("Wind gusts");
+  await expect(aerial).toContainText("No limit is reached");
   await expect(
-    planner.getByRole("region", { name: "Aerial or line work" }),
-  ).not.toContainText("Wind gusts 55 mph");
+    notes.getByRole("listitem").filter({ hasText: /^Heavy equipment moves:/ }),
+  ).toContainText("Wind gusts 55 mph (limit 40)");
   await expect(
-    planner
-      .getByRole("region", { name: "Aerial or line work" })
+    schedule
+      .getByRole("region", { name: "Aerial or line work: limits" })
       .getByText("Confirm")
       .first(),
   ).toBeVisible();
+});
+
+test("picking an hour shows its gusts, rain chance, rain and CAPE, by mouse and by keyboard", async ({
+  page,
+}) => {
+  await openReport(page);
+  const schedule = page.locator("#weather");
+  const detail = schedule.getByRole("status");
+  await expect(detail).toContainText("Select an hour");
+  await schedule.getByRole("button", { name: "Details for 2 PM" }).click();
+  await expect(detail).toContainText("2 PM");
+  await expect(detail).toContainText("Gusts");
+  await expect(detail).toContainText("Rain chance");
+  await expect(detail).toContainText("CAPE");
+  await expect(
+    schedule.getByRole("button", { name: "Details for 2 PM" }),
+  ).toHaveAttribute("aria-pressed", "true");
+  // keyboard: moving focus to the next hour selects it
+  await schedule.getByRole("button", { name: "Details for 3 PM" }).focus();
+  await expect(detail).toContainText("3 PM");
+  // the full hourly table stays as a fold
+  await expect(
+    schedule.locator("details", { hasText: "Hourly detail" }),
+  ).toHaveCount(1);
+});
+
+test("a good-air day has no air quality row in the schedule", async ({
+  page,
+}) => {
+  await openReport(page);
+  await expect(
+    page.getByRole("table", { name: /Hourly work schedule/ }),
+  ).toBeVisible();
+  await expect(
+    page.locator("#weather").getByRole("rowheader", { name: /Air quality/ }),
+  ).toHaveCount(0);
+  await expect(page.locator("#air")).toContainText("Peak AQI");
+});
+
+test("the air quality row appears in the schedule when the day reaches 101", async ({
+  page,
+}) => {
+  const bad = sample("621");
+  bad.air.peak = {
+    ...bad.air.peak,
+    us_aqi: 120,
+    band: {
+      min: 101,
+      name: "Unhealthy for sensitive groups",
+      meaning: "Sensitive groups may feel effects.",
+    },
+  };
+  bad.air.hours = bad.air.hours.map((h: object) => ({ ...h, us_aqi: 120 }));
+  await serve(page, bad);
+  await openReport(page);
+  await expect(
+    page.locator("#weather").getByRole("rowheader", { name: /Air quality/ }),
+  ).toBeVisible();
+  await expect(page.locator("#air")).toContainText(
+    "Unhealthy for sensitive groups",
+  );
 });
 
 test("the acclimatization switch shows the NIOSH schedule", async ({
   page,
 }) => {
   await openReport(page);
-  const heat = page.locator("#heat");
-  await expect(heat.getByText("Most time in the heat")).toHaveCount(0);
-  await heat
+  const schedule = page.locator("#weather");
+  await expect(schedule.getByText("Most time in the heat")).toHaveCount(0);
+  await schedule
     .getByLabel("Some workers are new to the job or back after a break")
     .check();
-  await expect(heat.getByText("Most time in the heat")).toBeVisible();
-  await expect(heat).toContainText("20%");
-  await expect(heat).toContainText("Supervise new workers closely");
+  await expect(schedule.getByText("Most time in the heat")).toBeVisible();
+  await expect(schedule).toContainText("20%");
+  await expect(schedule).toContainText("Supervise new workers closely");
 });
 
 test("changes since the earlier report are listed, or reported as none", async ({
@@ -220,25 +383,40 @@ test("changes since the earlier report are listed, or reported as none", async (
       },
     ],
   };
-  await page.route("**/reports/621/latest.json", (route) =>
-    route.fulfill({ json: rep }),
-  );
+  await serve(page, rep);
   await openReport(page);
+  const verdict = page.locator("#verdict");
+  await expect(verdict).toContainText("Changed since the evening report");
+  await verdict.getByText("Full reasons and changes").click();
   await expect(
-    page.getByRole("region", { name: /Go with limits|Go|Reschedule/ }).first(),
-  ).toContainText("Changed since the evening report");
-  await expect(
-    page.getByText("The verdict got worse: from Go to Go with limits."),
+    verdict.getByText("The verdict got worse: from Go to Go with limits."),
   ).toBeVisible();
 });
 
-test("wildlife shows public sightings with the reporting caveat, and counts crew reports", async ({
+test("wildlife shows only groups with sightings, the reporting caveat, and counts crew reports", async ({
   page,
 }) => {
+  const rep = sample("621");
   await openReport(page);
   const wildlife = page.locator("#wildlife");
-  await expect(wildlife).toContainText("American alligator");
+  const seen = rep.wildlife.groups.filter(
+    (g: { recent: number }) => g.recent > 0,
+  );
+  const none = rep.wildlife.groups.filter(
+    (g: { recent: number }) => g.recent === 0,
+  );
+  for (const g of seen)
+    await expect(
+      wildlife.getByRole("list", { name: /Sightings/ }).getByText(g.label),
+    ).toBeVisible();
+  for (const g of none)
+    await expect(
+      wildlife.getByRole("list", { name: /Sightings/ }).getByText(g.label),
+    ).toHaveCount(0);
   await expect(wildlife).toContainText("No sightings does not mean no animals");
+  await expect(wildlife).toContainText(
+    "Check banks and flooded ruts before entry",
+  );
   await expect(wildlife).toContainText("iNaturalist");
   // the mock site has one open crew wildlife report
   await expect(wildlife).toContainText("1 open wildlife report(s)");
@@ -270,6 +448,7 @@ test("the detour planner takes two clicks and explains the result in words", asy
     "Choose the start point",
   );
   const map = routes.getByRole("region", { name: /Map of flagged routes/ });
+  await expect(map).toBeInViewport();
   const box = (await map.boundingBox())!;
   await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
   await expect(routes.getByRole("status")).toContainText(
@@ -299,9 +478,7 @@ test("a report without road data says why detours are unavailable", async ({
     status: "missing",
     reason: "overpass_roads_621: ReadTimeout",
   };
-  await page.route("**/reports/621/latest.json", (route) =>
-    route.fulfill({ json: rep }),
-  );
+  await serve(page, rep);
   await openReport(page);
   await expect(page.locator("#routes")).toContainText(
     "Detours: overpass_roads_621: ReadTimeout",
@@ -311,14 +488,14 @@ test("a report without road data says why detours are unavailable", async ({
   ).toHaveCount(0);
 });
 
-test("phones get section links that jump to a panel; wide screens do not", async ({
+test("phones get section links that jump to a card; wide screens do not", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await openReport(page);
   const nav = page.getByRole("navigation", { name: "Sections" });
   await expect(nav).toBeVisible();
-  // nothing, including the hidden hour labels and the scrolling strips, may widen the page
+  // nothing, including the hidden hour labels and the scrolling schedule, may widen the page
   await expect(page.locator("#heat")).toBeVisible();
   expect(
     await page.evaluate(
@@ -336,7 +513,7 @@ test("phones get section links that jump to a panel; wide screens do not", async
       return !!heading && !!links && heading.y >= links.y + links.height - 1;
     })
     .toBe(true);
-  await nav.getByRole("link", { name: "Gaps" }).click();
+  await nav.getByRole("link", { name: "Notes" }).click();
   await expect(page.locator("#gaps")).toBeInViewport();
   await page.setViewportSize({ width: 1280, height: 900 });
   await expect(nav).toBeHidden();
@@ -391,39 +568,66 @@ test("Escape cancels picking, and 'Start at the plant' fills in the start", asyn
   ).toBeVisible();
 });
 
-test("routes to avoid are also listed in words, worst first, with a way to see them all", async ({
+test("flagged routes are a table next to the map, worst first, with a way to see them all", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await openReport(page);
+  const routes = page.locator("#routes");
+  const table = routes.getByRole("table", { name: /Flagged routes/ });
+  await expect(table).toBeVisible();
+  // side by side on a wide screen: the table starts to the right of the map
+  const map = await routes
+    .getByRole("region", { name: /Map of flagged routes/ })
+    .boundingBox();
+  const tbl = await table.boundingBox();
+  expect(tbl!.x).toBeGreaterThan(map!.x + map!.width - 1);
+  const rows = table.locator("tbody tr");
+  const first = await rows.count();
+  expect(first).toBeGreaterThan(0);
+  expect(first).toBeLessThanOrEqual(5);
+  await expect(rows.first()).toContainText(/Hold|Inspect/);
+  await expect(
+    table.getByRole("columnheader", { name: "Predicted rut" }),
+  ).toBeVisible();
+  const all = routes.getByRole("button", { name: /Show all \d+ routes/ });
+  if (await all.count()) {
+    await all.click();
+    expect(await rows.count()).toBeGreaterThan(first);
+    await routes.getByRole("button", { name: "Show the worst 5 only" }).click();
+    await expect(rows).toHaveCount(first);
+  }
+});
+
+test("a row in the route table highlights that road, and picking it again clears it", async ({
   page,
 }) => {
   await openReport(page);
   const routes = page.locator("#routes");
-  const list = routes.getByRole("list", { name: "Flagged routes" });
-  await expect(list).toBeVisible();
-  const first = await list.getByRole("listitem").count();
-  expect(first).toBeGreaterThan(0);
-  expect(first).toBeLessThanOrEqual(5);
-  await expect(list.getByRole("listitem").first()).toContainText(
-    /hold|inspect/,
-  );
-  const all = routes.getByRole("button", { name: /Show all \d+ routes/ });
-  if (await all.count()) {
-    await all.click();
-    expect(await list.getByRole("listitem").count()).toBeGreaterThan(first);
-    await routes.getByRole("button", { name: "Show the worst 5 only" }).click();
-    await expect(list.getByRole("listitem")).toHaveCount(first);
-  }
+  const table = routes.getByRole("table", { name: /Flagged routes/ });
+  const row = table.locator("tbody tr").first();
+  const pick = row.getByRole("button");
+  const name = (await pick.textContent())!.trim();
+  await pick.click();
+  await expect(pick).toHaveAttribute("aria-pressed", "true");
+  await expect(
+    routes.getByText(`${name} is highlighted on the map.`),
+  ).toHaveCount(1);
+  await pick.focus();
+  await page.keyboard.press("Enter");
+  await expect(pick).toHaveAttribute("aria-pressed", "false");
 });
 
-test("the header says when the weather-only window hides a day-long block on heavy equipment", async ({
+test("the verdict says when the weather-only window hides a day-long block on heavy equipment", async ({
   page,
 }) => {
   await openReport(page);
-  const header = page
-    .getByRole("region", { name: /Go with limits|Go|Reschedule/ })
-    .first();
-  await expect(header).toContainText(
+  const verdict = page.locator("#verdict");
+  await expect(verdict).toContainText("weather limits only");
+  await expect(verdict).toContainText(
     "Weather only. Heavy equipment moves are blocked all day",
   );
-  await expect(header).toContainText("routes at hold");
+  await expect(verdict).toContainText("routes at hold");
 });
 
 test("no weather-only note when the planner is not blocked all day", async ({
@@ -438,18 +642,17 @@ test("no weather-only note when the planner is not blocked all day", async ({
     gust: 5,
     wbgt: 70,
   }));
-  await page.route("**/reports/621/latest.json", (route) =>
-    route.fulfill({ json: rep }),
-  );
+  await serve(page, rep);
   await openReport(page);
   await expect(page.getByText("Weather only.")).toHaveCount(0);
 });
 
-test("the wildlife table fits its panel, so the last column is readable", async ({
+test("the wildlife table fits its tile, so the last column is readable", async ({
   page,
 }) => {
   await openReport(page);
   const wildlife = page.locator("#wildlife");
+  await wildlife.getByText("Sightings by group").click();
   await expect(
     wildlife.getByRole("columnheader", { name: "Compared with a usual month" }),
   ).toBeVisible();
@@ -478,10 +681,7 @@ test("a layer that fails to load is named, and a missing layer says why", async 
 test("layers that do not apply are listed with the reason", async ({
   page,
 }) => {
-  const inland = sample("6113");
-  await page.route("**/reports/621/latest.json", (route) =>
-    route.fulfill({ json: inland }),
-  );
+  await serve(page, sample("6113"));
   await openReport(page);
   await expect(page.locator("#routes")).toContainText("Not shown:");
   await expect(page.locator("#routes")).toContainText(
@@ -498,44 +698,65 @@ test("technical terms have their long form, and hour cells are read from hidden 
     /wet bulb globe temperature/,
   );
   await expect(
-    page.locator("#weather abbr", { hasText: "CAPE" }),
+    page.locator("#weather abbr", { hasText: "CAPE" }).first(),
   ).toHaveAttribute("title", /convective available potential energy/);
   await expect(
     page.locator("#flood abbr", { hasText: "NAVD88" }),
   ).toHaveAttribute("title", /North American Vertical Datum/);
-  await expect(page.locator("#heat ol li[aria-label]")).toHaveCount(0);
-  await expect(page.locator("#heat ol li").first()).toContainText("heat index");
+  await expect(
+    page.locator("#flood abbr", { hasText: "MLLW" }).first(),
+  ).toHaveAttribute("title", /mean lower low water/);
+  await expect(
+    page.locator("#weather td[aria-label], #weather li[aria-label]"),
+  ).toHaveCount(0);
+  await expect(
+    page.locator("#weather td .sr-only", { hasText: "heat index" }).first(),
+  ).toBeAttached();
 });
 
-test("source notes are folded, and open for printing", async ({ page }) => {
+test("source notes are folded and open for printing, and the caveats that change a decision stay visible", async ({
+  page,
+}) => {
   await openReport(page);
-  const notes = page
-    .locator("#next-day-report details")
-    .filter({ has: page.locator("summary", { hasText: /^About/ }) });
-  await expect(page.locator("#routes")).toContainText("does not certify");
-  await expect(page.locator("#wildlife")).toBeVisible();
-  const total = await notes.count();
+  await expect(page.locator("#mud")).toBeVisible();
+  // The map draws its own attribution fold; only the report's folds are counted.
+  const folds = page.locator(
+    "#next-day-report details:not(.maplibregl-ctrl-attrib)",
+  );
+  const total = await folds.count();
   expect(total).toBeGreaterThan(3);
-  await expect(notes.locator("xpath=self::*[@open]")).toHaveCount(0);
-  // the caveats that change a decision stay visible
-  await expect(page.locator("#routes")).toContainText(
+  await expect(folds.locator("xpath=self::*[@open]")).toHaveCount(0);
+  // visible without opening anything
+  await expect(page.locator("#verdict")).toContainText("does not clear");
+  await expect(page.locator("#mud")).toContainText(
     "does not certify a crossing is safe",
+  );
+  await expect(page.locator("#heat")).toContainText("Chart read by hand");
+  await expect(page.locator("#flood")).toContainText("ignores storm surge");
+  await expect(page.locator("#flood")).toContainText(
+    "Treat a leveed area as able to flood",
   );
   await expect(page.locator("#wildlife")).toContainText(
     "No sightings does not mean no animals",
   );
+  // the footer holds the gaps and limits
+  const footer = page.locator("#gaps details");
+  await expect(footer).toContainText("Data gaps");
+  await expect(footer).toContainText("Limits that always apply");
   await page.evaluate(() => window.dispatchEvent(new Event("beforeprint")));
-  await expect(notes.locator("xpath=self::*[@open]")).toHaveCount(total);
+  await expect(folds.locator("xpath=self::*[@open]")).toHaveCount(total);
   await page.evaluate(() => window.dispatchEvent(new Event("afterprint")));
-  await expect(notes.locator("xpath=self::*[@open]")).toHaveCount(0);
+  await expect(folds.locator("xpath=self::*[@open]")).toHaveCount(0);
 });
 
 test("edited task limits are marked and can be reset", async ({ page }) => {
   await openReport(page);
-  const planner = page.locator("#tasks");
-  await planner.getByLabel("Aerial or line work").check();
-  const section = planner.getByRole("region", { name: "Aerial or line work" });
-  await section.getByText("Limits for this task").click();
+  const schedule = page.locator("#weather");
+  await schedule.getByLabel("Aerial or line work", { exact: true }).check();
+  await schedule.getByText("Task limits and sources").click();
+  const section = schedule.getByRole("region", {
+    name: "Aerial or line work: limits",
+  });
   await section
     .getByLabel("Aerial or line work: limit for Wind gusts")
     .fill("30");

@@ -1,155 +1,86 @@
-import { Badge, Panel, PanelHeader, SeverityMark } from "../../components/ui";
-import {
-  formatReportDate,
-  formatSiteTime,
-  clockFromHHMM,
-  type NextDayReport as Report,
-} from "../../lib/nextDayReport";
+import { useMemo, useState } from "react";
+import type { FeatureCollection } from "geojson";
+import { Panel, PanelHeader } from "../../components/ui";
+import type { NextDayReport as Report } from "../../lib/nextDayReport";
 import { SectionNav } from "../dashboard/SectionNav";
 import { useNotice } from "../../hooks/notice";
 import { useSiteFeed } from "../../hooks/useSiteFeed";
-import type { Site } from "../../lib/types";
-import { AirPanel } from "./AirPanel";
-import { FloodPanel } from "./FloodPanel";
-import { GapsPanel } from "./GapsPanel";
-import { HazardIndexPanel } from "./HazardIndexPanel";
-import { HeatPanel } from "./HeatPanel";
+import type { Report as CrewReport, Site } from "../../lib/types";
+import { DisclaimerFooter } from "./DisclaimerFooter";
+import { HazardCard } from "./HazardCard";
+import { MudCard } from "./MudCard";
 import { RoutePanel } from "./RoutePanel";
-import { TaskPlanner } from "./TaskPlanner";
-import { WeatherPanel } from "./WeatherPanel";
-import { WildlifePanel } from "./WildlifePanel";
-import { blockedHours, WORKDAY } from "./taskPlan";
+import { ScheduleMatrix } from "./ScheduleMatrix";
+import { AirTile, TideTile, WildlifeTile } from "./Tiles";
+import { VerdictCard } from "./VerdictCard";
+import { flaggedRoutes, type RouteFeature } from "./routesList";
+import { useJson } from "./useJson";
 import { useReport } from "./useReport";
 import styles from "./NextDayReport.module.css";
 
-const LEVEL_MARK = { go: null, limits: 2, reschedule: 3 } as const;
-
-/** Jump links for phones: the page is long, and every panel has an id. */
+/** Jump links for phones: the page is long, and every card has an id. */
 const SECTIONS = [
-  ["heat", "Heat"],
-  ["weather", "Weather"],
-  ["routes", "Routes"],
-  ["tasks", "Tasks"],
-  ["flood", "Flood"],
+  ["verdict", "Summary"],
   ["hazard-index", "Hazard"],
+  ["mud", "Mud"],
+  ["weather", "Schedule"],
+  ["routes", "Routes"],
+  ["flood", "Tide"],
   ["air", "Air"],
   ["wildlife", "Wildlife"],
-  ["gaps", "Gaps"],
+  ["gaps", "Notes"],
 ] as const;
 
-/**
- * The best work window comes from weather limits only. When the first task profile (heavy equipment) is blocked for
- * the whole workday by a site-wide flag, such as routes at hold, say so right under the window.
- */
-function weatherOnlyNote(report: Report): string | null {
-  const t = report.tasks;
-  const first = t?.profiles[0];
-  if (!t || t.status !== "ok" || !first || !report.verdict.work_window)
-    return null;
-  const day = blockedHours(first, report.hourly, t.site_flags).filter(
-    (r) => r.hour >= WORKDAY.start && r.hour < WORKDAY.end,
+/** The loaded report. Its own component so the equipment choice and the route file are shared by the mud card and the map. */
+function Loaded({
+  report,
+  stale,
+  crewReports,
+}: {
+  report: Report;
+  stale: boolean;
+  crewReports: CrewReport[];
+}) {
+  const eia = report.meta.site.eia;
+  const routesJson = useJson<FeatureCollection>(eia, report.mud.routes_file);
+  const [equipment, setEquipment] = useState(
+    report.mud.default_equipment ?? "road_truck",
   );
-  if (!day.length || !day.every((r) => r.blocked)) return null;
-  const fired = first.blockers.filter((b) => {
-    const flag = b.kind === "site" && b.flag ? t.site_flags[b.flag] : null;
-    return flag && b.values?.includes(flag);
-  });
-  if (!fired.length) return null;
-  return `Weather only. ${first.label} are blocked all day: ${fired
-    .map((b) => b.label.toLowerCase())
-    .join(", ")}. See the Task planner.`;
-}
-
-function Header({ report, stale }: { report: Report; stale: boolean }) {
-  const v = report.verdict;
-  const mark = LEVEL_MARK[v.level];
-  const tz = report.meta.site.timezone;
+  const pieces = routesJson.data
+    ? (routesJson.data.features as unknown as RouteFeature[])
+    : null;
+  const flagged = useMemo(
+    () => (pieces ? flaggedRoutes(pieces, equipment) : null),
+    [pieces, equipment],
+  );
   return (
-    <section
-      className={styles.verdict}
-      data-level={v.level}
-      aria-labelledby="verdict-title"
-    >
-      <div className={styles.verdictHead}>
-        <h2 id="verdict-title" className={styles.verdictLabel}>
-          {mark ? <SeverityMark severity={mark} size={22} /> : null}
-          {v.label}
-        </h2>
-        <span>
-          Report for <strong>{formatReportDate(report.meta.for_date)}</strong> ·{" "}
-          {report.meta.site.name}
-        </span>
-        <Badge>
-          {report.meta.kind === "morning"
-            ? "Morning refresh"
-            : "Evening report"}{" "}
-          · built {formatSiteTime(report.meta.generated_at, tz)}
-        </Badge>
+    <div className={styles.stack} id="next-day-report">
+      <SectionNav sections={SECTIONS} />
+      <div className={styles.hero}>
+        <VerdictCard report={report} stale={stale} />
+        <HazardCard report={report} />
+        <MudCard
+          report={report}
+          equipment={equipment}
+          pieces={pieces}
+          flagged={flagged}
+        />
       </div>
-      {stale ? (
-        <p className={styles.banner} role="status">
-          This report is more than 24 hours old. Build a new one before you rely
-          on it.
-        </p>
-      ) : null}
-      {v.work_window ? (
-        <p style={{ margin: 0 }}>
-          Best work window:{" "}
-          <strong>
-            {clockFromHHMM(v.work_window.start)} to{" "}
-            {clockFromHHMM(v.work_window.end)}
-          </strong>
-          .
-        </p>
-      ) : (
-        <p style={{ margin: 0 }}>
-          <strong>No two-hour work window was found.</strong>
-        </p>
-      )}
-      {weatherOnlyNote(report) ? (
-        <p className={styles.banner}>{weatherOnlyNote(report)}</p>
-      ) : null}
-      {v.reasons.length ? (
-        <ul className={styles.list}>
-          {v.reasons.map((r) => (
-            <li key={r.code + r.text}>{r.text}</li>
-          ))}
-        </ul>
-      ) : (
-        <p className={styles.muted} style={{ margin: 0 }}>
-          No limit was reached in the data this report could use.
-        </p>
-      )}
-      <Changes report={report} />
-      <p className={styles.small} style={{ margin: 0 }}>
-        {v.disclaimer}
-      </p>
-    </section>
-  );
-}
-
-/** What moved since the previous report for the same date (a 5 AM rebuild against the 6 PM report). */
-function Changes({ report }: { report: Report }) {
-  const c = report.changes;
-  if (!c || c.status !== "ok") return null;
-  const when = formatSiteTime(c.since!, report.meta.site.timezone);
-  return (
-    <div>
-      <h3 className={styles.sub} style={{ margin: "0 0 var(--space-2)" }}>
-        Changed since the {c.since_kind === "morning" ? "morning" : "evening"}{" "}
-        report ({when})
-      </h3>
-      {c.items.length ? (
-        <ul className={styles.list}>
-          {c.items.map((i) => (
-            <li key={i.text}>{i.text}</li>
-          ))}
-        </ul>
-      ) : (
-        <p className={styles.muted} style={{ margin: 0 }}>
-          Nothing material changed.
-        </p>
-      )}
+      <ScheduleMatrix report={report} />
+      <RoutePanel
+        report={report}
+        crewReports={crewReports}
+        routesJson={routesJson}
+        flagged={flagged}
+        equipment={equipment}
+        onEquipment={setEquipment}
+      />
+      <div className={styles.tiles}>
+        <TideTile report={report} />
+        <AirTile report={report} />
+        <WildlifeTile report={report} crewReports={crewReports} />
+      </div>
+      <DisclaimerFooter report={report} />
     </div>
   );
 }
@@ -198,26 +129,12 @@ export function NextDayReport({ site }: { site: Site }) {
       </Panel>
     );
 
-  const { report, stale } = result;
   return (
-    <div className={styles.stack} id="next-day-report">
-      <SectionNav sections={SECTIONS} />
-      <Header report={report} stale={stale} />
-      <div className={styles.cols}>
-        <HeatPanel report={report} />
-        <WeatherPanel report={report} />
-      </div>
-      <RoutePanel report={report} crewReports={feed.reports} />
-      <TaskPlanner report={report} />
-      <div className={styles.cols}>
-        <FloodPanel report={report} />
-        <div className={styles.stack}>
-          <HazardIndexPanel report={report} />
-          <AirPanel report={report} />
-          <WildlifePanel report={report} crewReports={feed.reports} />
-        </div>
-      </div>
-      <GapsPanel report={report} />
-    </div>
+    <Loaded
+      key={eia}
+      report={result.report}
+      stale={result.stale}
+      crewReports={feed.reports}
+    />
   );
 }

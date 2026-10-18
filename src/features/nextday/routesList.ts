@@ -84,6 +84,14 @@ export function milesText(feet: number): string {
   return `${miles.toFixed(miles < 10 ? 2 : 1)} mi`;
 }
 
+/** Largest predicted rut among the flagged routes, or null when no flagged route has a rut value. */
+export function maxPredictedRut(routes: FlaggedRoute[]): number | null {
+  const ruts = routes
+    .map((r) => r.worstRutIn)
+    .filter((v): v is number => v !== null);
+  return ruts.length ? Math.max(...ruts) : null;
+}
+
 /** Total flagged length for the whole list, in feet. */
 export function totalFlaggedFeet(routes: FlaggedRoute[]): number {
   return routes.reduce((sum, r) => sum + r.flaggedFeet, 0);

@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>__TITLE__</title>
+<!-- Starter for an animated pitch. Copy next to an assets/ folder holding engine.js,
+     vendor/lottie.min.js, lottie/bundle.js and shots/. Replace every __PLACEHOLDER__.
+     Layout is a fixed 1920×1080 stage scaled to the window; position everything in stage px. -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    /* Take these from the product's own design tokens when it has them. */
+    --paper: #f3f1ea;
+    --ink: #1b1f1d;
+    --muted: #5c625e;
+    --brand: #1f3a34;
+    --accent: #ff6b3d;
+    --line: #d9d4c7;
+    --night: #0b1411;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body { background: var(--night); color: var(--ink); font-family: "IBM Plex Sans", system-ui, sans-serif; overflow: hidden; }
+  #viewport { position: fixed; inset: 0; overflow: hidden; }
+  #stage { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; overflow: hidden; background: var(--night); }
+  .layer, .scene { position: absolute; inset: 0; }
+  .abs { position: absolute; }
+  .mono { font-family: "IBM Plex Mono", ui-monospace, monospace; }
+
+  /* Rigged SVG characters: nested <g> per joint; rotate around the joint with fill-box origins. */
+  .rig g { transform-box: fill-box; }
+  .joint-top { transform-origin: 50% 0%; }
+
+  #paper { background: var(--paper); }
+  .copy { position: absolute; left: 120px; top: 0; bottom: 0; width: 580px; display: flex; flex-direction: column; justify-content: center; }
+  .kicker { font-family: "IBM Plex Mono", monospace; font-size: 24px; color: var(--accent); letter-spacing: .08em; text-transform: uppercase; margin: 0 0 18px; }
+  .copy h2 { font-size: 68px; line-height: 1.05; margin: 0 0 26px; letter-spacing: -.01em; }
+  .copy p { font-size: 29px; line-height: 1.4; margin: 0; color: var(--muted); }
+
+  /* A framed screenshot. Overlays inside .cam use % of the image, so they track it while the camera moves. */
+  .shot { position: absolute; background: #fff; border-radius: 18px; overflow: hidden; box-shadow: 0 2px 0 var(--line), 0 30px 60px -20px rgba(0,0,0,.35); }
+  .shot img { display: block; width: 100%; }
+  .cam { position: relative; transform-origin: 50% 50%; }
+  .crop { overflow: hidden; }
+  .ring { position: absolute; border: 5px solid var(--accent); border-radius: 14px; transform: translate(-50%, -50%); box-shadow: 0 0 0 6px rgba(255,107,61,.18); }
+  .lottie { position: absolute; pointer-events: none; }
+  .lottie.center { transform: translate(-50%, -50%); }
+
+  .title { color: #f3f1ea; text-align: center; left: 0; right: 0; top: 380px; }
+  .title h1 { font-size: 140px; margin: 0; letter-spacing: -.02em; }
+  .title p { font-size: 40px; margin: 18px 0 0; opacity: .85; }
+  #flash { background: #fffdf4; opacity: 0; pointer-events: none; }
+</style>
+</head>
+<body>
+<div id="viewport">
+  <div id="stage" aria-hidden="true">
+
+    <!-- Scene: cold open. Replace with the storyline's opening (character, setting). -->
+    <section class="scene" id="sOpen" style="background: radial-gradient(circle at 50% 70%, #173d2a, var(--night))">
+      <div class="abs title"><h1>__PRODUCT__</h1><p>__TAGLINE__</p></div>
+      <div class="lottie center" id="lBoom" style="left:960px; top:540px; width:1000px; height:1000px"></div>
+    </section>
+
+    <div class="layer" id="paper"></div>
+
+    <!-- Scene: one product feature. Copy this block per beat. -->
+    <section class="scene" id="sFeature1">
+      <div class="copy">
+        <p class="kicker">01 · __FEATURE__</p>
+        <h2>__HEADLINE__</h2>
+        <p>__ONE_SENTENCE_THAT_IS_TRUE_OF_THE_CODE__</p>
+      </div>
+      <div class="shot" style="left:780px; top:90px; width:1000px">
+        <div class="cam" id="f1Cam">
+          <img src="assets/shots/__SHOT__.png" alt="" />
+          <!-- left/top = the detail's centre as % of the image (measure it on the screenshot) -->
+          <div class="ring" id="f1Ring" style="left:40%; top:45%; width:140px; height:70px"></div>
+          <div class="lottie center" id="lPulse" style="left:40%; top:45%; width:160px; height:160px"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="scene" id="sOutro" style="background: var(--night)">
+      <div class="abs title"><h1>__PRODUCT__</h1><p>__SIGN_OFF__</p></div>
+    </section>
+
+    <div class="layer" id="flash"></div>
+  </div>
+</div>
+
+<script src="assets/vendor/lottie.min.js"></script>
+<script src="assets/lottie/bundle.js"></script>
+<script src="assets/engine.js"></script>
+<script>
+  const P = Pitch.create({ duration: 12 });
+  const { EASE } = P;
+
+  P.scenes([
+    { id: "sOpen", start: 0, end: 3 },
+    { id: "sFeature1", start: 3, end: 9 },
+    { id: "sOutro", start: 9, end: 12 },
+  ]);
+  P.track("#paper", [[2.9, { opacity: 0 }], [3.2, { opacity: 1 }], [8.85, { opacity: 1 }, EASE.exit], [9.15, { opacity: 0 }]]);
+
+  // Open: a boom, with flash and sound, hands off to the product.
+  P.cue("boom", "#lBoom", 1.6, { decor: true });
+  P.sound(1.6, P.boom);
+  P.track("#flash", [[1.65, { opacity: 0 }], [1.77, { opacity: 1 }, EASE.linear], [2.9, { opacity: 1 }, EASE.exit], [3.4, { opacity: 0 }]], "decor");
+
+  // Feature: slow camera push, one callout, a looping pulse on the live element.
+  P.track("#f1Cam", [[3.2, { transform: "scale(1)" }, EASE.linear], [9, { transform: "scale(1.08)" }]], "motion");
+  P.callout("#f1Ring", 5.2, 1.2);
+  P.cue("pulse", "#lPulse", 4.0, { loop: true });
+
+  P.start();
+</script>
+</body>
+</html>

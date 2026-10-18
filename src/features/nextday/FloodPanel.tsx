@@ -1,4 +1,4 @@
-import { Badge, Panel, PanelHeader } from "../../components/ui";
+import { Badge } from "../../components/ui";
 import {
   formatLocalClock,
   type LeveeSection,
@@ -7,7 +7,6 @@ import {
   type TideSection,
 } from "../../lib/nextDayReport";
 import { Abbr } from "./Abbr";
-import { AboutData } from "./AboutData";
 import styles from "./NextDayReport.module.css";
 
 const FT_PER_M = 3.28084;
@@ -114,26 +113,16 @@ function Levees({ levees }: { levees: LeveeSection }) {
         ))}
       </ul>
       <ul className={styles.list}>
-        {[(levees.caveats ?? [])[0], (levees.caveats ?? []).at(-1)]
-          .filter((c, i, all) => c && all.indexOf(c) === i)
-          .map((c) => (
-            <li key={c} className={styles.muted}>
-              {c}
-            </li>
-          ))}
+        {/* The last caveat (levees are left out of the shading) is shown in the tide tile. */}
+        {(levees.caveats ?? []).slice(0, -1).map((c) => (
+          <li key={c} className={styles.muted}>
+            {c}
+          </li>
+        ))}
       </ul>
-      <AboutData label="About the levee data">
-        <ul className={styles.list}>
-          {(levees.caveats ?? []).slice(1, -1).map((c) => (
-            <li key={c} className={styles.muted}>
-              {c}
-            </li>
-          ))}
-        </ul>
-        <p className={styles.small}>
-          Source: <a href={levees.source?.url}>{levees.source?.name}</a>.
-        </p>
-      </AboutData>
+      <p className={styles.small}>
+        Source: <a href={levees.source?.url}>{levees.source?.name}</a>.
+      </p>
     </>
   );
 }
@@ -224,7 +213,8 @@ function Tide({ tide }: { tide: TideSection }) {
         .
       </p>
       <ul className={styles.list}>
-        {(tide.caveats ?? []).map((c) => (
+        {/* The first caveat (storm surge, ground not shaded) is shown in the tide tile. */}
+        {(tide.caveats ?? []).slice(1).map((c) => (
           <li key={c} className={styles.muted}>
             {c}
           </li>
@@ -239,15 +229,11 @@ function Tide({ tide }: { tide: TideSection }) {
   );
 }
 
-export function FloodPanel({ report }: { report: NextDayReport }) {
+/** River, levee and tide detail, for the fold in the tide and flood tile. */
+export function FloodDetails({ report }: { report: NextDayReport }) {
   const { river, levees, tide } = report.flood;
   return (
-    <Panel id="flood" aria-labelledby="flood-title">
-      <PanelHeader
-        title="Flood: river, levees and tide"
-        titleId="flood-title"
-        description="Forecast water levels near the site. A forecast is not a guarantee, and a levee is not a guarantee."
-      />
+    <>
       <h3 className={styles.sub} style={{ marginTop: 0 }}>
         River
       </h3>
@@ -256,6 +242,6 @@ export function FloodPanel({ report }: { report: NextDayReport }) {
       <Levees levees={levees} />
       <h3 className={styles.sub}>Tide</h3>
       <Tide tide={tide} />
-    </Panel>
+    </>
   );
 }
