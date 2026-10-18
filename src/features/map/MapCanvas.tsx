@@ -462,6 +462,12 @@ export default function MapCanvas({
     }
   }, [sites, site.id]);
 
+  // Site switching waits while a report or check-in is sending (changeSite ignores it then).
+  useEffect(() => {
+    for (const { marker } of sitePins.current.values())
+      (marker.getElement() as HTMLButtonElement).disabled = disabled;
+  }, [disabled, sites, site.id]);
+
   // Lightning stop-work: show the 10-mile ring and its bolt.
   useEffect(() => {
     const instance = map.current;

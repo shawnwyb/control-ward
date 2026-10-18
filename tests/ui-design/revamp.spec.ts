@@ -439,3 +439,27 @@ test("map: weather layers are floating chips", async ({ page }) => {
   await chips.getByRole("button", { name: "Rain" }).click();
   await expect(source).toHaveCount(0);
 });
+
+test("site switch: a late answer for the previous site is ignored", async ({
+  page,
+}) => {
+  // North's alerts and lightning answer 1.5 s late; South answers at once.
+  await signIn(page, "supervisor@planit.local", "?slow=site-north");
+  const alertsLink = page
+    .getByRole("navigation", { name: "Pages" })
+    .getByRole("link", { name: /^Alerts/ });
+  const bolt = page.locator("#site-map .stop-work-marker");
+  await page.locator("#site").selectOption("site-south");
+  await expect(alertsLink).toHaveAccessibleName("Alerts 1 active");
+  // Visit North, and leave before its (stop-work) answer arrives.
+  await page.locator("#site").selectOption("site-north");
+  await page.locator("#site").selectOption("site-south");
+  await expect(alertsLink).toHaveAccessibleName("Alerts 1 active");
+  await page.waitForTimeout(2500); // North's late answers land now
+  await expect(bolt).toHaveCount(0);
+  await expect(alertsLink).toHaveAccessibleName("Alerts 1 active");
+  // North itself still loads: its stop-work shows once its answer arrives.
+  await page.locator("#site").selectOption("site-north");
+  await expect(bolt).toHaveCount(1);
+  await expect(alertsLink).toHaveAccessibleName("Alerts 2 active");
+});

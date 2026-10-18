@@ -135,6 +135,16 @@
   transform: translateY(-2px);
 }
 
+/* While a report or check-in is sending, site switching is paused. */
+.sitePin:disabled {
+  cursor: progress;
+  opacity: 0.55;
+}
+
+.sitePin:disabled:hover .sitePill {
+  transform: none;
+}
+
 .sitePin[aria-current="true"] {
   z-index: 2;
 }

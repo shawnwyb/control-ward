@@ -109,7 +109,8 @@
 }
 
 .chip:hover {
-  background: #f7f7f5;
+  /* The hover tint over an opaque chip, so the map does not show through. */
+  background: linear-gradient(var(--hover), var(--hover)), var(--bg);
 }
 
 .chip[aria-pressed="true"] {

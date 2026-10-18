@@ -200,6 +200,13 @@ let tasks = [
 const params = new URLSearchParams(location.search);
 const latency = Number(params.get("latency") ?? 150);
 const failWrites = params.has("fail");
+// ?slow=site-north delays that site's alerts and lightning reads by 1.5 s, to test
+// that a late answer for a site you have already left is ignored.
+const slowSite = params.get("slow");
+const slowDown = (siteId: string | null) =>
+  siteId && siteId === slowSite
+    ? new Promise((resolve) => setTimeout(resolve, 1500))
+    : Promise.resolve();
 // ?break=alerts, or window.__mockFlags.breakAlerts at runtime, makes alert reads fail.
 // Created on first use, not at import, so importing this module has no side effects.
 type Flags = { breakAlerts: boolean; breakCrew: boolean };
@@ -992,6 +999,7 @@ async function handle(
         : [],
     );
   if (path === "/rest/v1/alerts") {
+    await slowDown(siteParam);
     if (flags().breakAlerts)
       return apiError("Simulated outage (?break=alerts)", 503);
     return respond(
@@ -1016,6 +1024,7 @@ async function handle(
     );
   }
   if (path === "/rest/v1/lightning_state") {
+    await slowDown(siteParam);
     if (flags().breakAlerts)
       return apiError("Simulated outage (?break=alerts)", 503);
     // ?clear=N makes the stop-work countdown end in N seconds (it runs 30 minutes from the strike).
