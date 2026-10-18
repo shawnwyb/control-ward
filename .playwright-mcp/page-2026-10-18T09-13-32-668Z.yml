@@ -1,0 +1,3 @@
+- generic [active]:
+  - generic:
+    - status

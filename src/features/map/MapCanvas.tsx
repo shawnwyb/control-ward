@@ -9,6 +9,7 @@ import {
   ScaleControl,
 } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
+import type { FeatureCollection } from "geojson";
 import {
   extentCorners,
   extentPolygon,
@@ -38,6 +39,12 @@ import {
   type MudRoutes,
 } from "./mud/mudLayer";
 import { applySatellite } from "./satelliteLayer";
+import {
+  FIRE_CLICKABLE,
+  applyFires,
+  fetchFires,
+  firePopupElement,
+} from "./wildfire/wildfireLayer";
 import { forecastBounds } from "./weather/forecast";
 import type { WeatherView } from "./weather/types";
 import { applyWeather } from "./weather/weatherLayer";
@@ -77,6 +84,9 @@ export type MapCanvasProps = {
   onPin: (latitude: number, longitude: number) => void;
   onUnavailable: () => void;
 };
+
+/** How often active wildfires are reloaded (NIFC updates every few minutes). */
+const FIRE_REFRESH_MS = 15 * 60 * 1000;
 
 /** Lightning stop-work radius: 10 miles. */
 export const STOP_WORK_RADIUS_M = 16093;
@@ -152,6 +162,7 @@ export default function MapCanvas({
     onSelectSite,
     mud,
     satellite,
+    fires: null as FeatureCollection | null,
   });
   useEffect(() => {
     latest.current = {
@@ -165,6 +176,7 @@ export default function MapCanvas({
       onSelectSite,
       mud,
       satellite,
+      fires: latest.current.fires,
     };
   });
   // The basemap style is (re)loaded asynchronously; overlays wait for it.
@@ -328,6 +340,7 @@ export default function MapCanvas({
       applyWeather(instance, latest.current.weather ?? null);
       applyMud(instance, latest.current.mud ?? null);
       applySatellite(instance, latest.current.satellite);
+      applyFires(instance, latest.current.fires);
     });
     // Basemap unreachable: keep the overlays on a plain ground instead of a blank box.
     instance.on("error", () => {
@@ -374,8 +387,40 @@ export default function MapCanvas({
       );
     }
 
+    // A click on a wildfire opens its card the same way.
+    instance.on("click", [...FIRE_CLICKABLE], (event) => {
+      const feature = event.features?.[0];
+      if (!feature?.properties) return;
+      const [lng, lat] = (feature.geometry as { coordinates: number[] })
+        .coordinates;
+      mudPopup
+        .setLngLat([lng, lat])
+        .setDOMContent(
+          firePopupElement(
+            feature.properties,
+            { lng, lat },
+            latest.current.site,
+          ),
+        )
+        .addTo(instance);
+    });
+    for (const id of FIRE_CLICKABLE) {
+      instance.on(
+        "mouseenter",
+        id,
+        () => (instance.getCanvas().style.cursor = "pointer"),
+      );
+      instance.on(
+        "mouseleave",
+        id,
+        () => (instance.getCanvas().style.cursor = ""),
+      );
+    }
+
     instance.on("click", (event) => {
-      const onRoute = MUD_CLICKABLE.filter((id) => instance.getLayer(id));
+      const onRoute = [...MUD_CLICKABLE, ...FIRE_CLICKABLE].filter((id) =>
+        instance.getLayer(id),
+      );
       if (
         onRoute.length &&
         instance.queryRenderedFeatures(event.point, { layers: onRoute }).length
@@ -652,6 +697,28 @@ export default function MapCanvas({
     if (instance && styleLoaded.current)
       applyWeather(instance, weather ?? null);
   }, [weather]);
+
+  // Active wildfires: always on, like the lightning ring. A failed load keeps the last fires shown.
+  useEffect(() => {
+    if (!mapReady) return;
+    const abort = new AbortController();
+    const load = () =>
+      fetchFires(abort.signal)
+        .then((fires) => {
+          latest.current.fires = fires;
+          const instance = map.current;
+          if (instance && styleLoaded.current) applyFires(instance, fires);
+          if (container.current)
+            container.current.dataset.fires = String(fires.features.length);
+        })
+        .catch(() => {});
+    load();
+    const timer = setInterval(load, FIRE_REFRESH_MS);
+    return () => {
+      abort.abort();
+      clearInterval(timer);
+    };
+  }, [mapReady]);
 
   // Satellite imagery: a raster layer under labels and overlays.
   useEffect(() => {

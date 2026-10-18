@@ -356,6 +356,10 @@ export function SiteMap({
       {sites ? (
         <li className={styles.note}>Pins: each site’s hazard index, 0 to 10</li>
       ) : null}
+      <li className={styles.note}>
+        <span className={styles.fireSample} aria-hidden="true" />
+        Red dots: active wildfires (NIFC), sized by acres
+      </li>
       {stopWork ? (
         <li className={styles.note}>
           <span className={styles.stormSample} aria-hidden="true" />

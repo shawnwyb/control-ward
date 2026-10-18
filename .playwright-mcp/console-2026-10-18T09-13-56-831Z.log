@@ -1,0 +1,5 @@
+[     206ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://127.0.0.1:5174/node_modules/.vite/deps/react-dom_client.js?v=6ab549d7:22164
+[    7179ms] [WARNING] layers[highway-shield-non-us].filter[1]: Expected value to be of type number, but found null instead. Falling back to false. @ http://127.0.0.1:5174/node_modules/maplibre-gl/dist/maplibre-gl-worker.mjs?v=6.14.0:4
+[    7179ms] [WARNING] layers[highway-shield-us-interstate].filter[1]: Expected value to be of type number, but found null instead. Falling back to false. @ http://127.0.0.1:5174/node_modules/maplibre-gl/dist/maplibre-gl-worker.mjs?v=6.14.0:4
+[    7179ms] [WARNING] layers[road_shield_us].filter[1]: Expected value to be of type number, but found null instead. Falling back to false. @ http://127.0.0.1:5174/node_modules/maplibre-gl/dist/maplibre-gl-worker.mjs?v=6.14.0:4
+[   24854ms] [WARNING] layers[boundary_3].filter[1]: Expected value to be of type number, but found null instead. Falling back to false. @ http://127.0.0.1:5174/node_modules/maplibre-gl/dist/maplibre-gl-worker.mjs?v=6.14.0:4
