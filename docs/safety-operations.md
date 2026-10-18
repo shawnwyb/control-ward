@@ -1,5 +1,7 @@
 # Automatic safety checklist operations
 
+For a fresh clone, start with the [local development guide](local-development.md). It gives the real frontend, isolated CodeAct executor and prediction model commands in order. This document covers architecture, configuration, verification and production operation.
+
 ## User flow
 
 Open an assigned worksite as either a supervisor or worker. The Task safety checklist panel automatically shows the site's jurisdiction, heat/weather readings, cited instructions, source links and coverage gaps. Read it and select **Acknowledge this checklist**. A replacement requires a new acknowledgement. No profile form, planned work, source approval, Generate or Publish action is required.

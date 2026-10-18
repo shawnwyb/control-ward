@@ -2,6 +2,10 @@
 
 A safety platform for utility field crews, built for SwampHacks 2026. It combines weather, heat, lightning, flood, wildfire, soil and crew-reported hazards into one risk score for each power plant site. It raises alerts when conditions turn dangerous and creates a next-day briefing at 6 PM local time for each site.
 
+## Start locally
+
+Follow the [local development guide](docs/local-development.md) for a fresh clone. It starts with the real app connected to the team's database, then covers actual CodeAct generation on an isolated local stack and running both prediction models. The browser-only fictional preview is an optional UI-development path.
+
 ## Status
 
 | Area                                                                | Status                                                                                                                  |
@@ -18,7 +22,7 @@ A safety platform for utility field crews, built for SwampHacks 2026. It combine
 
 ## How it works
 
-Everything runs on Supabase (Postgres with PostGIS, Auth, Storage, Realtime, pg_cron, Edge Functions). There is no separate server.
+Monitoring, authentication, data storage and the API run on Supabase (Postgres with PostGIS, Auth, Storage, Realtime, pg_cron and Edge Functions). The CodeAct Python executor runs on a separate Docker-capable machine, and prediction jobs run in Python outside hosted Supabase. They can share one compute machine. The earlier safety pipeline can run as scheduled Edge Functions calling Gemini.
 
 1. pg_cron starts an Edge Function on a schedule.
 2. The Edge Function fetches outside data (Open-Meteo, NWS, NOAA, USGS, NIFC, NOAA GOES) and stores it as readings.
@@ -35,13 +39,13 @@ Read these for details:
 
 ## Setup
 
-Requirements: Node 22 or later, npm and the Supabase CLI. Docker is needed only for the local option.
+Requirements: Node 22 or later, npm and the Supabase CLI for backend setup. Docker is required for local Supabase and for the CodeAct executor, including when that executor connects to a hosted database. Python 3.11 is needed for the prediction jobs. Frontend-only access to a hosted project needs Node/npm and public connection settings.
 
 ```sh
 npm ci
 ```
 
-### Option A: hosted project (no Docker)
+### Option A: hosted Supabase backend
 
 1. Run `supabase login`.
 2. Link your project: `supabase link --project-ref <ref>`.
