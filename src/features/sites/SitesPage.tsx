@@ -11,6 +11,7 @@ import {
 } from "../../lib/monitoring";
 import type { Report, Site } from "../../lib/types";
 import { StopWorkBanner } from "../alerts/StopWorkBanner";
+import { ModelsSection } from "../models/ModelsSection";
 import { SiteDetail } from "./SiteDetail";
 import { SitesTable, type SitesView } from "./SitesTable";
 import styles from "./SitesPage.module.css";
@@ -25,7 +26,7 @@ const noRisk: SiteRiskView = {
 
 /**
  * Supervisor home: the ranked sites table beside the live map, the stop-work banner over
- * the map, and the selected site's detail under the table.
+ * the map, the selected site's detail under the table and its forecast models under the map.
  */
 export function SitesPage({
   site,
@@ -76,14 +77,17 @@ export function SitesPage({
         loaded={overview.loaded}
         error={overview.error}
       />
-      <div className={styles.map}>
-        {/* Not part of the map: the stop-work signal must show even if the map cannot load. */}
-        <StopWorkBanner siteName={site.name} lightning={lightning} />
-        <div className={styles.mapSlot}>
-          {renderMap(overview.sites)}
-          {mapSlotOverlay}
+      <div className={styles.side}>
+        <div className={styles.map}>
+          {/* Not part of the map: the stop-work signal must show even if the map cannot load. */}
+          <StopWorkBanner siteName={site.name} lightning={lightning} />
+          <div className={styles.mapSlot}>
+            {renderMap(overview.sites)}
+            {mapSlotOverlay}
+          </div>
+          {mapOverlay}
         </div>
-        {mapOverlay}
+        <ModelsSection site={site} />
       </div>
       <div className={styles.detail}>
         <SiteDetail

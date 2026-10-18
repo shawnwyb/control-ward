@@ -2,6 +2,7 @@ import { Icon, type IconName } from "../../components/ui/Icon";
 import { Footer } from "../shell/Footer";
 import { FeatureCarousel } from "./FeatureCarousel";
 import { LiveDemo } from "./LiveDemo";
+import { ModelCards } from "./ModelCards";
 import { Puzzle } from "./Puzzle";
 import styles from "./Landing.module.css";
 
@@ -129,6 +130,20 @@ export function Landing({ onSignIn }: { onSignIn: () => void }) {
           A lightning strike near Big Cypress Sub, live in the supervisor view.
         </p>
         <LiveDemo />
+      </section>
+
+      <section
+        id="models"
+        className={styles.section}
+        aria-labelledby="models-title"
+      >
+        <h2 id="models-title" className={styles.h2}>
+          The models
+        </h2>
+        <p className={styles.lede}>
+          Two forecasts behind the daily safety briefing.
+        </p>
+        <ModelCards />
       </section>
 
       <section

@@ -14,6 +14,17 @@ import { handleSafety } from "./mockSafety";
 type Row = Record<string, unknown>;
 
 const PASSWORD = "CrewDemo123!";
+
+/** ml_scores rows per site: [now, tomorrow] on the 0-10 scale. */
+const mlScores: Record<string, Record<string, [number, number]>> = {
+  "site-north": { hazard_index: [4.8, 5.6], mud: [3.1, 4.2] },
+  "site-south": { hazard_index: [7.9, 8.4], mud: [6.2, 7.7] },
+  "site-tampa": { hazard_index: [5.9, 6.5], mud: [1.4, 2.0] },
+  "site-jax": { hazard_index: [3.6, 4.1], mud: [2.2, 2.8] },
+  "site-manatee": { hazard_index: [1.2, 1.8], mud: [5.4, 6.1] },
+  "site-everglades": { hazard_index: [2.4, 2.0], mud: [8.1, 8.8] },
+  "site-turkey-point": { hazard_index: [2.1, 2.6], mud: [7.4, 8.0] },
+};
 /** Fictional plants at plausible Florida industrial and utility locations. */
 const sites = [
   {
@@ -1058,6 +1069,32 @@ async function handle(
       },
     };
   };
+  if (path === "/rest/v1/ml_scores") {
+    const scores = mlScores[siteParam ?? ""] ?? {};
+    const computed_at = new Date(Date.now() - 2 * 3600 * 1000).toISOString();
+    return respond(
+      memberOf
+        ? Object.entries(scores).flatMap(([model, [now, tomorrow]]) =>
+            (
+              [
+                ["now", now],
+                ["tomorrow", tomorrow],
+              ] as const
+            ).map(([horizon, score]) => ({
+              site_id: siteParam,
+              model,
+              horizon,
+              score,
+              model_version:
+                model === "mud"
+                  ? "stram-inspired-nrcs-0.1"
+                  : "hazidx-0.1.0+2018-2022.23ed6848",
+              computed_at,
+            })),
+          )
+        : [],
+    );
+  }
   if (path === "/rest/v1/readings")
     return respond(
       memberOf

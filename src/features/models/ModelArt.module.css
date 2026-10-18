@@ -1,0 +1,16 @@
+.art {
+  --art-amber: #d6a24c;
+  --art-truck: #233a35;
+
+  display: block;
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+  margin: var(--space-6) auto var(--space-4);
+}
+
+.tick {
+  fill: var(--ink-2);
+  font-family: var(--font-mono);
+  font-size: 11px;
+}

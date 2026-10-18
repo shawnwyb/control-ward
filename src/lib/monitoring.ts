@@ -147,6 +147,37 @@ export async function fetchSiteRisk(siteId: string): Promise<SiteRiskView> {
   };
 }
 
+/** One model's 0-10 score from ml_scores. */
+export type MlScore = {
+  score: number;
+  horizon: "now" | "tomorrow";
+  modelVersion: string;
+  computedAt: string;
+};
+
+/** Each model's score for a site, keyed by model ("hazard_index", "mud"); tomorrow's row wins over now's. */
+export type MlScores = Partial<Record<string, MlScore>>;
+
+export async function fetchMlScores(siteId: string): Promise<MlScores> {
+  const { data, error } = await supabase
+    .from("ml_scores")
+    .select("model, horizon, score, model_version, computed_at")
+    .eq("site_id", siteId);
+  if (error) throw error;
+  const out: MlScores = {};
+  for (const row of data) {
+    const held = out[row.model];
+    if (held && held.horizon === "tomorrow") continue;
+    out[row.model] = {
+      score: Number(row.score),
+      horizon: row.horizon as MlScore["horizon"],
+      modelVersion: row.model_version,
+      computedAt: row.computed_at,
+    };
+  }
+  return out;
+}
+
 /** Live readings (not forecasts) from the window the rules engine looks at, newest first. */
 export async function fetchReadings(siteId: string): Promise<Reading[]> {
   const since = new Date(Date.now() - READINGS_WINDOW_MS).toISOString();

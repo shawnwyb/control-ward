@@ -3,7 +3,7 @@
   grid-template-columns: minmax(0, 1fr);
   grid-template-areas:
     "table"
-    "map"
+    "side"
     "detail";
   gap: var(--space-4);
   align-items: start;
@@ -15,7 +15,6 @@
 
 .map {
   position: relative;
-  grid-area: map;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
   gap: var(--space-2);
@@ -32,6 +31,14 @@
   min-height: 0;
 }
 
+/* The map with the selected site's forecast models under it. */
+.side {
+  grid-area: side;
+  display: grid;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
 .detail {
   grid-area: detail;
   display: grid;
@@ -44,18 +51,19 @@
   .page:not(.mapView) {
     grid-template-columns: minmax(0, 44fr) minmax(0, 56fr);
     grid-template-areas:
-      "table map"
-      "detail map";
+      "table side"
+      "detail side";
     grid-template-rows: auto 1fr;
     column-gap: var(--space-5);
   }
 
-  .page:not(.mapView) .map {
-    position: sticky;
-    top: var(--space-4);
+  /* The side column spans both rows; the forecast models sit under the map. */
+  .page:not(.mapView) .side {
     grid-row: 1 / span 2;
-    /* The content area's full height. */
-    height: calc(100dvh - 2 * var(--space-4));
+  }
+
+  .page:not(.mapView) .map {
+    height: min(40rem, calc(100dvh - 2 * var(--space-4)));
     min-height: 26rem;
   }
 }
