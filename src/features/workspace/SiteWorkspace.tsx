@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ErrorBoundary } from "../../components/ErrorBoundary";
 import { Panel } from "../../components/ui";
 import { useBusy } from "../../hooks/busy";
@@ -184,7 +184,7 @@ export function SiteWorkspace({
     />
   );
 
-  const siteMap = (overview?: { sites: SiteSummary[]; banner?: ReactNode }) => (
+  const siteMap = (overview?: { sites: SiteSummary[] }) => (
     <ErrorBoundary
       fallback={
         <Panel className={styles.map}>
@@ -213,7 +213,7 @@ export function SiteWorkspace({
         onSelectSite={overview ? onSiteChange : undefined}
         stopWork={lightning.data.status === "stop_work"}
         fitStopWork={overview !== undefined}
-        banner={overview?.banner}
+        variant={overview ? "fill" : "card"}
         onPin={setPin}
       />
     </ErrorBoundary>
@@ -241,7 +241,7 @@ export function SiteWorkspace({
             crewTerm={feed.metrics.crewRisk}
             lightning={lightning.data}
             onSelectSite={onSiteChange}
-            renderMap={(sites, banner) => siteMap({ sites, banner })}
+            renderMap={(sites) => siteMap({ sites })}
           >
             {/* Until the report drawer replaces it. */}
             {reportForm()}

@@ -502,27 +502,96 @@ test("sites: ranked table drives the page", async ({ page }) => {
   await expect(alertsLink).toHaveAccessibleName("Alerts 1 active");
 });
 
-test("sites: stop-work banner follows the selected site and clears", async ({
-  page,
-}) => {
-  await signIn(page, "supervisor@planit.local", "?clear=14");
+test("sites: stop-work banner follows the selected site", async ({ page }) => {
+  await signIn(page, "supervisor@planit.local");
   const banner = page.getByRole("alert").filter({ hasText: "Stop work" });
   const row = (name: string) =>
     page.getByRole("region", { name: "Sites" }).getByRole("button", { name });
-  // Signed in on a site that is clear: no banner until North is picked from the table.
-  await expect(page.locator("#site")).not.toHaveValue("site-north");
+  // Signed in on Jacksonville, which is clear: no banner until North is picked from the table.
+  await expect(page.locator("#site")).toHaveValue("site-jax");
   await expect(banner).toHaveCount(0);
   await row("North Plant").click();
   await expect(banner).toContainText("North Plant");
   await expect(banner).toContainText(/\d\d:\d\d/);
   await expect(banner).toContainText("6.2 mi");
-  // Another site is not in stop-work: no banner. Coming back, it is there again.
   await row("South Plant").click();
   await expect(banner).toHaveCount(0);
   await row("North Plant").click();
   await expect(banner).toHaveCount(1);
-  // The countdown runs out: the banner leaves.
-  await expect(banner).toHaveCount(0, { timeout: 20000 });
+});
+
+test("sites: stop-work banner leaves when the countdown ends", async ({
+  page,
+}) => {
+  await signIn(page, "supervisor@planit.local", "?clear=25");
+  const banner = page.getByRole("alert").filter({ hasText: "Stop work" });
+  await page
+    .getByRole("region", { name: "Sites" })
+    .getByRole("button", { name: /North Plant/ })
+    .click();
+  await expect(banner).toHaveCount(1);
+  await expect(banner).toHaveCount(0, { timeout: 40000 });
+});
+
+test("sites: the banner shows even when the map cannot load", async ({
+  page,
+}) => {
+  // No WebGL: the map reports itself unavailable.
+  await page.addInitScript(() => {
+    const real = HTMLCanvasElement.prototype.getContext;
+    HTMLCanvasElement.prototype.getContext = function (
+      this: HTMLCanvasElement,
+      type: string,
+      ...rest: unknown[]
+    ) {
+      if (type.includes("webgl")) return null;
+      return (real as (...a: unknown[]) => unknown).call(this, type, ...rest);
+    } as typeof real;
+  });
+  await signIn(page, "supervisor@planit.local");
+  await expect(page.getByText("The map isn\u2019t available")).toBeVisible();
+  await page
+    .getByRole("region", { name: "Sites" })
+    .getByRole("button", { name: /North Plant/ })
+    .click();
+  await expect(
+    page.getByRole("alert").filter({ hasText: "Stop work" }),
+  ).toContainText("North Plant");
+});
+
+test("sites: rows are in rank order for Tab, and keep focus when re-ranked", async ({
+  page,
+}) => {
+  await signIn(page, "supervisor@planit.local");
+  const region = page.getByRole("region", { name: "Sites" });
+  const rows = region.getByRole("button", { name: /Demo/ });
+  const names = () =>
+    rows.evaluateAll((els) =>
+      els.map((el) => el.querySelector("span span")?.textContent ?? ""),
+    );
+  await expect(rows).toHaveCount(6);
+  const before = await names();
+  expect(before[0]).toContain("South Plant");
+  expect(before[5]).toContain("Port Everglades");
+  // Tab order: the first row takes focus after the view switch, then each next row in rank order.
+  await region.getByRole("button", { name: "Map", exact: true }).focus();
+  await page.keyboard.press("Tab");
+  await expect(rows.nth(0)).toBeFocused();
+  await page.keyboard.press("Tab");
+  await expect(rows.nth(1)).toBeFocused();
+  // Jacksonville (4.1) jumps to the top while its row has focus.
+  const jax = rows.filter({ hasText: "Jacksonville" });
+  await jax.focus();
+  await page.evaluate(() => {
+    const w = window as unknown as {
+      __mockFlags: { scores: Record<string, number> };
+    };
+    w.__mockFlags.scores["site-jax"] = 9.9;
+    window.dispatchEvent(new Event("focus"));
+  });
+  await expect.poll(async () => (await names())[0]).toContain("Jacksonville");
+  await expect(jax).toBeFocused();
+  await expect(rows.first()).toContainText("9.9");
 });
 
 test("sites: Table / Map switch hides the list", async ({ page }) => {

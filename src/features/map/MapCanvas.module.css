@@ -311,3 +311,12 @@
 .crewStale {
   opacity: 0.55;
 }
+
+/* The map fills its container (Sites page right pane) instead of the card's 3:2 box. */
+.fill {
+  aspect-ratio: auto;
+  height: 100%;
+  min-height: 0;
+  border: 0;
+  border-radius: 0;
+}

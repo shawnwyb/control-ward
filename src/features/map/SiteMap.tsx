@@ -1,4 +1,4 @@
-import { lazy, Suspense, useMemo, useState, type ReactNode } from "react";
+import { lazy, Suspense, useId, useMemo, useState } from "react";
 import {
   Badge,
   Button,
@@ -6,6 +6,7 @@ import {
   Panel,
   PanelHeader,
   SeverityMark,
+  cx,
   TimeSlider,
   type IconName,
 } from "../../components/ui";
@@ -80,8 +81,11 @@ type Props = {
   stopWork?: boolean;
   /** Frame the whole stop-work ring once per stop-work episode. */
   fitStopWork?: boolean;
-  /** Drops in over the top of the map (the stop-work banner), above the layer chips. */
-  banner?: ReactNode;
+  /**
+   * "card" (default): titled panel with the legend below. "fill": the map fills its
+   * container edge to edge, with the legend in a small popover.
+   */
+  variant?: "card" | "fill";
   onPin: (latitude: number, longitude: number) => void;
 };
 
@@ -145,12 +149,15 @@ export function SiteMap({
   onSelectSite,
   stopWork = false,
   fitStopWork = false,
-  banner,
+  variant = "card",
   onPin,
 }: Props) {
   const [unavailable, setUnavailable] = useState(false);
   const [overlay, setOverlay] = useState<Overlay>("off");
   const [rainSource, setRainSource] = useState<RainSource>("radar");
+  const [legendOpen, setLegendOpen] = useState(false);
+  const legendId = useId();
+  const fill = variant === "fill";
 
   const radarOn = overlay === "rain" && rainSource === "radar";
   const forecastOn = overlay !== "off" && !radarOn;
@@ -211,92 +218,10 @@ export function SiteMap({
       : describeForecastHour(forecast.grid!.times[forecast.index]);
   const key = keyFor(overlay, rainSource);
 
-  return (
-    <Panel id="site-map" className={className} aria-labelledby="map-title">
-      <PanelHeader
-        title={site.name}
-        titleId="map-title"
-        aside={<Badge>1200 m × 800 m</Badge>}
-      />
-      {unavailable ? (
-        <div className={styles.placeholder}>
-          The map isn’t available on this device. Use “Use my location” or enter
-          coordinates.
-        </div>
-      ) : (
-        <div className={styles.stage}>
-          <Suspense
-            fallback={<div className={styles.placeholder}>Loading map…</div>}
-          >
-            <MapCanvas
-              site={site}
-              reports={reports}
-              crew={crew}
-              crewFocus={crewFocus}
-              pin={pin}
-              disabled={disabled}
-              highlightId={highlightId}
-              focusRequest={focusRequest}
-              weather={weather}
-              regional={overlay !== "off"}
-              sites={sites}
-              onSelectSite={onSelectSite}
-              stopWork={stopWork}
-              fitStopWork={fitStopWork}
-              onPin={onPin}
-              onUnavailable={() => setUnavailable(true)}
-            />
-          </Suspense>
-          {/* Weather layers float over the map as chips; pressing the active one turns it off. */}
-          <div className={styles.top}>
-            {banner}
-            <div className={styles.chips}>
-              <div
-                role="group"
-                aria-label="Weather layers"
-                className={styles.chipGroup}
-              >
-                {layerChips.map((chip) => (
-                  <button
-                    key={chip.value}
-                    type="button"
-                    className={styles.chip}
-                    aria-pressed={overlay === chip.value}
-                    onClick={() =>
-                      setOverlay(overlay === chip.value ? "off" : chip.value)
-                    }
-                  >
-                    <Icon name={chip.icon} size={14} />
-                    {chip.label}
-                  </button>
-                ))}
-              </div>
-              {overlay === "rain" ? (
-                <div
-                  role="group"
-                  aria-label="Rain data"
-                  className={styles.chipGroup}
-                >
-                  {sourceChips.map((chip) => (
-                    <button
-                      key={chip.value}
-                      type="button"
-                      className={styles.chip}
-                      aria-pressed={rainSource === chip.value}
-                      aria-label={chip.ariaLabel}
-                      onClick={() => setRainSource(chip.value)}
-                    >
-                      {chip.label}
-                    </button>
-                  ))}
-                </div>
-              ) : null}
-            </div>
-          </div>
-        </div>
-      )}
+  const weatherEl = (
+    <>
       {source ? (
-        <div className={styles.weather}>
+        <div className={cx(styles.weather, fill && styles.weatherFloat)}>
           {source.status === "loading" ? (
             <p className={styles.weatherNote}>
               Loading {sourceName.toLowerCase()}…
@@ -348,41 +273,159 @@ export function SiteMap({
           ) : null}
         </div>
       ) : null}
-      <ul className={styles.legend}>
+    </>
+  );
+  const legendEl = (
+    <ul
+      id={fill ? legendId : undefined}
+      className={cx(styles.legend, fill && styles.legendPop)}
+    >
+      <li>
+        <span className={styles.pinSample} aria-hidden="true" />
+        Your pin
+      </li>
+      {crew ? (
         <li>
-          <span className={styles.pinSample} aria-hidden="true" />
-          Your pin
+          <span className={styles.crewSample} aria-hidden="true" />
+          Worker (last known)
         </li>
-        {crew ? (
-          <li>
-            <span className={styles.crewSample} aria-hidden="true" />
-            Worker (last known)
-          </li>
-        ) : null}
-        {([1, 2, 3] as Severity[]).map((severity) => (
-          <li key={severity}>
-            <SeverityMark severity={severity} size={14} />
-            {["", "Low", "Moderate", "High"][severity]}
-          </li>
-        ))}
+      ) : null}
+      {([1, 2, 3] as Severity[]).map((severity) => (
+        <li key={severity}>
+          <SeverityMark severity={severity} size={14} />
+          {["", "Low", "Moderate", "High"][severity]}
+        </li>
+      ))}
+      <li className={styles.note}>
+        Dashed ring: {SITE_RADIUS_M} m from site center
+      </li>
+      {sites ? (
+        <li className={styles.note}>Pins: each site’s hazard index, 0 to 10</li>
+      ) : null}
+      {stopWork ? (
         <li className={styles.note}>
-          Dashed ring: {SITE_RADIUS_M} m from site center
+          <span className={styles.stormSample} aria-hidden="true" />
+          Orange ring: lightning stop-work, 10 miles
         </li>
-        {sites ? (
-          <li className={styles.note}>
-            Pins: each site’s hazard index, 0 to 10
-          </li>
-        ) : null}
-        {stopWork ? (
-          <li className={styles.note}>
-            <span className={styles.stormSample} aria-hidden="true" />
-            Orange ring: lightning stop-work, 10 miles
-          </li>
-        ) : null}
-        <li className={`${styles.note} ${styles.keyboardHint}`}>
-          With the map focused, arrow keys move the pin (Shift for 100 m).
-        </li>
-      </ul>
+      ) : null}
+      <li className={`${styles.note} ${styles.keyboardHint}`}>
+        With the map focused, arrow keys move the pin (Shift for 100 m).
+      </li>
+    </ul>
+  );
+
+  return (
+    <Panel
+      id="site-map"
+      className={cx(className, fill && styles.fillPanel)}
+      aria-labelledby={fill ? undefined : "map-title"}
+      aria-label={fill ? `${site.name} map` : undefined}
+    >
+      {fill ? null : (
+        <PanelHeader
+          title={site.name}
+          titleId="map-title"
+          aside={<Badge>1200 m × 800 m</Badge>}
+        />
+      )}
+      {unavailable ? (
+        <div className={styles.placeholder}>
+          The map isn’t available on this device. Use “Use my location” or enter
+          coordinates.
+        </div>
+      ) : (
+        <div className={cx(styles.stage, fill && styles.stageFill)}>
+          <Suspense
+            fallback={<div className={styles.placeholder}>Loading map…</div>}
+          >
+            <MapCanvas
+              site={site}
+              reports={reports}
+              crew={crew}
+              crewFocus={crewFocus}
+              pin={pin}
+              disabled={disabled}
+              highlightId={highlightId}
+              focusRequest={focusRequest}
+              weather={weather}
+              regional={overlay !== "off"}
+              sites={sites}
+              onSelectSite={onSelectSite}
+              stopWork={stopWork}
+              fitStopWork={fitStopWork}
+              fill={fill}
+              onPin={onPin}
+              onUnavailable={() => setUnavailable(true)}
+            />
+          </Suspense>
+          {/* Weather layers float over the map as chips; pressing the active one turns it off. */}
+          <div className={styles.chips}>
+            <div
+              role="group"
+              aria-label="Weather layers"
+              className={styles.chipGroup}
+            >
+              {layerChips.map((chip) => (
+                <button
+                  key={chip.value}
+                  type="button"
+                  className={styles.chip}
+                  aria-pressed={overlay === chip.value}
+                  onClick={() =>
+                    setOverlay(overlay === chip.value ? "off" : chip.value)
+                  }
+                >
+                  <Icon name={chip.icon} size={14} />
+                  {chip.label}
+                </button>
+              ))}
+            </div>
+            {overlay === "rain" ? (
+              <div
+                role="group"
+                aria-label="Rain data"
+                className={styles.chipGroup}
+              >
+                {sourceChips.map((chip) => (
+                  <button
+                    key={chip.value}
+                    type="button"
+                    className={styles.chip}
+                    aria-pressed={rainSource === chip.value}
+                    aria-label={chip.ariaLabel}
+                    onClick={() => setRainSource(chip.value)}
+                  >
+                    {chip.label}
+                  </button>
+                ))}
+              </div>
+            ) : null}
+          </div>
+          {fill ? (
+            <>
+              {weatherEl}
+              <div className={styles.legendBox}>
+                <div hidden={!legendOpen}>{legendEl}</div>
+                <button
+                  type="button"
+                  className={styles.chip}
+                  aria-expanded={legendOpen}
+                  aria-controls={legendId}
+                  onClick={() => setLegendOpen(!legendOpen)}
+                >
+                  Legend
+                </button>
+              </div>
+            </>
+          ) : null}
+        </div>
+      )}
+      {fill ? null : (
+        <>
+          {weatherEl}
+          {legendEl}
+        </>
+      )}
     </Panel>
   );
 }

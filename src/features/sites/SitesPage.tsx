@@ -43,8 +43,8 @@ export function SitesPage({
   lightning: LightningView;
   /** A row was chosen: select that site. */
   onSelectSite: (siteId: string) => void;
-  /** The map, given every site's summary for the pins and the banner to float over it. */
-  renderMap: (sites: SiteSummary[], banner: ReactNode) => ReactNode;
+  /** The map, given every site's summary for the pins. */
+  renderMap: (sites: SiteSummary[]) => ReactNode;
   /** Under the detail (the report form, until it moves into a drawer). */
   children?: ReactNode;
 }) {
@@ -74,10 +74,9 @@ export function SitesPage({
         error={overview.error}
       />
       <div className={styles.map}>
-        {renderMap(
-          overview.sites,
-          <StopWorkBanner siteName={site.name} lightning={lightning} />,
-        )}
+        {/* Not part of the map: the stop-work signal must show even if the map cannot load. */}
+        <StopWorkBanner siteName={site.name} lightning={lightning} />
+        <div className={styles.mapSlot}>{renderMap(overview.sites)}</div>
       </div>
       <div className={styles.detail}>
         <SiteDetail

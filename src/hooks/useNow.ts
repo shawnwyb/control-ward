@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 
-/** The current time in ms, refreshed every second while `active`. */
+/** The current time in ms, refreshed every second while `active`. Fresh on the render that activates it. */
 export function useNow(active: boolean): number {
-  const [now, setNow] = useState(() => Date.now());
+  const [tick, setTick] = useState(0);
   useEffect(() => {
     if (!active) return;
-    setNow(Date.now());
-    const id = setInterval(() => setNow(Date.now()), 1000);
+    const id = setInterval(() => setTick((n) => n + 1), 1000);
     return () => clearInterval(id);
   }, [active]);
-  return now;
+  // Recomputed on every render (the tick forces one a second), so never a stale frame.
+  void tick;
+  return Date.now();
 }

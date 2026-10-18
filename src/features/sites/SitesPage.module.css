@@ -15,7 +15,16 @@
 
 .map {
   grid-area: map;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: var(--space-2);
   min-width: 0;
+  height: min(32rem, 70vh);
+}
+
+.mapSlot {
+  min-width: 0;
+  min-height: 0;
 }
 
 .detail {
@@ -40,10 +49,17 @@
     position: sticky;
     top: var(--space-4);
     grid-row: 1 / span 2;
+    /* The content area's full height. */
+    height: calc(100dvh - 2 * var(--space-4));
+    min-height: 26rem;
   }
 }
 
 /* Map view: the map takes the full width and the ranked list is hidden. */
 .mapView .detail {
   grid-template-columns: minmax(0, 1fr);
+}
+
+.mapView .map {
+  height: min(40rem, calc(100dvh - 8rem));
 }

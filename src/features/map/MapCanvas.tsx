@@ -1,4 +1,4 @@
-import { useEffect, useRef, type KeyboardEvent } from "react";
+import { useEffect, useRef, type KeyboardEvent, useState } from "react";
 import {
   AttributionControl,
   type GeoJSONSource,
@@ -62,6 +62,8 @@ export type MapCanvasProps = {
   stopWork?: boolean;
   /** Frame the whole 10-mile ring once each time the site enters stop-work. */
   fitStopWork?: boolean;
+  /** Fill the container's height instead of the card's 3:2 box. */
+  fill?: boolean;
   onPin: (latitude: number, longitude: number) => void;
   onUnavailable: () => void;
 };
@@ -105,11 +107,13 @@ export default function MapCanvas({
   onSelectSite,
   stopWork = false,
   fitStopWork = false,
+  fill = false,
   onPin,
   onUnavailable,
 }: MapCanvasProps) {
   const container = useRef<HTMLDivElement>(null);
   const map = useRef<MapLibreMap | null>(null);
+  const [mapReady, setMapReady] = useState(false);
   const pinMarker = useRef<Marker | null>(null);
   const hazardMarkers = useRef(
     new Map<string, { marker: Marker; key: string; report: Report }>(),
@@ -197,6 +201,7 @@ export default function MapCanvas({
       return;
     }
     map.current = instance;
+    setMapReady(true);
     instance.touchZoomRotate.disableRotation();
     instance.getCanvas().tabIndex = -1;
     instance.addControl(
@@ -515,7 +520,7 @@ export default function MapCanvas({
       ],
       { padding: 40, duration: reducedMotion() ? 0 : 1000 },
     );
-  }, [stopWork, fitStopWork, site]);
+  }, [stopWork, fitStopWork, site, mapReady]);
 
   // Weather overlay: raster layers follow the frames and the scrubber.
   useEffect(() => {
@@ -728,7 +733,7 @@ export default function MapCanvas({
     <div
       ref={container}
       id="pin-map"
-      className={styles.map}
+      className={fill ? `${styles.map} ${styles.fill}` : styles.map}
       role="application"
       tabIndex={0}
       aria-label="Site pin map. Click to place a pin, or use arrow keys to move it."

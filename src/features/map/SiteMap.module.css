@@ -65,18 +65,13 @@
   position: relative;
 }
 
-.top {
+.chips {
   position: absolute;
   top: var(--space-3);
   left: var(--space-3);
   /* Clear of the zoom buttons on the right. */
   right: calc(var(--tap-min) + var(--space-5));
-  display: grid;
-  gap: var(--space-2);
   pointer-events: none;
-}
-
-.chips {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2);
@@ -180,4 +175,54 @@
 
 .credit {
   margin-left: auto;
+}
+
+/* variant="fill": edge to edge, with the weather scrubber and legend floating on the map. */
+.fillPanel {
+  position: relative;
+  height: 100%;
+  min-height: 22rem;
+  padding: 0;
+  overflow: hidden;
+}
+
+.stageFill {
+  position: absolute;
+  inset: 0;
+}
+
+.weatherFloat {
+  position: absolute;
+  left: var(--space-3);
+  right: calc(var(--tap-min) + var(--space-5));
+  bottom: 4.75rem;
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-card);
+  background: var(--bg);
+  box-shadow: var(--shadow-float);
+}
+
+.legendBox {
+  position: absolute;
+  left: var(--space-3);
+  bottom: 2.25rem;
+  display: grid;
+  gap: var(--space-2);
+  justify-items: start;
+}
+
+.legendPop {
+  margin: 0;
+  padding: var(--space-3);
+  width: min(18rem, 80vw);
+  flex-direction: column;
+  align-items: flex-start;
+  border-radius: var(--radius-card);
+  background: var(--bg);
+  box-shadow: var(--shadow-float);
+}
+
+.legendBox [hidden] {
+  display: none;
 }

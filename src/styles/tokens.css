@@ -29,6 +29,7 @@
   --accent: #2383e2;
   --accent-hover: #0b6ec5;
   --accent-soft: #e7f3f8;
+  --select-tint: rgba(35, 131, 226, 0.08);
 
   /* Floating panels: Notion's layered shadow */
   --shadow-float:

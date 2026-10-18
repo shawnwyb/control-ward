@@ -209,13 +209,19 @@ const slowDown = (siteId: string | null) =>
     : Promise.resolve();
 // ?break=alerts, or window.__mockFlags.breakAlerts at runtime, makes alert reads fail.
 // Created on first use, not at import, so importing this module has no side effects.
-type Flags = { breakAlerts: boolean; breakCrew: boolean };
+type Flags = {
+  breakAlerts: boolean;
+  breakCrew: boolean;
+  /** window.__mockFlags.scores = { "site-jax": 9 } overrides a site's index in the site list (tests re-ranking). */
+  scores: Record<string, number | null>;
+};
 function flags(): Flags {
   const w = window as unknown as { __mockFlags?: Flags };
   return (w.__mockFlags ??= {
     breakAlerts: params.get("break") === "alerts",
     // ?break=crew pretends the crew-assignment migration has not been applied.
     breakCrew: params.get("break") === "crew",
+    scores: {},
   });
 }
 
@@ -933,7 +939,9 @@ async function handle(
       sites
         .filter((site) => accounts[email].includes(site.id))
         .map((site) => {
-          const risk = scores[site.id] ?? null;
+          const override = flags().scores[site.id];
+          const risk =
+            override !== undefined ? override : (scores[site.id] ?? null);
           const struck = alerts.find(
             (a) =>
               a.site_id === site.id &&

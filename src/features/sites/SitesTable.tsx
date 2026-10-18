@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
 import { Icon, IndexTag, cx } from "../../components/ui";
 import { rankSites, topHazards, type SiteSummary } from "../../lib/sites";
 import { hazardInfo } from "./hazards";
@@ -26,8 +26,8 @@ const reduced = () =>
 
 /**
  * Notion-style database view of every site, ranked by hazard index. Rows are buttons.
- * They sit in a stable DOM order (by name) and are positioned by rank, so a re-rank moves
- * the same elements and the `top` transition animates them.
+ * Rows are in rank order in the DOM (reading and Tab order match the screen); a re-rank
+ * slides them to their new places (FLIP), unless the user prefers reduced motion.
  */
 export function SitesTable({
   sites,
@@ -39,19 +39,45 @@ export function SitesTable({
   error,
   className,
 }: Props) {
-  const rank = useMemo(() => {
-    const map = new Map<string, number>();
-    rankSites(sites).forEach((site, index) => map.set(site.siteId, index));
-    return map;
-  }, [sites]);
-  const stable = useMemo(
-    () =>
-      [...sites].sort(
-        (a, b) =>
-          a.name.localeCompare(b.name) || a.siteId.localeCompare(b.siteId),
-      ),
-    [sites],
-  );
+  // Rows are in rank order in the DOM, so reading and Tab order match what is on screen.
+  const ranked = useMemo(() => rankSites(sites), [sites]);
+  const order = ranked.map((site) => site.siteId).join("|");
+  const rank = new Map(ranked.map((site, index) => [site.siteId, index]));
+
+  // FLIP: when the ranking changes, each row starts at its old place and slides to the new one.
+  const list = useRef<HTMLUListElement>(null);
+  const tops = useRef(new Map<string, number>());
+  const lastFocus = useRef<{ id: string; at: number } | null>(null);
+  useLayoutEffect(() => {
+    const el = list.current;
+    if (!el) return;
+    const items = [...el.children] as HTMLLIElement[];
+    const animate = !reduced();
+    for (const item of items) {
+      const id = item.dataset.id!;
+      const before = tops.current.get(id);
+      if (animate && before !== undefined && before !== item.offsetTop)
+        item.animate(
+          [
+            { transform: `translateY(${before - item.offsetTop}px)` },
+            { transform: "none" },
+          ],
+          { duration: 700, easing: "cubic-bezier(0.3, 1.4, 0.5, 1)" },
+        );
+      tops.current.set(id, item.offsetTop);
+    }
+    // Moving a DOM node drops its focus; give it back to the row that just had it.
+    const lost = lastFocus.current;
+    if (
+      lost &&
+      Date.now() - lost.at < 100 &&
+      document.activeElement === document.body
+    )
+      items
+        .find((item) => item.dataset.id === lost.id)
+        ?.querySelector("button")
+        ?.focus({ preventScroll: true });
+  }, [order]);
   const failed = error !== null && sites.length === 0;
 
   // A pin picked on the map may be off screen in a long list.
@@ -127,65 +153,72 @@ export function SitesTable({
             <p className={styles.state}>No sites to show yet.</p>
           ) : (
             <div ref={body} className={styles.body}>
-              <div
-                className={styles.rows}
-                style={{ height: sites.length * ROW_H }}
-              >
-                {stable.map((site) => {
+              <ul ref={list} className={styles.rows} role="list">
+                {ranked.map((site) => {
                   const hazards = topHazards(site.subscores, 2);
                   const top = hazards[0];
                   return (
-                    <button
-                      key={site.siteId}
-                      type="button"
-                      className={cx(
-                        styles.row,
-                        site.siteId === selectedId && styles.selected,
-                      )}
-                      style={{ top: (rank.get(site.siteId) ?? 0) * ROW_H }}
-                      aria-current={
-                        site.siteId === selectedId ? "true" : undefined
-                      }
-                      onClick={() => onSelect(site.siteId)}
-                    >
-                      <span className={styles.name}>
-                        <Icon
-                          name={top ? hazardInfo[top].icon : "tower"}
-                          size={16}
-                        />
-                        <span className={styles.nameText}>{site.name}</span>
-                      </span>
-                      <span className={styles.index}>
-                        <IndexTag value={site.riskNow} />
-                      </span>
-                      <span className={styles.hazards}>
-                        {hazards.map((key) => (
-                          <span
-                            key={key}
-                            className={cx(
-                              styles.tag,
-                              styles[`tag_${hazardInfo[key].tag}`],
-                            )}
-                          >
-                            {hazardInfo[key].name === "Severe weather"
-                              ? "Weather"
-                              : hazardInfo[key].name}
-                          </span>
-                        ))}
-                      </span>
-                      <span
+                    <li key={site.siteId} data-id={site.siteId}>
+                      <button
+                        type="button"
                         className={cx(
-                          styles.alerts,
-                          site.activeAlerts > 0 && styles.alertsOn,
+                          styles.row,
+                          site.siteId === selectedId && styles.selected,
                         )}
-                        aria-label={`${site.activeAlerts} active alerts`}
+                        aria-current={
+                          site.siteId === selectedId ? "true" : undefined
+                        }
+                        onClick={() => onSelect(site.siteId)}
+                        onBlur={() =>
+                          (lastFocus.current = {
+                            id: site.siteId,
+                            at: Date.now(),
+                          })
+                        }
                       >
-                        {site.activeAlerts}
-                      </span>
-                    </button>
+                        <span className={styles.name}>
+                          <Icon
+                            name={top ? hazardInfo[top].icon : "tower"}
+                            size={16}
+                          />
+                          <span className={styles.nameText}>{site.name}</span>
+                        </span>
+                        <span className={styles.index}>
+                          <IndexTag value={site.riskNow} />
+                        </span>
+                        <span className={styles.hazards}>
+                          {hazards.map((key) => (
+                            <span
+                              key={key}
+                              className={cx(
+                                styles.tag,
+                                styles[`tag_${hazardInfo[key].tag}`],
+                              )}
+                            >
+                              {hazardInfo[key].name === "Severe weather"
+                                ? "Weather"
+                                : hazardInfo[key].name}
+                            </span>
+                          ))}
+                        </span>
+                        <span
+                          className={cx(
+                            styles.alerts,
+                            site.activeAlerts > 0 && styles.alertsOn,
+                          )}
+                        >
+                          <span aria-hidden="true">{site.activeAlerts}</span>
+                          <span className={styles.sr}>
+                            {site.activeAlerts === 1
+                              ? "1 active alert"
+                              : `${site.activeAlerts} active alerts`}
+                          </span>
+                        </span>
+                      </button>
+                    </li>
                   );
                 })}
-              </div>
+              </ul>
             </div>
           )}
         </>
