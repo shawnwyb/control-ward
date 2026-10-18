@@ -15,10 +15,9 @@ import {
   type HourResult,
   type Overrides,
 } from "./taskPlan";
+import { FIRST_HOUR, LAST_HOUR } from "./hours";
 import styles from "./NextDayReport.module.css";
 
-const FIRST_HOUR = 5;
-const LAST_HOUR = 20;
 const storeKey = (eia: string) => `planit.tasklimits.v1.${eia}`;
 
 // Saved limits are a per-device convenience. Storage can be blocked or empty, so every access is guarded.

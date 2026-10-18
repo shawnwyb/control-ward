@@ -332,6 +332,40 @@ export type TasksSection = Base & {
   note: string;
 };
 
+export type WildlifeSection = Base & {
+  radius_km?: number;
+  days?: number;
+  season_radius_km?: number;
+  recent_total?: number;
+  recent_shown?: number;
+  obscured_not_drawn?: number;
+  groups?: {
+    id: string;
+    label: string;
+    recent: number;
+    season: {
+      label: string;
+      month: number;
+      this_month: number;
+      year_total: number;
+      months: number[];
+    };
+  }[];
+  map_file?: string | null;
+  caveats?: string[];
+  source?: { name: string; url: string; note: string };
+};
+
+export type RoutingSection = Base & {
+  graph_file?: string | null;
+  edges?: number;
+  rated_edges?: number;
+  radius_m?: number;
+  tide_wet_edges?: number;
+  caveats?: string[];
+  source?: { name: string; url: string };
+};
+
 export type Gap = { section: string; status: SectionStatus; reason: string };
 
 export type NextDayReport = {
@@ -368,6 +402,8 @@ export type NextDayReport = {
   hourly: HourRow[];
   changes?: ChangesSection;
   tasks?: TasksSection;
+  wildlife?: WildlifeSection;
+  routing?: RoutingSection;
   limits: string[];
   gaps: Gap[];
 };

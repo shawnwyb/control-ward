@@ -140,6 +140,12 @@ function seedSite(siteId: string, entries: Seed[]): Report[] {
 }
 
 const reports: Report[] = [
+  // Crew mud and wildlife reports near the sample report's flagged routes (Next-day report tab).
+  ...seedSite("site-turkey-point", [
+    ["mud", 2, 2, 90, 400, -300],
+    ["mud", 3, 1, 30, -500, 100],
+    ["wildlife", 2, 1, 200, 150, 450],
+  ]),
   ...seedSite("site-north", [
     ["downed_line", 3, 4, 20, 90, -140],
     ["wildlife", 2, 1, 180, -60, 220],
@@ -1016,14 +1022,16 @@ async function handle(
                 "National Weather Service flood statements and hydrologic updates indicate rising river levels and saturated drainage basins across the plant perimeter following heavy antecedent rainfall.",
               articles: [
                 {
-                  title: "Regional River Basin Flood Advisory and Water Level Updates",
+                  title:
+                    "Regional River Basin Flood Advisory and Water Level Updates",
                   url: "https://water.weather.gov/ahps",
                   source: "weather.gov",
                   snippet:
                     "Elevated gauge readings and localized road ponding active across low-lying access corridors.",
                 },
                 {
-                  title: "Heavy Rainfall Prompts Flood Watches and Travel Advisories",
+                  title:
+                    "Heavy Rainfall Prompts Flood Watches and Travel Advisories",
                   url: "https://www.localnews.com/weather/flood-watch",
                   source: "localnews.com",
                   snippet:

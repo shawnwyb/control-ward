@@ -221,3 +221,82 @@ test("changes since the earlier report are listed, or reported as none", async (
     page.getByText("The verdict got worse: from Go to Go with limits."),
   ).toBeVisible();
 });
+
+test("wildlife shows public sightings with the reporting caveat, and counts crew reports", async ({
+  page,
+}) => {
+  await openReport(page);
+  const wildlife = page.locator("#wildlife");
+  await expect(wildlife).toContainText("American alligator");
+  await expect(wildlife).toContainText("No sightings does not mean no animals");
+  await expect(wildlife).toContainText("iNaturalist");
+  // the mock site has one open crew wildlife report
+  await expect(wildlife).toContainText("1 open wildlife report(s)");
+});
+
+test("crew mud and wildlife reports appear as a map layer that can be turned off", async ({
+  page,
+}) => {
+  await openReport(page);
+  const crew = page
+    .locator("#routes")
+    .getByRole("checkbox", { name: "Crew reports" });
+  await expect(crew).toBeEnabled();
+  await expect(crew).toBeChecked();
+  await expect(page.locator("#routes")).toContainText(
+    "Orange dot: crew mud report",
+  );
+});
+
+test("the detour planner takes two clicks and explains the result in words", async ({
+  page,
+}) => {
+  await openReport(page);
+  const routes = page.locator("#routes");
+  await routes
+    .getByRole("button", { name: "Pick start and end on the map" })
+    .click();
+  await expect(routes.getByRole("status")).toContainText(
+    "Click the start point",
+  );
+  const map = routes.getByRole("img", { name: /Map of flagged routes/ });
+  const box = (await map.boundingBox())!;
+  await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
+  await expect(routes.getByRole("status")).toContainText(
+    "Now click the end point",
+  );
+  await page.mouse.click(
+    box.x + box.width / 2 + 90,
+    box.y + box.height / 2 + 70,
+  );
+  // either a path is described, or the planner says plainly that no road is near the click
+  await expect(
+    routes
+      .getByText(/Direct route|more than 400 m from any mapped road/)
+      .first(),
+  ).toBeVisible();
+  await routes.getByRole("button", { name: "Clear" }).click();
+  await expect(routes.getByText("Direct route")).toHaveCount(0);
+  // the planner's limits are stated
+  await expect(routes).toContainText("Check it on the ground");
+});
+
+test("a report without road data says why detours are unavailable", async ({
+  page,
+}) => {
+  const rep = sample("621");
+  rep.routing = {
+    status: "missing",
+    reason: "overpass_roads_621: ReadTimeout",
+  };
+  await page.route("**/reports/621/latest.json", (route) =>
+    route.fulfill({ json: rep }),
+  );
+  await openReport(page);
+  await expect(page.locator("#routes")).toContainText(
+    "Detours: overpass_roads_621: ReadTimeout",
+  );
+  await expect(
+    page.getByRole("button", { name: "Pick start and end on the map" }),
+  ).toHaveCount(0);
+});

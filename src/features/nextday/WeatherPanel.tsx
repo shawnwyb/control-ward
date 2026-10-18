@@ -7,10 +7,8 @@ import {
   type NwsAlert,
 } from "../../lib/nextDayReport";
 import { HourStrip } from "./HourStrip";
+import { FIRST_HOUR, LAST_HOUR } from "./hours";
 import styles from "./NextDayReport.module.css";
-
-const FIRST_HOUR = 5;
-const LAST_HOUR = 20;
 
 function Alerts({ alerts, empty }: { alerts: NwsAlert[]; empty: string }) {
   if (!alerts.length) return <p className={styles.muted}>{empty}</p>;

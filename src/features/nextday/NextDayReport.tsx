@@ -5,6 +5,8 @@ import {
   clockFromHHMM,
   type NextDayReport as Report,
 } from "../../lib/nextDayReport";
+import { useNotice } from "../../hooks/notice";
+import { useSiteFeed } from "../../hooks/useSiteFeed";
 import type { Site } from "../../lib/types";
 import { AirPanel } from "./AirPanel";
 import { FloodPanel } from "./FloodPanel";
@@ -14,6 +16,7 @@ import { HeatPanel } from "./HeatPanel";
 import { RoutePanel } from "./RoutePanel";
 import { TaskPlanner } from "./TaskPlanner";
 import { WeatherPanel } from "./WeatherPanel";
+import { WildlifePanel } from "./WildlifePanel";
 import { useReport } from "./useReport";
 import styles from "./NextDayReport.module.css";
 
@@ -114,6 +117,9 @@ function Changes({ report }: { report: Report }) {
 export function NextDayReport({ site }: { site: Site }) {
   const eia = site.eia_plant_id;
   const result = useReport(eia);
+  const { announce } = useNotice();
+  // Open crew reports (mud and wildlife) are drawn on the map next to the report's own layers.
+  const feed = useSiteFeed(site.id, (message) => announce(message, true));
 
   if (!eia)
     return (
@@ -159,13 +165,14 @@ export function NextDayReport({ site }: { site: Site }) {
         <HeatPanel report={report} />
         <WeatherPanel report={report} />
       </div>
-      <RoutePanel report={report} />
+      <RoutePanel report={report} crewReports={feed.reports} />
       <TaskPlanner report={report} />
       <div className={styles.cols}>
         <FloodPanel report={report} />
         <div className={styles.stack}>
           <HazardIndexPanel report={report} />
           <AirPanel report={report} />
+          <WildlifePanel report={report} crewReports={feed.reports} />
         </div>
       </div>
       <GapsPanel report={report} />

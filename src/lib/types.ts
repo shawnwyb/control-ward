@@ -30,6 +30,7 @@ export const hazardLabels: Record<HazardType, string> = {
   downed_line: "Downed line",
   washout: "Washout",
   other: "Other",
+  mud: "Mud or rut",
 };
 
 export const severityLabels: Record<Severity, string> = {

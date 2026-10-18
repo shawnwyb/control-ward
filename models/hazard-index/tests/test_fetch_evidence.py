@@ -169,6 +169,41 @@ class FetchEvidenceTest(unittest.TestCase):
             self.assertIn("https://news.weather.gov/rivers", urls)
             self.assertIn("https://apnews.com/article/flooding", urls)
 
+    def test_clean_vertex_redirect_urls(self):
+        art = {
+            "title": "weather.gov",
+            "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQHcBMF...",
+            "source": "vertexaisearch.cloud.google.com",
+            "snippet": ""
+        }
+        cleaned = fetch_evidence._clean_article(art)
+        self.assertEqual(cleaned["source"], "weather.gov")
+        self.assertEqual(cleaned["url"], "https://weather.gov")
+        self.assertIn("weather.gov", cleaned["title"])
+
+    def test_truncated_json_summary_parsing(self):
+        # Truncated JSON mid-sentence
+        data = {
+            "candidates": [{
+                "content": {
+                    "parts": [{
+                        "text": '{\n  "summary": "The National Weather Service noted severe wind gusts and rain in the area'
+                    }]
+                },
+                "groundingMetadata": {
+                    "groundingChunks": [
+                        {"web": {"uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/XYZ", "title": "cbsnews.com"}}
+                    ]
+                }
+            }]
+        }
+        res = fetch_evidence._parse_gemini_response(data)
+        self.assertFalse(res["summary"].startswith("{"))
+        self.assertIn("The National Weather Service noted severe wind gusts", res["summary"])
+        self.assertEqual(res["articles"][0]["source"], "cbsnews.com")
+        self.assertEqual(res["articles"][0]["url"], "https://cbsnews.com")
+
 
 if __name__ == "__main__":
     unittest.main()
+

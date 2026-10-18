@@ -17,12 +17,14 @@
 # Set PYTHON to use another interpreter (default: the repository's .venv).
 set -euo pipefail
 
-HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR=$(dirname "${BASH_SOURCE[0]}")
+HERE=$(cd "$SCRIPT_DIR" && pwd)
 SELF="$HERE/$(basename "${BASH_SOURCE[0]}")"
-REPO="$(cd "$HERE/../.." && pwd)"
+REPO=$(cd "$HERE/../.." && pwd)
 PY="${PYTHON:-$REPO/.venv/bin/python}"
 export NEXTDAY_CALLER_PWD="$PWD"   # relative paths given on the command line still resolve after the cd
-# nextday itself, the hazard-index package (heat, localtime, sites) and the NLD fetcher (nld_fetch.NLDClient)
+
+# nextday itself, the hazard-index package: heat, localtime, sites; and the NLD fetcher: nld_fetch.NLDClient
 export PYTHONPATH="$HERE:$REPO/models/hazard-index:$REPO/data/flood-data${PYTHONPATH:+:$PYTHONPATH}"
 cd "$HERE"
 

@@ -42,7 +42,7 @@ class StubFetcher(Fetcher):
                 return data
         raise SourceUnavailable(f"stub has no payload for '{key}'")
 
-    def get_json(self, key, url, params=None, *, retries=3):
+    def get_json(self, key, url, params=None, *, retries=3, timeout=None):
         data = self._find(key)
         self.sources[key] = {"url": url, "fetched_at": "2026-10-18T22:00:00Z"}
         return data

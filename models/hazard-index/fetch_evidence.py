@@ -30,7 +30,7 @@ from urllib.parse import urlparse
 from hazidx import paths
 from hazidx.sites import load_sites
 
-DEFAULT_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.0-flash")
+DEFAULT_MODEL = os.getenv("GEMINI_MODEL", "gemini-3.8-flash")
 EVIDENCE_DIR = paths.ARTIFACTS / "evidence"
 SITES_NWS_PATH = paths.ARTIFACTS / "sites_nws.json"
 DEFAULT_TIMEOUT = 90
@@ -91,9 +91,9 @@ def build_search_prompt(row: dict, nws_info: dict) -> str:
         f"Search for recent local news articles, emergency advisories, or official NWS / weather incident reports concerning {hazard_desc} "
         f"affecting {county} County or the surrounding {state} region around {local_date}.\n\n"
         f"Requirements:\n"
-        f"1. Provide a concise, factual 2-3 sentence summary explaining the local situation and backing evidence for the {driver} hazard.\n"
-        f"2. Use Google Search to cite real local news sources and advisories.\n"
-        f"3. Return ONLY a valid JSON object in this exact shape:\n"
+        f"1. Provide a concise, factual 2-3 sentence summary (under 80 words) explaining the local situation and backing evidence for the {driver} hazard.\n"
+        f"2. Use Google Search to cite real local news sources and advisories. In the articles array, provide the real canonical public website URLs (such as https://www.weather.gov/... or https://www.cbsnews.com/...), NOT google or vertex redirect links.\n"
+        f"3. Return ONLY a valid, complete JSON object in this exact shape:\n"
         f"{{\n"
         f'  "summary": "2-3 sentences summarizing the local conditions and news reports.",\n'
         f'  "articles": [\n'
@@ -104,87 +104,186 @@ def build_search_prompt(row: dict, nws_info: dict) -> str:
     return prompt
 
 
+def _clean_article(art: dict) -> dict:
+    title = (art.get("title") or "").strip()
+    url = (art.get("url") or "").strip()
+    source = (art.get("source") or "").strip()
+    snippet = (art.get("snippet") or "").strip()
+
+    # Clean up vertexaisearch redirect URLs
+    if "vertexaisearch.cloud.google.com" in url:
+        if re.match(r"^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", title):
+            source = title
+            url = f"https://{title}"
+            title = f"{source} Local Hazard Advisory"
+        elif source and source != "vertexaisearch.cloud.google.com":
+            url = f"https://{source}" if not source.startswith("http") else source
+        else:
+            source = "Weather & News Service"
+
+    if not source or source == "vertexaisearch.cloud.google.com":
+        domain = urlparse(url).netloc.replace("www.", "")
+        source = domain if domain and "vertexaisearch" not in domain else "News Advisory"
+
+    return {
+        "title": title or f"{source} Report",
+        "url": url,
+        "source": source,
+        "snippet": snippet,
+    }
+
+
+def _parse_gemini_response(data: dict) -> dict:
+    text_content = ""
+    extracted_articles = []
+
+    # 1. generateContent structure
+    if "candidates" in data:
+        candidate = data["candidates"][0] if data["candidates"] else {}
+        parts = candidate.get("content", {}).get("parts", [])
+        text_content = "".join(p.get("text", "") for p in parts)
+        grounding = candidate.get("groundingMetadata", {})
+        for chunk in grounding.get("groundingChunks", []):
+            web = chunk.get("web", {})
+            uri = web.get("uri")
+            title = web.get("title")
+            if uri:
+                domain = urlparse(uri).netloc.replace("www.", "")
+                extracted_articles.append({
+                    "title": title or domain,
+                    "url": uri,
+                    "source": domain,
+                    "snippet": ""
+                })
+
+    # 2. Interactions API structure
+    elif "steps" in data:
+        steps = data.get("steps", [])
+        for step in steps:
+            for c in step.get("content", []):
+                if c.get("type") == "text":
+                    text_content += c.get("text", "")
+                for ann in c.get("annotations", []):
+                    uri = ann.get("url") or ann.get("uri")
+                    title = ann.get("title")
+                    if uri:
+                        domain = urlparse(uri).netloc.replace("www.", "")
+                        extracted_articles.append({
+                            "title": title or domain,
+                            "url": uri,
+                            "source": domain,
+                            "snippet": ""
+                        })
+
+    summary = ""
+    json_articles = []
+
+    # Try standard JSON parsing
+    try:
+        cleaned_text = re.sub(r"^```(?:json)?\s*|\s*```$", "", text_content.strip(), flags=re.MULTILINE)
+        parsed = json.loads(cleaned_text)
+        if isinstance(parsed, dict):
+            summary = str(parsed.get("summary") or "")
+            if isinstance(parsed.get("articles"), list):
+                json_articles = parsed["articles"]
+    except Exception:
+        pass
+
+    # Regex extraction fallback if JSON was truncated or malformed
+    if not summary or summary.lstrip().startswith("{") or '"summary"' in summary:
+        sm = re.search(r'"summary"\s*:\s*"((?:[^"\\]|\\.)*)', text_content)
+        if sm:
+            summary = sm.group(1).replace('\\"', '"').replace('\\n', ' ').strip()
+        elif text_content:
+            clean = re.sub(r'^\s*\{\s*"summary"\s*:\s*"?', '', text_content)
+            clean = re.sub(r'"?\s*,?\s*"articles".*$', '', clean, flags=re.DOTALL)
+            summary = clean.strip().strip('"').strip()[:400]
+
+    if not summary:
+        summary = "Backing news reports retrieved for local site area."
+
+    # If json_articles wasn't parsed (e.g. truncated), try extracting individual article objects
+    if not json_articles:
+        for m in re.finditer(r'\{\s*"title"\s*:\s*"([^"]+)"\s*,\s*"url"\s*:\s*"([^"]+)"(?:[^{}]*?"source"\s*:\s*"([^"]*)")?(?:[^{}]*?"snippet"\s*:\s*"([^"]*)")?', text_content):
+            json_articles.append({
+                "title": m.group(1),
+                "url": m.group(2),
+                "source": m.group(3) or urlparse(m.group(2)).netloc.replace("www.", ""),
+                "snippet": m.group(4) or ""
+            })
+
+    # Combine articles, prioritizing real canonical URLs over raw grounding redirect chunks
+    combined = []
+    seen_urls = set()
+    for raw_art in json_articles + extracted_articles:
+        art = _clean_article(raw_art)
+        url = art.get("url")
+        if url and url not in seen_urls:
+            seen_urls.add(url)
+            combined.append(art)
+
+    return {"summary": summary, "articles": combined[:5]}
+
+
 def query_gemini_search(prompt: str, api_key: str, model: str = DEFAULT_MODEL, timeout: int = DEFAULT_TIMEOUT) -> dict:
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={api_key}"
-    payload = {
+    # Attempt 1: Standard generateContent endpoint
+    url_gc = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={api_key}"
+    payload_gc = {
         "contents": [{"role": "user", "parts": [{"text": prompt}]}],
         "tools": [{"google_search": {}}],
         "generationConfig": {
             "temperature": 0.2,
-            "maxOutputTokens": 2048,
+            "maxOutputTokens": 4096,
         }
     }
-    req = urllib.request.Request(
-        url,
-        data=json.dumps(payload).encode("utf-8"),
+    req_gc = urllib.request.Request(
+        url_gc,
+        data=json.dumps(payload_gc).encode("utf-8"),
         headers={
             "Content-Type": "application/json",
             "User-Agent": "planit-hazard-evidence/1.0"
         }
     )
     try:
-        with urllib.request.urlopen(req, timeout=timeout) as resp:
+        with urllib.request.urlopen(req_gc, timeout=timeout) as resp:
             data = json.loads(resp.read().decode("utf-8"))
+            return _parse_gemini_response(data)
     except urllib.error.HTTPError as exc:
         err_msg = exc.read().decode("utf-8", errors="replace")
-        raise RuntimeError(f"Gemini API error ({exc.code}) on model {model}: {err_msg[:300]}") from exc
+        if "Interactions" not in err_msg and exc.code not in (400, 404):
+            raise RuntimeError(f"Gemini API error ({exc.code}) on model {model}: {err_msg[:300]}") from exc
+
+    # Attempt 2: Interactions API endpoint (recommended by Google for gemini-3.8-flash)
+    url_int = f"https://generativelanguage.googleapis.com/v1beta/interactions?key={api_key}"
+    payload_int = {
+        "model": model,
+        "input": prompt,
+        "store": False,
+        "tools": [{"type": "google_search"}],
+        "generation_config": {
+            "temperature": 0.2,
+            "max_output_tokens": 4096
+        }
+    }
+    req_int = urllib.request.Request(
+        url_int,
+        data=json.dumps(payload_int).encode("utf-8"),
+        headers={
+            "Content-Type": "application/json",
+            "User-Agent": "planit-hazard-evidence/1.0"
+        }
+    )
+    try:
+        with urllib.request.urlopen(req_int, timeout=timeout) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+            return _parse_gemini_response(data)
+    except urllib.error.HTTPError as exc:
+        err_msg = exc.read().decode("utf-8", errors="replace")
+        raise RuntimeError(f"Gemini Interactions API error ({exc.code}) on model {model}: {err_msg[:300]}") from exc
     except (TimeoutError, urllib.error.URLError) as exc:
         raise RuntimeError(f"Gemini query timed out after {timeout}s on model {model}") from exc
 
-    candidates = data.get("candidates", [])
-    if not candidates:
-        return {"summary": "No candidates returned from Gemini search.", "articles": []}
 
-    candidate = candidates[0]
-    parts = candidate.get("content", {}).get("parts", [])
-    text_content = "".join(p.get("text", "") for p in parts)
-
-    # Extract grounding metadata
-    grounding = candidate.get("groundingMetadata", {})
-    grounding_chunks = grounding.get("groundingChunks", [])
-    extracted_articles = []
-    for chunk in grounding_chunks:
-        web = chunk.get("web", {})
-        uri = web.get("uri")
-        title = web.get("title")
-        if uri:
-            domain = urlparse(uri).netloc.replace("www.", "")
-            extracted_articles.append({
-                "title": title or domain,
-                "url": uri,
-                "source": domain,
-                "snippet": ""
-            })
-
-    # Try parsing json from text
-    summary = "Backing news reports retrieved for local site area."
-    json_articles = []
-    try:
-        cleaned_text = re.sub(r"^```json\s*|\s*```$", "", text_content.strip(), flags=re.MULTILINE)
-        parsed = json.loads(cleaned_text)
-        if isinstance(parsed, dict):
-            summary = parsed.get("summary", summary)
-            if isinstance(parsed.get("articles"), list):
-                json_articles = parsed["articles"]
-    except Exception:
-        if text_content:
-            summary = text_content[:500]
-
-    # Combine articles
-    combined = []
-    seen_urls = set()
-    for a in json_articles + extracted_articles:
-        url = a.get("url")
-        if url and url not in seen_urls:
-            seen_urls.add(url)
-            combined.append({
-                "title": a.get("title") or urlparse(url).netloc,
-                "url": url,
-                "source": a.get("source") or urlparse(url).netloc.replace("www.", ""),
-                "snippet": a.get("snippet", "")
-            })
-
-    return {"summary": summary, "articles": combined[:5]}
 
 
 def mock_evidence_for_row(row: dict, nws_info: dict) -> dict:

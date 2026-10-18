@@ -8,10 +8,8 @@ import {
 } from "../../lib/nextDayReport";
 import { BAND_SEVERITY, bandRange } from "./bands";
 import { HourStrip, type StripCell } from "./HourStrip";
+import { FIRST_HOUR, LAST_HOUR } from "./hours";
 import styles from "./NextDayReport.module.css";
-
-const FIRST_HOUR = 5;
-const LAST_HOUR = 20;
 
 export function HeatPanel({ report }: { report: NextDayReport }) {
   const heat: HeatSection = report.heat;
