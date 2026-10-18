@@ -175,6 +175,8 @@ export function SiteMap({
     if (!legendOpen) return;
     const onKey = (event: KeyboardEvent) => {
       if (event.key !== "Escape") return;
+      // One Escape closes only the topmost layer: this runs first (capture) and marks it handled.
+      event.preventDefault();
       setLegendOpen(false);
       legendButton.current?.focus();
     };
@@ -182,10 +184,10 @@ export function SiteMap({
       if (!legendBox.current?.contains(event.target as Node))
         setLegendOpen(false);
     };
-    document.addEventListener("keydown", onKey);
+    document.addEventListener("keydown", onKey, true);
     document.addEventListener("pointerdown", onDown);
     return () => {
-      document.removeEventListener("keydown", onKey);
+      document.removeEventListener("keydown", onKey, true);
       document.removeEventListener("pointerdown", onDown);
     };
   }, [legendOpen]);

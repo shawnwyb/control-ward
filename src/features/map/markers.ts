@@ -125,7 +125,7 @@ export function hazardCardElement(report: Report): HTMLElement {
 
 export function pinMarkerElement(): HTMLElement {
   const element = document.createElement("div");
-  element.className = styles.pin;
+  element.className = `${styles.pin} report-pin`;
   element.innerHTML = `<span></span>`;
   return element;
 }

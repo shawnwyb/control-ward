@@ -178,6 +178,9 @@ export function SiteWorkspace({
       setLocating("denied");
     };
     setReportOpen(true);
+    // On a phone the sheet covers the bottom of the screen: bring the map to the top of it.
+    if (window.innerWidth < 768)
+      document.getElementById("site-map")?.scrollIntoView({ block: "start" });
     if (!navigator.geolocation) return toCenter();
     setLocating("pending");
     navigator.geolocation.getCurrentPosition(
@@ -202,7 +205,7 @@ export function SiteWorkspace({
   function placePin(latitude: number, longitude: number) {
     locateToken.current++;
     setAccuracyFt(undefined);
-    setLocating((current) => (current === "pending" ? "idle" : current));
+    setLocating("idle");
     setPin(latitude, longitude);
   }
 

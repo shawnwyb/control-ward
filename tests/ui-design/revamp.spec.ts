@@ -687,14 +687,19 @@ test("report: Esc and the close button close the drawer and focus returns", asyn
   await drawer.getByRole("button", { name: "Close" }).click();
   await expect(drawer).toBeHidden();
   await expect(open).toBeFocused();
-  // Focus stays inside while open.
+  // Not a trap: focus moves in on open, and Shift+Tab can still reach the map.
   await open.click();
-  for (let i = 0; i < 25; i++) {
-    await page.keyboard.press("Tab");
-    expect(
-      await drawer.evaluate((node) => node.contains(document.activeElement)),
-    ).toBe(true);
+  await expect(
+    drawer.getByRole("heading", { name: "Report a hazard" }),
+  ).toBeFocused();
+  let reachedMap = false;
+  for (let i = 0; i < 40 && !reachedMap; i++) {
+    await page.keyboard.press("Shift+Tab");
+    reachedMap = await page.evaluate(
+      () => document.activeElement?.id === "pin-map",
+    );
   }
+  expect(reachedMap).toBe(true);
 });
 
 test("report: location denied falls back to site center", async ({ page }) => {
@@ -791,3 +796,44 @@ test("report: switching site closes drawer and discards photo", async ({
   await expect(drawer.getByText("gator.png")).toHaveCount(0);
   await expect(drawer.getByRole("radio", { name: /Debris/ })).toBeChecked();
 });
+
+for (const [name, size] of [
+  ["1280x800", { width: 1280, height: 800 }],
+  ["390x844", { width: 390, height: 844 }],
+] as const) {
+  test(`report: the pin is visible and not covered by the drawer (${name})`, async ({
+    page,
+    context,
+  }) => {
+    await context.grantPermissions(["geolocation"]);
+    await context.setGeolocation({ latitude: 30.36, longitude: -81.62 });
+    await page.setViewportSize(size);
+    await signIn(page, "supervisor@planit.local");
+    await page.getByRole("button", { name: "Report hazard" }).click();
+    const drawer = page.getByRole("dialog", { name: "Report a hazard" });
+    await expect(drawer).toBeVisible();
+    await expect(drawer.getByText(/Pinned at your location/)).toBeVisible();
+    const pin = page.locator(".report-pin");
+    await expect
+      .poll(async () => {
+        const [p, d, m] = await Promise.all([
+          pin.boundingBox(),
+          drawer.boundingBox(),
+          page.locator("#site-map").boundingBox(),
+        ]);
+        if (!p || !d || !m) return false;
+        const overlaps =
+          p.x < d.x + d.width &&
+          p.x + p.width > d.x &&
+          p.y < d.y + d.height &&
+          p.y + p.height > d.y;
+        const inMap =
+          p.x >= m.x &&
+          p.x + p.width <= m.x + m.width &&
+          p.y >= m.y &&
+          p.y + p.height <= m.y + m.height;
+        return inMap && !overlaps;
+      })
+      .toBe(true);
+  });
+}

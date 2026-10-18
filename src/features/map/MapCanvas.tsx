@@ -431,12 +431,57 @@ export default function MapCanvas({
       pinSite.current = site.id;
       return;
     }
-    if (
-      pinActive &&
-      !instance.getBounds().contains([pin.longitude, pin.latitude])
-    )
-      instance.easeTo({ center: [pin.longitude, pin.latitude] });
   }, [pin.latitude, pin.longitude, pinActive, disabled, site.id]);
+
+  // While the report drawer is open, the map treats the area it covers as off-limits: the pin
+  // is brought into the visible part (right of the drawer, or above the phone sheet).
+  const wasPinActive = useRef(false);
+  useEffect(() => {
+    const instance = map.current;
+    const box = container.current;
+    if (!instance || !box || !mapReady) return;
+    const opening = pinActive && !wasPinActive.current;
+    wasPinActive.current = pinActive;
+    const none = { top: 0, right: 0, bottom: 0, left: 0 };
+    let padding = none;
+    if (pinActive) {
+      const rect = box.getBoundingClientRect();
+      if (window.innerWidth >= 768) {
+        // Matches the drawer: min(21rem, pane - 2 gutters), plus its gutter and a margin.
+        const width = Math.min(336, rect.width - 24);
+        padding = { ...none, right: Math.round(width + 24) };
+      } else {
+        // The phone sheet is fixed to the bottom of the screen, at most 55% of its height.
+        const top = window.innerHeight * 0.45;
+        const covered = Math.max(0, rect.bottom - top);
+        padding = {
+          ...none,
+          bottom: Math.round(Math.min(covered, rect.height - 120)),
+        };
+      }
+    }
+    const duration = reducedMotion() ? 0 : 350;
+    const lngLat: [number, number] = [pin.longitude, pin.latitude];
+    if (
+      !pinActive ||
+      !Number.isFinite(pin.latitude) ||
+      !Number.isFinite(pin.longitude)
+    ) {
+      instance.easeTo({ padding, duration });
+      return;
+    }
+    const point = instance.project(lngLat);
+    const inside =
+      point.x >= 30 &&
+      point.x <= box.clientWidth - padding.right - 30 &&
+      point.y >= 30 &&
+      point.y <= box.clientHeight - padding.bottom - 30;
+    instance.easeTo({
+      padding,
+      ...(opening || !inside ? { center: lngLat } : {}),
+      duration,
+    });
+  }, [pinActive, pin.latitude, pin.longitude, mapReady]);
 
   // Score pins for every site; clicking one selects that site.
   useEffect(() => {

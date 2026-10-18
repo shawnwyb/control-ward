@@ -6,7 +6,6 @@ import {
   useState,
   type DragEvent,
   type FormEvent,
-  type KeyboardEvent,
 } from "react";
 import { Button, Icon, RadioCard, SeverityMark, cx } from "../../components/ui";
 import {
@@ -36,21 +35,18 @@ type Props = {
 
 const hazardTypes = Object.keys(hazardLabels) as HazardType[];
 const severities: Severity[] = [1, 2, 3];
-const tabbable =
-  'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])';
-
 function hint(locating: Locating, accuracyFt?: number) {
   if (locating === "denied")
     return "Couldn't get your location. Click the map to place the pin.";
   if (locating === "pending") return "Finding your location…";
   return accuracyFt === undefined
-    ? "Click the map to move the pin."
+    ? "Pin placed on the map · click map to move"
     : `Pinned at your location · ±${accuracyFt} ft · click map to move`;
 }
 
 /**
  * Report a hazard: a panel over the right of the map (a bottom sheet on phones). The map
- * stays usable beside it, so it is a non-modal dialog; focus is kept inside while open.
+ * stays usable beside it, so it is a non-modal dialog: no focus trap (the map must stay reachable).
  */
 export function ReportDrawer({
   open,
@@ -85,22 +81,6 @@ export function ReportDrawer({
     if (!draft.file && fileInput.current) fileInput.current.value = "";
   }, [draft.file]);
 
-  function trap(event: KeyboardEvent) {
-    if (event.key !== "Tab" || !root.current) return;
-    const items = [...root.current.querySelectorAll<HTMLElement>(tabbable)];
-    if (items.length === 0) return;
-    const first = items[0];
-    const last = items[items.length - 1];
-    const active = document.activeElement;
-    if (event.shiftKey && (active === first || active === title.current)) {
-      event.preventDefault();
-      last.focus();
-    } else if (!event.shiftKey && active === last) {
-      event.preventDefault();
-      first.focus();
-    }
-  }
-
   function submit(event: FormEvent) {
     event.preventDefault();
     onSubmit();
@@ -119,12 +99,12 @@ export function ReportDrawer({
       ref={root}
       id="report-drawer"
       role="dialog"
+      aria-modal="false"
       aria-labelledby={titleId}
       aria-describedby={`${titleId}-hint`}
       className={styles.drawer}
       data-open={open || undefined}
       inert={!open}
-      onKeyDown={trap}
     >
       <header className={styles.head}>
         <h2 id={titleId} ref={title} tabIndex={-1} className={styles.title}>
@@ -242,8 +222,13 @@ export function ReportDrawer({
           variant="primary"
           block
           busy={busy}
+          disabled={locating === "pending"}
         >
-          {busy ? "Sending…" : "Send report"}
+          {busy
+            ? "Sending…"
+            : locating === "pending"
+              ? "Finding your location…"
+              : "Send report"}
         </Button>
       </form>
     </aside>
