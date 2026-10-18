@@ -178,7 +178,7 @@ export async function fetchOfficialDocument(
       signal: AbortSignal.any([signal, AbortSignal.timeout(8000)]),
       headers: {
         accept: "text/html,text/plain",
-        "user-agent": "PlanITSiteSafety/2.0",
+        "user-agent": "ControlWardSiteSafety/2.0",
       },
     });
     if ([301, 302, 303, 307, 308].includes(response.status)) {

@@ -356,7 +356,7 @@ test("landing: judges see the pitch and reach sign-in", async ({ page }) => {
 
 test("landing: feature carousel slides", async ({ page }) => {
   await page.goto("/");
-  const region = page.getByRole("region", { name: "What PlanIT Control does" });
+  const region = page.getByRole("region", { name: "What ControlWard does" });
   await region.scrollIntoViewIfNeeded();
   await expect(region.getByRole("listitem")).toHaveCount(6);
   const dot = (n: number) => region.getByRole("button", { name: `Slide ${n}` });
@@ -397,7 +397,7 @@ test("landing: carousel does not auto-advance under reduced motion", async ({
 }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
-  const region = page.getByRole("region", { name: "What PlanIT Control does" });
+  const region = page.getByRole("region", { name: "What ControlWard does" });
   await region.scrollIntoViewIfNeeded();
   await page.mouse.move(2, 2);
   await page.waitForTimeout(6000);
@@ -411,7 +411,7 @@ test("landing: carousel navigation is steady and does not skip", async ({
   page,
 }) => {
   await page.goto("/");
-  const region = page.getByRole("region", { name: "What PlanIT Control does" });
+  const region = page.getByRole("region", { name: "What ControlWard does" });
   await region.scrollIntoViewIfNeeded();
   await page.mouse.move(2, 2);
   const current = () =>
@@ -456,7 +456,7 @@ for (const [width, height] of [
     await page.setViewportSize({ width, height });
     await page.goto("/");
     await page
-      .getByRole("region", { name: "What PlanIT Control does" })
+      .getByRole("region", { name: "What ControlWard does" })
       .scrollIntoViewIfNeeded();
     const overflow = await page.evaluate(
       () => document.documentElement.scrollWidth - window.innerWidth,

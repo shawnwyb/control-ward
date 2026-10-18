@@ -52,7 +52,7 @@ not the filename. Make sure `~/.local/bin` is on `PATH`.
 
 ```sh
 supabase login                               # opens a browser
-supabase projects list                       # find the REFERENCE ID for PlanIT
+supabase projects list                       # find the REFERENCE ID for ControlWard
 supabase link --project-ref <project-ref>    # press Enter past the DB password prompt; not needed
 ```
 

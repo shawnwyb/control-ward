@@ -96,7 +96,7 @@ export function demoProcedure(siteId: string) {
     site_id: siteId,
     category: "company_policy",
     title: "FICTIONAL DEMO — pre-job procedure",
-    issuing_body: "PlanIT demo company (fictional)",
+    issuing_body: "ControlWard demo company (fictional)",
     url: null,
     audience: "crew",
     jurisdiction: "FL",

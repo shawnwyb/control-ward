@@ -14,7 +14,7 @@ import httpx
 
 from . import paths
 
-UA = "planit-next-day-report/0.1 (SwampHacks 2026 hazard report; research use)"
+UA = "controlward-next-day-report/0.1 (SwampHacks 2026 hazard report; research use)"
 
 
 class SourceUnavailable(RuntimeError):

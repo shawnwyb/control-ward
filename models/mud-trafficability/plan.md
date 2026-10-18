@@ -45,7 +45,7 @@ The published hardwood/softwood coefficients are not automatically meaningful fo
 
 The normalized cone index, \(NCI\), incorporates soil strength and machine characteristics, including wheel load, tire dimensions, and tire deflection. Rutting is then related to this machine–ground interaction and the number of passes.
 
-For PlanIT, that means the same location should support different scenarios:
+For ControlWard, that means the same location should support different scenarios:
 
 - Light vehicle versus loaded heavy equipment.
 - A few passes versus repeated mobilization.
@@ -89,7 +89,7 @@ The uploaded paper does not itself include the complete raw training dataset, a 
 
 There are also apparent inconsistencies that should be resolved before exact replication. For example, Table 4 and parts of the results differ in their assignment of flow-initiation-area settings to Blocks 1 and 2. Some field-measurement timing descriptions also need clarification. These are reasons to verify the original data and methods, not to silently choose whichever interpretation produces a better fit.
 
-## 4. How I would adapt it for PlanIT
+## 4. How I would adapt it for ControlWard
 
 ### Phase 1: Reimplement an interpretable STRAM-style baseline
 
@@ -113,7 +113,7 @@ If you replace ForHyM with another moisture model or public moisture product, ca
 
 For your Everglades scenario, explicitly evaluate:
 
-| Study assumption or input | PlanIT adaptation |
+| Study assumption or input | ControlWard adaptation |
 |---|---|
 | Canadian forest cover categories | Actual site cover and disturbance status |
 | Study-specific moisture–strength relationship | Locally measured moisture and cone index |
@@ -159,7 +159,7 @@ Display:
 - Prediction time and forecast window.
 - Whether local measurements support the estimate.
 
-The paper mentions 10 cm and 15 cm rutting criteria used in particular forestry jurisdictions. Those are disturbance-management criteria, not universal vehicle safety or immobilization thresholds. Do not directly convert them into PlanIT stop-work rules. 
+The paper mentions 10 cm and 15 cm rutting criteria used in particular forestry jurisdictions. Those are disturbance-management criteria, not universal vehicle safety or immobilization thresholds. Do not directly convert them into ControlWard stop-work rules.
 
 ## 6. What data would make the adaptation credible?
 
@@ -185,7 +185,7 @@ Then evaluate with entire sites and later periods held out. For the full pipelin
 
 ## Recommended scope
 
-For PlanIT, I would implement a STRAM-inspired next-day rutting-risk layer for unpaved access routes, with locally calibrated soil-strength relationships and vehicle/pass-count scenarios.
+For ControlWard, I would implement a STRAM-inspired next-day rutting-risk layer for unpaved access routes, with locally calibrated soil-strength relationships and vehicle/pass-count scenarios.
 
 That is a defensible, technically meaningful adaptation of this paper. A suitable initial product claim would be:
 

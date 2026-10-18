@@ -241,7 +241,7 @@ def query_gemini_search(prompt: str, api_key: str, model: str = DEFAULT_MODEL, t
         data=json.dumps(payload_gc).encode("utf-8"),
         headers={
             "Content-Type": "application/json",
-            "User-Agent": "planit-hazard-evidence/1.0"
+            "User-Agent": "controlward-hazard-evidence/1.0"
         }
     )
     try:
@@ -270,7 +270,7 @@ def query_gemini_search(prompt: str, api_key: str, model: str = DEFAULT_MODEL, t
         data=json.dumps(payload_int).encode("utf-8"),
         headers={
             "Content-Type": "application/json",
-            "User-Agent": "planit-hazard-evidence/1.0"
+            "User-Agent": "controlward-hazard-evidence/1.0"
         }
     )
     try:

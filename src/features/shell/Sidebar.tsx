@@ -68,7 +68,7 @@ export function Sidebar({
             <polygon points="24,11.6 28.4,16 24,20.4 19.6,16" />
           </svg>
         </span>
-        <span className={styles.name}>PlanIT Control</span>
+        <span className={styles.name}>ControlWard</span>
       </div>
       {sites.length ? (
         <Field

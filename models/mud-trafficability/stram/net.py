@@ -6,7 +6,7 @@ import time
 
 import httpx
 
-UA = "planit-stram/0.1 (SwampHacks 2026 research prototype)"
+UA = "controlward-stram/0.1 (SwampHacks 2026 research prototype)"
 
 
 def client(timeout: float = 120.0) -> httpx.Client:

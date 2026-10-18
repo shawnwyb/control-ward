@@ -36,7 +36,7 @@ export function Landing({ onSignIn }: { onSignIn: () => void }) {
       <header className={styles.nav}>
         <span className={styles.logo}>
           <i aria-hidden="true" />
-          PlanIT Control
+          ControlWard
         </span>
         <nav className={styles.links} aria-label="Sections">
           <button type="button" onClick={() => scrollToSection("running")}>
@@ -109,7 +109,7 @@ export function Landing({ onSignIn }: { onSignIn: () => void }) {
         aria-labelledby="features-title"
       >
         <h2 id="features-title" className={styles.h2}>
-          What PlanIT Control does
+          What ControlWard does
         </h2>
         <p className={styles.lede}>
           Six pieces that fit together. Hover to pause.

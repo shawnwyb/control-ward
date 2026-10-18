@@ -1,4 +1,4 @@
-# Run PlanIT locally
+# Run ControlWard locally
 
 Start here after cloning the repository. The main path uses the real application, agent and prediction code. The optional UI preview at the end uses fictional data.
 
@@ -80,7 +80,7 @@ Install the Supabase CLI and start Docker. Keep the three long-running processes
 ### A. Start the database and frontend
 
 ```sh
-SAFETY_LOCAL_DIR=/tmp/planit-local npm run safety:local:start
+SAFETY_LOCAL_DIR=/tmp/controlward-local npm run safety:local:start
 npm run safety:dev
 ```
 
@@ -117,7 +117,7 @@ Edit that ignored file. Set:
 Ask the project owner for the model ID and budget settings if unsure. Hosted secret values are not downloaded by cloning the repository. See [server configuration](safety-operations.md#one-time-server-setup) for provider documentation and budget details. These values do not belong in `.env.local` or a `VITE_` variable.
 
 ```sh
-SAFETY_LOCAL_DIR=/tmp/planit-local node scripts/safety/local-stack.mjs serve "$PWD/.env.safety-functions"
+SAFETY_LOCAL_DIR=/tmp/controlward-local node scripts/safety/local-stack.mjs serve "$PWD/.env.safety-functions"
 ```
 
 Leave this terminal running. It serves the model broker and weather ingestion locally; no function deployment or Supabase login is needed for this local path.
@@ -169,7 +169,7 @@ These SQL steps are one-time developer setup for a local database. Supervisors d
 Still in the third terminal:
 
 ```sh
-supabase status --workdir /tmp/planit-local -o env
+supabase status --workdir /tmp/controlward-local -o env
 ```
 
 Copy **`SERVICE_ROLE_KEY`** from this local status output, not `ANON_KEY`. Create ignored `.env.codeact.local`:
@@ -210,7 +210,7 @@ If a site shows no instructions, inspect the gaps. A blocked government page or 
 Stop the frontend, Edge server and worker with Ctrl+C. Stop the local Supabase stack with:
 
 ```sh
-SAFETY_LOCAL_DIR=/tmp/planit-local npm run safety:local:stop
+SAFETY_LOCAL_DIR=/tmp/controlward-local npm run safety:local:stop
 ```
 
 ## 4. Run the real prediction models locally

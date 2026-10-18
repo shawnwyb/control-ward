@@ -44,7 +44,7 @@
     "fetched_at": "2026-10-18T06:44:45Z"
    },
    "coops_hilo_8723423": {
-    "url": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=predictions&application=planit_next_day_report&station=8723423&datum=MLLW&time_zone=lst_ldt&units=metric&interval=hilo&format=json&begin_date=20261018&end_date=20261020",
+    "url": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=predictions&application=controlward_next_day_report&station=8723423&datum=MLLW&time_zone=lst_ldt&units=metric&interval=hilo&format=json&begin_date=20261018&end_date=20261020",
     "fetched_at": "2026-10-18T06:44:45Z"
    },
    "coops_datums_8723423": {
@@ -296,7 +296,7 @@
     "fetched_at": "2026-10-18T06:46:34Z"
    },
    "coops_hilo_8761927": {
-    "url": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=predictions&application=planit_next_day_report&station=8761927&datum=MLLW&time_zone=lst_ldt&units=metric&interval=hilo&format=json&begin_date=20261018&end_date=20261020",
+    "url": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=predictions&application=controlward_next_day_report&station=8761927&datum=MLLW&time_zone=lst_ldt&units=metric&interval=hilo&format=json&begin_date=20261018&end_date=20261020",
     "fetched_at": "2026-10-18T06:46:34Z"
    },
    "coops_datums_8761927": {

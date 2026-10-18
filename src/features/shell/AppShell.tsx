@@ -50,7 +50,7 @@ export function AppShell({
             </span>
           ) : null}
         </button>
-        <span>PlanIT Control</span>
+        <span>ControlWard</span>
       </header>
       <div
         id="sidebar"

@@ -1,4 +1,4 @@
-# PlanIT Control
+# ControlWard
 
 A safety platform for utility field crews, built for SwampHacks 2026. It combines weather, heat, lightning, flood, wildfire, soil and crew-reported hazards into one risk score for each power plant site. It raises alerts when conditions turn dangerous and creates a next-day briefing at 6 PM local time for each site.
 
@@ -190,6 +190,10 @@ The site map uses MapLibre GL with the free OpenFreeMap "liberty" basemap (no AP
 | `outsider@planit.local`   | None        |
 
 All demo accounts use `CrewDemo123!`. The sign-in hints appear only when `VITE_LOCAL_DEMO=true`. Never load these identities into a production project or expose the local stack publicly.
+
+## Name compatibility
+
+The official project and application name is **ControlWard**. Existing `@planit.local` account addresses, browser-storage keys and the local Docker stack ID retain their original identifiers so existing logins, preferences, push subscriptions and local data keep working. Historical migrations and the original project brief retain their recorded names; new evidence labels use ControlWard.
 
 ## Generated files
 
