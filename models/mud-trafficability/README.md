@@ -67,5 +67,6 @@ for the worst segment). `push --apply` sends it to the linked production project
 One-time setup, from the repo root: install the Supabase CLI, `supabase login`, `supabase link --project-ref <ref>`.
 
 Applying changes **live** site risk: `compute_site_risk` takes max(ML score, subscores), the `tomorrow` score feeds the
-6 PM briefing, and scores never expire. Re-run `forecast` and `push --apply` to refresh, and `push --clear --apply` to
+6 PM briefing. After migration `20261018020000`, scores stop contributing to risk after 36 hours (`now`) or
+48 hours (`tomorrow`); historical rows remain stored. Re-run `forecast` and `push --apply` to refresh, and `push --clear --apply` to
 remove this model's scores.

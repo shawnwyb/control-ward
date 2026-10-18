@@ -128,7 +128,7 @@ export function sourceCandidates(
     if (!row || typeof row !== "object") continue;
     const url = officialUrl(row.url),
       level = row.level as Source["level"];
-    const expected = levels[level];
+    const expected = Object.hasOwn(levels, level) ? levels[level] : null;
     if (
       !url ||
       !expected ||

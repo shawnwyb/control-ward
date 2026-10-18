@@ -15,7 +15,7 @@ That score:
 - becomes the risk driver ("ML mud trafficability `<score>`") wherever it is the largest input;
 - feeds the 6 PM local briefing's `predicted_risk` through the `tomorrow` row;
 - raises no alerts;
-- **never expires** — it stays in effect until overwritten by a fresh run or removed with `--clear`.
+- contributes to risk only while fresh: under 36 hours for `now`, under 48 hours for `tomorrow` (migration `20261018020000`); historical rows remain stored.
 
 Run this once a day, before the 6 PM local briefing window, so `tomorrow`'s score reflects that day's forecast.
 A supervisor or whoever owns this model should run it — not CI, and not unattended.
@@ -179,7 +179,7 @@ supabase db query --linked --workdir "$PWD" --output-format json \
 
 ## 8. Refresh and expiry
 
-Scores never expire on their own. `push --apply` refuses a run older than 24 hours (`--allow-stale` to override,
+Scores remain stored, but after migration `20261018020000` they stop contributing to risk after 36 hours (`now`) or 48 hours (`tomorrow`). `push --apply` refuses a run older than 24 hours (`--allow-stale` to override,
 not recommended). To keep production current, re-run section 4 daily. To stop influencing site risk without a
 fresh run, clear (section 9).
 

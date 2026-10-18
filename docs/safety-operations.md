@@ -1,5 +1,7 @@
 # Automatic safety checklist operations
 
+For a fresh clone, start with the [local development guide](local-development.md). It gives the real frontend, isolated CodeAct executor and prediction model commands in order. This document covers architecture, configuration, verification and production operation.
+
 ## User flow
 
 Open an assigned worksite as either a supervisor or worker. The Task safety checklist panel automatically shows the site's jurisdiction, heat/weather readings, cited instructions, source links and coverage gaps. Read it and select **Acknowledge this checklist**. A replacement requires a new acknowledgement. No profile form, planned work, source approval, Generate or Publish action is required.
@@ -85,3 +87,71 @@ Opening the real database before deployment does not enable the agent. Both the 
 To stop new generation/publication, set `private.safety_settings.enabled=false` and Edge `SAFETY_AGENT_ENABLED=false`. History and existing urgent alerts remain. Disabling generation does not withdraw previously generated checklists immediately; they retain their normal freshness/expiry behavior. For rollback, disable generation and revert frontend/worker deployment while retaining additive tables and historical citations.
 
 The earlier curated-source ingestion and draft-review interfaces are historical compatibility tools. They are not prerequisites for automatic research, generation or publication and are not used by the current UI.
+
+## CodeAct research executor
+
+The opt-in executor adapts the **action representation and execution-feedback loop** from Xingyao Wang, Yangyi Chen, Lifan Yuan, Yizhe Zhang, Yunzhu Li, Hao Peng and Heng Ji, _Executable Code Actions Elicit Better LLM Agents_ (ICML 2024; [arXiv:2402.01030v4](https://arxiv.org/abs/2402.01030v4)). The model generates executable Python that calls research tools, composes results using variables/loops/conditionals, observes execution output or errors, and chooses another action or a final proposal. A JSON envelope transports the Python action; research is performed by the executed code, not by a predetermined tool sequence.
+
+This project uses Gemini with a restricted Docker interpreter and application-specific tools. It does **not** reproduce CodeActInstruct fine-tuning, the paper's model, full general-purpose action space, benchmarks, or reported performance gains. Functional verification establishes execution, feedback and grounding behavior; it does not establish superior checklist quality or legal completeness. Cite the paper for the architecture, not as evidence that this deployment achieves its benchmark results.
+
+```text
+Minute enqueue -> run execution_mode
+                    | pipeline -> existing scheduled Edge worker
+                    | codeact  -> Node worker
+                                   |
+                        model broker (Supabase secrets + lease/budget)
+                                   |
+                        model generates Python action
+                                   v
+                        persistent isolated Python container
+                                   |
+                     read-only tools -> host validates every call
+                       | context: Census + recorded site conditions
+                       | search: grounded official-source discovery
+                       | read: independently fetched official documents
+                       | check: quote/number/length validation
+                                   |
+                        stdout/error -> model -> next action
+                                   |
+                        finish proposal, max five actions
+                                   v
+                     existing SQL validation + input freshness check
+                                   |
+                        current checklist -> worker receipt
+```
+
+Files: `scripts/safety/codeact/agent.mjs` owns the bounded loop/tools; `sandbox.mjs` starts and destroys the per-run container; `interpreter.py` maintains Python variables and bridges tool calls; `worker.mjs` claims leases and submits publication. `supabase/functions/codeact-safety-model` holds the provider credential and reserves model-call budgets in SQL. Migrations `20261018040000` and `20261018040100` add mode separation, service-only caches and private per-lease action traces. Existing publication validation, membership access and per-version acknowledgement remain authoritative.
+
+Generated Python receives no provider/service credentials, host socket, writable host mount or network. The host exposes only scoped research tools, checks arguments and budgets on every call (including loop iterations), and owns publication. The disposable container runs without root/capabilities, with a read-only filesystem and bounded memory/CPU/processes/output. Docker is a process-isolation boundary, not a proof against every possible kernel/runtime vulnerability; use a dedicated worker host without unrelated sensitive workloads. Never mount Docker's socket inside the Python container.
+
+Bounds: 120 seconds per run, five code actions, seven decision opportunities, 16 tool calls, eight total provider calls including search, and a conservative 50,000-token input/output reservation (up to 8,192 output tokens for each code/proposal response). The broker also applies `SAFETY_RESERVED_USD_PER_TURN` and `SAFETY_MAX_SPEND_USD` before each call. Completed token reservations reconcile against provider-reported usage; failed or unreported calls retain their reservation. Only one provider call can be in flight per attempt. The model receives remaining action/tool budgets and a final-proposal instruction at the decision limit. Independently fetched full text and exact relevant excerpts are available to Python; excerpts are not generated summaries. Errors and validation failures become observations within those limits. Private `safety_codeact_attempts` stores executable actions and bounded tool/execution observations, not hidden reasoning. Failed/incomplete runs do not publish fabricated evidence; existing bounded retry/lease behavior applies.
+
+Caching is explicit: Census results are cached **30 days by coordinates** only when resolved; official document text is cached **two hours by URL**, preserving its original `checked_at`. Failed fetches never refresh a cache entry. Search discovery covers all known jurisdiction levels once per research run; repeated discovery calls reuse that run's candidate list. Changing worksite coordinates selects a new jurisdiction key; weather changes reuse still-valid regulation documents while generating a new checklist. Existing checklist input fingerprints and two-hour queue deduplication are separate from these evidence caches. This is time-based freshness, not continuous detection of regulatory changes. Earlier regulatory changes can remain unseen until document-cache expiry and the next run.
+
+### Start against the real database
+
+Deploy migrations `20261018040000` and `20261018040100` after the existing migrations and deploy `codeact-safety-model`. Keep the existing server secrets; no new Gemini key is required. The broker accepts only the server service-role credential and a live CodeAct lease, never browser credentials. On the **trusted worker host**, provide an ignored file such as `.env.codeact` containing `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` (no `VITE_` prefix). Do not commit it or copy it into generated code's container.
+
+```sh
+docker pull python:3.12-slim
+node --env-file=.env.codeact --experimental-strip-types scripts/safety/codeact/worker.mjs
+```
+
+Node 22+ and Docker are required. Run that command under your hosting platform's supervisor/restart policy; keep one worker initially. It can share the trusted machine that runs model jobs. The Python container is disposable execution isolation, not an additional public server. Host dependencies are pinned by `package-lock.json`; deploy an immutable Python image digest for reproducibility. The locally verified image is `python:3.12-slim@sha256:a6e34c598f2467ed0e9a8d349809fcd8b5c603269512df273a0bb1784edc11b1`.
+
+Once the worker is healthy, change server configuration, not a worksite admin form:
+
+```sql
+update private.safety_settings set execution_mode = 'codeact';
+-- Transfer only unclaimed jobs; leave in-flight leases alone.
+update public.automatic_safety_runs set execution_mode = 'codeact'
+where execution_mode = 'pipeline' and state = 'queued' and attempt = 0;
+```
+
+The minute enqueue selects that mode for future jobs. The Edge pipeline cannot claim CodeAct jobs. To revert, set `execution_mode='pipeline'` and move queued CodeAct jobs back to pipeline; let running leases finish or expire before moving them. Do not switch the queue to CodeAct without a continuously running executor. Migration intentionally keeps `pipeline` as the default so deploying schema/frontend cannot strand generation. `--once` runs at most one claimed job, and `SAFETY_CODEACT_RUN_ID` can restrict a verification run to a specific queued CodeAct job.
+
+### Concise checklist presentation
+
+Python submits candidate items to `check_proposal`, which returns a validated proposal reference. The model can finish using that reference, preserving the original quote text without copying it into another response. Inline proposals still pass the same validation.
+
+New CodeAct proposals are limited to five actions, 80-character titles, 600-character exact quotes and 240-character scope notes. The worker sees action titles, up to three condition summaries, current/stale status and an acknowledgement. Expand **Scope & sources** for each action's complete scope and verbatim evidence; expand coverage notes for missing information. Supervisors have **Research details** with source timestamps and retry status. Older longer versions retain their remaining instructions under **additional instructions**. Search attribution, when supplied, stays displayed. Acknowledgement records receipt, not completed work, training or applicability.

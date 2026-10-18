@@ -103,3 +103,13 @@
     align-items: stretch;
   }
 }
+
+.conditions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  font-size: var(--text-sm);
+}

@@ -55,3 +55,11 @@ Only the service role can call these RPCs:
 Tables are `automatic_safety_runs`, `automatic_safety_checklists` and `automatic_safety_reads`. Runs and full fetched documents are service-only. Members can read their site's checklists and their own receipts under RLS; direct browser writes are revoked.
 
 The earlier profile, planned-work, source-approval and draft-publication RPCs remain for historical compatibility. The current UI and automatic worker do not call them. See the [contract](safety-contract.md) and [operations](safety-operations.md).
+
+## CodeAct server-only execution
+
+Migration `20261018040000` adds `automatic_safety_runs.execution_mode` (`pipeline` by default or `codeact`). Browsers continue using the existing workspace and acknowledgement RPCs. The Node executor claims only CodeAct jobs through `claim_codeact_safety_runs(p_run_id?)`; the Edge pipeline claims only pipeline jobs. Queue mode is deployment configuration in `private.safety_settings.execution_mode`.
+
+`POST /functions/v1/codeact-safety-model` accepts `{run_id, lease_token, prompt, search}` with a service-role credential in `Authorization: Bearer …` and `apikey`. It forwards that credential to the service-only `reserve_codeact_model_call` RPC for authorization and lease/budget checks before accessing the provider. Browser/anonymous credentials cannot execute the reservation RPC. The response is the bounded model result, including provider token usage; raw provider responses and credentials are never exposed.
+
+`reserve_codeact_model_call` reserves prompt/output capacity and a provider call; `settle_codeact_model_call` (migration `20261018040100`) reconciles against reported usage. One call may be in flight per lease. `get_codeact_cache`, `put_codeact_cache` and `save_codeact_trace` are also service-only. Cache entries and action/observation traces live in `private.safety_codeact_cache` and `private.safety_codeact_attempts`. Model output cannot call publication directly; the host uses the existing `finish_automatic_safety_run` validation and freshness checks. See [operations](safety-operations.md#codeact-research-executor) for runtime, cache TTLs, rollout and rollback.
