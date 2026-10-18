@@ -1,5 +1,6 @@
 import { Icon, type IconName } from "../../components/ui/Icon";
 import { Footer } from "../shell/Footer";
+import { FeatureCarousel } from "./FeatureCarousel";
 import { Puzzle } from "./Puzzle";
 import styles from "./Landing.module.css";
 
@@ -13,9 +14,9 @@ const story: { icon: IconName; text: string }[] = [
 const sources = [
   "EIA-860M",
   "NOAA Storm Events",
-  "Iowa Env. Mesonet",
-  "OSHA Severe Injury",
-  "National Levee DB",
+  "Iowa Environmental Mesonet",
+  "OSHA Severe Injury Reports",
+  "National Levee Database",
   "NOAA Tides & Currents",
   "FEMA Flood Maps",
 ];
@@ -101,7 +102,6 @@ export function Landing({ onSignIn }: { onSignIn: () => void }) {
         </ul>
       </section>
 
-      {/* PLACEHOLDER (Task 4): replace this section with the features carousel. */}
       <section
         id="features"
         className={styles.section}
@@ -110,7 +110,10 @@ export function Landing({ onSignIn }: { onSignIn: () => void }) {
         <h2 id="features-title" className={styles.h2}>
           What PlanIT Control does
         </h2>
-        <p className={styles.lede}>Six pieces that fit together.</p>
+        <p className={styles.lede}>
+          Six pieces that fit together. Hover to pause.
+        </p>
+        <FeatureCarousel />
       </section>
 
       {/* PLACEHOLDER (Task 5): replace this section with the "See it running" demo. */}

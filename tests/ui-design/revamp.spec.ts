@@ -206,3 +206,56 @@ test("landing: judges see the pitch and reach sign-in", async ({ page }) => {
   await page.getByRole("link", { name: "Back to home" }).click();
   await expect(h1).toBeVisible();
 });
+
+test("landing: feature carousel slides", async ({ page }) => {
+  await page.goto("/");
+  const region = page.getByRole("region", { name: "What PlanIT Control does" });
+  await region.scrollIntoViewIfNeeded();
+  await expect(region.getByRole("listitem")).toHaveCount(6);
+  const dot = (n: number) => region.getByRole("button", { name: `Slide ${n}` });
+  await expect(dot(1)).toHaveAttribute("aria-current", "true");
+
+  await region.getByRole("button", { name: "Next" }).click();
+  await expect(dot(2)).toHaveAttribute("aria-current", "true");
+  // Slide 2 has scrolled to the start of the track.
+  await expect
+    .poll(async () =>
+      page.evaluate(() => {
+        const track = document.querySelector("ul[data-carousel-track]")!;
+        const slide = track.children[1] as HTMLElement;
+        return Math.abs(
+          slide.getBoundingClientRect().left -
+            track.getBoundingClientRect().left,
+        );
+      }),
+    )
+    .toBeLessThan(80);
+
+  // Hovering the track pauses auto-advance (focus is moved away first).
+  await page.evaluate(() => (document.activeElement as HTMLElement).blur());
+  const track = region.locator("ul[data-carousel-track]");
+  await track.hover();
+  await page.waitForTimeout(6000);
+  await expect(dot(2)).toHaveAttribute("aria-current", "true");
+
+  // Moving away resumes it.
+  await page.mouse.move(2, 2);
+  await expect(dot(3)).toHaveAttribute("aria-current", "true", {
+    timeout: 8000,
+  });
+});
+
+test("landing: carousel does not auto-advance under reduced motion", async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  const region = page.getByRole("region", { name: "What PlanIT Control does" });
+  await region.scrollIntoViewIfNeeded();
+  await page.mouse.move(2, 2);
+  await page.waitForTimeout(6000);
+  await expect(region.getByRole("button", { name: "Slide 1" })).toHaveAttribute(
+    "aria-current",
+    "true",
+  );
+});
