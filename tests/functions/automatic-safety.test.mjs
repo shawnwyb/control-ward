@@ -544,3 +544,35 @@ test("full discovery cannot crowd out the verified heat fallback or duplicate so
   for (const level of ["state", "county", "city"])
     assert.ok(output.content.sources.some((s) => s.level === level));
 });
+
+test("bounded search metadata and whitespace around fenced final JSON do not discard a valid research response", async () => {
+  const adapter = geminiResearch("fixture-key", "gemini-3.8-flash", async () =>
+    Response.json({
+      metadata_padding: "x".repeat(180000),
+      steps: [
+        {
+          type: "google_search_result",
+          result: [{ search_suggestions: "<p>Search suggestions</p>" }],
+        },
+        {
+          type: "model_output",
+          content: [
+            {
+              type: "text",
+              text: "\n```json\n" + JSON.stringify(discovery) + "\n```\n",
+            },
+          ],
+        },
+      ],
+      usage: { total_tokens: 60 },
+    }),
+  );
+  const result = await adapter.ask(
+    "Find sources",
+    true,
+    AbortSignal.timeout(1000),
+  );
+  assert.deepEqual(result.value, discovery);
+  assert.equal(result.grounded, true);
+  assert.ok(JSON.stringify(result).length < 5000);
+});
