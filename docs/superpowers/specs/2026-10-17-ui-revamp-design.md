@@ -29,7 +29,7 @@ SwampHacks 2026, so first impressions for judges matter as much as day-to-day us
 - No backend, schema, RPC or Edge Function changes. The revamp is frontend only and reads the data the
   app already reads.
 - No new product features beyond what the brief already asks for and the app already does.
-- Dark mode is out of scope *(my call; easy to add later because everything goes through tokens)*.
+- Dark mode is out of scope _(my call; easy to add later because everything goes through tokens)_.
 
 ## Anti-goals (would be a failure even if it works)
 
@@ -42,8 +42,8 @@ SwampHacks 2026, so first impressions for judges matter as much as day-to-day us
 ## Constraints
 
 - Stack stays: React 19, TypeScript, CSS Modules, MapLibre GL, Supabase client. No UI framework or
-  animation library is required; CSS transitions/keyframes and small hooks are enough *(my call; the
-  builder may add one small dependency if it clearly saves time, e.g. a router)*.
+  animation library is required; CSS transitions/keyframes and small hooks are enough _(my call; the
+  builder may add one small dependency if it clearly saves time, e.g. a router)_.
 - **The judges' live demo runs on the hosted Supabase project with the 60 real plants.** The team
   provides demo credentials themselves; the UI only needs the normal sign-in. Nothing in the UI may
   embed or display passwords.
@@ -75,7 +75,7 @@ SwampHacks 2026, so first impressions for judges matter as much as day-to-day us
 - **Hazard index scale (0–10):** keep the rules engine's existing three bands and labels from
   `riskLevel()` (≥7 High = red, ≥4 Elevated = orange, else Low = green), so briefing and push wording
   stay consistent. Shown as a tag with the number (and the label where space allows), and as the map
-  pin color with the number on it *(my call)*.
+  pin color with the number on it _(my call)_.
 - **Icons:** thin gray outline icons (Lucide-like: 24 grid, ~1.7 stroke, round caps), one color
   (`#91918e`), extending the existing `Icon.tsx` string-based set so map popups can reuse them. Color
   only appears in tags and on the map. No emoji.
@@ -90,28 +90,28 @@ SwampHacks 2026, so first impressions for judges matter as much as day-to-day us
 **Supervisor sidebar:** Sites · Alerts (count badge) · Next-day briefing · Crew · Reports.
 **Crew sidebar:** My site · Alerts (count badge) · Tomorrow's briefing · Reports.
 
-**One current site** *(my call)*: there is a single `selectedSiteId`. The sidebar site switcher and
+**One current site** _(my call)_: there is a single `selectedSiteId`. The sidebar site switcher and
 selecting a row in the Sites table set the same value. Alerts, Briefing, Crew, Reports and the
 stop-work banner all follow the selected site, exactly as today's per-site components do. Cross-site
 awareness comes only from the Sites table, which shows each site's index and active alert count from
 `site_overview` (`active_alert_count`). The sidebar Alerts badge is the selected site's count. No
 cross-site alerts query.
 
-**Reports page** *(my call)*: lists every report at the site, as today, so the shared "Still there /
+**Reports page** _(my call)_: lists every report at the site, as today, so the shared "Still there /
 Gone" check-in flow stays; a "Mine" filter narrows it to the user's own reports (`reporter_id`).
 
 Where today's components land (re-skinned, logic kept):
 
-| Today | New home |
-| --- | --- |
-| `RiskPanel` (site risk, subscores) | Sites page: detail for the selected site (subscore bars) |
-| `AlertsSection` / `AlertsPanel`, lightning state | Alerts page, plus the stop-work banner on map pages |
-| `BriefingPanel`, `SafetyPanel` | Next-day briefing page |
-| `CrewPanel`, `CrewAccess`, `RemoveCrew`, `PushComposer` | Crew page (supervisor) |
-| `ReportFeed`, `HistoryView` | Reports page (with a "Mine" filter) |
-| `CrewTools` (location sharing, crew alerts) | My site page (crew) and Alerts page |
-| `ReportForm` | Report drawer on the map (crew; supervisors can report too) |
-| `StatusStrip` connection state | Small status line in the sidebar footer |
+| Today                                                   | New home                                                    |
+| ------------------------------------------------------- | ----------------------------------------------------------- |
+| `RiskPanel` (site risk, subscores)                      | Sites page: detail for the selected site (subscore bars)    |
+| `AlertsSection` / `AlertsPanel`, lightning state        | Alerts page, plus the stop-work banner on map pages         |
+| `BriefingPanel`, `SafetyPanel`                          | Next-day briefing page                                      |
+| `CrewPanel`, `CrewAccess`, `RemoveCrew`, `PushComposer` | Crew page (supervisor)                                      |
+| `ReportFeed`, `HistoryView`                             | Reports page (with a "Mine" filter)                         |
+| `CrewTools` (location sharing, crew alerts)             | My site page (crew) and Alerts page                         |
+| `ReportForm`                                            | Report drawer on the map (crew; supervisors can report too) |
+| `StatusStrip` connection state                          | Small status line in the sidebar footer                     |
 
 The builder decides the exact routing mechanism (hash routes, a tiny router, or state) as long as
 browser back/forward works between pages and a page can be linked directly.
@@ -125,22 +125,22 @@ browser back/forward works between pages and a page can be linked directly.
   highlighted. Layer toggles float over the map as pill chips. They are the map's existing weather
   layers (Radar, Rain, Wind, Temperature/heat, Forecast) restyled as chips; there is no map data for
   flood, wildfire, soil or wildlife, so those appear as the site's top hazards in the table and detail,
-  not as map layers *(my call)*.
+  not as map layers _(my call)_.
 - Data: one query of the `site_overview` view for all sites the user can see (RLS already scopes it),
   instead of one request per site.
 - A site's detail (subscore bars, tomorrow's index, open hazards) appears for the selected site, e.g.
-  in a panel under the table or a floating card on the map *(builder's call)*.
+  in a panel under the table or a floating card on the map _(builder's call)_.
 
 ### Map
 
 - Must convey geography and hazards: water, wetlands/landcover, roads and place labels must be readable.
   Replace the very pale Positron basemap with a more informative OpenFreeMap style (e.g. "liberty"),
-  toned down if needed so hazard overlays stay the loudest layer *(my call)*.
+  toned down if needed so hazard overlays stay the loudest layer _(my call)_.
 - Keep the existing weather/radar/wind layers and markers; restyle markers to rounded score pins
   (number on a colored pill with a pointer) and gray line icons for reports.
 - Lightning: the browser cannot read individual strikes, only `lightning_state` per site. When a site
   is in stop-work, draw a dashed 10-mile ring around the **site** (the stop-work radius) with a bolt
-  marker, and show the last strike distance in the banner *(my call)*.
+  marker, and show the last strike distance in the banner _(my call)_.
 
 ### Crew: My site page with report drawer (option A)
 
@@ -152,7 +152,7 @@ browser back/forward works between pages and a page can be linked directly.
     No latitude/longitude fields. If location is unavailable or denied, the pin starts at the site
     center and a one-line hint says to click the map.
   - Severity: Low / Moderate / High segmented control.
-  - Optional note *(only if the backend already accepts one; otherwise omit — no backend changes)*.
+  - Optional note _(only if the backend already accepts one; otherwise omit — no backend changes)_.
   - **Optional photo** drop zone ("Add photo (optional) · drop a file or choose one"), same limits as
     today (JPEG/PNG/WebP, 5 MB).
   - **Send report**. Existing duplicate-merge behavior and messages stay.
@@ -165,7 +165,7 @@ Shown to signed-out visitors at the root; "Sign in" / "Open live demo" lead to s
 
 1. **Nav:** logo + PlanIT Control, How it works, Features, Data, Sign in, **Open live demo**.
 2. **Hero:** badge "Built for utility field crews · SwampHacks 2026"; headline
-   "Every hazard on site. *One picture.*" (highlighted second line); buttons "Open live demo →" and
+   "Every hazard on site. _One picture._" (highlighted second line); buttons "Open live demo →" and
    "See how it works". **No gray paragraph under the headline.** Right side: six pastel jigsaw pieces
    (Extreme heat, Lightning, Flooding, Soil, Wildfire, Wildlife, each with a short reading) fly in one
    by one and snap into a 3×2 grid, then a score card pops in below: "Big Cypress Sub · Hazard index
@@ -175,8 +175,8 @@ Shown to signed-out visitors at the root; "Sign in" / "Open live demo" lead to s
    the app on top and number + title + description below. Six cards: one risk picture per site,
    instant stop-work alerts, 6 PM next-day briefing, crew hazard reports, supervisor dashboard,
    hazard index 0–10 (7-day forecast). Auto-advances every ~4.5s, pauses on hover, arrows + dots.
-   Pictures may be HTML/SVG recreations of the app or real screenshots *(builder's call; recreations
-   stay crisp and need no asset pipeline)*.
+   Pictures may be HTML/SVG recreations of the app or real screenshots _(builder's call; recreations
+   stay crisp and need no asset pipeline)_.
 5. **"See it running":** an animated, looping recreation of the supervisor Sites view: a lightning
    strike near Big Cypress Sub, its index counts 6.1 → 8.6 in table and pin, the row slides to the top,
    the stop-work banner drops in with a live countdown, the Alerts badge appears, a cursor clicks the
