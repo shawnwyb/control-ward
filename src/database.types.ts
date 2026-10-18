@@ -205,6 +205,7 @@ export type Database = {
           created_at: string
           diagnostics: Json
           error_category: string | null
+          execution_mode: string
           fingerprint: string
           finished_at: string | null
           id: string
@@ -222,6 +223,7 @@ export type Database = {
           created_at?: string
           diagnostics?: Json
           error_category?: string | null
+          execution_mode?: string
           fingerprint: string
           finished_at?: string | null
           id?: string
@@ -239,6 +241,7 @@ export type Database = {
           created_at?: string
           diagnostics?: Json
           error_category?: string | null
+          execution_mode?: string
           fingerprint?: string
           finished_at?: string | null
           id?: string
@@ -419,50 +422,6 @@ export type Database = {
           },
         ]
       }
-      hazard_evidence: {
-        Row: {
-          articles: Json
-          driver: string
-          hazard_score: number
-          horizon: string
-          id: string
-          model_version: string
-          queried_at: string
-          site_id: string
-          summary: string
-        }
-        Insert: {
-          articles?: Json
-          driver: string
-          hazard_score: number
-          horizon: string
-          id?: string
-          model_version: string
-          queried_at?: string
-          site_id: string
-          summary: string
-        }
-        Update: {
-          articles?: Json
-          driver?: string
-          hazard_score?: number
-          horizon?: string
-          id?: string
-          model_version?: string
-          queried_at?: string
-          site_id?: string
-          summary?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "hazard_evidence_site_id_fkey"
-            columns: ["site_id"]
-            isOneToOne: false
-            referencedRelation: "sites"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       hazard_checkin_tasks: {
         Row: {
           completed_at: string | null
@@ -557,6 +516,57 @@ export type Database = {
             columns: ["report_id"]
             isOneToOne: false
             referencedRelation: "hazard_reports"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hazard_evidence: {
+        Row: {
+          articles: Json
+          driver: string
+          hazard_score: number
+          horizon: string
+          id: string
+          model_version: string
+          queried_at: string
+          site_id: string
+          summary: string
+        }
+        Insert: {
+          articles?: Json
+          driver: string
+          hazard_score: number
+          horizon: string
+          id?: string
+          model_version: string
+          queried_at?: string
+          site_id: string
+          summary: string
+        }
+        Update: {
+          articles?: Json
+          driver?: string
+          hazard_score?: number
+          horizon?: string
+          id?: string
+          model_version?: string
+          queried_at?: string
+          site_id?: string
+          summary?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hazard_evidence_site_id_fkey"
+            columns: ["site_id"]
+            isOneToOne: false
+            referencedRelation: "site_overview"
+            referencedColumns: ["site_id"]
+          },
+          {
+            foreignKeyName: "hazard_evidence_site_id_fkey"
+            columns: ["site_id"]
+            isOneToOne: false
+            referencedRelation: "sites"
             referencedColumns: ["id"]
           },
         ]
@@ -1868,6 +1878,34 @@ export type Database = {
           created_at: string
           diagnostics: Json
           error_category: string | null
+          execution_mode: string
+          fingerprint: string
+          finished_at: string | null
+          id: string
+          input_snapshot: Json
+          lease_token: string | null
+          leased_until: string | null
+          site_id: string
+          source_documents: Json
+          state: string
+          work_date: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "automatic_safety_runs"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
+      claim_codeact_safety_runs: {
+        Args: { p_run_id?: string }
+        Returns: {
+          attempt: number
+          available_at: string
+          created_at: string
+          diagnostics: Json
+          error_category: string | null
+          execution_mode: string
           fingerprint: string
           finished_at: string | null
           id: string
@@ -2011,6 +2049,7 @@ export type Database = {
         Returns: Json
       }
       get_briefing_inputs: { Args: { p_site_id: string }; Returns: Json }
+      get_codeact_cache: { Args: { p_key: string }; Returns: Json }
       get_safety_workspace: {
         Args: { p_site_id: string; p_work_date: string }
         Returns: Json
@@ -2066,11 +2105,24 @@ export type Database = {
           user_id: string
         }[]
       }
+      put_codeact_cache: {
+        Args: { p_key: string; p_ttl_seconds: number; p_value: Json }
+        Returns: undefined
+      }
       refresh_stale_safety_briefings: { Args: never; Returns: number }
       request_briefing_draft: { Args: { p_site_id: string }; Returns: Json }
       request_safety_briefing: {
         Args: { p_regenerate?: boolean; p_site_id: string; p_work_date: string }
         Returns: string
+      }
+      reserve_codeact_model_call: {
+        Args: {
+          p_lease_token: string
+          p_max_calls: number
+          p_prompt_bytes: number
+          p_run_id: string
+        }
+        Returns: Json
       }
       reserve_hazard_photo: {
         Args: { p_content_type: string; p_photo_id: string; p_site_id: string }
@@ -2113,6 +2165,10 @@ export type Database = {
       save_briefing_draft: {
         Args: { p_content: Json; p_for_date: string; p_site_id: string }
         Returns: Json
+      }
+      save_codeact_trace: {
+        Args: { p_lease_token: string; p_run_id: string; p_trace: Json }
+        Returns: undefined
       }
       save_safety_context: {
         Args: {
@@ -2182,6 +2238,7 @@ export type Database = {
         }
         Returns: Json
       }
+      upsert_hazard_evidence: { Args: { p_batch: Json }; Returns: Json }
       upsert_ml_scores: { Args: { p_batch: Json }; Returns: Json }
       withdraw_safety_publication: {
         Args: { p_publication_id: string }

@@ -49,16 +49,25 @@ function content(): ChecklistContent {
     alerts: [],
     items: missing
       ? []
-      : [
-          {
-            id: "item-1",
-            kind: "guidance",
-            title: "FICTIONAL DEMO heat precautions",
-            text: quote,
-            conditions: "Fictional demonstration only.",
-            citations: [{ source_id: "source-1", quote }],
-          },
-        ],
+      : scenario() === "long"
+        ? Array.from({ length: 12 }, (_, i) => ({
+            id: `item-${i + 1}`,
+            kind: "guidance" as const,
+            title: `FICTIONAL DEMO action ${i + 1}`,
+            text: quote.repeat(20),
+            conditions: "Fictional scope details. ".repeat(20),
+            citations: [{ source_id: "source-1", quote: quote.repeat(20) }],
+          }))
+        : [
+            {
+              id: "item-1",
+              kind: "guidance",
+              title: "FICTIONAL DEMO heat precautions",
+              text: quote,
+              conditions: "Fictional demonstration only.",
+              citations: [{ source_id: "source-1", quote }],
+            },
+          ],
     sources: missing
       ? []
       : [

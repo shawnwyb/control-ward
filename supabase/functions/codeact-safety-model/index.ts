@@ -1,4 +1,3 @@
-import { rpc } from "../_shared/runtime.ts";
 import { geminiResearch } from "../_shared/automatic-safety/agent.ts";
 import { readBounded } from "../_shared/automatic-safety/research.ts";
 import type { Snapshot } from "../_shared/automatic-safety/contracts.ts";
@@ -12,12 +11,9 @@ const json = (value: unknown, status = 200) =>
     headers: { "content-type": "application/json" },
   });
 Deno.serve(async (req) => {
-  const expected = `Bearer ${Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""}`;
-  const actual = req.headers.get("authorization") ?? "";
-  let diff = expected.length ^ actual.length;
-  for (let i = 0; i < expected.length; i++)
-    diff |= expected.charCodeAt(i) ^ (actual.charCodeAt(i) || 0);
-  if (diff || expected === "Bearer ")
+  const authorization = req.headers.get("authorization") ?? "";
+  const apiKey = req.headers.get("apikey") ?? "";
+  if (!authorization.startsWith("Bearer ") || !apiKey)
     return json({ error: "unauthorized" }, 401);
   try {
     if (
@@ -37,12 +33,34 @@ Deno.serve(async (req) => {
       maximum <= 0
     )
       throw new Error("provider_unconfigured");
-    const snapshot = await rpc<Snapshot>("reserve_codeact_model_call", {
-      p_run_id: body.run_id,
-      p_lease_token: body.lease_token,
-      p_prompt_bytes: new TextEncoder().encode(body.prompt).byteLength,
-      p_max_calls: Math.min(8, Math.floor(maximum / reserve)),
-    });
+    // PostgREST verifies the caller's credential and service-only EXECUTE grant.
+    // Do not substitute the function's own key before authorization, or a browser
+    // could turn this endpoint into a privileged provider proxy.
+    const reservation = await fetch(
+      `${Deno.env.get("SUPABASE_URL")}/rest/v1/rpc/reserve_codeact_model_call`,
+      {
+        method: "POST",
+        headers: {
+          authorization,
+          apikey: apiKey,
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          p_run_id: body.run_id,
+          p_lease_token: body.lease_token,
+          p_prompt_bytes: new TextEncoder().encode(body.prompt).byteLength,
+          p_max_calls: Math.min(8, Math.floor(maximum / reserve)),
+        }),
+        signal: AbortSignal.timeout(10000),
+      },
+    );
+    if (!reservation.ok) {
+      await reservation.body?.cancel();
+      return json({ error: "unauthorized_or_inactive_lease" }, 403);
+    }
+    const snapshot = JSON.parse(
+      await readBounded(reservation, 100000),
+    ) as Snapshot;
     const model = Deno.env.get("SAFETY_MODEL") ?? "";
     if (snapshot.model !== model)
       throw new Error("model_configuration_changed");

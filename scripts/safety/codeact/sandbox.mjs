@@ -5,7 +5,10 @@ import { randomUUID } from "node:crypto";
 
 // The container, not a Python allowlist, is the security boundary. No host env,
 // socket, writable mount or network reaches generated code. One interpreter/run.
-export function createSandbox({ signal, image = "python:3.12-slim" } = {}) {
+export function createSandbox({
+  signal,
+  image = "python:3.12-slim@sha256:a6e34c598f2467ed0e9a8d349809fcd8b5c603269512df273a0bb1784edc11b1",
+} = {}) {
   const name = `planit-codeact-${randomUUID()}`;
   const child = spawn(
     "docker",
@@ -41,7 +44,8 @@ export function createSandbox({ signal, image = "python:3.12-slim" } = {}) {
     },
   );
   let pending,
-    closed = false;
+    closed = false,
+    receivedBytes = 0;
   const stop = () => {
     if (closed) return;
     closed = true;
@@ -59,6 +63,10 @@ export function createSandbox({ signal, image = "python:3.12-slim" } = {}) {
     pending = undefined;
   });
   child.stderr.resume();
+  child.stdout.on("data", (chunk) => {
+    receivedBytes += chunk.length;
+    if (receivedBytes > 200000) stop();
+  });
   const lines = createInterface({ input: child.stdout });
   lines.on("line", async (line) => {
     const active = pending;
@@ -100,6 +108,7 @@ export function createSandbox({ signal, image = "python:3.12-slim" } = {}) {
       signal?.throwIfAborted();
       if (closed || pending || typeof code !== "string" || code.length > 12000)
         throw new Error("invalid_code_action");
+      receivedBytes = 0;
       // Includes time spent awaiting tools; never extends the enclosing run lease.
       const timer = setTimeout(stop, 90000);
       try {

@@ -138,3 +138,31 @@ test("missing jurisdiction and condition data produce explicit gaps instead of f
     panel.getByText(/No verified instruction could be extracted/),
   ).toBeVisible();
 });
+
+test("a long legacy checklist stays compact on mobile and preserves every instruction and quote", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/?safety=long");
+  await login(page, "crew@planit.local", false);
+  const panel = page.locator("#safety-checklist");
+  const actions = panel.getByRole("list", { name: "Priority worker actions" });
+  await expect(actions.locator(":scope > li")).toHaveCount(5);
+  for (const quote of await panel.getByRole("blockquote").all())
+    await expect(quote).not.toBeVisible();
+  expect((await panel.boundingBox())!.height).toBeLessThan(1200);
+  await panel.screenshot({
+    path: "test-results/safety-compact-worker-mobile.png",
+  });
+  await panel.getByText("7 additional instructions from this version").click();
+  await expect(
+    panel.getByText("FICTIONAL DEMO action 12", { exact: true }),
+  ).toBeVisible();
+  await panel
+    .getByText(/Scope & sources/)
+    .last()
+    .click();
+  await expect(panel.getByRole("blockquote").last()).toContainText(
+    "FICTIONAL DEMO",
+  );
+});
