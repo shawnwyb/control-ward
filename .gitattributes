@@ -1,0 +1,6 @@
+# Scraped HTML is input data, not application source code.
+data/**/*.html linguist-detectable=false
+data/**/*.htm linguist-detectable=false
+
+# Generated model artifacts should not count toward language statistics.
+models/**/output/** linguist-generated=true
