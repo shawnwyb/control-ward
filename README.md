@@ -139,3 +139,10 @@ https://mesonet.agron.iastate.edu/
 https://levees.sec.usace.army.mil/
 - National Oceanic and Atmospheric Administration, Center for Operational Oceanographic Products and Services. (n.d.). Tides & currents [Data portal]. Retrieved October 18, 2026, from https://tidesandcurrents.noaa.gov/
 - Federal Emergency Management Agency. (n.d.). FEMA Flood Map Service Center [Geospatial data portal]. U.S. Department of Homeland Security. Retrieved October 18, 2026, from https://msc.fema.gov/portal/home
+
+## License
+
+This project is licensed under the PolyForm Noncommercial License 1.0.0.
+See the LICENSE file for the full terms.
+
+For commercial licensing inquiries, contact tyleee0105@gmail.com
